@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Performance Monitoring</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            bg: '#111827',
+                            card: '#1f2937',
+                            text: '#f3f4f6',
+                            muted: '#9ca3af',
+                            border: '#374151'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .card {
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            transition: all 0.2s ease-in-out;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Custom Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05); 
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #d1d5db; 
+            border-radius: 3px;
+        }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #4b5563; 
+        }
+
+        /* Gauge Overlay Text */
+        .gauge-value {
+            position: absolute;
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+        .gauge-label {
+            position: absolute;
+            top: 72%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.875rem;
+        }
+
+        /* Status Matrix Grid */
+        .status-grid {
+            display: grid;
+            grid-template-columns: auto repeat(3, 1fr);
+            gap: 1px;
+            background-color: #e5e7eb; /* Border color */
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+        .dark .status-grid {
+            background-color: #374151;
+        }
+        .status-cell {
+            padding: 0.75rem;
+            text-align: center;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .dark .status-cell {
+            background-color: #1f2937;
+        }
+        .status-header {
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            background-color: #f9fafb;
+        }
+        .dark .status-header {
+            background-color: #111827;
+            color: #d1d5db;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 h-screen flex flex-col overflow-hidden dark:bg-dark-bg dark:text-dark-text">
+
+    <!-- Top Navigation -->
+    <nav class="bg-white border-b border-gray-200 h-16 flex-none z-10 dark:bg-dark-card dark:border-dark-border">
+        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 h-full">
+            <div class="flex justify-between h-full">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center gap-3">
+                        <div class="bg-blue-600 text-white p-2 rounded-lg">
+                            <i class="fa-solid fa-network-wired text-xl"></i>
+                        </div>
+                        <span class="font-bold text-xl tracking-tight text-gray-900 dark:text-white">Network Performance Monitoring</span>
+                    </div>
+                    <div class="hidden sm:ml-8 sm:flex sm:space-x-8">
+                        <a href="#" class="border-blue-500 text-gray-900 dark:text-white inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Summary Page</a>
+                        <a href="#" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">SD-WAN Page</a>
+                        <a href="#" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Switch Page</a>
+                        <a href="#" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Access Point Page</a>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <!-- Scope Selector -->
+                    <div class="relative">
+                        <select id="scopeSelector" onchange="updateDashboardScope(this.value)" class="block w-full pl-3 pr-10 py-2 text-sm border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md bg-gray-50 border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                            <option value="Global">Global Organization</option>
+                            <option value="North America">North America</option>
+                            <option value="EMEA">EMEA</option>
+                            <option value="APAC">APAC</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Dark Mode Toggle -->
+                    <button id="themeToggle" class="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 focus:outline-none">
+                        <i class="fa-solid fa-moon dark:hidden"></i>
+                        <i class="fa-solid fa-sun hidden dark:block text-yellow-400"></i>
+                    </button>
+
+                    <div class="flex items-center gap-3 border-l pl-4 border-gray-200 dark:border-gray-700">
+                        <div class="text-right hidden md:block">
+                            <p class="text-sm font-medium text-gray-900 dark:text-white">Admin User</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">NetOps Lead</p>
+                        </div>
+                        <div class="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold">
+                            AU
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 overflow-y-auto p-6 bg-gray-50 dark:bg-dark-bg">
+        
+        <!-- Dashboard Grid -->
+        <div class="grid grid-cols-12 gap-6 max-w-[1920px] mx-auto">
+
+            <!-- 1. Executive Summary / Global Health (Top Left) -->
+            <div class="col-span-12 lg:col-span-3 card p-4 relative h-64 bg-white dark:bg-dark-card">
+                <div class="flex justify-between items-start mb-2">
+                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Network Health</h3>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                        Live
+                    </span>
+                </div>
+                <div class="relative h-full flex items-center justify-center pb-2">
+                    <canvas id="healthGauge"></canvas>
+                    <div class="gauge-value text-gray-800 dark:text-white" id="healthScoreValue">--</div>
+                    <div class="gauge-label text-gray-500 dark:text-gray-400">Weighted Score</div>
+                    <div class="absolute bottom-4 left-0 right-0 flex justify-between text-xs text-gray-400 px-8">
+                        <span>Critical</span>
+                        <span>Healthy</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Critical Issues Counter (Big Numbers) -->
+            <div class="col-span-12 sm:col-span-6 lg:col-span-3 card p-0 overflow-hidden border-l-4 border-red-500 h-64 bg-white dark:bg-dark-card">
+                <div class="p-5 flex-1 flex flex-col justify-between">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Network Issues</h3>
+                            <p class="text-xs text-gray-400 mt-1">Active incidents requiring attention</p>
+                        </div>
+                        <div class="bg-red-50 dark:bg-red-900/20 p-2 rounded-full">
+                            <i class="fa-solid fa-triangle-exclamation text-red-500"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4 my-2">
+                        <div class="flex flex-col">
+                            <span class="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase">Critical</span>
+                            <div class="flex items-baseline gap-1">
+                                <span class="text-4xl font-bold text-red-600" id="criticalCount">--</span>
+                            </div>
+                        </div>
+                        <div class="flex flex-col border-l pl-4 border-gray-100 dark:border-gray-700">
+                            <span class="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase">Warning</span>
+                            <div class="flex items-baseline gap-1">
+                                <span class="text-4xl font-bold text-amber-500" id="warningCount">--</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button id="toggleFiresBtn" onclick="toggleActiveFires()" class="mt-2 w-full flex justify-center items-center py-2 px-4 border border-red-300 dark:border-red-800 rounded-md shadow-sm text-sm font-medium text-red-700 dark:text-red-400 bg-white dark:bg-gray-800 hover:bg-red-50 dark:hover:bg-red-900/30 focus:outline-none transition-colors">
+                        View Active Fires
+                    </button>
+                </div>
+            </div>
+
+            <!-- 3. Security Posture & 4. Active Clients -->
+            <div class="col-span-12 sm:col-span-6 lg:col-span-3 flex flex-col gap-6 h-64">
+                <!-- Security -->
+                <div class="card p-4 flex-1 flex flex-col justify-center relative overflow-hidden bg-white dark:bg-dark-card">
+                    <div class="absolute right-0 top-0 p-4 opacity-10">
+                        <i class="fa-solid fa-shield-halved text-6xl text-indigo-600 dark:text-indigo-400"></i>
+                    </div>
+                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Security Posture (24h)</h3>
+                    <div class="flex gap-4">
+                        <div class="cursor-pointer group" onclick="filterAlerts('threat')">
+                            <span class="block text-2xl font-bold text-gray-900 dark:text-white group-hover:text-indigo-600 transition-colors" id="threatsCount">--</span>
+                            <span class="text-xs text-gray-500 dark:text-gray-400 border-b border-dashed border-gray-400 group-hover:border-indigo-600">Threats Blocked</span>
+                        </div>
+                        <div class="border-l border-gray-200 dark:border-gray-700 pl-4 cursor-pointer group" onclick="filterAlerts('rogue')">
+                            <span class="block text-2xl font-bold text-red-600 group-hover:text-red-500 transition-colors" id="roguesCount">--</span>
+                            <span class="text-xs text-gray-500 dark:text-gray-400 border-b border-dashed border-gray-400 group-hover:border-red-500">Active Rogues</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Clients -->
+                <div class="card p-4 flex-1 flex flex-col justify-center bg-white dark:bg-dark-card">
+                     <div class="flex justify-between items-start">
+                        <div>
+                             <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Total Active Clients</h3>
+                             <div class="flex items-center gap-2 mt-1">
+                                <span class="text-3xl font-bold text-gray-900 dark:text-white" id="clientCount">--</span>
+                                <div class="flex flex-col items-center">
+                                    <span class="text-xs text-green-600 dark:text-green-400 font-medium bg-green-50 dark:bg-green-900/30 px-1.5 py-0.5 rounded flex items-center gap-1">
+                                        <i class="fa-solid fa-arrow-trend-up"></i> <span id="clientTrend">4.2%</span>
+                                    </span>
+                                    <span class="text-[10px] text-green-700 dark:text-green-500 font-normal mt-0.5">vs Yesterday</span>
+                                </div>
+                             </div>
+                        </div>
+                        <div class="h-10 w-24">
+                             <canvas id="clientSparkline"></canvas>
+                        </div>
+                     </div>
+                </div>
+            </div>
+
+             <!-- 5. WAN Resilience (Donut) -->
+             <div class="col-span-12 sm:col-span-6 lg:col-span-3 card p-4 h-64 bg-white dark:bg-dark-card">
+                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">WAN Resilience</h3>
+                <div class="flex items-center h-full">
+                    <div class="w-1/2 h-40">
+                        <canvas id="wanDonut"></canvas>
+                    </div>
+                    <div class="w-1/2 pl-4 space-y-3">
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+                                <span class="text-xs font-medium text-gray-600 dark:text-gray-300">Primary (Fiber)</span>
+                            </div>
+                            <span class="text-xl font-bold text-gray-900 dark:text-white block ml-4" id="wanPrimary">91%</span>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <div class="w-2 h-2 rounded-full bg-amber-500"></div>
+                                <span class="text-xs font-medium text-gray-600 dark:text-gray-300">Failover (LTE)</span>
+                            </div>
+                            <span class="text-xl font-bold text-gray-900 dark:text-white block ml-4" id="wanFailover">8%</span>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <div class="w-2 h-2 rounded-full bg-red-500"></div>
+                                <span class="text-xs font-medium text-gray-600 dark:text-gray-300">Unreachable</span>
+                            </div>
+                            <span class="text-xl font-bold text-gray-900 dark:text-white block ml-4" id="wanDown">1%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ROW 2: Analytical Charts -->
+
+            <!-- 6. User Frustration Leaderboard -->
+            <div class="col-span-12 lg:col-span-4 card p-4 h-80 bg-white dark:bg-dark-card">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-sm font-bold text-gray-700 dark:text-white">"User Frustration" Leaderboard</h3>
+                    <span class="text-xs text-gray-400">Lowest Success Rate (Last 1h)</span>
+                </div>
+                <div class="relative h-full w-full pb-4">
+                    <canvas id="frustrationChart"></canvas>
+                </div>
+            </div>
+
+            <!-- 7. Top Impacted SD-WANs (Latency) -->
+            <div class="col-span-12 lg:col-span-4 card p-4 h-80 bg-white dark:bg-dark-card">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-sm font-bold text-gray-700 dark:text-white">Top Impacted SD-WANs (Latency)</h3>
+                    <span class="text-xs text-gray-400">Avg WAN Latency (ms)</span>
+                </div>
+                <div class="relative h-full w-full pb-4">
+                    <canvas id="latencyChart"></canvas>
+                </div>
+            </div>
+
+            <!-- 8. Device Status Distribution (Status Matrix) -->
+            <div class="col-span-12 lg:col-span-4 card p-4 h-80 bg-white dark:bg-dark-card">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-sm font-bold text-gray-700 dark:text-white">Device Status Distribution</h3>
+                    <span class="text-xs text-gray-400">Status Matrix Grid</span>
+                </div>
+                <div class="h-full w-full flex flex-col justify-center">
+                    <div class="status-grid border border-gray-200 dark:border-gray-700">
+                        <!-- Header Row -->
+                        <div class="status-cell status-header">Type</div>
+                        <div class="status-cell status-header text-green-600 dark:text-green-400">Online</div>
+                        <div class="status-cell status-header text-amber-500">Warning</div>
+                        <div class="status-cell status-header text-red-500">Critical</div>
+                        
+                        <!-- Gateways -->
+                        <div class="status-cell font-medium text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800">Gateways</div>
+                        <div class="status-cell" id="gw-online">--</div>
+                        <div class="status-cell bg-amber-50 dark:bg-amber-900/10 text-amber-700 dark:text-amber-400" id="gw-warn">--</div>
+                        <div class="status-cell bg-red-50 dark:bg-red-900/10 text-red-700 dark:text-red-400 font-bold" id="gw-crit">--</div>
+                        
+                        <!-- Switches -->
+                        <div class="status-cell font-medium text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800">Switches</div>
+                        <div class="status-cell" id="sw-online">--</div>
+                        <div class="status-cell bg-amber-50 dark:bg-amber-900/10 text-amber-700 dark:text-amber-400" id="sw-warn">--</div>
+                        <div class="status-cell bg-red-50 dark:bg-red-900/10 text-red-700 dark:text-red-400 font-bold" id="sw-crit">--</div>
+
+                        <!-- APs -->
+                        <div class="status-cell font-medium text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800">Access Points</div>
+                        <div class="status-cell" id="ap-online">--</div>
+                        <div class="status-cell bg-amber-50 dark:bg-amber-900/10 text-amber-700 dark:text-amber-400" id="ap-warn">--</div>
+                        <div class="status-cell bg-red-50 dark:bg-red-900/10 text-red-700 dark:text-red-400 font-bold" id="ap-crit">--</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ROW 3: Unified Alert Feed -->
+            <div class="col-span-12 card h-96 flex flex-col bg-white dark:bg-dark-card">
+                <div class="p-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
+                    <h3 class="text-sm font-bold text-gray-700 dark:text-white flex items-center gap-2">
+                        <i class="fa-regular fa-bell"></i> Unified Alert Feed
+                        <span id="activeFilterBadge" class="hidden ml-2 px-2 py-0.5 rounded text-xs font-normal bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                            Filtered
+                        </span>
+                    </h3>
+                    <div class="flex gap-2">
+                        <input type="text" placeholder="Search alerts..." class="text-xs border border-gray-300 dark:border-gray-600 rounded px-2 py-1 focus:outline-none focus:border-blue-500 bg-white dark:bg-gray-700 dark:text-white">
+                        <button class="text-xs bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300 px-3 py-1 rounded">Export CSV</button>
+                    </div>
+                </div>
+                <div class="flex-1 overflow-auto custom-scrollbar p-0">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0 z-10">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Severity</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Time</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Vendor</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Site</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Device</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Message</th>
+                                <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white dark:bg-dark-card divide-y divide-gray-200 dark:divide-gray-700" id="alertTableBody">
+                            <!-- Rows populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="p-2 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-xs text-center text-gray-500 dark:text-gray-400">
+                    Streaming live events...
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-8 mb-4 text-center text-xs text-gray-400 dark:text-gray-500">
+            <p>NPM 2.0 Operational Command Center • Powered by Meraki & Mist Integration</p>
+        </footer>
+    </main>
+
+    <!-- Script for Logic and Charts -->
+    <script>
+        // --- THEME TOGGLE LOGIC ---
+        const themeToggleBtn = document.getElementById('themeToggle');
+        const htmlElement = document.documentElement;
+        let isDark = false;
+
+        function updateChartColors() {
+            const textColor = isDark ? '#9ca3af' : '#6b7280';
+            const gridColor = isDark ? '#374151' : '#e5e7eb';
+            
+            Chart.defaults.color = textColor;
+            Chart.defaults.borderColor = gridColor;
+            
+            // Re-render all charts to apply new colors
+            Chart.instances.forEach(chart => chart.update());
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            isDark = !isDark;
+            if (isDark) {
+                htmlElement.classList.add('dark');
+            } else {
+                htmlElement.classList.remove('dark');
+            }
+            updateChartColors();
+        });
+
+
+        // --- 1. DATA CONFIGURATION & STATE MANAGEMENT ---
+        
+        // Scope Definition
+        const REGIONS = {
+            "Global": { deviceCount: 20000, clientCount: 15342, health: 91, trend: '4.2%' },
+            "North America": { deviceCount: 9000, clientCount: 6240, health: 94, trend: '1.2%' },
+            "EMEA": { deviceCount: 7000, clientCount: 5100, health: 88, trend: '-2.1%' },
+            "APAC": { deviceCount: 4000, clientCount: 4002, health: 92, trend: '0.8%' }
+        };
+
+        // Chart Data Sources (with region mapping)
+        const frustrationData = [
+            { label: 'NYC-HQ (Mist)', region: 'North America', val: 62, color: '#ef4444' },
+            { label: 'LON-Warehouse (Meraki)', region: 'EMEA', val: 74, color: '#f87171' },
+            { label: 'SFO-Branch (Meraki)', region: 'North America', val: 78, color: '#fca5a5' },
+            { label: 'TOK-Sales (Mist)', region: 'APAC', val: 81, color: '#fbbf24' },
+            { label: 'MUM-Hub (Meraki)', region: 'APAC', val: 85, color: '#fbbf24' },
+            { label: 'ATL-Retail (Meraki)', region: 'North America', val: 86, color: '#fcd34d' },
+            { label: 'CHI-Dist (Mist)', region: 'North America', val: 88, color: '#fcd34d' },
+            { label: 'BER-R&D (Mist)', region: 'EMEA', val: 76, color: '#fca5a5' },
+            { label: 'PAR-Office (Meraki)', region: 'EMEA', val: 79, color: '#fbbf24' },
+            { label: 'SYD-Office (Mist)', region: 'APAC', val: 89, color: '#fcd34d' }
+        ];
+
+        const latencyData = [
+            { label: 'BRA-Remote (Starlink)', region: 'North America', val: 320, color: '#6366f1' }, // Americas grouped to NA for simplicity
+            { label: 'SYD-Office (Fiber)', region: 'APAC', val: 180, color: '#6366f1' },
+            { label: 'CHI-Dist (MPLS)', region: 'North America', val: 145, color: '#6366f1' },
+            { label: 'BER-R&D (VPN)', region: 'EMEA', val: 110, color: '#6366f1' },
+            { label: 'ATL-Retail (LTE)', region: 'North America', val: 95, color: '#6366f1' },
+            { label: 'LON-Warehouse (Broadband)', region: 'EMEA', val: 85, color: '#6366f1' },
+            { label: 'TOK-Sales (Fiber)', region: 'APAC', val: 45, color: '#6366f1' }
+        ];
+
+        // Alerts Data Source (with region)
+        const allAlerts = [
+            { sev: 'crit', vendor: 'mist', site: 'NYC-HQ', region: 'North America', device: 'Core-Switch-01', msg: 'BGP Neighbor Down (Peer 10.10.10.1)', time: '2m ago', type: 'network' },
+            { sev: 'crit', vendor: 'meraki', site: 'LON-Warehouse', region: 'EMEA', device: 'MX-Edge-Gateway', msg: 'Uplink 1 (WAN) detected packet loss > 15%', time: '5m ago', type: 'network' },
+            { sev: 'warn', vendor: 'meraki', site: 'SFO-Branch', region: 'North America', device: 'MR-AP-Floor2', msg: 'High Interference detected on Channel 6', time: '12m ago', type: 'network' },
+            { sev: 'warn', vendor: 'mist', site: 'TOK-Sales', region: 'APAC', device: 'AP-ConfRoom', msg: 'SLE: Time to Connect exceeded threshold', time: '18m ago', type: 'network' },
+            { sev: 'crit', vendor: 'meraki', site: 'MUM-Hub', region: 'APAC', device: 'MS-Dist-Switch', msg: 'Power Supply Unit 2 Fail', time: '25m ago', type: 'hardware' },
+            { sev: 'info', vendor: 'meraki', site: 'BER-R&D', region: 'EMEA', device: 'Network', msg: 'Firmware upgrade scheduled for 02:00 UTC', time: '1h ago', type: 'system' },
+            { sev: 'warn', vendor: 'mist', site: 'NYC-HQ', region: 'North America', device: 'Gateway-02', msg: 'DHCP Pool Exhaustion approaching (85%)', time: '1h 10m ago', type: 'network' },
+            { sev: 'info', vendor: 'mist', site: 'SYD-Office', region: 'APAC', device: 'AP-Lobby', msg: 'Rogue AP detected (SSID: FreeWifi)', time: '1h 30m ago', type: 'rogue' },
+            { sev: 'crit', vendor: 'meraki', site: 'ATL-Retail', region: 'North America', device: 'MX-Sec', msg: 'Malware blocked (Trojan.Win32.Emotet)', time: '1h 45m ago', type: 'threat' }
+        ];
+
+        // Global Chart Instances
+        let charts = {};
+        let currentFilter = 'all'; // Alert filter (active fires, threats, etc)
+        let currentScope = 'Global'; // Region Scope
+
+        // --- 2. LOGIC FUNCTIONS ---
+
+        function getFilteredData(scope) {
+            // Filter Charts
+            const filterFn = (item) => scope === 'Global' || item.region === scope;
+            
+            const fData = frustrationData.filter(filterFn).sort((a,b) => a.val - b.val).slice(0, 5); // Bottom 5 (technically top 5 worst)
+            const lData = latencyData.filter(filterFn).sort((a,b) => b.val - a.val).slice(0, 5); // Top 5 highest
+            
+            // Filter Alerts
+            const aData = allAlerts.filter(filterFn);
+
+            // Calculate Device Stats based on scope count
+            const total = REGIONS[scope].deviceCount;
+            // Introduce slight variation per region for status matrix
+            let critRate = 0.02; 
+            let warnRate = 0.04;
+            if (scope === 'EMEA') { critRate = 0.03; warnRate = 0.06; } // EMEA slightly worse
+            if (scope === 'North America') { critRate = 0.01; warnRate = 0.03; } // NA slightly better
+
+            const stats = {
+                gateway: { online: Math.floor(total * 0.1 * (1-critRate-warnRate)), warn: Math.floor(total * 0.1 * warnRate), crit: Math.floor(total * 0.1 * critRate) },
+                switch: { online: Math.floor(total * 0.3 * (1-critRate-warnRate)), warn: Math.floor(total * 0.3 * warnRate), crit: Math.floor(total * 0.3 * critRate) },
+                ap: { online: Math.floor(total * 0.6 * (1-critRate-warnRate)), warn: Math.floor(total * 0.6 * warnRate), crit: Math.floor(total * 0.6 * critRate) }
+            };
+
+            const totalCrit = stats.gateway.crit + stats.switch.crit + stats.ap.crit;
+            const totalWarn = stats.gateway.warn + stats.switch.warn + stats.ap.warn;
+
+            // Mock Security Stats
+            const threats = Math.floor(total * 0.08) + Math.floor(Math.random() * 20);
+            const rogues = Math.floor(total * 0.002) + Math.floor(Math.random() * 5);
+
+            return { fData, lData, aData, stats, totalCrit, totalWarn, threats, rogues };
+        }
+
+        function updateDashboardScope(scope) {
+            currentScope = scope;
+            const data = getFilteredData(scope);
+            const regionInfo = REGIONS[scope];
+
+            // 1. Update Gauge
+            charts.health.data.datasets[0].data = [regionInfo.health, 100 - regionInfo.health];
+            charts.health.data.datasets[0].backgroundColor[0] = regionInfo.health > 90 ? '#10b981' : (regionInfo.health > 75 ? '#f59e0b' : '#ef4444');
+            charts.health.update();
+            const valEl = document.getElementById('healthScoreValue');
+            valEl.innerText = regionInfo.health;
+            valEl.style.color = regionInfo.health > 90 ? '#059669' : (regionInfo.health > 75 ? '#d97706' : '#dc2626');
+
+            // 2. Update Big Numbers
+            document.getElementById('criticalCount').innerText = data.totalCrit;
+            document.getElementById('warningCount').innerText = data.totalWarn;
+            document.getElementById('threatsCount').innerText = data.threats;
+            document.getElementById('roguesCount').innerText = data.rogues;
+            
+            // 3. Update Clients
+            document.getElementById('clientCount').innerText = regionInfo.clientCount.toLocaleString();
+            document.getElementById('clientTrend').innerText = regionInfo.trend;
+
+            // 4. Update WAN Donut (Mock variation)
+            let fiber = 91, lte = 8, down = 1;
+            if(scope === 'EMEA') { fiber = 85; lte = 12; down = 3; }
+            if(scope === 'APAC') { fiber = 94; lte = 5; down = 1; }
+            charts.wan.data.datasets[0].data = [fiber, lte, down];
+            charts.wan.update();
+            document.getElementById('wanPrimary').innerText = fiber + '%';
+            document.getElementById('wanFailover').innerText = lte + '%';
+            document.getElementById('wanDown').innerText = down + '%';
+
+            // 5. Update Frustration Chart
+            charts.frustration.data.labels = data.fData.map(d => d.label);
+            charts.frustration.data.datasets[0].data = data.fData.map(d => d.val);
+            charts.frustration.data.datasets[0].backgroundColor = data.fData.map(d => d.color);
+            charts.frustration.update();
+
+            // 6. Update Latency Chart
+            charts.latency.data.labels = data.lData.map(d => d.label);
+            charts.latency.data.datasets[0].data = data.lData.map(d => d.val);
+            charts.latency.update();
+
+            // 7. Update Status Matrix
+            document.getElementById('gw-online').innerText = data.stats.gateway.online;
+            document.getElementById('gw-warn').innerText = data.stats.gateway.warn;
+            document.getElementById('gw-crit').innerText = data.stats.gateway.crit;
+            document.getElementById('sw-online').innerText = data.stats.switch.online;
+            document.getElementById('sw-warn').innerText = data.stats.switch.warn;
+            document.getElementById('sw-crit').innerText = data.stats.switch.crit;
+            document.getElementById('ap-online').innerText = data.stats.ap.online;
+            document.getElementById('ap-warn').innerText = data.stats.ap.warn;
+            document.getElementById('ap-crit').innerText = data.stats.ap.crit;
+
+            // 8. Update Alerts
+            renderTable(currentFilter, data.aData);
+        }
+
+        // --- 3. CHART INITIALIZATION ---
+
+        function initCharts() {
+            Chart.defaults.font.family = "'Inter', sans-serif";
+            Chart.defaults.color = '#6b7280';
+            Chart.defaults.responsive = true;
+            Chart.defaults.maintainAspectRatio = false;
+
+            // A. Health
+            charts.health = new Chart(document.getElementById('healthGauge').getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Health', 'Loss'],
+                    datasets: [{ data: [0, 100], backgroundColor: ['#10b981', '#e5e7eb'], borderWidth: 0, circumference: 180, rotation: 270, cutout: '85%', borderRadius: 5 }]
+                },
+                options: { plugins: { legend: { display: false }, tooltip: { enabled: false } } }
+            });
+
+            // B. Frustration
+            charts.frustration = new Chart(document.getElementById('frustrationChart').getContext('2d'), {
+                type: 'bar',
+                data: { labels: [], datasets: [{ label: 'Success Rate (%)', data: [], backgroundColor: [], borderRadius: 4 }] },
+                options: {
+                    plugins: { legend: { display: false } },
+                    scales: { x: { grid: { display: false } }, y: { min: 40, max: 100, grid: { display: true, borderDash: [2, 2] } } }
+                }
+            });
+
+            // C. Latency
+            charts.latency = new Chart(document.getElementById('latencyChart').getContext('2d'), {
+                type: 'bar',
+                data: { labels: [], datasets: [{ label: 'Latency (ms)', data: [], backgroundColor: '#6366f1', borderRadius: 4 }] },
+                options: {
+                    plugins: { legend: { display: false } },
+                    scales: { x: { grid: { display: false } }, y: { beginAtZero: true, grid: { display: true, borderDash: [2, 2] } } }
+                }
+            });
+
+            // D. WAN
+            charts.wan = new Chart(document.getElementById('wanDonut').getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Primary', 'Backup', 'Down'],
+                    datasets: [{ data: [91, 8, 1], backgroundColor: ['#3b82f6', '#f59e0b', '#ef4444'], borderWidth: 0, cutout: '70%' }]
+                },
+                options: { plugins: { legend: { display: false } } }
+            });
+
+            // E. Sparkline (Static for now)
+            charts.spark = new Chart(document.getElementById('clientSparkline').getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: ['6h', '5h', '4h', '3h', '2h', '1h', 'Now'],
+                    datasets: [{ data: [12000, 12500, 13200, 14500, 15100, 14800, 15342], borderColor: '#059669', borderWidth: 2, tension: 0.4, pointRadius: 0 }]
+                },
+                options: { plugins: { legend: { display: false }, tooltip: { enabled: false } }, scales: { x: { display: false }, y: { display: false } } }
+            });
+        }
+
+        // --- 4. ALERT TABLE LOGIC ---
+
+        const sevStyles = {
+            crit: 'text-red-600 bg-red-50 dark:bg-red-900/20 dark:text-red-400 rounded-full px-2 py-0.5 text-xs font-bold border border-red-100 dark:border-red-900',
+            warn: 'text-amber-600 bg-amber-50 dark:bg-amber-900/20 dark:text-amber-400 rounded-full px-2 py-0.5 text-xs font-bold border border-amber-100 dark:border-amber-900',
+            info: 'text-blue-600 bg-blue-50 dark:bg-blue-900/20 dark:text-blue-400 rounded-full px-2 py-0.5 text-xs font-bold border border-blue-100 dark:border-blue-900'
+        };
+
+        const sevIcons = {
+            crit: '<i class="fa-solid fa-circle-exclamation"></i>',
+            warn: '<i class="fa-solid fa-triangle-exclamation"></i>',
+            info: '<i class="fa-solid fa-circle-info"></i>'
+        };
+
+        function renderTable(filter, alertsOverride = null) {
+            const tableBody = document.getElementById('alertTableBody');
+            tableBody.innerHTML = '';
+            
+            // Determine active alerts source (current scope vs passed override)
+            let alertsToFilter = alertsOverride || getFilteredData(currentScope).aData;
+
+            const badge = document.getElementById('activeFilterBadge');
+            if (filter === 'all') {
+                badge.classList.add('hidden');
+                badge.textContent = '';
+            } else {
+                badge.classList.remove('hidden');
+                if (filter === 'fires') badge.textContent = 'Active Fires';
+                if (filter === 'threat') badge.textContent = 'Security Threats';
+                if (filter === 'rogue') badge.textContent = 'Rogue Devices';
+            }
+
+            const filteredAlerts = alertsToFilter.filter(a => {
+                if (filter === 'all') return true;
+                if (filter === 'fires') return a.sev === 'crit' || a.sev === 'warn';
+                if (filter === 'threat') return a.type === 'threat';
+                if (filter === 'rogue') return a.type === 'rogue';
+                return true;
+            });
+
+            if (filteredAlerts.length === 0) {
+                 const row = document.createElement('tr');
+                 row.innerHTML = `<td colspan="7" class="px-6 py-4 text-center text-sm text-gray-400">No alerts found for this criteria in ${currentScope}.</td>`;
+                 tableBody.appendChild(row);
+                 return;
+            }
+
+            filteredAlerts.forEach(alert => {
+                const row = document.createElement('tr');
+                row.className = "hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors";
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="${sevStyles[alert.sev]} flex items-center gap-1 w-fit">
+                            ${sevIcons[alert.sev]} ${alert.sev.toUpperCase()}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-500 dark:text-gray-400">${alert.time}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                        <div class="flex items-center gap-2">
+                            ${alert.vendor === 'meraki' 
+                                ? '<img src="https://upload.wikimedia.org/wikipedia/commons/3/30/Cisco_logo.svg" class="h-4 w-auto opacity-70" alt="Meraki">' 
+                                : '<img src="https://upload.wikimedia.org/wikipedia/commons/2/28/Juniper_Networks_logo.svg" class="h-3 w-auto opacity-70" alt="Mist">'}
+                            <span class="capitalize text-xs font-medium">${alert.vendor}</span>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">${alert.site}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">${alert.device}</td>
+                    <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400 truncate max-w-xs" title="${alert.msg}">${alert.msg}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <a href="#" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300">Triage</a>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Action Handlers
+        function toggleActiveFires() {
+            const btn = document.getElementById('toggleFiresBtn');
+            if (currentFilter === 'fires') {
+                currentFilter = 'all';
+                btn.innerHTML = "View Active Fires";
+                btn.classList.remove('bg-red-50', 'text-red-800', 'border-red-500');
+            } else {
+                currentFilter = 'fires';
+                btn.innerHTML = "Show All Events";
+                btn.classList.add('bg-red-50', 'text-red-800', 'border-red-500');
+            }
+            renderTable(currentFilter);
+        }
+
+        function filterAlerts(type) {
+            // If clicking the same filter, toggle off
+            if (currentFilter === type) {
+                currentFilter = 'all';
+            } else {
+                currentFilter = type;
+            }
+            // Reset Fires button if it was active
+            const btn = document.getElementById('toggleFiresBtn');
+            btn.innerHTML = "View Active Fires";
+            btn.classList.remove('bg-red-50', 'text-red-800', 'border-red-500');
+            
+            renderTable(currentFilter);
+        }
+
+        // Initialize
+        initCharts();
+        updateDashboardScope('Global'); // Load Global Data initially
+
+    </script>
+</body>
+</html>
