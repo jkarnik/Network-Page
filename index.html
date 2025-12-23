@@ -120,6 +120,16 @@
             background-color: #111827;
             color: #d1d5db;
         }
+
+        /* Clickable chart labels */
+        #latencyChart, #frustrationChart {
+            cursor: default;
+        }
+
+        /* Show pointer cursor over y-axis labels */
+        #latencyChart:hover, #frustrationChart:hover {
+            cursor: pointer;
+        }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800 h-screen flex flex-col overflow-hidden dark:bg-dark-bg dark:text-dark-text">
@@ -147,9 +157,24 @@
                     <div class="relative">
                         <select id="scopeSelector" onchange="updateDashboardScope(this.value)" class="block w-full pl-3 pr-10 py-2 text-sm border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md bg-gray-50 border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                             <option value="Global">Global Organization</option>
-                            <option value="North America">North America</option>
-                            <option value="EMEA">EMEA</option>
-                            <option value="APAC">APAC</option>
+                            <optgroup label="Regions">
+                                <option value="North America">North America</option>
+                                <option value="EMEA">EMEA</option>
+                                <option value="APAC">APAC</option>
+                            </optgroup>
+                            <optgroup label="Sites">
+                                <option value="site:NYC-HQ">NYC-HQ</option>
+                                <option value="site:LON-Warehouse">LON-Warehouse</option>
+                                <option value="site:SFO-Branch">SFO-Branch</option>
+                                <option value="site:TOK-Sales">TOK-Sales</option>
+                                <option value="site:MUM-Hub">MUM-Hub</option>
+                                <option value="site:ATL-Retail">ATL-Retail</option>
+                                <option value="site:CHI-Dist">CHI-Dist</option>
+                                <option value="site:BER-R&D">BER-R&D</option>
+                                <option value="site:PAR-Office">PAR-Office</option>
+                                <option value="site:SYD-Office">SYD-Office</option>
+                                <option value="site:BRA-Remote">BRA-Remote</option>
+                            </optgroup>
                         </select>
                     </div>
                     
@@ -209,7 +234,7 @@
                             <span class="text-xs text-gray-500 dark:text-gray-400 border-b border-dashed border-gray-400 group-hover:border-red-500 inline-block">Critical</span>
                         </div>
                         <div class="flex items-center justify-center flex-shrink-0">
-                            <i class="fa-solid fa-triangle-exclamation text-4xl text-red-600 opacity-20"></i>
+                            <i class="fa-solid fa-triangle-exclamation text-4xl text-red-600 opacity-30 dark:opacity-90"></i>
                         </div>
                         <div class="cursor-pointer group flex-1 text-center" onclick="filterAlerts('fires')">
                             <span class="block text-2xl font-bold text-amber-500 group-hover:text-amber-400 transition-colors" id="warningCount">--</span>
@@ -227,7 +252,7 @@
                             <span class="text-xs text-gray-500 dark:text-gray-400 border-b border-dashed border-gray-400 group-hover:border-indigo-600 inline-block">Threats Blocked</span>
                         </div>
                         <div class="flex items-center justify-center flex-shrink-0">
-                            <i class="fa-solid fa-shield-halved text-4xl text-indigo-600 opacity-20"></i>
+                            <i class="fa-solid fa-shield-halved text-4xl text-indigo-600 dark:text-indigo-400 opacity-30 dark:opacity-90"></i>
                         </div>
                         <div class="cursor-pointer group flex-1 text-center" onclick="filterAlerts('rogue')">
                             <span class="block text-2xl font-bold text-red-600 group-hover:text-red-500 transition-colors" id="roguesCount">--</span>
@@ -334,17 +359,6 @@
 
             <!-- ROW 2: Analytical Charts -->
 
-            <!-- 6. User Frustration Leaderboard -->
-            <div class="col-span-12 lg:col-span-4 card p-4 h-80 bg-white dark:bg-dark-card">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-sm font-bold text-gray-700 dark:text-white">"User Frustration" Leaderboard</h3>
-                    <span class="text-xs text-gray-400">Lowest Success Rate (Last 1h)</span>
-                </div>
-                <div class="relative h-full w-full pb-4">
-                    <canvas id="frustrationChart"></canvas>
-                </div>
-            </div>
-
             <!-- 7. Top Impacted SD-WANs (Latency) -->
             <div class="col-span-12 lg:col-span-4 card p-4 h-80 bg-white dark:bg-dark-card">
                 <div class="flex justify-between items-center mb-4">
@@ -356,34 +370,43 @@
                 </div>
             </div>
 
+            <!-- 6. User Frustration Leaderboard -->
+            <div class="col-span-12 lg:col-span-5 card p-4 h-80 bg-white dark:bg-dark-card">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-sm font-bold text-gray-700 dark:text-white">User Frustration Leaderboard</h3>
+                    <span class="text-xs text-gray-400">Time to Connect (ms)</span>
+                </div>
+                <div class="relative h-full w-full pb-4">
+                    <canvas id="frustrationChart"></canvas>
+                </div>
+            </div>
+
             <!-- 8. WAN Resilience (Donut) -->
-            <div class="col-span-12 lg:col-span-4 card p-4 h-80 bg-white dark:bg-dark-card">
-                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">WAN Resilience</h3>
-                <div class="flex items-center h-full">
-                    <div class="w-1/2 h-64">
+            <div class="col-span-12 lg:col-span-3 card p-4 h-80 bg-white dark:bg-dark-card flex flex-col">
+                <div class="flex justify-center items-center mb-4">
+                    <h3 class="text-sm font-bold text-gray-700 dark:text-white">WAN Resilience</h3>
+                </div>
+                <div class="relative flex-1 flex items-center justify-center overflow-hidden px-2">
+                    <div class="relative w-full" style="max-width: 231px; max-height: 231px; aspect-ratio: 1/1;">
                         <canvas id="wanDonut"></canvas>
-                    </div>
-                    <div class="w-1/2 pl-4 space-y-3">
-                        <div>
-                            <div class="flex items-center gap-2 mb-1">
-                                <div class="w-2 h-2 rounded-full bg-blue-500"></div>
-                                <span class="text-xs font-medium text-gray-600 dark:text-gray-300">Primary (Fiber)</span>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                            <div class="bg-white dark:bg-dark-card rounded-lg p-3 shadow-sm space-y-2">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+                                    <span class="text-sm font-medium text-gray-600 dark:text-gray-300">Primary</span>
+                                    <span class="text-sm font-bold text-gray-900 dark:text-white" id="wanPrimary">91%</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-2 h-2 rounded-full bg-amber-500"></div>
+                                    <span class="text-sm font-medium text-gray-600 dark:text-gray-300">Failover</span>
+                                    <span class="text-sm font-bold text-gray-900 dark:text-white" id="wanFailover">8%</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-2 h-2 rounded-full bg-red-500"></div>
+                                    <span class="text-sm font-medium text-gray-600 dark:text-gray-300">Down</span>
+                                    <span class="text-sm font-bold text-gray-900 dark:text-white" id="wanDown">1%</span>
+                                </div>
                             </div>
-                            <span class="text-xl font-bold text-gray-900 dark:text-white block ml-4" id="wanPrimary">91%</span>
-                        </div>
-                        <div>
-                            <div class="flex items-center gap-2 mb-1">
-                                <div class="w-2 h-2 rounded-full bg-amber-500"></div>
-                                <span class="text-xs font-medium text-gray-600 dark:text-gray-300">Failover (LTE)</span>
-                            </div>
-                            <span class="text-xl font-bold text-gray-900 dark:text-white block ml-4" id="wanFailover">8%</span>
-                        </div>
-                        <div>
-                            <div class="flex items-center gap-2 mb-1">
-                                <div class="w-2 h-2 rounded-full bg-red-500"></div>
-                                <span class="text-xs font-medium text-gray-600 dark:text-gray-300">Unreachable</span>
-                            </div>
-                            <span class="text-xl font-bold text-gray-900 dark:text-white block ml-4" id="wanDown">1%</span>
                         </div>
                     </div>
                 </div>
@@ -413,7 +436,6 @@
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Site</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Device</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Message</th>
-                                <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Action</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white dark:bg-dark-card divide-y divide-gray-200 dark:divide-gray-700" id="alertTableBody">
@@ -464,7 +486,7 @@
 
 
         // --- 1. DATA CONFIGURATION & STATE MANAGEMENT ---
-        
+
         // Scope Definition
         const REGIONS = {
             "Global": { deviceCount: 20000, clientCount: 15342, health: 91, trend: '4.2%' },
@@ -473,18 +495,49 @@
             "APAC": { deviceCount: 4000, clientCount: 4002, health: 92, trend: '0.8%' }
         };
 
+        // Site to Region Mapping
+        const SITE_TO_REGION = {
+            'NYC-HQ': 'North America',
+            'SFO-Branch': 'North America',
+            'ATL-Retail': 'North America',
+            'CHI-Dist': 'North America',
+            'BRA-Remote': 'North America',
+            'LON-Warehouse': 'EMEA',
+            'BER-R&D': 'EMEA',
+            'PAR-Office': 'EMEA',
+            'TOK-Sales': 'APAC',
+            'MUM-Hub': 'APAC',
+            'SYD-Office': 'APAC'
+        };
+
+        // Site-specific data (mock data for each site)
+        const SITES = {
+            'NYC-HQ': { deviceCount: 1200, clientCount: 980, health: 89, trend: '2.1%' },
+            'LON-Warehouse': { deviceCount: 800, clientCount: 650, health: 85, trend: '-1.5%' },
+            'SFO-Branch': { deviceCount: 600, clientCount: 480, health: 92, trend: '3.2%' },
+            'TOK-Sales': { deviceCount: 500, clientCount: 420, health: 91, trend: '1.8%' },
+            'MUM-Hub': { deviceCount: 900, clientCount: 750, health: 88, trend: '0.5%' },
+            'ATL-Retail': { deviceCount: 400, clientCount: 320, health: 94, trend: '2.5%' },
+            'CHI-Dist': { deviceCount: 700, clientCount: 560, health: 93, trend: '1.2%' },
+            'BER-R&D': { deviceCount: 650, clientCount: 520, health: 87, trend: '-0.8%' },
+            'PAR-Office': { deviceCount: 550, clientCount: 440, health: 90, trend: '1.5%' },
+            'SYD-Office': { deviceCount: 450, clientCount: 380, health: 95, trend: '2.8%' },
+            'BRA-Remote': { deviceCount: 300, clientCount: 240, health: 82, trend: '-2.3%' }
+        };
+
         // Chart Data Sources (with region mapping)
+        // Values represent Time to Connect in milliseconds (higher = worse)
         const frustrationData = [
-            { label: 'NYC-HQ (Mist)', region: 'North America', val: 62, color: '#ef4444' },
-            { label: 'LON-Warehouse (Meraki)', region: 'EMEA', val: 74, color: '#f87171' },
-            { label: 'SFO-Branch (Meraki)', region: 'North America', val: 78, color: '#fca5a5' },
-            { label: 'TOK-Sales (Mist)', region: 'APAC', val: 81, color: '#fbbf24' },
-            { label: 'MUM-Hub (Meraki)', region: 'APAC', val: 85, color: '#fbbf24' },
-            { label: 'ATL-Retail (Meraki)', region: 'North America', val: 86, color: '#fcd34d' },
-            { label: 'CHI-Dist (Mist)', region: 'North America', val: 88, color: '#fcd34d' },
-            { label: 'BER-R&D (Mist)', region: 'EMEA', val: 76, color: '#fca5a5' },
-            { label: 'PAR-Office (Meraki)', region: 'EMEA', val: 79, color: '#fbbf24' },
-            { label: 'SYD-Office (Mist)', region: 'APAC', val: 89, color: '#fcd34d' }
+            { label: 'NYC-HQ (Mist)', region: 'North America', val: 3200, color: '#ef4444' },
+            { label: 'LON-Warehouse (Meraki)', region: 'EMEA', val: 2800, color: '#f87171' },
+            { label: 'SFO-Branch (Meraki)', region: 'North America', val: 2400, color: '#fca5a5' },
+            { label: 'TOK-Sales (Mist)', region: 'APAC', val: 2100, color: '#fbbf24' },
+            { label: 'MUM-Hub (Meraki)', region: 'APAC', val: 1900, color: '#fbbf24' },
+            { label: 'ATL-Retail (Meraki)', region: 'North America', val: 1600, color: '#fcd34d' },
+            { label: 'CHI-Dist (Mist)', region: 'North America', val: 1400, color: '#fcd34d' },
+            { label: 'BER-R&D (Mist)', region: 'EMEA', val: 2600, color: '#fca5a5' },
+            { label: 'PAR-Office (Meraki)', region: 'EMEA', val: 2200, color: '#fbbf24' },
+            { label: 'SYD-Office (Mist)', region: 'APAC', val: 1200, color: '#fcd34d' }
         ];
 
         const latencyData = [
@@ -514,26 +567,46 @@
         let charts = {};
         let currentFilter = 'all'; // Alert filter (active fires, threats, etc)
         let currentScope = 'Global'; // Region Scope
+        let currentSiteFilter = null; // Site-specific filter
 
         // --- 2. LOGIC FUNCTIONS ---
 
-        function getFilteredData(scope) {
+        function getFilteredData(scope, siteFilter = null) {
+            // Determine if this is a site-level filter
+            const isSiteFilter = siteFilter !== null;
+
             // Filter Charts
-            const filterFn = (item) => scope === 'Global' || item.region === scope;
-            
-            const fData = frustrationData.filter(filterFn).sort((a,b) => a.val - b.val).slice(0, 5); // Bottom 5 (technically top 5 worst)
+            const filterFn = (item) => {
+                if (isSiteFilter) {
+                    // Extract site name from label (e.g., "NYC-HQ (Mist)" -> "NYC-HQ")
+                    const itemSite = item.label.split(' (')[0];
+                    return itemSite === siteFilter;
+                }
+                return scope === 'Global' || item.region === scope;
+            };
+
+            const fData = frustrationData.filter(filterFn).sort((a,b) => b.val - a.val).slice(0, 5); // Top 5 highest time to connect (worst)
             const lData = latencyData.filter(filterFn).sort((a,b) => b.val - a.val).slice(0, 5); // Top 5 highest
-            
+
             // Filter Alerts
-            const aData = allAlerts.filter(filterFn);
+            const alertFilterFn = (item) => {
+                if (isSiteFilter) return item.site === siteFilter;
+                return scope === 'Global' || item.region === scope;
+            };
+            const aData = allAlerts.filter(alertFilterFn);
 
             // Calculate Device Stats based on scope count
-            const total = REGIONS[scope].deviceCount;
-            // Introduce slight variation per region for status matrix
-            let critRate = 0.02; 
+            const total = isSiteFilter ? SITES[siteFilter].deviceCount : REGIONS[scope].deviceCount;
+
+            // Introduce slight variation per region/site for status matrix
+            let critRate = 0.02;
             let warnRate = 0.04;
-            if (scope === 'EMEA') { critRate = 0.03; warnRate = 0.06; } // EMEA slightly worse
-            if (scope === 'North America') { critRate = 0.01; warnRate = 0.03; } // NA slightly better
+            if (scope === 'EMEA' || (isSiteFilter && SITE_TO_REGION[siteFilter] === 'EMEA')) {
+                critRate = 0.03; warnRate = 0.06;
+            }
+            if (scope === 'North America' || (isSiteFilter && SITE_TO_REGION[siteFilter] === 'North America')) {
+                critRate = 0.01; warnRate = 0.03;
+            }
 
             const stats = {
                 gateway: { online: Math.floor(total * 0.1 * (1-critRate-warnRate)), warn: Math.floor(total * 0.1 * warnRate), crit: Math.floor(total * 0.1 * critRate) },
@@ -552,17 +625,30 @@
         }
 
         function updateDashboardScope(scope) {
-            currentScope = scope;
-            const data = getFilteredData(scope);
-            const regionInfo = REGIONS[scope];
+            // Check if this is a site-specific filter
+            let isSiteScope = false;
+            let siteName = null;
+
+            if (scope.startsWith('site:')) {
+                isSiteScope = true;
+                siteName = scope.substring(5); // Remove 'site:' prefix
+                currentScope = SITE_TO_REGION[siteName]; // Set scope to parent region
+                currentSiteFilter = siteName;
+            } else {
+                currentScope = scope;
+                currentSiteFilter = null;
+            }
+
+            const data = getFilteredData(currentScope, siteName);
+            const scopeInfo = isSiteScope ? SITES[siteName] : REGIONS[currentScope];
 
             // 1. Update Gauge
-            charts.health.data.datasets[0].data = [regionInfo.health, 100 - regionInfo.health];
-            charts.health.data.datasets[0].backgroundColor[0] = regionInfo.health > 90 ? '#10b981' : (regionInfo.health > 75 ? '#f59e0b' : '#ef4444');
+            charts.health.data.datasets[0].data = [scopeInfo.health, 100 - scopeInfo.health];
+            charts.health.data.datasets[0].backgroundColor[0] = scopeInfo.health > 90 ? '#10b981' : (scopeInfo.health > 75 ? '#f59e0b' : '#ef4444');
             charts.health.update();
             const valEl = document.getElementById('healthScoreValue');
-            valEl.innerText = regionInfo.health;
-            valEl.style.color = regionInfo.health > 90 ? '#059669' : (regionInfo.health > 75 ? '#d97706' : '#dc2626');
+            valEl.innerText = scopeInfo.health;
+            valEl.style.color = scopeInfo.health > 90 ? '#059669' : (scopeInfo.health > 75 ? '#d97706' : '#dc2626');
 
             // 2. Update Big Numbers
             document.getElementById('criticalCount').innerText = data.totalCrit;
@@ -572,7 +658,7 @@
 
             // 3. Update Clients by Device Type
             // Calculate client distribution (approximate split)
-            const totalClients = regionInfo.clientCount;
+            const totalClients = scopeInfo.clientCount;
             const gwClients = Math.floor(totalClients * 0.21); // ~21% on gateways
             const swClients = Math.floor(totalClients * 0.51); // ~51% on switches
             const apClients = totalClients - gwClients - swClients; // remainder on APs
@@ -582,15 +668,16 @@
             document.getElementById('apClientCount').innerText = apClients.toLocaleString();
 
             // Set trends (vary slightly by device type)
-            const baseTrend = parseFloat(regionInfo.trend);
+            const baseTrend = parseFloat(scopeInfo.trend);
             document.getElementById('gwClientTrend').innerText = (baseTrend * 0.5).toFixed(1) + '%';
             document.getElementById('swClientTrend').innerText = (baseTrend * 1.2).toFixed(1) + '%';
             document.getElementById('apClientTrend').innerText = (baseTrend * 0.9).toFixed(1) + '%';
 
             // 4. Update WAN Donut (Mock variation)
             let fiber = 91, lte = 8, down = 1;
-            if(scope === 'EMEA') { fiber = 85; lte = 12; down = 3; }
-            if(scope === 'APAC') { fiber = 94; lte = 5; down = 1; }
+            const checkScope = isSiteScope ? SITE_TO_REGION[siteName] : currentScope;
+            if(checkScope === 'EMEA') { fiber = 85; lte = 12; down = 3; }
+            if(checkScope === 'APAC') { fiber = 94; lte = 5; down = 1; }
             charts.wan.data.datasets[0].data = [fiber, lte, down];
             charts.wan.update();
             document.getElementById('wanPrimary').innerText = fiber + '%';
@@ -599,8 +686,23 @@
 
             // 5. Update Frustration Chart
             charts.frustration.data.labels = data.fData.map(d => d.label);
-            charts.frustration.data.datasets[0].data = data.fData.map(d => d.val);
-            charts.frustration.data.datasets[0].backgroundColor = data.fData.map(d => d.color);
+            // Split the total time into 4 components with randomized percentages
+            charts.frustration.data.datasets[0].data = data.fData.map(d => {
+                const assocPct = 0.25 + Math.random() * 0.20; // 25-45%
+                return Math.floor(d.val * assocPct);
+            });
+            charts.frustration.data.datasets[1].data = data.fData.map(d => {
+                const authPct = 0.15 + Math.random() * 0.15; // 15-30%
+                return Math.floor(d.val * authPct);
+            });
+            charts.frustration.data.datasets[2].data = data.fData.map(d => {
+                const dhcpPct = 0.15 + Math.random() * 0.15; // 15-30%
+                return Math.floor(d.val * dhcpPct);
+            });
+            charts.frustration.data.datasets[3].data = data.fData.map(d => {
+                const dnsPct = 0.10 + Math.random() * 0.15; // 10-25%
+                return Math.floor(d.val * dnsPct);
+            });
             charts.frustration.update();
 
             // 6. Update Latency Chart
@@ -642,22 +744,93 @@
             });
 
             // B. Frustration
-            charts.frustration = new Chart(document.getElementById('frustrationChart').getContext('2d'), {
+            const frustrationCanvas = document.getElementById('frustrationChart');
+            charts.frustration = new Chart(frustrationCanvas.getContext('2d'), {
                 type: 'bar',
-                data: { labels: [], datasets: [{ label: 'Success Rate (%)', data: [], backgroundColor: [], borderRadius: 4 }] },
+                data: {
+                    labels: [],
+                    datasets: [
+                        { label: 'Association', data: [], backgroundColor: '#dc2626', borderRadius: 4 },
+                        { label: 'Auth', data: [], backgroundColor: '#ea580c', borderRadius: 4 },
+                        { label: 'DHCP', data: [], backgroundColor: '#f59e0b', borderRadius: 4 },
+                        { label: 'DNS Resolution', data: [], backgroundColor: '#16a34a', borderRadius: 4 }
+                    ]
+                },
                 options: {
-                    plugins: { legend: { display: false } },
-                    scales: { x: { grid: { display: false } }, y: { min: 40, max: 100, grid: { display: true, borderDash: [2, 2] } } }
+                    indexAxis: 'y',
+                    onClick: (event, elements, chart) => {
+                        // Only filter if clicking on a bar, not legend
+                        if (elements.length > 0 && elements[0].datasetIndex !== undefined) {
+                            const index = elements[0].index;
+                            const siteName = chart.data.labels[index];
+                            filterBySite(siteName);
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 12,
+                                padding: 8,
+                                font: { size: 10 }
+                            },
+                            onClick: () => {} // Disable legend click
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: function(context) {
+                                    return context[0].label + ' (click to filter)';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            stacked: true,
+                            beginAtZero: true,
+                            grid: { display: true, borderDash: [2, 2] },
+                            title: { display: true, text: 'Time (ms)', font: { size: 10 } }
+                        },
+                        y: {
+                            stacked: true,
+                            grid: { display: false }
+                        }
+                    }
                 }
             });
 
             // C. Latency
-            charts.latency = new Chart(document.getElementById('latencyChart').getContext('2d'), {
+            const latencyCanvas = document.getElementById('latencyChart');
+            charts.latency = new Chart(latencyCanvas.getContext('2d'), {
                 type: 'bar',
                 data: { labels: [], datasets: [{ label: 'Latency (ms)', data: [], backgroundColor: '#6366f1', borderRadius: 4 }] },
                 options: {
-                    plugins: { legend: { display: false } },
-                    scales: { x: { grid: { display: false } }, y: { beginAtZero: true, grid: { display: true, borderDash: [2, 2] } } }
+                    indexAxis: 'y',
+                    onClick: (event, elements, chart) => {
+                        // Only filter if clicking on a bar
+                        if (elements.length > 0 && elements[0].datasetIndex !== undefined) {
+                            const index = elements[0].index;
+                            const siteName = chart.data.labels[index];
+                            filterBySite(siteName);
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                title: function(context) {
+                                    return context[0].label + ' (click to filter)';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { beginAtZero: true, grid: { display: true, borderDash: [2, 2] } },
+                        y: {
+                            grid: { display: false }
+                        }
+                    }
                 }
             });
 
@@ -717,22 +890,33 @@
         function renderTable(filter, alertsOverride = null) {
             const tableBody = document.getElementById('alertTableBody');
             tableBody.innerHTML = '';
-            
+
             // Determine active alerts source (current scope vs passed override)
             let alertsToFilter = alertsOverride || getFilteredData(currentScope).aData;
 
             const badge = document.getElementById('activeFilterBadge');
-            if (filter === 'all') {
+            // Determine what badges to show
+            let badgeText = '';
+            if (currentSiteFilter) {
+                badgeText = `Site: ${currentSiteFilter}`;
+            }
+            if (filter !== 'all') {
+                if (badgeText) badgeText += ' | ';
+                if (filter === 'fires') badgeText += 'Active Fires';
+                if (filter === 'threat') badgeText += 'Security Threats';
+                if (filter === 'rogue') badgeText += 'Rogue Devices';
+            }
+
+            if (badgeText) {
+                badge.classList.remove('hidden');
+                badge.textContent = badgeText;
+            } else {
                 badge.classList.add('hidden');
                 badge.textContent = '';
-            } else {
-                badge.classList.remove('hidden');
-                if (filter === 'fires') badge.textContent = 'Active Fires';
-                if (filter === 'threat') badge.textContent = 'Security Threats';
-                if (filter === 'rogue') badge.textContent = 'Rogue Devices';
             }
 
             const filteredAlerts = alertsToFilter.filter(a => {
+                // Apply alert type filter (site filter already applied in getFilteredData)
                 if (filter === 'all') return true;
                 if (filter === 'fires') return a.sev === 'crit' || a.sev === 'warn';
                 if (filter === 'threat') return a.type === 'threat';
@@ -742,7 +926,7 @@
 
             if (filteredAlerts.length === 0) {
                  const row = document.createElement('tr');
-                 row.innerHTML = `<td colspan="7" class="px-6 py-4 text-center text-sm text-gray-400">No alerts found for this criteria in ${currentScope}.</td>`;
+                 row.innerHTML = `<td colspan="6" class="px-6 py-4 text-center text-sm text-gray-400">No alerts found for this criteria in ${currentScope}.</td>`;
                  tableBody.appendChild(row);
                  return;
             }
@@ -766,11 +950,10 @@
                         </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">${alert.site}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">${alert.device}</td>
-                    <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400 truncate max-w-xs" title="${alert.msg}">${alert.msg}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <a href="#" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300">Triage</a>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <a href="#" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 font-medium hover:underline">${alert.device}</a>
                     </td>
+                    <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400 truncate max-w-xs" title="${alert.msg}">${alert.msg}</td>
                 `;
                 tableBody.appendChild(row);
             });
@@ -786,6 +969,23 @@
             }
 
             renderTable(currentFilter);
+        }
+
+        function filterBySite(siteName) {
+            // Extract site name without vendor info (e.g., "NYC-HQ (Mist)" -> "NYC-HQ")
+            const cleanSiteName = siteName.split(' (')[0];
+
+            // Toggle site filter
+            if (currentSiteFilter === cleanSiteName) {
+                // Clear filter - go back to global
+                currentSiteFilter = null;
+                document.getElementById('scopeSelector').value = 'Global';
+                updateDashboardScope('Global');
+            } else {
+                // Apply site filter
+                document.getElementById('scopeSelector').value = 'site:' + cleanSiteName;
+                updateDashboardScope('site:' + cleanSiteName);
+            }
         }
 
         // Initialize
