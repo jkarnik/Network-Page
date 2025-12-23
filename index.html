@@ -30,7 +30,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="fontawesome/css/all.min.css">
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -759,9 +759,9 @@
                     <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-500 dark:text-gray-400">${alert.time}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                         <div class="flex items-center gap-2">
-                            ${alert.vendor === 'meraki' 
-                                ? '<img src="https://upload.wikimedia.org/wikipedia/commons/3/30/Cisco_logo.svg" class="h-4 w-auto opacity-70" alt="Meraki">' 
-                                : '<img src="https://upload.wikimedia.org/wikipedia/commons/2/28/Juniper_Networks_logo.svg" class="h-3 w-auto opacity-70" alt="Mist">'}
+                            ${alert.vendor === 'meraki'
+                                ? '<img src="images/cisco-logo.svg" class="h-4 w-auto opacity-70" alt="Meraki">'
+                                : '<img src="images/juniper-logo.svg" class="h-3 w-auto opacity-70" alt="Mist">'}
                             <span class="capitalize text-xs font-medium">${alert.vendor}</span>
                         </div>
                     </td>
