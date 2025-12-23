@@ -182,7 +182,7 @@
             <!-- 1. Executive Summary / Global Health (Top Left) -->
             <div class="col-span-12 lg:col-span-3 card p-4 relative h-64 bg-white dark:bg-dark-card">
                 <div class="flex justify-between items-start mb-2">
-                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Network Health</h3>
+                    <h3 class="text-sm font-bold text-gray-700 dark:text-white">Network Health</h3>
                     <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
                         Live
                     </span>
@@ -198,75 +198,102 @@
                 </div>
             </div>
 
-            <!-- 2. Critical Issues Counter (Big Numbers) -->
-            <div class="col-span-12 sm:col-span-6 lg:col-span-2 card p-0 overflow-hidden border-l-4 border-red-500 h-64 bg-white dark:bg-dark-card">
-                <div class="p-4 flex-1 flex flex-col justify-between">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Network Issues</h3>
-                            <p class="text-xs text-gray-400 mt-1">Active incidents</p>
+            <!-- 2. Network Issues & Security Posture -->
+            <div class="col-span-12 sm:col-span-6 lg:col-span-3 flex flex-col gap-6 h-64">
+                <!-- Network Issues -->
+                <div class="card p-4 flex-1 flex flex-col justify-center bg-white dark:bg-dark-card">
+                    <h3 class="text-sm font-bold text-gray-700 dark:text-white mb-3 text-center">Network Issues</h3>
+                    <div class="flex items-center justify-between gap-2">
+                        <div class="cursor-pointer group flex-1 text-center" onclick="filterAlerts('fires')">
+                            <span class="block text-2xl font-bold text-red-600 group-hover:text-red-500 transition-colors" id="criticalCount">--</span>
+                            <span class="text-xs text-gray-500 dark:text-gray-400 border-b border-dashed border-gray-400 group-hover:border-red-500 inline-block">Critical</span>
                         </div>
-                        <div class="bg-red-50 dark:bg-red-900/20 p-2 rounded-full">
-                            <i class="fa-solid fa-triangle-exclamation text-red-500"></i>
+                        <div class="flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-triangle-exclamation text-4xl text-red-600 opacity-20"></i>
                         </div>
-                    </div>
-
-                    <div class="flex flex-col gap-3 my-2">
-                        <div class="flex flex-col text-center">
-                            <span class="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase mb-1">Critical</span>
-                            <span class="text-4xl font-bold text-red-600" id="criticalCount">--</span>
-                        </div>
-                        <div class="flex flex-col text-center border-t pt-3 border-gray-100 dark:border-gray-700">
-                            <span class="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase mb-1">Warning</span>
-                            <span class="text-4xl font-bold text-amber-500" id="warningCount">--</span>
+                        <div class="cursor-pointer group flex-1 text-center" onclick="filterAlerts('fires')">
+                            <span class="block text-2xl font-bold text-amber-500 group-hover:text-amber-400 transition-colors" id="warningCount">--</span>
+                            <span class="text-xs text-gray-500 dark:text-gray-400 border-b border-dashed border-gray-400 group-hover:border-amber-500 inline-block">Warning</span>
                         </div>
                     </div>
+                </div>
 
-                    <button id="toggleFiresBtn" onclick="toggleActiveFires()" class="mt-2 w-full flex justify-center items-center py-2 px-3 border border-red-300 dark:border-red-800 rounded-md shadow-sm text-xs font-medium text-red-700 dark:text-red-400 bg-white dark:bg-gray-800 hover:bg-red-50 dark:hover:bg-red-900/30 focus:outline-none transition-colors">
-                        View Active Fires
-                    </button>
+                <!-- Security -->
+                <div class="card p-4 flex-1 flex flex-col justify-center bg-white dark:bg-dark-card">
+                    <h3 class="text-sm font-bold text-gray-700 dark:text-white mb-3 text-center">Security Posture (24h)</h3>
+                    <div class="flex items-center justify-between gap-2">
+                        <div class="cursor-pointer group flex-1 text-center" onclick="filterAlerts('threat')">
+                            <span class="block text-2xl font-bold text-gray-900 dark:text-white group-hover:text-indigo-600 transition-colors" id="threatsCount">--</span>
+                            <span class="text-xs text-gray-500 dark:text-gray-400 border-b border-dashed border-gray-400 group-hover:border-indigo-600 inline-block">Threats Blocked</span>
+                        </div>
+                        <div class="flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-shield-halved text-4xl text-indigo-600 opacity-20"></i>
+                        </div>
+                        <div class="cursor-pointer group flex-1 text-center" onclick="filterAlerts('rogue')">
+                            <span class="block text-2xl font-bold text-red-600 group-hover:text-red-500 transition-colors" id="roguesCount">--</span>
+                            <span class="text-xs text-gray-500 dark:text-gray-400 border-b border-dashed border-gray-400 group-hover:border-red-500 inline-block">Active Rogues</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- 3. Security Posture & 4. Active Clients -->
-            <div class="col-span-12 sm:col-span-6 lg:col-span-3 flex flex-col gap-6 h-64">
-                <!-- Security -->
-                <div class="card p-4 flex-1 flex flex-col justify-center relative overflow-hidden bg-white dark:bg-dark-card">
-                    <div class="absolute right-0 top-0 p-4 opacity-10">
-                        <i class="fa-solid fa-shield-halved text-6xl text-indigo-600 dark:text-indigo-400"></i>
-                    </div>
-                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Security Posture (24h)</h3>
-                    <div class="flex gap-4">
-                        <div class="cursor-pointer group" onclick="filterAlerts('threat')">
-                            <span class="block text-2xl font-bold text-gray-900 dark:text-white group-hover:text-indigo-600 transition-colors" id="threatsCount">--</span>
-                            <span class="text-xs text-gray-500 dark:text-gray-400 border-b border-dashed border-gray-400 group-hover:border-indigo-600">Threats Blocked</span>
-                        </div>
-                        <div class="border-l border-gray-200 dark:border-gray-700 pl-4 cursor-pointer group" onclick="filterAlerts('rogue')">
-                            <span class="block text-2xl font-bold text-red-600 group-hover:text-red-500 transition-colors" id="roguesCount">--</span>
-                            <span class="text-xs text-gray-500 dark:text-gray-400 border-b border-dashed border-gray-400 group-hover:border-red-500">Active Rogues</span>
-                        </div>
-                    </div>
+            <!-- 3. Active Clients by Device Type -->
+            <div class="col-span-12 sm:col-span-6 lg:col-span-2 card p-3 h-64 bg-white dark:bg-dark-card overflow-hidden">
+                <div class="flex items-baseline gap-2 mb-3">
+                    <h3 class="text-sm font-bold text-gray-700 dark:text-white">Active Clients</h3>
+                    <span class="text-[10px] text-gray-400 dark:text-gray-500">vs Yesterday</span>
                 </div>
+                <div class="flex flex-col justify-between h-[calc(100%-2rem)]">
+                    <!-- Gateways -->
+                    <div class="flex flex-col gap-1">
+                        <div class="flex items-center gap-1.5">
+                            <i class="fa-solid fa-network-wired text-blue-600 text-xs"></i>
+                            <span class="text-xs font-medium text-gray-600 dark:text-gray-300">Gateways</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-bold text-gray-900 dark:text-white w-14 flex-shrink-0" id="gwClientCount">3,200</span>
+                            <span class="text-[10px] text-green-600 dark:text-green-400 font-medium bg-green-50 dark:bg-green-900/30 px-1 py-0.5 rounded flex items-center gap-0.5 whitespace-nowrap flex-shrink-0">
+                                <i class="fa-solid fa-arrow-trend-up"></i> <span id="gwClientTrend">2.1%</span>
+                            </span>
+                            <div class="flex-1 h-4 min-w-0">
+                                <canvas id="gwSparkline"></canvas>
+                            </div>
+                        </div>
+                    </div>
 
-                <!-- Clients -->
-                <div class="card p-4 flex-1 flex flex-col justify-center bg-white dark:bg-dark-card">
-                     <div class="flex justify-between items-start">
-                        <div>
-                             <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Total Active Clients</h3>
-                             <div class="flex items-center gap-2 mt-1">
-                                <span class="text-3xl font-bold text-gray-900 dark:text-white" id="clientCount">--</span>
-                                <div class="flex flex-col items-center">
-                                    <span class="text-xs text-green-600 dark:text-green-400 font-medium bg-green-50 dark:bg-green-900/30 px-1.5 py-0.5 rounded flex items-center gap-1">
-                                        <i class="fa-solid fa-arrow-trend-up"></i> <span id="clientTrend">4.2%</span>
-                                    </span>
-                                    <span class="text-[10px] text-green-700 dark:text-green-500 font-normal mt-0.5">vs Yesterday</span>
-                                </div>
-                             </div>
+                    <!-- Switches -->
+                    <div class="flex flex-col gap-1">
+                        <div class="flex items-center gap-1.5">
+                            <i class="fa-solid fa-server text-purple-600 text-xs"></i>
+                            <span class="text-xs font-medium text-gray-600 dark:text-gray-300">Switches</span>
                         </div>
-                        <div class="h-10 w-24">
-                             <canvas id="clientSparkline"></canvas>
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-bold text-gray-900 dark:text-white w-14 flex-shrink-0" id="swClientCount">7,800</span>
+                            <span class="text-[10px] text-green-600 dark:text-green-400 font-medium bg-green-50 dark:bg-green-900/30 px-1 py-0.5 rounded flex items-center gap-0.5 whitespace-nowrap flex-shrink-0">
+                                <i class="fa-solid fa-arrow-trend-up"></i> <span id="swClientTrend">5.3%</span>
+                            </span>
+                            <div class="flex-1 h-4 min-w-0">
+                                <canvas id="swSparkline"></canvas>
+                            </div>
                         </div>
-                     </div>
+                    </div>
+
+                    <!-- Access Points -->
+                    <div class="flex flex-col gap-1">
+                        <div class="flex items-center gap-1.5">
+                            <i class="fa-solid fa-wifi text-green-600 text-xs"></i>
+                            <span class="text-xs font-medium text-gray-600 dark:text-gray-300">Access Points</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-bold text-gray-900 dark:text-white w-14 flex-shrink-0" id="apClientCount">4,342</span>
+                            <span class="text-[10px] text-green-600 dark:text-green-400 font-medium bg-green-50 dark:bg-green-900/30 px-1 py-0.5 rounded flex items-center gap-0.5 whitespace-nowrap flex-shrink-0">
+                                <i class="fa-solid fa-arrow-trend-up"></i> <span id="apClientTrend">3.7%</span>
+                            </span>
+                            <div class="flex-1 h-4 min-w-0">
+                                <canvas id="apSparkline"></canvas>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -542,10 +569,23 @@
             document.getElementById('warningCount').innerText = data.totalWarn;
             document.getElementById('threatsCount').innerText = data.threats;
             document.getElementById('roguesCount').innerText = data.rogues;
-            
-            // 3. Update Clients
-            document.getElementById('clientCount').innerText = regionInfo.clientCount.toLocaleString();
-            document.getElementById('clientTrend').innerText = regionInfo.trend;
+
+            // 3. Update Clients by Device Type
+            // Calculate client distribution (approximate split)
+            const totalClients = regionInfo.clientCount;
+            const gwClients = Math.floor(totalClients * 0.21); // ~21% on gateways
+            const swClients = Math.floor(totalClients * 0.51); // ~51% on switches
+            const apClients = totalClients - gwClients - swClients; // remainder on APs
+
+            document.getElementById('gwClientCount').innerText = gwClients.toLocaleString();
+            document.getElementById('swClientCount').innerText = swClients.toLocaleString();
+            document.getElementById('apClientCount').innerText = apClients.toLocaleString();
+
+            // Set trends (vary slightly by device type)
+            const baseTrend = parseFloat(regionInfo.trend);
+            document.getElementById('gwClientTrend').innerText = (baseTrend * 0.5).toFixed(1) + '%';
+            document.getElementById('swClientTrend').innerText = (baseTrend * 1.2).toFixed(1) + '%';
+            document.getElementById('apClientTrend').innerText = (baseTrend * 0.9).toFixed(1) + '%';
 
             // 4. Update WAN Donut (Mock variation)
             let fiber = 91, lte = 8, down = 1;
@@ -631,12 +671,30 @@
                 options: { plugins: { legend: { display: false } } }
             });
 
-            // E. Sparkline (Static for now)
-            charts.spark = new Chart(document.getElementById('clientSparkline').getContext('2d'), {
+            // E. Sparklines for each device type
+            charts.gwSpark = new Chart(document.getElementById('gwSparkline').getContext('2d'), {
                 type: 'line',
                 data: {
                     labels: ['6h', '5h', '4h', '3h', '2h', '1h', 'Now'],
-                    datasets: [{ data: [12000, 12500, 13200, 14500, 15100, 14800, 15342], borderColor: '#059669', borderWidth: 2, tension: 0.4, pointRadius: 0 }]
+                    datasets: [{ data: [3000, 3050, 3100, 3150, 3180, 3190, 3200], borderColor: '#3b82f6', borderWidth: 2, tension: 0.4, pointRadius: 0 }]
+                },
+                options: { plugins: { legend: { display: false }, tooltip: { enabled: false } }, scales: { x: { display: false }, y: { display: false } } }
+            });
+
+            charts.swSpark = new Chart(document.getElementById('swSparkline').getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: ['6h', '5h', '4h', '3h', '2h', '1h', 'Now'],
+                    datasets: [{ data: [7200, 7300, 7450, 7600, 7700, 7750, 7800], borderColor: '#9333ea', borderWidth: 2, tension: 0.4, pointRadius: 0 }]
+                },
+                options: { plugins: { legend: { display: false }, tooltip: { enabled: false } }, scales: { x: { display: false }, y: { display: false } } }
+            });
+
+            charts.apSpark = new Chart(document.getElementById('apSparkline').getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: ['6h', '5h', '4h', '3h', '2h', '1h', 'Now'],
+                    datasets: [{ data: [4050, 4100, 4150, 4200, 4280, 4310, 4342], borderColor: '#16a34a', borderWidth: 2, tension: 0.4, pointRadius: 0 }]
                 },
                 options: { plugins: { legend: { display: false }, tooltip: { enabled: false } }, scales: { x: { display: false }, y: { display: false } } }
             });
@@ -719,20 +777,6 @@
         }
 
         // Action Handlers
-        function toggleActiveFires() {
-            const btn = document.getElementById('toggleFiresBtn');
-            if (currentFilter === 'fires') {
-                currentFilter = 'all';
-                btn.innerHTML = "View Active Fires";
-                btn.classList.remove('bg-red-50', 'text-red-800', 'border-red-500');
-            } else {
-                currentFilter = 'fires';
-                btn.innerHTML = "Show All Events";
-                btn.classList.add('bg-red-50', 'text-red-800', 'border-red-500');
-            }
-            renderTable(currentFilter);
-        }
-
         function filterAlerts(type) {
             // If clicking the same filter, toggle off
             if (currentFilter === type) {
@@ -740,11 +784,7 @@
             } else {
                 currentFilter = type;
             }
-            // Reset Fires button if it was active
-            const btn = document.getElementById('toggleFiresBtn');
-            btn.innerHTML = "View Active Fires";
-            btn.classList.remove('bg-red-50', 'text-red-800', 'border-red-500');
-            
+
             renderTable(currentFilter);
         }
 
