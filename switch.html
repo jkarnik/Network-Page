@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Switch Performance Monitoring</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            bg: '#111827',
+                            card: '#1f2937',
+                            text: '#f3f4f6',
+                            border: '#374151'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <link rel="stylesheet" href="fontawesome/css/all.min.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="assets/css/shared-styles.css">
+
+    <style>
+        /* Specific styles for the digital faceplate */
+        .port-grid {
+            display: grid;
+            grid-template-columns: repeat(24, 1fr);
+            gap: 4px;
+        }
+        .port-slot {
+            aspect-ratio: 1/1.1;
+            border-radius: 2px;
+            position: relative;
+            transition: all 0.2s;
+        }
+        .port-led {
+            width: 6px;
+            height: 4px;
+            margin: 2px auto;
+            border-radius: 1px;
+        }
+        .rj45-shape {
+            width: 70%;
+            height: 60%;
+            background: rgba(0,0,0,0.2);
+            margin: 2px auto 0;
+            border-radius: 1px 1px 2px 2px;
+        }
+        .poe-indicator {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            font-size: 8px;
+            color: #fbbf24;
+            display: none;
+        }
+        .poe-active .poe-indicator {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 h-screen flex flex-col overflow-hidden dark:bg-dark-bg dark:text-dark-text">
+
+    <nav class="bg-white border-b border-gray-200 h-16 flex-none z-10 dark:bg-dark-card dark:border-dark-border">
+        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 h-full">
+            <div class="flex justify-between h-full">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center gap-3">
+                        <div class="bg-blue-600 text-white p-2 rounded-lg">
+                            <i class="fa-solid fa-network-wired text-xl"></i>
+                        </div>
+                        <span class="font-bold text-xl tracking-tight text-gray-900 dark:text-white">Network Performance Monitoring</span>
+                    </div>
+                    <div class="hidden sm:ml-8 sm:flex sm:space-x-8">
+                        <a href="index.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Summary Page</a>
+                        <a href="sdwan.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">SD-WAN Page</a>
+                        <a href="switch.html" class="border-blue-500 text-gray-900 dark:text-white inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Switch Page</a>
+                        <a href="access-point.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Access Point Page</a>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="relative">
+                        <select id="scopeSelector" onchange="updateSwitchView(this.value)" class="block w-full pl-3 pr-10 py-2 text-sm border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md bg-gray-50 border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                            <option value="NYC-Core-Switch-01">NYC-Core-Switch-01</option>
+                            <option value="NYC-Dist-Switch-01">NYC-Dist-Switch-01</option>
+                            <option value="LON-Access-Switch-04">LON-Access-Switch-04</option>
+                        </select>
+                    </div>
+
+                    <button id="themeToggle" class="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 focus:outline-none">
+                        <i class="fa-solid fa-moon dark:hidden"></i>
+                        <i class="fa-solid fa-sun hidden dark:block text-yellow-400"></i>
+                    </button>
+
+                    <div class="flex items-center gap-3 border-l pl-4 border-gray-200 dark:border-gray-700">
+                        <div class="text-right hidden md:block">
+                            <p class="text-sm font-medium text-gray-900 dark:text-white">Admin User</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">NetOps Lead</p>
+                        </div>
+                        <div class="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold">
+                            AU
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-1 overflow-y-auto p-6 bg-gray-50 dark:bg-dark-bg">
+        <div class="max-w-[1920px] mx-auto">
+
+            <!-- Device Info Card -->
+            <div class="card p-4 bg-white dark:bg-dark-card border-l-4 border-green-500 mb-6">
+                <div class="flex items-center justify-between">
+                    <!-- Left: Device Name -->
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-server text-gray-400 text-lg"></i>
+                        <div>
+                            <h2 class="text-lg font-bold text-gray-900 dark:text-white">NYC-Core-Switch-01</h2>
+                            <p class="text-xs text-gray-500">Cisco Meraki MS390-48P</p>
+                        </div>
+                    </div>
+
+                    <!-- Center: IP and MAC -->
+                    <div class="flex items-center gap-8 text-sm">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-gray-400">IP:</span>
+                            <span class="font-mono text-gray-700 dark:text-gray-300">192.168.10.2</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-gray-400">MAC:</span>
+                            <span class="font-mono text-gray-700 dark:text-gray-300">54:3d:4b:1a:2c:3d</span>
+                        </div>
+                    </div>
+
+                    <!-- Right: Uptime and Status -->
+                    <div class="flex items-center gap-4">
+                        <div class="text-right">
+                            <p class="text-xs text-gray-400 mb-0.5">Uptime</p>
+                            <p class="font-mono text-lg font-bold text-gray-900 dark:text-white">124d 10h 32m</p>
+                        </div>
+                        <span class="px-2 py-1 text-xs font-bold text-green-700 bg-green-100 rounded dark:bg-green-900 dark:text-green-300">ONLINE</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-12 gap-6 mb-6">
+                
+                <div class="col-span-12 card p-1 bg-gray-800 dark:bg-gray-900 border-4 border-gray-300 dark:border-gray-700 shadow-inner">
+                    <div class="flex justify-between items-center px-4 py-2 bg-gray-700 dark:bg-gray-800 rounded-t mb-1">
+                        <span class="text-xs font-mono text-gray-300 font-bold">FRONT PANEL VIEW</span>
+                        <div class="flex gap-4 text-[10px] text-gray-400">
+                            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-sm bg-green-500"></span> Up</span>
+                            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-sm bg-gray-500"></span> Down</span>
+                            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-sm bg-amber-500"></span> Alert</span>
+                            <span class="flex items-center gap-1"><i class="fa-solid fa-bolt text-yellow-400"></i> PoE</span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-4 bg-gray-800 dark:bg-gray-900 overflow-x-auto">
+                        <div class="min-w-[800px]">
+                            <div class="flex justify-between mb-2">
+                                <div class="port-grid flex-1" id="faceplateRowTop">
+                                    </div>
+                            </div>
+                            <div class="flex justify-between">
+                                <div class="port-grid flex-1" id="faceplateRowBottom">
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-span-12 md:col-span-3 card p-4 bg-white dark:bg-dark-card">
+                    <h3 class="text-sm font-bold text-gray-700 dark:text-white mb-4">System Health</h3>
+                    <div class="grid grid-cols-2 gap-2 h-full pb-2">
+                        <div class="flex flex-col items-center justify-center relative">
+                            <canvas id="cpuGauge"></canvas>
+                            <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none pt-2">
+                                <span class="text-xl font-bold text-gray-800 dark:text-white" id="cpuValue">--</span>
+                                <span class="text-[10px] text-gray-400 uppercase">CPU</span>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-center justify-center relative">
+                            <canvas id="memGauge"></canvas>
+                            <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none pt-2">
+                                <span class="text-xl font-bold text-gray-800 dark:text-white" id="memValue">--</span>
+                                <span class="text-[10px] text-gray-400 uppercase">MEM</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-span-12 md:col-span-3 card p-4 bg-white dark:bg-dark-card">
+                    <h3 class="text-sm font-bold text-gray-700 dark:text-white mb-4">Hardware Redundancy</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-plug text-gray-400"></i>
+                                <div>
+                                    <p class="text-xs font-bold text-gray-700 dark:text-gray-200">PSU 1</p>
+                                    <p class="text-[10px] text-gray-500">Slot A</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-1.5 text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 px-2 py-0.5 rounded text-xs font-bold">
+                                <i class="fa-solid fa-check"></i> OK
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-plug text-gray-400"></i>
+                                <div>
+                                    <p class="text-xs font-bold text-gray-700 dark:text-gray-200">PSU 2</p>
+                                    <p class="text-[10px] text-gray-500">Slot B</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-1.5 text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 px-2 py-0.5 rounded text-xs font-bold">
+                                <i class="fa-solid fa-check"></i> OK
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-fan text-gray-400"></i>
+                                <div>
+                                    <p class="text-xs font-bold text-gray-700 dark:text-gray-200">System Fans</p>
+                                    <p class="text-[10px] text-gray-500">4200 RPM</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-1.5 text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 px-2 py-0.5 rounded text-xs font-bold">
+                                <i class="fa-solid fa-check"></i> OK
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-span-12 md:col-span-3 card p-4 bg-white dark:bg-dark-card">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="text-sm font-bold text-gray-700 dark:text-white">PoE Budget</h3>
+                        <span class="text-xs font-mono text-gray-500">380W / 740W</span>
+                    </div>
+                    <div class="relative h-48 flex items-center justify-center">
+                        <canvas id="poeChart"></canvas>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none mt-4">
+                            <span class="text-2xl font-bold text-blue-600 dark:text-blue-400">51%</span>
+                            <span class="text-xs text-gray-400">Utilized</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-span-12 md:col-span-3 card p-4 bg-white dark:bg-dark-card">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-sm font-bold text-gray-700 dark:text-white">Traffic (24h)</h3>
+                        <span class="text-xs text-green-500 font-medium flex items-center gap-1">
+                            <i class="fa-solid fa-arrow-trend-up"></i> 12.4 GB
+                        </span>
+                    </div>
+                    <div class="relative h-40">
+                        <canvas id="trafficTrendChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="col-span-12 md:col-span-4 card p-4 bg-white dark:bg-dark-card">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-sm font-bold text-gray-700 dark:text-white">Error Monitor (Top 5 Ports)</h3>
+                        <span class="text-xs text-gray-400">CRC/Fragments</span>
+                    </div>
+                    <div class="relative h-48">
+                        <canvas id="errorChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="col-span-12 md:col-span-8 card p-0 bg-white dark:bg-dark-card flex flex-col h-64">
+                    <div class="p-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-sm font-bold text-gray-700 dark:text-white">"Shadow IT" Detector</h3>
+                            <span class="px-2 py-0.5 rounded text-[10px] bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300 font-bold border border-red-200 dark:border-red-900">
+                                3 Anomalies
+                            </span>
+                        </div>
+                        <p class="text-xs text-gray-400">Ports with >1 MAC Address (excluding uplinks)</p>
+                    </div>
+                    <div class="flex-1 overflow-auto custom-scrollbar">
+                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                            <thead class="bg-gray-50 dark:bg-gray-800">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Port</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Client Count</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Detected Vendor(s)</th>
+                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white dark:bg-dark-card divide-y divide-gray-200 dark:divide-gray-700 text-sm">
+                                <tr class="hover:bg-red-50 dark:hover:bg-red-900/10">
+                                    <td class="px-6 py-4 font-mono font-bold text-gray-900 dark:text-white">Ge3</td>
+                                    <td class="px-6 py-4 text-gray-500 dark:text-gray-400">Conf Room Wall Jack</td>
+                                    <td class="px-6 py-4 font-bold text-red-600">5 Devices</td>
+                                    <td class="px-6 py-4 text-xs text-gray-500">Netgear, Apple, Dell</td>
+                                    <td class="px-6 py-4 text-right">
+                                        <button class="text-xs bg-red-100 hover:bg-red-200 text-red-700 px-3 py-1 rounded font-medium dark:bg-red-900/50 dark:hover:bg-red-900 dark:text-red-200">Disable Port</button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-amber-50 dark:hover:bg-amber-900/10">
+                                    <td class="px-6 py-4 font-mono font-bold text-gray-900 dark:text-white">Ge12</td>
+                                    <td class="px-6 py-4 text-gray-500 dark:text-gray-400">Reception Desk</td>
+                                    <td class="px-6 py-4 font-bold text-amber-600">2 Devices</td>
+                                    <td class="px-6 py-4 text-xs text-gray-500">HP, Yealink (VoIP)</td>
+                                    <td class="px-6 py-4 text-right">
+                                        <span class="text-xs text-gray-400 italic">Whitelisted (VoIP)</span>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-red-50 dark:hover:bg-red-900/10">
+                                    <td class="px-6 py-4 font-mono font-bold text-gray-900 dark:text-white">Ge42</td>
+                                    <td class="px-6 py-4 text-gray-500 dark:text-gray-400">Lab Bench 4</td>
+                                    <td class="px-6 py-4 font-bold text-red-600">8 Devices</td>
+                                    <td class="px-6 py-4 text-xs text-gray-500">TP-Link, Intel, Raspberry Pi</td>
+                                    <td class="px-6 py-4 text-right">
+                                        <button class="text-xs bg-red-100 hover:bg-red-200 text-red-700 px-3 py-1 rounded font-medium dark:bg-red-900/50 dark:hover:bg-red-900 dark:text-red-200">Disable Port</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="col-span-12 card p-0 bg-white dark:bg-dark-card flex flex-col h-[500px]">
+                    <div class="p-4 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 flex justify-between items-center">
+                        <h3 class="text-sm font-bold text-gray-700 dark:text-white">Port Interface Status</h3>
+                        <div class="flex gap-2">
+                             <input type="text" id="portSearch" placeholder="Search ports..." class="text-xs border border-gray-300 dark:border-gray-600 rounded px-2 py-1 focus:outline-none focus:border-blue-500 bg-white dark:bg-gray-700 dark:text-white">
+                            <select class="text-xs border border-gray-300 dark:border-gray-600 rounded px-2 py-1 focus:outline-none focus:border-blue-500 bg-white dark:bg-gray-700 dark:text-white">
+                                <option>All Status</option>
+                                <option>Connected</option>
+                                <option>Not Connected</option>
+                                <option>Alert</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex-1 overflow-auto custom-scrollbar">
+                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                            <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0 z-10">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Port</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">VLAN</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Speed/Duplex</th>
+                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">PoE (W)</th>
+                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Clients</th>
+                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Errors (24h)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white dark:bg-dark-card divide-y divide-gray-200 dark:divide-gray-700 text-sm font-mono" id="portTableBody">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <footer class="mt-8 mb-4 text-center text-xs text-gray-400 dark:text-gray-500">
+            <p>NPM 2.0 Operational Command Center • Powered by Meraki & Mist Integration</p>
+        </footer>
+    </main>
+
+    <script src="assets/js/theme-manager.js"></script>
+    <script src="assets/js/chart-config.js"></script>
+    <script src="assets/js/navigation.js"></script>
+
+    <script>
+        // Initialize navigation for Switch page
+        NavigationManager.init('switch');
+
+        // --- SWITCH SELECTION HANDLER ---
+        function updateSwitchView(switchName) {
+            console.log('Switch view changed to:', switchName);
+            // Update the device info card header
+            document.querySelector('h2.text-lg.font-bold').textContent = switchName;
+
+            // In a real application, this would reload the port data for the selected switch
+            // For now, it just logs the change
+        }
+
+        // --- MOCK DATA GENERATION ---
+        
+        // Generate 48 ports data
+        const ports = [];
+        for (let i = 1; i <= 48; i++) {
+            const isUp = Math.random() > 0.3; // 70% chance UP
+            const isPoe = i <= 24 && Math.random() > 0.4; // First 24 ports are PoE capable
+            const hasError = isUp && Math.random() > 0.95; // 5% chance of error if UP
+            
+            let status = 'down';
+            if (isUp) status = hasError ? 'alert' : 'up';
+            
+            ports.push({
+                id: i,
+                name: `Ge${i}`,
+                desc: isUp ? (i === 48 ? 'Uplink' : `Workstation ${i}`) : 'Unused',
+                status: status,
+                vlan: i === 48 ? 'Trunk' : '10',
+                speed: '1 Gbps',
+                duplex: 'Full',
+                poe: isUp && isPoe ? (Math.random() * 15).toFixed(1) : 0,
+                clients: isUp ? (i === 48 ? 120 : 1) : 0,
+                errors: hasError ? Math.floor(Math.random() * 500) : 0
+            });
+        }
+
+        // --- RENDER FUNCTIONS ---
+
+        // 1. Render Faceplate [cite: 50]
+        function renderFaceplate() {
+            const rowTop = document.getElementById('faceplateRowTop');
+            const rowBottom = document.getElementById('faceplateRowBottom');
+            
+            ports.forEach(port => {
+                const isOdd = port.id % 2 !== 0;
+                const container = isOdd ? rowTop : rowBottom;
+                
+                // Colors based on status [cite: 45, 46, 47]
+                let ledColor = 'bg-gray-600'; // Default/Down
+                let portColor = 'bg-gray-700';
+                
+                if (port.status === 'up') {
+                    ledColor = 'bg-green-500 shadow-[0_0_4px_rgba(34,197,94,0.6)]';
+                    portColor = 'bg-gray-600';
+                } else if (port.status === 'alert') {
+                    ledColor = 'bg-amber-500 shadow-[0_0_4px_rgba(245,158,11,0.6)]';
+                    portColor = 'bg-gray-600';
+                }
+
+                const poeClass = port.poe > 0 ? 'poe-active' : '';
+
+                const slotHtml = `
+                    <div class="port-slot ${portColor} flex flex-col items-center ${poeClass}" title="Port ${port.id}: ${port.desc}">
+                        <div class="port-led ${ledColor}"></div>
+                        <div class="rj45-shape"></div>
+                        <div class="text-[8px] text-gray-500 font-mono mt-auto mb-0.5">${port.id}</div>
+                        <i class="fa-solid fa-bolt poe-indicator"></i>
+                    </div>
+                `;
+                
+                container.innerHTML += slotHtml;
+            });
+        }
+
+        // 2. Render Port Table
+        function renderPortTable() {
+            const tbody = document.getElementById('portTableBody');
+            
+            ports.forEach(port => {
+                const statusBadge = {
+                    'up': '<span class="px-2 py-0.5 rounded text-xs font-bold bg-green-100 text-green-800">Connected</span>',
+                    'down': '<span class="px-2 py-0.5 rounded text-xs font-bold bg-gray-100 text-gray-500">Down</span>',
+                    'alert': '<span class="px-2 py-0.5 rounded text-xs font-bold bg-amber-100 text-amber-800">Error</span>'
+                };
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors";
+                tr.innerHTML = `
+                    <td class="px-6 py-3 font-bold text-gray-700 dark:text-gray-300">${port.name}</td>
+                    <td class="px-6 py-3 text-gray-500 dark:text-gray-400">${port.desc}</td>
+                    <td class="px-6 py-3 text-center">${statusBadge[port.status]}</td>
+                    <td class="px-6 py-3 text-gray-700 dark:text-gray-300">${port.vlan}</td>
+                    <td class="px-6 py-3 text-gray-500 dark:text-gray-400">${port.speed} / ${port.duplex}</td>
+                    <td class="px-6 py-3 text-right font-medium ${port.poe > 0 ? 'text-blue-600 dark:text-blue-400' : 'text-gray-400'}">${port.poe > 0 ? port.poe + ' W' : '-'}</td>
+                    <td class="px-6 py-3 text-right text-gray-700 dark:text-gray-300">${port.clients}</td>
+                    <td class="px-6 py-3 text-right ${port.errors > 0 ? 'text-red-600 font-bold' : 'text-gray-400'}">${port.errors}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // --- CHART INITIALIZATION ---
+        const charts = {};
+
+        function initCharts() {
+            ChartConfig.initDefaults();
+
+            // 1. CPU Gauge [cite: 54]
+            charts.cpu = new Chart(document.getElementById('cpuGauge'), {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [24, 76],
+                        backgroundColor: ['#3b82f6', '#e5e7eb'],
+                        borderWidth: 0, cutout: '80%', circumference: 360
+                    }]
+                },
+                options: { plugins: { tooltip: { enabled: false } } }
+            });
+            document.getElementById('cpuValue').innerText = '24%';
+
+            // 2. Memory Gauge [cite: 54]
+            charts.mem = new Chart(document.getElementById('memGauge'), {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [45, 55],
+                        backgroundColor: ['#8b5cf6', '#e5e7eb'],
+                        borderWidth: 0, cutout: '80%', circumference: 360
+                    }]
+                },
+                options: { plugins: { tooltip: { enabled: false } } }
+            });
+            document.getElementById('memValue').innerText = '45%';
+
+            // 3. PoE Budget Chart [cite: 71] (Pie/Donut hybrid)
+            charts.poe = new Chart(document.getElementById('poeChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Used', 'Remaining'],
+                    datasets: [{
+                        data: [380, 360],
+                        backgroundColor: ['#3b82f6', '#e5e7eb'],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    cutout: '70%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 10, font: {size: 10} } }
+                    }
+                }
+            });
+
+            // 4. Traffic Trend [cite: 76]
+            charts.traffic = new Chart(document.getElementById('trafficTrendChart'), {
+                type: 'line',
+                data: {
+                    labels: ['00:00','04:00','08:00','12:00','16:00','20:00','Now'],
+                    datasets: [{
+                        label: 'Throughput',
+                        data: [120, 150, 450, 890, 650, 320, 210],
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        borderWidth: 2,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { display: true, grid: { display: false }, ticks: { font: {size: 9} } },
+                        y: { display: false, min: 0 }
+                    }
+                }
+            });
+
+            // 5. Error Monitor [cite: 65]
+            const errorPorts = ports.filter(p => p.errors > 0).sort((a,b) => b.errors - a.errors).slice(0, 5);
+            charts.errors = new Chart(document.getElementById('errorChart'), {
+                type: 'bar',
+                data: {
+                    labels: errorPorts.map(p => p.name),
+                    datasets: [{
+                        label: 'Errors',
+                        data: errorPorts.map(p => p.errors),
+                        backgroundColor: '#ef4444',
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: { beginAtZero: true, grid: { borderDash: [2, 2] } }
+                    }
+                }
+            });
+        }
+
+        // Initialize Logic
+        renderFaceplate();
+        renderPortTable();
+        initCharts();
+        
+        // Register charts for theme switching
+        themeManager.registerCharts(charts);
+
+        // Initial theme check
+        if (themeManager.isDarkMode()) {
+            themeManager.updateChartColors();
+        }
+
+    </script>
+</body>
+</html>

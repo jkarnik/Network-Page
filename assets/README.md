@@ -502,9 +502,126 @@ Here's a complete example of how to use all modules together in a new page:
 
 ---
 
+---
+
+## Project Overview
+
+This Network Performance Monitoring dashboard consists of 4 fully integrated pages:
+
+### Pages
+
+1. **[index.html](../index.html)** - Summary Dashboard
+   - Organization-wide network health
+   - Active clients by device type
+   - Device status distribution matrix
+   - Network issues & security alerts
+   - Organization/Region/Site scope selector
+
+2. **[sdwan.html](../sdwan.html)** - SD-WAN Device View
+   - CPU & Memory gauges with sparklines
+   - Cellular backup signal strength
+   - Uplink health (latency/jitter/loss)
+   - WAN throughput graphs
+   - VPN tunnel status table
+   - BGP neighbors & routing table
+   - Tab navigation (Overview/Advanced/Diagnostics)
+
+3. **[switch.html](../switch.html)** - Switch Device View
+   - Digital faceplate with LED indicators
+   - Port-level status visualization
+   - PoE budget monitoring
+   - Hardware redundancy (PSU/Fans)
+   - Shadow IT detection
+   - 48-port interface status table
+   - Error monitoring by port
+
+4. **[access-point.html](../access-point.html)** - Access Point Device View
+   - Real-time client connections
+   - Channel utilization
+   - RF performance metrics
+   - Connected clients details
+   - Band steering statistics
+   - Tab navigation (Overview/Clients/RF)
+
+### Navigation Flow
+
+All pages are interconnected with seamless navigation:
+
+```
+Summary (Index) ↔ SD-WAN ↔ Switch ↔ Access Point
+       ↓              ↓         ↓           ↓
+    [Global View] [Device]  [Device]    [Device]
+```
+
+### Consistent Design Elements
+
+All pages share:
+- ✅ Identical navigation bar structure
+- ✅ Dark/light mode toggle with persistence
+- ✅ Scope/device selectors with onchange handlers
+- ✅ Three-column device info cards (Name | IP/MAC | Uptime/Status)
+- ✅ Inter font family from Google Fonts
+- ✅ Tailwind CSS utility classes
+- ✅ Chart.js visualizations
+- ✅ Font Awesome icons (optimized to 1MB)
+- ✅ Shared CSS and JavaScript modules
+- ✅ Mobile responsive design
+
+### Color Palette
+
+Consistent across all pages:
+- **Primary (Blue)**: `#3b82f6`
+- **Success (Green)**: `#10b981`
+- **Warning (Amber)**: `#f59e0b`
+- **Danger (Red)**: `#ef4444`
+- **Purple**: `#8b5cf6`
+- **Gray backgrounds**: `#f9fafb`, `#f3f4f6`
+- **Dark backgrounds**: `#111827`, `#1f2937`
+
+### Device Info Card Pattern
+
+All device pages use the same card layout:
+
+```html
+<div class="card p-4 bg-white dark:bg-dark-card border-l-4 border-green-500">
+    <div class="flex items-center justify-between">
+        <!-- Left: Device Name -->
+        <div class="flex items-center gap-2">
+            <i class="fa-solid fa-[icon] text-gray-400 text-lg"></i>
+            <div>
+                <h2 class="text-lg font-bold text-gray-900 dark:text-white">[Device Name]</h2>
+                <p class="text-xs text-gray-500">[Model]</p>
+            </div>
+        </div>
+
+        <!-- Center: IP and MAC -->
+        <div class="flex items-center gap-8 text-sm">
+            <div class="flex items-center gap-2">
+                <span class="text-xs text-gray-400">IP:</span>
+                <span class="font-mono text-gray-700 dark:text-gray-300">[IP]</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-xs text-gray-400">MAC:</span>
+                <span class="font-mono text-gray-700 dark:text-gray-300">[MAC]</span>
+            </div>
+        </div>
+
+        <!-- Right: Uptime and Status -->
+        <div class="flex items-center gap-4">
+            <div class="text-right">
+                <p class="text-xs text-gray-400 mb-0.5">Uptime</p>
+                <p class="font-mono text-lg font-bold text-gray-900 dark:text-white">[Uptime]</p>
+            </div>
+            <span class="px-2 py-1 text-xs font-bold text-green-700 bg-green-100 rounded dark:bg-green-900 dark:text-green-300">ONLINE</span>
+        </div>
+    </div>
+</div>
+```
+
+---
+
 ## Support
 
 For issues or questions about these modules, please refer to:
-- Main documentation: `/REFACTORING_SUMMARY.md`
 - Code comments in each module file
-- Example pages: `index.html`, `sdwan.html`
+- Example pages: `index.html`, `sdwan.html`, `switch.html`, `access-point.html`

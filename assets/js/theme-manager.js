@@ -18,15 +18,17 @@ class ThemeManager {
 
     /**
      * Load saved theme preference from sessionStorage
+     * Defaults to dark mode if no preference is saved
      */
     loadTheme() {
         const savedTheme = sessionStorage.getItem('theme');
-        if (savedTheme === 'dark') {
-            this.isDark = true;
-            this.htmlElement.classList.add('dark');
-        } else {
+        if (savedTheme === 'light') {
             this.isDark = false;
             this.htmlElement.classList.remove('dark');
+        } else {
+            // Default to dark mode
+            this.isDark = true;
+            this.htmlElement.classList.add('dark');
         }
     }
 

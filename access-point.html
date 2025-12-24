@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access Point Performance Monitoring</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            bg: '#111827',
+                            card: '#1f2937',
+                            text: '#f3f4f6',
+                            border: '#374151'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <link rel="stylesheet" href="fontawesome/css/all.min.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="assets/css/shared-styles.css">
+</head>
+<body class="bg-gray-100 text-gray-800 h-screen flex flex-col overflow-hidden dark:bg-dark-bg dark:text-dark-text">
+
+    <nav class="bg-white border-b border-gray-200 h-16 flex-none z-10 dark:bg-dark-card dark:border-dark-border">
+        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 h-full">
+            <div class="flex justify-between h-full">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center gap-3">
+                        <div class="bg-blue-600 text-white p-2 rounded-lg">
+                            <i class="fa-solid fa-network-wired text-xl"></i>
+                        </div>
+                        <span class="font-bold text-xl tracking-tight text-gray-900 dark:text-white">Network Performance Monitoring</span>
+                    </div>
+                    <div class="hidden sm:ml-8 sm:flex sm:space-x-8">
+                        <a href="index.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Summary Page</a>
+                        <a href="sdwan.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">SD-WAN Page</a>
+                        <a href="switch.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Switch Page</a>
+                        <a href="access-point.html" class="border-blue-500 text-gray-900 dark:text-white inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Access Point Page</a>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="relative">
+                        <select id="scopeSelector" onchange="updateAccessPointView(this.value)" class="block w-full pl-3 pr-10 py-2 text-sm border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md bg-gray-50 border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                            <option value="NYC-Lobby-AP-01">NYC-Lobby-AP-01</option>
+                            <option value="NYC-ConfRoom-AP-04">NYC-ConfRoom-AP-04</option>
+                            <option value="LON-Warehouse-AP-12">LON-Warehouse-AP-12</option>
+                        </select>
+                    </div>
+
+                    <button id="themeToggle" class="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 focus:outline-none">
+                        <i class="fa-solid fa-moon dark:hidden"></i>
+                        <i class="fa-solid fa-sun hidden dark:block text-yellow-400"></i>
+                    </button>
+
+                    <div class="flex items-center gap-3 border-l pl-4 border-gray-200 dark:border-gray-700">
+                        <div class="text-right hidden md:block">
+                            <p class="text-sm font-medium text-gray-900 dark:text-white">Admin User</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">NetOps Lead</p>
+                        </div>
+                        <div class="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold">
+                            AU
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-1 overflow-y-auto p-6 bg-gray-50 dark:bg-dark-bg">
+        <div class="max-w-[1920px] mx-auto">
+
+            <div class="card p-4 bg-white dark:bg-dark-card border-l-4 border-green-500 mb-6">
+                <div class="flex items-center justify-between">
+                    <!-- Left: Device Name -->
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-wifi text-gray-400 text-lg"></i>
+                        <div>
+                            <h2 class="text-lg font-bold text-gray-900 dark:text-white">NYC-Lobby-AP-01</h2>
+                            <p class="text-xs text-gray-500">Cisco Meraki MR56-HW</p>
+                        </div>
+                    </div>
+
+                    <!-- Center: IP and MAC -->
+                    <div class="flex items-center gap-8 text-sm">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-gray-400">IP:</span>
+                            <span class="font-mono text-gray-700 dark:text-gray-300">10.128.20.15</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-gray-400">MAC:</span>
+                            <span class="font-mono text-gray-700 dark:text-gray-300">e0:cb:bc:45:12:a1</span>
+                        </div>
+                    </div>
+
+                    <!-- Right: Uptime and Status -->
+                    <div class="flex items-center gap-4">
+                        <div class="text-right">
+                            <p class="text-xs text-gray-400 mb-0.5">Uptime</p>
+                            <p class="font-mono text-lg font-bold text-gray-900 dark:text-white">22d 4h 12m</p>
+                        </div>
+                        <span class="px-2 py-1 text-xs font-bold text-green-700 bg-green-100 rounded dark:bg-green-900 dark:text-green-300">ONLINE</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <div class="border-b border-gray-200 dark:border-gray-700">
+                    <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+                        <button onclick="switchTab('overview')" id="tab-overview" class="tab-button border-blue-500 text-blue-600 dark:text-blue-400 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                            Overview
+                        </button>
+                        <button onclick="switchTab('rf-analysis')" id="tab-rf-analysis" class="tab-button border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                            RF Analysis
+                        </button>
+                        <button onclick="switchTab('clients')" id="tab-clients" class="tab-button border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                            Clients
+                        </button>
+                    </nav>
+                </div>
+            </div>
+
+            <div id="content-overview" class="tab-content">
+                <div class="grid grid-cols-12 gap-6">
+                    
+                    <div class="col-span-12 lg:col-span-6 card p-4 bg-white dark:bg-dark-card h-80">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-sm font-bold text-gray-700 dark:text-white">Client Journey Funnel</h3>
+                            <span class="text-xs text-gray-400">Survival Rate %</span>
+                        </div>
+                        <div class="relative h-full w-full pb-4">
+                            <canvas id="funnelChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="col-span-12 md:col-span-6 lg:col-span-4 card p-4 bg-white dark:bg-dark-card h-80">
+                         <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-sm font-bold text-gray-700 dark:text-white">Client Count History</h3>
+                            <span class="text-xs text-gray-400">Last 24 Hours</span>
+                        </div>
+                        <div class="relative h-full w-full pb-4">
+                            <canvas id="clientHistoryChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="col-span-12 md:col-span-6 lg:col-span-2 card p-4 bg-white dark:bg-dark-card h-80 flex flex-col">
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="text-sm font-bold text-gray-700 dark:text-white">DHCP Capacity</h3>
+                            <i class="fa-solid fa-server text-gray-400"></i>
+                        </div>
+                        <div class="flex-1 flex flex-col items-center justify-center relative">
+                            <canvas id="dhcpGauge"></canvas>
+                            <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none mt-4">
+                                <span class="text-xl font-bold text-gray-800 dark:text-white" id="dhcpValue">--</span>
+                                <span class="text-xs text-gray-400">Used</span>
+                            </div>
+                        </div>
+                        <div class="mt-2 text-center">
+                            <p class="text-xs text-gray-500">VLAN 20 (Corp)</p>
+                            <p class="text-[10px] text-gray-400">182 / 254 IPs</p>
+                        </div>
+                    </div>
+
+                     <div class="col-span-12 card p-4 bg-white dark:bg-dark-card">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-sm font-bold text-gray-700 dark:text-white">Recent Client Events</h3>
+                            <span class="text-xs text-gray-400">Live Feed</span>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="flex gap-4 items-start pb-4 border-b border-gray-100 dark:border-gray-700">
+                                <div class="w-20 text-xs text-gray-500 dark:text-gray-400 pt-1">10:42:15</div>
+                                <div class="w-8 flex flex-col items-center">
+                                    <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                                    <div class="h-full w-0.5 bg-gray-200 dark:bg-gray-700 mt-1"></div>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-bold text-gray-800 dark:text-white">Association Success</p>
+                                    <p class="text-xs text-gray-500">Client <span class="font-mono">a4:b1:c2...</span> associated on 5GHz radio (SSID: Corp-Secure).</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-4 items-start pb-4 border-b border-gray-100 dark:border-gray-700">
+                                <div class="w-20 text-xs text-gray-500 dark:text-gray-400 pt-1">10:41:55</div>
+                                <div class="w-8 flex flex-col items-center">
+                                    <div class="w-2 h-2 rounded-full bg-amber-500"></div>
+                                    <div class="h-full w-0.5 bg-gray-200 dark:bg-gray-700 mt-1"></div>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-bold text-gray-800 dark:text-white">DHCP Slow Response</p>
+                                    <p class="text-xs text-gray-500">Client <span class="font-mono">e2:11:98...</span> took 4.2s to receive IP address.</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-4 items-start">
+                                <div class="w-20 text-xs text-gray-500 dark:text-gray-400 pt-1">10:38:10</div>
+                                <div class="w-8 flex flex-col items-center">
+                                    <div class="w-2 h-2 rounded-full bg-red-500"></div>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-bold text-gray-800 dark:text-white">Auth Failure (4-Way Handshake)</p>
+                                    <p class="text-xs text-gray-500">Client <span class="font-mono">b8:22:11...</span> failed WPA2 authentication.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div id="content-rf-analysis" class="tab-content hidden">
+                <div class="grid grid-cols-12 gap-6">
+                    
+                    <div class="col-span-12 lg:col-span-6 card p-4 bg-white dark:bg-dark-card h-80">
+                         <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-sm font-bold text-gray-700 dark:text-white">Channel Utilization</h3>
+                            <div class="flex gap-3 text-xs">
+                                <span class="flex items-center gap-1"><span class="w-2 h-2 bg-blue-500 rounded-sm"></span> WiFi</span>
+                                <span class="flex items-center gap-1"><span class="w-2 h-2 bg-red-400 rounded-sm"></span> Non-WiFi</span>
+                                <span class="flex items-center gap-1"><span class="w-2 h-2 bg-gray-200 rounded-sm"></span> Free</span>
+                            </div>
+                        </div>
+                        <div class="relative h-full w-full pb-4">
+                            <canvas id="channelUtilChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="col-span-12 lg:col-span-6 card p-4 bg-white dark:bg-dark-card h-80">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-sm font-bold text-gray-700 dark:text-white">Signal Quality Distribution (SNR)</h3>
+                            <span class="text-xs text-gray-400">Client Density</span>
+                        </div>
+                        <div class="relative h-full w-full pb-4">
+                            <canvas id="snrChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="col-span-12 card p-0 bg-white dark:bg-dark-card flex flex-col h-96">
+                        <div class="p-4 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 flex justify-between items-center">
+                            <h3 class="text-sm font-bold text-gray-700 dark:text-white">Interfering Neighbors (Rogues/Neighbors)</h3>
+                            <span class="text-xs bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300 px-2 py-0.5 rounded font-bold">2 High Impact</span>
+                        </div>
+                        <div class="flex-1 overflow-auto custom-scrollbar">
+                             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">SSID</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">BSSID</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Channel</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">RSSI</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Classification</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white dark:bg-dark-card divide-y divide-gray-200 dark:divide-gray-700 text-sm font-mono">
+                                    <tr class="hover:bg-red-50 dark:hover:bg-red-900/10">
+                                        <td class="px-6 py-3 font-bold text-gray-800 dark:text-white">Free_WiFi</td>
+                                        <td class="px-6 py-3 text-gray-500">aa:bb:cc:dd:ee:ff</td>
+                                        <td class="px-6 py-3">6 (2.4G)</td>
+                                        <td class="px-6 py-3 text-red-600 font-bold">-55 dBm</td>
+                                        <td class="px-6 py-3"><span class="text-xs bg-red-100 text-red-800 px-2 py-0.5 rounded">ROGUE</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-3 font-bold text-gray-800 dark:text-white">HP-Printer-Direct</td>
+                                        <td class="px-6 py-3 text-gray-500">11:22:33:44:55:66</td>
+                                        <td class="px-6 py-3">1 (2.4G)</td>
+                                        <td class="px-6 py-3 text-amber-600">-68 dBm</td>
+                                        <td class="px-6 py-3"><span class="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded">INTERFERING</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-3 font-bold text-gray-800 dark:text-white">Corp-Guest</td>
+                                        <td class="px-6 py-3 text-gray-500">99:88:77:66:55:44</td>
+                                        <td class="px-6 py-3">36 (5G)</td>
+                                        <td class="px-6 py-3 text-gray-500">-82 dBm</td>
+                                        <td class="px-6 py-3"><span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">MANAGED</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="content-clients" class="tab-content hidden">
+                 <div class="grid grid-cols-12 gap-6">
+                    
+                    <div class="col-span-12 lg:col-span-4 card p-4 bg-white dark:bg-dark-card h-96">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-sm font-bold text-gray-700 dark:text-white">Top SSIDs</h3>
+                            <span class="text-xs text-gray-400">Client Distribution</span>
+                        </div>
+                         <div class="relative h-full w-full pb-4">
+                            <canvas id="ssidChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="col-span-12 lg:col-span-8 card p-0 bg-white dark:bg-dark-card flex flex-col h-96">
+                        <div class="p-4 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 flex justify-between items-center">
+                            <h3 class="text-sm font-bold text-gray-700 dark:text-white">Active Client List</h3>
+                            <input type="text" placeholder="Search MAC, IP or User..." class="text-xs border border-gray-300 dark:border-gray-600 rounded px-2 py-1 focus:outline-none focus:border-blue-500 bg-white dark:bg-gray-700 dark:text-white">
+                        </div>
+                        <div class="flex-1 overflow-auto custom-scrollbar">
+                             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Client MAC</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">IP Address</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">OS</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">SSID</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">SNR</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Usage</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white dark:bg-dark-card divide-y divide-gray-200 dark:divide-gray-700 text-sm font-mono">
+                                    <tr>
+                                        <td class="px-6 py-3 text-blue-600 dark:text-blue-400 cursor-pointer hover:underline">a4:b1:c2:d3:e4:f5</td>
+                                        <td class="px-6 py-3">10.128.20.101</td>
+                                        <td class="px-6 py-3"><i class="fa-brands fa-apple"></i> iOS 17</td>
+                                        <td class="px-6 py-3">Corp-Secure</td>
+                                        <td class="px-6 py-3 text-right text-green-600 font-bold">42 dB</td>
+                                        <td class="px-6 py-3 text-right">1.2 GB</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-3 text-blue-600 dark:text-blue-400 cursor-pointer hover:underline">b2:c3:d4:e5:f6:a1</td>
+                                        <td class="px-6 py-3">10.128.20.105</td>
+                                        <td class="px-6 py-3"><i class="fa-brands fa-windows"></i> Win 11</td>
+                                        <td class="px-6 py-3">Corp-Secure</td>
+                                        <td class="px-6 py-3 text-right text-green-600 font-bold">38 dB</td>
+                                        <td class="px-6 py-3 text-right">450 MB</td>
+                                    </tr>
+                                     <tr>
+                                        <td class="px-6 py-3 text-blue-600 dark:text-blue-400 cursor-pointer hover:underline">c3:d4:e5:f6:a1:b2</td>
+                                        <td class="px-6 py-3">10.128.99.20</td>
+                                        <td class="px-6 py-3"><i class="fa-brands fa-android"></i> Android</td>
+                                        <td class="px-6 py-3">Guest-WiFi</td>
+                                        <td class="px-6 py-3 text-right text-amber-500 font-bold">18 dB</td>
+                                        <td class="px-6 py-3 text-right">50 MB</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                 </div>
+            </div>
+
+        </div>
+
+        <footer class="mt-8 mb-4 text-center text-xs text-gray-400 dark:text-gray-500">
+            <p>NPM 2.0 Operational Command Center • Powered by Meraki & Mist Integration</p>
+        </footer>
+    </main>
+
+    <script src="assets/js/theme-manager.js"></script>
+    <script src="assets/js/chart-config.js"></script>
+    <script src="assets/js/navigation.js"></script>
+
+    <script>
+        // Initialize navigation for AP page
+        NavigationManager.init('ap');
+
+        // --- ACCESS POINT SELECTOR ---
+        function updateAccessPointView(apName) {
+            console.log('Access point view changed to:', apName);
+            // Update the device info card header
+            document.querySelector('h2.text-lg.font-bold').textContent = apName;
+
+            // In a real application, this would reload the data for the selected access point
+            // For now, it just logs the change
+        }
+
+        // --- TAB SWITCHING LOGIC ---
+        function switchTab(tabName) {
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.add('hidden'));
+
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(button => {
+                button.classList.remove('border-blue-500', 'text-blue-600', 'dark:text-blue-400');
+                button.classList.add('border-transparent', 'text-gray-500', 'dark:text-gray-400');
+            });
+
+            document.getElementById(`content-${tabName}`).classList.remove('hidden');
+            const selectedButton = document.getElementById(`tab-${tabName}`);
+            selectedButton.classList.remove('border-transparent', 'text-gray-500', 'dark:text-gray-400');
+            selectedButton.classList.add('border-blue-500', 'text-blue-600', 'dark:text-blue-400');
+        }
+
+        // --- CHART INITIALIZATION ---
+        const charts = {};
+
+        function initCharts() {
+            ChartConfig.initDefaults();
+
+            // 1. Client Journey Funnel 
+            // Visualized as a Horizontal Bar Chart with custom colors
+            charts.funnel = new Chart(document.getElementById('funnelChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Association', 'Authentication', 'DHCP', 'DNS', 'Success'],
+                    datasets: [{
+                        label: 'Successful Attempts',
+                        data: [1200, 1180, 1175, 1170, 1170],
+                        backgroundColor: [
+                            '#3b82f6', // Blue
+                            '#3b82f6',
+                            '#f59e0b', // DHCP warning color
+                            '#3b82f6',
+                            '#10b981'  // Green Success
+                        ],
+                        borderRadius: 4,
+                        barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    // Calculate drop-off from previous step
+                                    let val = context.raw;
+                                    let prev = context.dataIndex > 0 ? context.dataset.data[context.dataIndex - 1] : val;
+                                    let drop = prev - val;
+                                    return `${val} Clients (${drop > 0 ? '-' + drop + ' drop-off' : 'Stable'})`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { display: false, max: 1300 },
+                        y: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // 2. Client Count History [cite: 170]
+            charts.history = new Chart(document.getElementById('clientHistoryChart'), {
+                type: 'line',
+                data: {
+                    labels: ['00:00','04:00','08:00','12:00','16:00','20:00','Now'],
+                    datasets: [{
+                        label: 'Connected Clients',
+                        data: [5, 8, 35, 48, 45, 12, 8],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+
+            // 3. DHCP Gauge 
+            charts.dhcp = new Chart(document.getElementById('dhcpGauge'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Used', 'Free'],
+                    datasets: [{
+                        data: [182, 72], // 182 used out of 254
+                        backgroundColor: ['#f59e0b', '#e5e7eb'], // Amber for warning level > 70%
+                        borderWidth: 0,
+                        cutout: '80%',
+                        circumference: 240,
+                        rotation: -120
+                    }]
+                },
+                options: { plugins: { tooltip: { enabled: false }, legend: { display: false } } }
+            });
+            document.getElementById('dhcpValue').innerText = '71%';
+
+            // 4. Channel Utilization [cite: 157]
+            // Stacked Bar for 2.4/5/6 GHz
+            charts.channel = new Chart(document.getElementById('channelUtilChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['2.4 GHz', '5 GHz', '6 GHz'],
+                    datasets: [
+                        { label: 'WiFi Traffic', data: [45, 20, 5], backgroundColor: '#3b82f6' },
+                        { label: 'Interference', data: [15, 5, 0], backgroundColor: '#f87171' },
+                        { label: 'Free Airtime', data: [40, 75, 95], backgroundColor: '#e5e7eb' }
+                    ]
+                },
+                options: {
+                    scales: {
+                        x: { stacked: true, grid: { display: false } },
+                        y: { stacked: true, max: 100, ticks: { callback: v => v + '%' } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            // 5. SNR Distribution 
+            charts.snr = new Chart(document.getElementById('snrChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Poor (<15dB)', 'Fair (15-25dB)', 'Good (25-35dB)', 'Excellent (>35dB)'],
+                    datasets: [{
+                        label: 'Client Count',
+                        data: [2, 5, 18, 17],
+                        backgroundColor: ['#ef4444', '#f59e0b', '#3b82f6', '#10b981'],
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+             // 6. Top SSIDs [cite: 180]
+             charts.ssids = new Chart(document.getElementById('ssidChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Corp-Secure', 'Guest-WiFi', 'IoT-Devices', 'Legacy-App'],
+                    datasets: [{
+                        label: 'Clients',
+                        data: [28, 8, 4, 2],
+                        backgroundColor: '#6366f1',
+                        borderRadius: 4,
+                        barThickness: 20
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    plugins: { legend: { display: false } },
+                    scales: { x: { display: false }, y: { grid: { display: false } } }
+                }
+            });
+        }
+
+        // Initialize Everything
+        initCharts();
+
+        // Register charts for theme switching
+        themeManager.registerCharts(charts);
+
+        // Initial theme check
+        if (themeManager.isDarkMode()) {
+            themeManager.updateChartColors();
+        }
+
+    </script>
+</body>
+</html>
