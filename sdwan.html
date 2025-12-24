@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SD-WAN Performance Monitoring</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: { bg: '#111827', card: '#1f2937', text: '#f3f4f6', border: '#374151' }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <link rel="stylesheet" href="fontawesome/css/all.min.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+        }
+
+        /* Page transition fade-in */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        body {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .card {
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            transition: all 0.2s ease-in-out;
+            display: flex; flex-direction: column;
+        }
+        .card:hover { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        
+        /* Signal Bars */
+        .signal-bar { width: 4px; border-radius: 1px; background-color: #e5e7eb; display: inline-block; margin-right: 2px; }
+        .signal-active { background-color: #10b981; }
+        .dark .signal-bar { background-color: #374151; }
+        .dark .signal-active { background-color: #34d399; }
+
+        /* Custom Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #4b5563; }
+        
+        /* Swimlane Event Styles */
+        .timeline-item { position: relative; padding-left: 1.5rem; border-left: 2px solid #e5e7eb; padding-bottom: 1rem; }
+        .timeline-dot { position: absolute; left: -5px; top: 0; width: 8px; height: 8px; border-radius: 50%; }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 h-screen flex flex-col overflow-hidden dark:bg-dark-bg dark:text-dark-text">
+
+    <!-- Top Navigation -->
+    <nav class="bg-white border-b border-gray-200 h-16 flex-none z-10 dark:bg-dark-card dark:border-dark-border">
+        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 h-full">
+            <div class="flex justify-between h-full">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center gap-3">
+                        <div class="bg-blue-600 text-white p-2 rounded-lg">
+                            <i class="fa-solid fa-network-wired text-xl"></i>
+                        </div>
+                        <span class="font-bold text-xl tracking-tight text-gray-900 dark:text-white">Network Performance Monitoring</span>
+                    </div>
+                    <div class="hidden sm:ml-8 sm:flex sm:space-x-8">
+                        <a href="index.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Summary Page</a>
+                        <a href="sdwan.html" class="border-blue-500 text-gray-900 dark:text-white inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">SD-WAN Page</a>
+                        <a href="#" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Switch Page</a>
+                        <a href="#" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Access Point Page</a>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <!-- Scope Selector -->
+                    <div class="relative">
+                        <select id="scopeSelector" onchange="updateDashboardScope(this.value)" class="block w-full pl-3 pr-10 py-2 text-sm border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md bg-gray-50 border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                            <option value="Global">Global Organization</option>
+                            <optgroup label="Regions">
+                                <option value="North America">North America</option>
+                                <option value="EMEA">EMEA</option>
+                                <option value="APAC">APAC</option>
+                            </optgroup>
+                            <optgroup label="Sites">
+                                <option value="site:NYC-HQ">NYC-HQ</option>
+                                <option value="site:LON-Warehouse">LON-Warehouse</option>
+                                <option value="site:SFO-Branch">SFO-Branch</option>
+                                <option value="site:TOK-Sales">TOK-Sales</option>
+                                <option value="site:MUM-Hub">MUM-Hub</option>
+                                <option value="site:ATL-Retail">ATL-Retail</option>
+                                <option value="site:CHI-Dist">CHI-Dist</option>
+                                <option value="site:BER-R&D">BER-R&D</option>
+                                <option value="site:PAR-Office">PAR-Office</option>
+                                <option value="site:SYD-Office">SYD-Office</option>
+                                <option value="site:BRA-Remote">BRA-Remote</option>
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <!-- Dark Mode Toggle -->
+                    <button id="themeToggle" class="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 focus:outline-none">
+                        <i class="fa-solid fa-moon dark:hidden"></i>
+                        <i class="fa-solid fa-sun hidden dark:block text-yellow-400"></i>
+                    </button>
+
+                    <div class="flex items-center gap-3 border-l pl-4 border-gray-200 dark:border-gray-700">
+                        <div class="text-right hidden md:block">
+                            <p class="text-sm font-medium text-gray-900 dark:text-white">Admin User</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">NetOps Lead</p>
+                        </div>
+                        <div class="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold">
+                            AU
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-1 overflow-y-auto p-6 bg-gray-50 dark:bg-dark-bg">
+        <div class="grid grid-cols-12 gap-6 max-w-[1920px] mx-auto">
+            
+            <div class="col-span-12 md:col-span-3 card p-4 bg-white dark:bg-dark-card border-l-4 border-green-500">
+                <div class="flex items-start justify-between">
+                    <div>
+                        <h2 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                            <i class="fa-solid fa-server text-gray-400"></i> NYC-Edge-01
+                        </h2>
+                        <p class="text-xs text-gray-500 mt-1">Juniper Mist SSR-120</p>
+                    </div>
+                    <span class="px-2 py-1 text-xs font-bold text-green-700 bg-green-100 rounded dark:bg-green-900 dark:text-green-300">ONLINE</span>
+                </div>
+                <div class="mt-4 grid grid-cols-2 gap-2 text-sm">
+                    <div>
+                        <p class="text-xs text-gray-400">IP Address</p>
+                        <p class="font-mono text-gray-700 dark:text-gray-300">192.168.45.1</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-400">Uptime</p>
+                        <p class="font-mono text-gray-700 dark:text-gray-300">45d 12h 30m</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-span-12 md:col-span-3 card p-4 bg-white dark:bg-dark-card">
+                <h3 class="text-sm font-bold text-gray-700 dark:text-white mb-2">System Load</h3>
+                <div class="flex justify-around items-center h-full">
+                    <div class="relative w-20 h-20">
+                        <canvas id="cpuGauge"></canvas>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center text-xs text-gray-500">
+                            <span class="font-bold text-gray-800 dark:text-white text-sm" id="cpuValue">42%</span>
+                            CPU
+                        </div>
+                    </div>
+                    <div class="relative w-20 h-20">
+                        <canvas id="memGauge"></canvas>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center text-xs text-gray-500">
+                            <span class="font-bold text-gray-800 dark:text-white text-sm" id="memValue">68%</span>
+                            MEM
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-span-12 md:col-span-3 card p-4 bg-white dark:bg-dark-card">
+                <div class="flex justify-between items-start mb-2">
+                    <h3 class="text-sm font-bold text-gray-700 dark:text-white">Cellular Backup</h3>
+                    <span class="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded dark:bg-blue-900/30 dark:text-blue-300">Verizon</span>
+                </div>
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="flex items-end h-6 gap-1" title="-85 dBm">
+                        <div class="signal-bar h-2 signal-active"></div>
+                        <div class="signal-bar h-3 signal-active"></div>
+                        <div class="signal-bar h-4 signal-active"></div>
+                        <div class="signal-bar h-5 signal-active"></div> <div class="signal-bar h-6"></div>
+                    </div>
+                    <span class="text-sm font-bold dark:text-white">-85 dBm</span>
+                </div>
+                <div class="flex-1 min-h-0 relative">
+                    <canvas id="signalSparkline"></canvas>
+                </div>
+                <p class="text-[10px] text-gray-400 mt-1">Signal Quality (RSRP) - Last 24h</p>
+            </div>
+
+             <div class="col-span-12 md:col-span-3 card p-4 bg-white dark:bg-dark-card overflow-auto custom-scrollbar">
+                <h3 class="text-sm font-bold text-gray-700 dark:text-white mb-2">BGP Neighbors</h3>
+                <ul class="space-y-2 text-sm">
+                    <li class="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-800 rounded">
+                        <span class="font-mono text-xs">10.255.0.1 (ISP-A)</span>
+                        <div class="flex items-center gap-1 text-green-600 text-xs font-bold">
+                            <i class="fa-solid fa-check-circle"></i> ESTAB
+                        </div>
+                    </li>
+                    <li class="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-800 rounded">
+                        <span class="font-mono text-xs">10.255.0.5 (ISP-B)</span>
+                        <div class="flex items-center gap-1 text-green-600 text-xs font-bold">
+                            <i class="fa-solid fa-check-circle"></i> ESTAB
+                        </div>
+                    </li>
+                    <li class="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-800 rounded">
+                        <span class="font-mono text-xs">192.168.20.1 (Core)</span>
+                        <div class="flex items-center gap-1 text-red-500 text-xs font-bold">
+                            <i class="fa-solid fa-circle-xmark"></i> IDLE
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-span-12 lg:col-span-8 card p-4 h-80 bg-white dark:bg-dark-card">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-sm font-bold text-gray-700 dark:text-white">Uplink Health (Latency vs Loss)</h3>
+                    <div class="flex gap-2">
+                        <span class="flex items-center gap-1 text-xs text-gray-500"><span class="w-2 h-2 rounded-full bg-blue-500"></span> Latency</span>
+                        <span class="flex items-center gap-1 text-xs text-gray-500"><span class="w-2 h-2 rounded-full bg-red-400"></span> Loss</span>
+                    </div>
+                </div>
+                <div class="relative h-full w-full pb-4">
+                    <canvas id="uplinkChart"></canvas>
+                </div>
+            </div>
+
+            <div class="col-span-12 lg:col-span-4 card p-4 h-80 bg-white dark:bg-dark-card">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-sm font-bold text-gray-700 dark:text-white">WAN Throughput</h3>
+                    <span class="text-xs text-gray-400">Last 6 Hours</span>
+                </div>
+                <div class="relative h-full w-full pb-4">
+                    <canvas id="throughputChart"></canvas>
+                </div>
+            </div>
+
+            <div class="col-span-12 lg:col-span-6 card p-0 bg-white dark:bg-dark-card overflow-hidden h-80">
+                <div class="p-4 border-b border-gray-100 dark:border-gray-700">
+                    <h3 class="text-sm font-bold text-gray-700 dark:text-white">VPN Tunnel Status (Overlay)</h3>
+                </div>
+                <div class="overflow-auto custom-scrollbar p-0 h-full">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0">
+                            <tr>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Peer</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">Latency</th>
+                                <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">Jitter</th>
+                                <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">Loss</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white dark:bg-dark-card divide-y divide-gray-200 dark:divide-gray-700 text-sm">
+                            <tr>
+                                <td class="px-4 py-2 font-medium dark:text-gray-200">DC-Primary</td>
+                                <td class="px-4 py-2"><span class="px-2 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-800">UP</span></td>
+                                <td class="px-4 py-2 text-right dark:text-gray-300">24ms</td>
+                                <td class="px-4 py-2 text-right dark:text-gray-300">2ms</td>
+                                <td class="px-4 py-2 text-right dark:text-gray-300">0.0%</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-2 font-medium dark:text-gray-200">DC-Backup</td>
+                                <td class="px-4 py-2"><span class="px-2 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-800">UP</span></td>
+                                <td class="px-4 py-2 text-right dark:text-gray-300">32ms</td>
+                                <td class="px-4 py-2 text-right dark:text-gray-300">4ms</td>
+                                <td class="px-4 py-2 text-right dark:text-gray-300">0.1%</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-2 font-medium dark:text-gray-200">Branch-SFO</td>
+                                <td class="px-4 py-2"><span class="px-2 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800">DEGRADED</span></td>
+                                <td class="px-4 py-2 text-right text-amber-600 font-bold">145ms</td>
+                                <td class="px-4 py-2 text-right dark:text-gray-300">25ms</td>
+                                <td class="px-4 py-2 text-right dark:text-gray-300">1.2%</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-2 font-medium dark:text-gray-200">Branch-LON</td>
+                                <td class="px-4 py-2"><span class="px-2 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-800">UP</span></td>
+                                <td class="px-4 py-2 text-right dark:text-gray-300">85ms</td>
+                                <td class="px-4 py-2 text-right dark:text-gray-300">12ms</td>
+                                <td class="px-4 py-2 text-right dark:text-gray-300">0.0%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="col-span-12 md:col-span-6 lg:col-span-3 card p-4 h-80 bg-white dark:bg-dark-card">
+                <h3 class="text-sm font-bold text-gray-700 dark:text-white mb-2">Top Applications (L7)</h3>
+                <div class="relative h-full flex items-center justify-center">
+                    <canvas id="appsChart"></canvas>
+                </div>
+            </div>
+
+            <div class="col-span-12 md:col-span-6 lg:col-span-3 card p-4 h-80 bg-white dark:bg-dark-card overflow-hidden">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="text-sm font-bold text-gray-700 dark:text-white">Wireless Threats</h3>
+                    <span class="bg-red-100 text-red-800 text-xs px-2 py-0.5 rounded-full font-bold">2 Active</span>
+                </div>
+                <div class="flex-1 overflow-auto custom-scrollbar space-y-3">
+                    <div class="p-3 border border-red-200 bg-red-50 dark:bg-red-900/10 dark:border-red-900 rounded-lg">
+                        <div class="flex items-center gap-2 text-red-700 dark:text-red-400 mb-1">
+                            <i class="fa-solid fa-skull-crossbones"></i>
+                            <span class="text-xs font-bold uppercase">Rogue AP</span>
+                        </div>
+                        <p class="text-sm font-semibold dark:text-gray-200">SSID: "Free_WiFi"</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Seen by: AP-Lobby (RSSI -65)</p>
+                    </div>
+                    <div class="p-3 border border-amber-200 bg-amber-50 dark:bg-amber-900/10 dark:border-amber-900 rounded-lg">
+                        <div class="flex items-center gap-2 text-amber-700 dark:text-amber-400 mb-1">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <span class="text-xs font-bold uppercase">Spoof Detected</span>
+                        </div>
+                        <p class="text-sm font-semibold dark:text-gray-200">MAC: ab:cd:ef:12:34</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Type: Man-in-the-Middle</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-span-12 lg:col-span-5 card p-0 bg-white dark:bg-dark-card h-80 overflow-hidden">
+                <div class="p-4 border-b border-gray-100 dark:border-gray-700">
+                    <h3 class="text-sm font-bold text-gray-700 dark:text-white">Active Route Table (RIB)</h3>
+                </div>
+                <div class="overflow-auto custom-scrollbar h-full">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0">
+                            <tr>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Prefix</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Next Hop</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Proto</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Intf</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white dark:bg-dark-card text-xs divide-y divide-gray-100 dark:divide-gray-700 font-mono">
+                            <tr><td>0.0.0.0/0</td><td>192.168.1.1</td><td class="text-blue-600">STATIC</td><td>ge-0/0/0</td></tr>
+                            <tr><td>10.0.0.0/8</td><td>10.255.0.1</td><td class="text-green-600">BGP</td><td>tun0</td></tr>
+                            <tr><td>172.16.0.0/12</td><td>10.255.0.5</td><td class="text-green-600">BGP</td><td>tun1</td></tr>
+                            <tr><td>192.168.45.0/24</td><td>Direct</td><td class="text-gray-500">CONN</td><td>ge-0/0/1</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="col-span-12 lg:col-span-4 card p-4 h-80 bg-white dark:bg-dark-card overflow-y-auto custom-scrollbar">
+                <h3 class="text-sm font-bold text-gray-700 dark:text-white mb-4">Sequential Event Timeline</h3>
+                <div class="pl-2">
+                    <div class="timeline-item dark:border-gray-700">
+                        <div class="timeline-dot bg-green-500"></div>
+                        <p class="text-xs text-gray-400">10:45 AM</p>
+                        <p class="text-sm font-medium dark:text-white">OSPF Adjacency Restored</p>
+                        <p class="text-xs text-gray-500">Neighbor 192.168.20.1 is UP</p>
+                    </div>
+                    <div class="timeline-item dark:border-gray-700">
+                        <div class="timeline-dot bg-red-500"></div>
+                        <p class="text-xs text-gray-400">10:42 AM</p>
+                        <p class="text-sm font-medium dark:text-white">Link Failure: Port 2</p>
+                        <p class="text-xs text-gray-500">Physical carrier loss detected</p>
+                    </div>
+                    <div class="timeline-item dark:border-gray-700">
+                        <div class="timeline-dot bg-amber-500"></div>
+                        <p class="text-xs text-gray-400">10:38 AM</p>
+                        <p class="text-sm font-medium dark:text-white">High Latency Alert</p>
+                        <p class="text-xs text-gray-500">Uplink 1 latency > 200ms</p>
+                    </div>
+                    <div class="timeline-item border-none dark:border-gray-700">
+                        <div class="timeline-dot bg-blue-500"></div>
+                        <p class="text-xs text-gray-400">08:00 AM</p>
+                        <p class="text-sm font-medium dark:text-white">Configuration Change</p>
+                        <p class="text-xs text-gray-500">Admin committed policy ID #4092</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-span-12 lg:col-span-3 card p-0 bg-white dark:bg-dark-card h-80 flex flex-col">
+                <div class="p-4 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+                    <h3 class="text-sm font-bold text-gray-700 dark:text-white">Firewall Logs</h3>
+                </div>
+                <div class="flex-1 overflow-auto custom-scrollbar">
+                    <table class="w-full text-xs">
+                        <thead class="bg-gray-50 dark:bg-gray-700 text-gray-500">
+                            <tr><th class="p-2 text-left">Time</th><th class="p-2 text-left">Action</th><th class="p-2 text-left">Dst Port</th></tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 dark:divide-gray-700 dark:text-gray-300">
+                            <tr><td class="p-2">11:01:05</td><td class="p-2 text-red-500">BLOCK</td><td class="p-2">445 (SMB)</td></tr>
+                            <tr><td class="p-2">11:01:02</td><td class="p-2 text-green-600">ALLOW</td><td class="p-2">443 (HTTPS)</td></tr>
+                            <tr><td class="p-2">11:00:55</td><td class="p-2 text-green-600">ALLOW</td><td class="p-2">53 (DNS)</td></tr>
+                            <tr><td class="p-2">11:00:41</td><td class="p-2 text-red-500">BLOCK</td><td class="p-2">23 (Telnet)</td></tr>
+                            <tr><td class="p-2">11:00:15</td><td class="p-2 text-green-600">ALLOW</td><td class="p-2">443 (HTTPS)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+        
+        <footer class="mt-8 mb-4 text-center text-xs text-gray-400 dark:text-gray-500">
+            <p>NPM 2.0 Operational Command Center • Powered by Meraki & Mist Integration</p>
+        </footer>
+    </main>
+
+    <script>
+        // --- THEME TOGGLE LOGIC ---
+        const themeToggleBtn = document.getElementById('themeToggle');
+        const htmlElement = document.documentElement;
+        let isDark = false;
+
+        // Load saved theme preference from sessionStorage
+        function loadTheme() {
+            const savedTheme = sessionStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                isDark = true;
+                htmlElement.classList.add('dark');
+            } else {
+                isDark = false;
+                htmlElement.classList.remove('dark');
+            }
+        }
+
+        // Save theme preference to sessionStorage
+        function saveTheme() {
+            sessionStorage.setItem('theme', isDark ? 'dark' : 'light');
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            isDark = !isDark;
+            if (isDark) {
+                htmlElement.classList.add('dark');
+            } else {
+                htmlElement.classList.remove('dark');
+            }
+            saveTheme();
+            updateChartColors();
+        });
+
+        // Load theme on page load
+        loadTheme();
+
+        // --- SCOPE MANAGEMENT ---
+        let currentScope = 'Global';
+        let currentSiteFilter = null;
+
+        function updateDashboardScope(scope) {
+            // Check if this is a site-specific filter
+            let isSiteScope = false;
+            let siteName = null;
+
+            if (scope.startsWith('site:')) {
+                isSiteScope = true;
+                siteName = scope.substring(5); // Remove 'site:' prefix
+                currentSiteFilter = siteName;
+            } else {
+                currentScope = scope;
+                currentSiteFilter = null;
+            }
+
+            // TODO: Update dashboard data based on scope
+            console.log('Scope changed to:', isSiteScope ? siteName : currentScope);
+        }
+
+        function updateChartColors() {
+            const textColor = isDark ? '#9ca3af' : '#6b7280';
+            const gridColor = isDark ? '#374151' : '#e5e7eb';
+            Chart.defaults.color = textColor;
+            Chart.defaults.borderColor = gridColor;
+            
+            // Iterate and update all charts
+            Object.values(charts).forEach(chart => chart.update());
+        }
+
+        // --- Chart Initialization ---
+        const charts = {};
+
+        function initCharts() {
+            Chart.defaults.font.family = "'Inter', sans-serif";
+            Chart.defaults.color = '#6b7280';
+            Chart.defaults.responsive = true;
+            Chart.defaults.maintainAspectRatio = false;
+
+            // 1. CPU Gauge
+            charts.cpu = new Chart(document.getElementById('cpuGauge'), {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [42, 58],
+                        backgroundColor: ['#3b82f6', '#e5e7eb'],
+                        borderWidth: 0, cutout: '80%', circumference: 360
+                    }]
+                },
+                options: { plugins: { tooltip: { enabled: false } } }
+            });
+
+            // 2. Memory Gauge
+            charts.mem = new Chart(document.getElementById('memGauge'), {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [68, 32],
+                        backgroundColor: ['#8b5cf6', '#e5e7eb'],
+                        borderWidth: 0, cutout: '80%', circumference: 360
+                    }]
+                },
+                options: { plugins: { tooltip: { enabled: false } } }
+            });
+
+            // 3. Cellular Sparkline
+            charts.signal = new Chart(document.getElementById('signalSparkline'), {
+                type: 'line',
+                data: {
+                    labels: Array(24).fill(''),
+                    datasets: [{
+                        data: [85,86,84,85,88,90,89,85,82,80,78,85,88,92,91,89,88,85,86,84,83,85,85,85],
+                        borderColor: '#10b981', borderWidth: 2, pointRadius: 0, tension: 0.4
+                    }]
+                },
+                options: { 
+                    plugins: { legend: { display: false } },
+                    scales: { x: { display: false }, y: { display: false, min: 60, max: 100 } }
+                }
+            });
+
+            // 4. Uplink Health (Dual Axis) [cite: 16]
+            charts.uplink = new Chart(document.getElementById('uplinkChart'), {
+                type: 'line',
+                data: {
+                    labels: ['00:00','04:00','08:00','12:00','16:00','20:00'],
+                    datasets: [
+                        {
+                            label: 'Latency (ms)',
+                            data: [24, 28, 45, 120, 35, 26],
+                            borderColor: '#3b82f6',
+                            yAxisID: 'y',
+                            tension: 0.3
+                        },
+                        {
+                            label: 'Loss (%)',
+                            data: [0, 0, 0.5, 2.1, 0.2, 0],
+                            borderColor: '#f87171',
+                            borderDash: [5, 5],
+                            yAxisID: 'y1',
+                            tension: 0.1
+                        }
+                    ]
+                },
+                options: {
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { type: 'linear', display: true, position: 'left', title: {display: true, text: 'ms'} },
+                        y1: { type: 'linear', display: true, position: 'right', grid: {drawOnChartArea: false}, title: {display: true, text: '%'} }
+                    }
+                }
+            });
+
+            // 5. Throughput (Stacked Area) [cite: 18]
+            charts.throughput = new Chart(document.getElementById('throughputChart'), {
+                type: 'line',
+                data: {
+                    labels: ['6h','5h','4h','3h','2h','1h'],
+                    datasets: [
+                        {
+                            label: 'Tx (Upload)',
+                            data: [12, 15, 45, 30, 20, 18],
+                            borderColor: '#6366f1',
+                            backgroundColor: 'rgba(99, 102, 241, 0.2)',
+                            fill: true, tension: 0.4
+                        },
+                        {
+                            label: 'Rx (Download)',
+                            data: [40, 55, 120, 85, 60, 50],
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                            fill: true, tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    plugins: { legend: { position: 'bottom' } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+
+            // 6. Top Apps (Donut) [cite: 51]
+            charts.apps = new Chart(document.getElementById('appsChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['M365', 'Teams', 'Salesforce', 'YouTube', 'Other'],
+                    datasets: [{
+                        data: [45, 25, 15, 5, 10],
+                        backgroundColor: ['#3b82f6', '#6366f1', '#0ea5e9', '#ef4444', '#9ca3af'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    cutout: '65%',
+                    plugins: { 
+                        legend: { position: 'right', labels: { boxWidth: 10, font: { size: 10 } } } 
+                    }
+                }
+            });
+        }
+
+        // Initialize Everything
+        initCharts();
+
+        // Update chart colors after initialization if dark mode is already active
+        if (isDark) {
+            updateChartColors();
+        }
+
+    </script>
+</body>
+</html>
