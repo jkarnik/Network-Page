@@ -1,0 +1,205 @@
+/* Network Performance Monitoring - Shared Styles */
+
+/* Base Styles */
+body {
+    font-family: 'Inter', sans-serif;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+/* Page transition fade-in */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+body {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Card Component */
+.card {
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    flex-direction: column;
+}
+
+.card:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 3px;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #4b5563;
+}
+
+/* Timeline/Event Styles */
+.timeline-item {
+    position: relative;
+    padding-left: 1.5rem;
+    border-left: 2px solid #e5e7eb;
+    padding-bottom: 1rem;
+}
+
+.timeline-dot {
+    position: absolute;
+    left: -5px;
+    top: 0;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.dark .timeline-item {
+    border-left-color: #374151;
+}
+
+/* Signal Bars (for cellular widgets) */
+.signal-bar {
+    width: 4px;
+    border-radius: 1px;
+    background-color: #e5e7eb;
+    display: inline-block;
+    margin-right: 2px;
+}
+
+.signal-active {
+    background-color: #10b981;
+}
+
+.dark .signal-bar {
+    background-color: #374151;
+}
+
+.dark .signal-active {
+    background-color: #34d399;
+}
+
+/* Gauge Overlay Text */
+.gauge-value {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+.gauge-label {
+    position: absolute;
+    top: 72%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.875rem;
+}
+
+/* Status Grid Component */
+.status-grid {
+    display: grid;
+    grid-template-columns: auto repeat(3, 1fr);
+    gap: 1px;
+    background-color: #e5e7eb;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.dark .status-grid {
+    background-color: #374151;
+}
+
+.status-cell {
+    padding: 0.75rem;
+    text-align: center;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.dark .status-cell {
+    background-color: #1f2937;
+}
+
+.status-header {
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background-color: #f9fafb;
+}
+
+.dark .status-header {
+    background-color: #111827;
+    color: #d1d5db;
+}
+
+.status-cell.clickable {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.status-cell.clickable:hover {
+    transform: scale(1.05);
+    background-color: rgba(59, 130, 246, 0.1) !important;
+}
+
+.dark .status-cell.clickable:hover {
+    background-color: rgba(59, 130, 246, 0.2) !important;
+}
+
+/* Expandable Widget Overlay */
+.expanded-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.expanded-backdrop.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Expandable Card Styles */
+.card.expanded {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100vw - 3rem);
+    max-width: 1400px;
+    height: calc(100vh - 120px);
+    z-index: 1000;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Chart Interaction Styles */
+#latencyChart, #frustrationChart {
+    cursor: default;
+}
+
+#latencyChart:hover, #frustrationChart:hover {
+    cursor: pointer;
+}

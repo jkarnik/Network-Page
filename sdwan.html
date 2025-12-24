@@ -25,46 +25,8 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
-        }
-
-        /* Page transition fade-in */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        body {
-            animation: fadeIn 0.5s ease-in-out;
-        }
-
-        .card {
-            border-radius: 0.75rem;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-            transition: all 0.2s ease-in-out;
-            display: flex; flex-direction: column;
-        }
-        .card:hover { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-        
-        /* Signal Bars */
-        .signal-bar { width: 4px; border-radius: 1px; background-color: #e5e7eb; display: inline-block; margin-right: 2px; }
-        .signal-active { background-color: #10b981; }
-        .dark .signal-bar { background-color: #374151; }
-        .dark .signal-active { background-color: #34d399; }
-
-        /* Custom Scrollbar */
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
-        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #4b5563; }
-        
-        /* Swimlane Event Styles */
-        .timeline-item { position: relative; padding-left: 1.5rem; border-left: 2px solid #e5e7eb; padding-bottom: 1rem; }
-        .timeline-dot { position: absolute; left: -5px; top: 0; width: 8px; height: 8px; border-radius: 50%; }
-    </style>
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="assets/css/shared-styles.css">
 </head>
 <body class="bg-gray-100 text-gray-800 h-screen flex flex-col overflow-hidden dark:bg-dark-bg dark:text-dark-text">
 
@@ -661,7 +623,15 @@
         </footer>
     </main>
 
+    <!-- Import shared modules -->
+    <script src="assets/js/theme-manager.js"></script>
+    <script src="assets/js/chart-config.js"></script>
+    <script src="assets/js/navigation.js"></script>
+
     <script>
+        // Initialize navigation for SD-WAN page
+        NavigationManager.init('sdwan');
+
         // --- TAB SWITCHING LOGIC ---
         function switchTab(tabName) {
             // Hide all tab contents
@@ -691,42 +661,6 @@
             }
         }
 
-        // --- THEME TOGGLE LOGIC ---
-        const themeToggleBtn = document.getElementById('themeToggle');
-        const htmlElement = document.documentElement;
-        let isDark = false;
-
-        // Load saved theme preference from sessionStorage
-        function loadTheme() {
-            const savedTheme = sessionStorage.getItem('theme');
-            if (savedTheme === 'dark') {
-                isDark = true;
-                htmlElement.classList.add('dark');
-            } else {
-                isDark = false;
-                htmlElement.classList.remove('dark');
-            }
-        }
-
-        // Save theme preference to sessionStorage
-        function saveTheme() {
-            sessionStorage.setItem('theme', isDark ? 'dark' : 'light');
-        }
-
-        themeToggleBtn.addEventListener('click', () => {
-            isDark = !isDark;
-            if (isDark) {
-                htmlElement.classList.add('dark');
-            } else {
-                htmlElement.classList.remove('dark');
-            }
-            saveTheme();
-            updateChartColors();
-        });
-
-        // Load theme on page load
-        loadTheme();
-
         // --- SCOPE MANAGEMENT ---
         let currentScope = 'Global';
         let currentSiteFilter = null;
@@ -749,24 +683,12 @@
             console.log('Scope changed to:', isSiteScope ? siteName : currentScope);
         }
 
-        function updateChartColors() {
-            const textColor = isDark ? '#9ca3af' : '#6b7280';
-            const gridColor = isDark ? '#374151' : '#e5e7eb';
-            Chart.defaults.color = textColor;
-            Chart.defaults.borderColor = gridColor;
-            
-            // Iterate and update all charts
-            Object.values(charts).forEach(chart => chart.update());
-        }
-
         // --- Chart Initialization ---
         const charts = {};
 
         function initCharts() {
-            Chart.defaults.font.family = "'Inter', sans-serif";
-            Chart.defaults.color = '#6b7280';
-            Chart.defaults.responsive = true;
-            Chart.defaults.maintainAspectRatio = false;
+            // Initialize Chart.js defaults using shared config
+            ChartConfig.initDefaults();
 
             // 1. CPU Gauge
             charts.cpu = new Chart(document.getElementById('cpuGauge'), {
@@ -1209,9 +1131,12 @@
         // Initialize Everything
         initCharts();
 
+        // Register charts with theme manager for automatic theme updates
+        themeManager.registerCharts(charts);
+
         // Update chart colors after initialization if dark mode is already active
-        if (isDark) {
-            updateChartColors();
+        if (themeManager.isDarkMode()) {
+            themeManager.updateChartColors();
         }
 
         // --- FIREWALL LOGS SEARCH AND FILTER ---

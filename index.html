@@ -35,221 +35,8 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
-        }
-
-        /* Page transition fade-in */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        body {
-            animation: fadeIn 0.5s ease-in-out;
-        }
-        
-        .card {
-            border-radius: 0.75rem;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-            transition: all 0.2s ease-in-out;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .card:hover {
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-
-        /* Custom Scrollbar */
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: rgba(0,0,0,0.05); 
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #d1d5db; 
-            border-radius: 3px;
-        }
-        .dark .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #4b5563; 
-        }
-
-        /* Gauge Overlay Text */
-        .gauge-value {
-            position: absolute;
-            top: 55%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 2.5rem;
-            font-weight: 700;
-        }
-        .gauge-label {
-            position: absolute;
-            top: 72%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 0.875rem;
-        }
-
-        /* Status Matrix Grid */
-        .status-grid {
-            display: grid;
-            grid-template-columns: auto repeat(3, 1fr);
-            gap: 1px;
-            background-color: #e5e7eb; /* Border color */
-            border-radius: 0.5rem;
-            overflow: hidden;
-        }
-        .dark .status-grid {
-            background-color: #374151;
-        }
-        .status-cell {
-            padding: 0.75rem;
-            text-align: center;
-            background-color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        .dark .status-cell {
-            background-color: #1f2937;
-        }
-        .status-header {
-            font-weight: 600;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            background-color: #f9fafb;
-        }
-        .dark .status-header {
-            background-color: #111827;
-            color: #d1d5db;
-        }
-
-        /* Clickable chart labels */
-        #latencyChart, #frustrationChart {
-            cursor: default;
-        }
-
-        /* Show pointer cursor over y-axis labels */
-        #latencyChart:hover, #frustrationChart:hover {
-            cursor: pointer;
-        }
-
-        /* Overlay styles for expanded Active Clients widget */
-        #activeClientsCard.expanded {
-            position: fixed;
-            top: 80px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: calc(100vw - 3rem);
-            max-width: 1400px;
-            height: calc(100vh - 120px);
-            z-index: 1000;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-        }
-
-        /* Backdrop overlay */
-        #expandedBackdrop {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(4px);
-            z-index: 999;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease-in-out;
-        }
-
-        #expandedBackdrop.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        /* Smooth transition for card expansion */
-        #activeClientsCard {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* Hide original position when expanded */
-        #activeClientsCard.expanded ~ * {
-            pointer-events: none;
-        }
-
-        /* Device Status Distribution overlay styles */
-        #deviceStatusCard.expanded {
-            position: fixed;
-            top: 80px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: calc(100vw - 3rem);
-            max-width: 1400px;
-            height: calc(100vh - 120px);
-            z-index: 1000;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-        }
-
-        #deviceStatusCard {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* Make status cells clickable */
-        .status-cell.clickable {
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .status-cell.clickable:hover {
-            transform: scale(1.05);
-            background-color: rgba(59, 130, 246, 0.1) !important;
-        }
-
-        .dark .status-cell.clickable:hover {
-            background-color: rgba(59, 130, 246, 0.2) !important;
-        }
-
-        /* Network Issues overlay styles */
-        #networkIssuesCard.expanded {
-            position: fixed;
-            top: 80px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: calc(100vw - 3rem);
-            max-width: 1400px;
-            height: calc(100vh - 120px);
-            z-index: 1000;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-        }
-
-        #networkIssuesCard {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* Security Posture overlay styles */
-        #securityCard.expanded {
-            position: fixed;
-            top: 80px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: calc(100vw - 3rem);
-            max-width: 1400px;
-            height: calc(100vh - 120px);
-            z-index: 1000;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-        }
-
-        #securityCard {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-    </style>
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="assets/css/shared-styles.css">
 </head>
 <body class="bg-gray-100 text-gray-800 h-screen flex flex-col overflow-hidden dark:bg-dark-bg dark:text-dark-text">
 
@@ -747,54 +534,15 @@
         </footer>
     </main>
 
+    <!-- Import shared modules -->
+    <script src="assets/js/theme-manager.js"></script>
+    <script src="assets/js/chart-config.js"></script>
+    <script src="assets/js/navigation.js"></script>
+
     <!-- Script for Logic and Charts -->
     <script>
-        // --- THEME TOGGLE LOGIC ---
-        const themeToggleBtn = document.getElementById('themeToggle');
-        const htmlElement = document.documentElement;
-        let isDark = false;
-
-        // Load saved theme preference from sessionStorage
-        function loadTheme() {
-            const savedTheme = sessionStorage.getItem('theme');
-            if (savedTheme === 'dark') {
-                isDark = true;
-                htmlElement.classList.add('dark');
-            } else {
-                isDark = false;
-                htmlElement.classList.remove('dark');
-            }
-        }
-
-        // Save theme preference to sessionStorage
-        function saveTheme() {
-            sessionStorage.setItem('theme', isDark ? 'dark' : 'light');
-        }
-
-        function updateChartColors() {
-            const textColor = isDark ? '#9ca3af' : '#6b7280';
-            const gridColor = isDark ? '#374151' : '#e5e7eb';
-
-            Chart.defaults.color = textColor;
-            Chart.defaults.borderColor = gridColor;
-
-            // Re-render all charts to apply new colors
-            Chart.instances.forEach(chart => chart.update());
-        }
-
-        themeToggleBtn.addEventListener('click', () => {
-            isDark = !isDark;
-            if (isDark) {
-                htmlElement.classList.add('dark');
-            } else {
-                htmlElement.classList.remove('dark');
-            }
-            saveTheme();
-            updateChartColors();
-        });
-
-        // Load theme on page load
-        loadTheme();
+        // Initialize navigation for Summary page
+        NavigationManager.init('summary');
 
 
         // --- 1. DATA CONFIGURATION & STATE MANAGEMENT ---
@@ -1109,10 +857,8 @@
         // --- 3. CHART INITIALIZATION ---
 
         function initCharts() {
-            Chart.defaults.font.family = "'Inter', sans-serif";
-            Chart.defaults.color = '#6b7280';
-            Chart.defaults.responsive = true;
-            Chart.defaults.maintainAspectRatio = false;
+            // Initialize Chart.js defaults using shared config
+            ChartConfig.initDefaults();
 
             // A. Health
             charts.health = new Chart(document.getElementById('healthGauge').getContext('2d'), {
@@ -2152,9 +1898,12 @@
         initCharts();
         updateDashboardScope('Global'); // Load Global Data initially
 
+        // Register charts with theme manager for automatic theme updates
+        themeManager.registerCharts(charts);
+
         // Update chart colors after initialization if dark mode is already active
-        if (isDark) {
-            updateChartColors();
+        if (themeManager.isDarkMode()) {
+            themeManager.updateChartColors();
         }
 
     </script>
