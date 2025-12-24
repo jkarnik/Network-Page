@@ -157,71 +157,65 @@
                 </div>
             </div>
 
-            <div class="col-span-12 md:col-span-3 card p-4 bg-white dark:bg-dark-card">
-                <h3 class="text-sm font-bold text-gray-700 dark:text-white mb-2">System Load</h3>
-                <div class="flex justify-around items-center h-full">
-                    <div class="relative w-20 h-20">
+            <!-- CPU Widget -->
+            <div class="col-span-12 md:col-span-3 card p-4 bg-white dark:bg-dark-card" style="min-height: 180px;">
+                <h3 class="text-sm font-bold text-gray-700 dark:text-white mb-3">CPU Load</h3>
+                <div class="flex gap-3" style="height: calc(100% - 32px);">
+                    <div class="relative w-20 h-20 flex-shrink-0 self-start" style="margin-top: 20px;">
                         <canvas id="cpuGauge"></canvas>
-                        <div class="absolute inset-0 flex flex-col items-center justify-center text-xs text-gray-500">
+                        <div class="absolute inset-0 flex flex-col items-center justify-center text-xs text-gray-500 dark:text-gray-400" style="top: 10px;">
                             <span class="font-bold text-gray-800 dark:text-white text-sm" id="cpuValue">42%</span>
-                            CPU
+                            <span class="mt-0.5">CPU</span>
                         </div>
                     </div>
-                    <div class="relative w-20 h-20">
-                        <canvas id="memGauge"></canvas>
-                        <div class="absolute inset-0 flex flex-col items-center justify-center text-xs text-gray-500">
-                            <span class="font-bold text-gray-800 dark:text-white text-sm" id="memValue">68%</span>
-                            MEM
-                        </div>
+                    <div class="flex-1" style="min-width: 0; position: relative; height: 100%;">
+                        <canvas id="cpuSparkline"></canvas>
                     </div>
                 </div>
             </div>
 
-            <div class="col-span-12 md:col-span-3 card p-4 bg-white dark:bg-dark-card">
-                <div class="flex justify-between items-start mb-2">
+            <!-- Memory Widget -->
+            <div class="col-span-12 md:col-span-3 card p-4 bg-white dark:bg-dark-card" style="min-height: 180px;">
+                <h3 class="text-sm font-bold text-gray-700 dark:text-white mb-3">Memory Load</h3>
+                <div class="flex gap-3" style="height: calc(100% - 32px);">
+                    <div class="relative w-20 h-20 flex-shrink-0 self-start" style="margin-top: 20px;">
+                        <canvas id="memGauge"></canvas>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center text-xs text-gray-500 dark:text-gray-400" style="top: 10px;">
+                            <span class="font-bold text-gray-800 dark:text-white text-sm" id="memValue">68%</span>
+                            <span class="mt-0.5">MEM</span>
+                        </div>
+                    </div>
+                    <div class="flex-1" style="min-width: 0; position: relative; height: 100%;">
+                        <canvas id="memSparkline"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cellular Backup Widget -->
+            <div class="col-span-12 md:col-span-3 card p-4 bg-white dark:bg-dark-card" style="min-height: 180px;">
+                <div class="flex justify-between items-start mb-3">
                     <h3 class="text-sm font-bold text-gray-700 dark:text-white">Cellular Backup</h3>
                     <span class="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded dark:bg-blue-900/30 dark:text-blue-300">Verizon</span>
                 </div>
-                <div class="flex items-center gap-3 mb-2">
-                    <div class="flex items-end h-6 gap-1" title="-85 dBm">
-                        <div class="signal-bar h-2 signal-active"></div>
-                        <div class="signal-bar h-3 signal-active"></div>
-                        <div class="signal-bar h-4 signal-active"></div>
-                        <div class="signal-bar h-5 signal-active"></div> <div class="signal-bar h-6"></div>
+                <div class="flex gap-3" style="height: calc(100% - 44px);">
+                    <div class="flex flex-col items-center gap-1 flex-shrink-0 self-start" style="margin-top: 40px;">
+                        <div class="flex items-end h-8 gap-1" title="-85 dBm">
+                            <div class="signal-bar h-2 signal-active"></div>
+                            <div class="signal-bar h-4 signal-active"></div>
+                            <div class="signal-bar h-5 signal-active"></div>
+                            <div class="signal-bar h-6 signal-active"></div>
+                            <div class="signal-bar h-8"></div>
+                        </div>
+                        <span class="text-xs font-bold dark:text-white" style="margin-top: 5px;">-85 dBm</span>
                     </div>
-                    <span class="text-sm font-bold dark:text-white">-85 dBm</span>
+                    <div class="flex-1" style="min-width: 0; position: relative; height: 100%;">
+                        <canvas id="signalSparkline"></canvas>
+                    </div>
                 </div>
-                <div class="flex-1 min-h-0 relative">
-                    <canvas id="signalSparkline"></canvas>
-                </div>
-                <p class="text-[10px] text-gray-400 mt-1">Signal Quality (RSRP) - Last 24h</p>
             </div>
 
-             <div class="col-span-12 md:col-span-3 card p-4 bg-white dark:bg-dark-card overflow-auto custom-scrollbar">
-                <h3 class="text-sm font-bold text-gray-700 dark:text-white mb-2">BGP Neighbors</h3>
-                <ul class="space-y-2 text-sm">
-                    <li class="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-800 rounded">
-                        <span class="font-mono text-xs">10.255.0.1 (ISP-A)</span>
-                        <div class="flex items-center gap-1 text-green-600 text-xs font-bold">
-                            <i class="fa-solid fa-check-circle"></i> ESTAB
-                        </div>
-                    </li>
-                    <li class="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-800 rounded">
-                        <span class="font-mono text-xs">10.255.0.5 (ISP-B)</span>
-                        <div class="flex items-center gap-1 text-green-600 text-xs font-bold">
-                            <i class="fa-solid fa-check-circle"></i> ESTAB
-                        </div>
-                    </li>
-                    <li class="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-800 rounded">
-                        <span class="font-mono text-xs">192.168.20.1 (Core)</span>
-                        <div class="flex items-center gap-1 text-red-500 text-xs font-bold">
-                            <i class="fa-solid fa-circle-xmark"></i> IDLE
-                        </div>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="col-span-12 lg:col-span-8 card p-4 h-80 bg-white dark:bg-dark-card">
+            <!-- ROW 2: Uplink Health, WAN Throughput, Top Applications -->
+            <div class="col-span-12 lg:col-span-5 card p-4 h-80 bg-white dark:bg-dark-card">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="text-sm font-bold text-gray-700 dark:text-white">Uplink Health (Latency vs Loss)</h3>
                     <div class="flex gap-2">
@@ -244,7 +238,88 @@
                 </div>
             </div>
 
-            <div class="col-span-12 lg:col-span-6 card p-0 bg-white dark:bg-dark-card overflow-hidden h-80">
+            <div class="col-span-12 lg:col-span-3 card p-4 h-80 bg-white dark:bg-dark-card">
+                <h3 class="text-sm font-bold text-gray-700 dark:text-white mb-2">Top Applications (L7)</h3>
+                <div class="relative h-full flex items-center justify-center">
+                    <canvas id="appsChart"></canvas>
+                </div>
+            </div>
+
+            <!-- ROW 3: Wireless Threats, Sequential Event Timeline, VPN Tunnel Status -->
+            <div class="col-span-12 md:col-span-6 lg:col-span-3 card p-4 bg-white dark:bg-dark-card overflow-hidden" style="height: 240px;">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="text-sm font-bold text-gray-700 dark:text-white">Wireless Threats</h3>
+                    <span class="bg-red-100 text-red-800 text-xs px-2 py-0.5 rounded-full font-bold">2 Active</span>
+                </div>
+                <div class="flex-1 overflow-auto custom-scrollbar space-y-3">
+                    <div class="p-3 border border-red-200 bg-red-50 dark:bg-red-900/10 dark:border-red-900 rounded-lg">
+                        <div class="flex items-center gap-2 text-red-700 dark:text-red-400 mb-1">
+                            <i class="fa-solid fa-skull-crossbones"></i>
+                            <span class="text-xs font-bold uppercase">Rogue AP</span>
+                        </div>
+                        <p class="text-sm font-semibold dark:text-gray-200">SSID: "Free_WiFi"</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Seen by: AP-Lobby (RSSI -65)</p>
+                    </div>
+                    <div class="p-3 border border-amber-200 bg-amber-50 dark:bg-amber-900/10 dark:border-amber-900 rounded-lg">
+                        <div class="flex items-center gap-2 text-amber-700 dark:text-amber-400 mb-1">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <span class="text-xs font-bold uppercase">Spoof Detected</span>
+                        </div>
+                        <p class="text-sm font-semibold dark:text-gray-200">MAC: ab:cd:ef:12:34</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Type: Man-in-the-Middle</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-span-12 lg:col-span-4 card p-4 bg-white dark:bg-dark-card overflow-hidden flex flex-col" style="height: 240px;">
+                <div class="flex justify-between items-center mb-4 flex-none">
+                    <h3 class="text-sm font-bold text-gray-700 dark:text-white">Sequential Event Timeline</h3>
+                    <span class="text-[10px] text-gray-400">Last 24 Hours</span>
+                </div>
+
+                <div class="pl-2 space-y-0 overflow-y-auto custom-scrollbar flex-1 pr-2">
+
+                    <div class="timeline-item dark:border-gray-700 pb-5">
+                        <div class="timeline-dot bg-amber-500 ring-4 ring-white dark:ring-dark-card"></div>
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-xs text-gray-400 dark:text-gray-500">10:50 AM - 11:15 AM</p>
+                                <p class="text-sm font-medium text-gray-900 dark:text-white flex items-center gap-2">
+                                    OSPF Flapping Detected
+                                    <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-200 dark:border-amber-800">
+                                        25 Events
+                                    </span>
+                                </p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Neighbor 10.255.0.1 state changing repeatedly (Full/Down)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item dark:border-gray-700 pb-5">
+                        <div class="timeline-dot bg-red-500 ring-4 ring-white dark:ring-dark-card"></div>
+                        <p class="text-xs text-gray-400 dark:text-gray-500">10:42 AM</p>
+                        <p class="text-sm font-medium text-gray-900 dark:text-white">Critical Link Failure</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Physical carrier loss detected on Port 2 (WAN 1)</p>
+                    </div>
+
+                    <div class="timeline-item dark:border-gray-700 pb-5">
+                        <div class="timeline-dot bg-blue-500 ring-4 ring-white dark:ring-dark-card"></div>
+                        <p class="text-xs text-gray-400 dark:text-gray-500">10:42 AM</p>
+                        <p class="text-sm font-medium text-gray-900 dark:text-white">Auto-VPN Failover</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Traffic rerouted to LTE Backup (Verizon) automatically</p>
+                    </div>
+
+                    <div class="timeline-item border-none dark:border-gray-700 pb-2">
+                        <div class="timeline-dot bg-gray-400 ring-4 ring-white dark:ring-dark-card"></div>
+                        <p class="text-xs text-gray-400 dark:text-gray-500">08:00 AM</p>
+                        <p class="text-sm font-medium text-gray-900 dark:text-white">Daily Backup</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Configuration snapshot saved successfully</p>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-span-12 lg:col-span-5 card p-0 bg-white dark:bg-dark-card overflow-hidden" style="height: 240px;">
                 <div class="p-4 border-b border-gray-100 dark:border-gray-700">
                     <h3 class="text-sm font-bold text-gray-700 dark:text-white">VPN Tunnel Status (Overlay)</h3>
                 </div>
@@ -293,107 +368,184 @@
                 </div>
             </div>
 
-            <div class="col-span-12 md:col-span-6 lg:col-span-3 card p-4 h-80 bg-white dark:bg-dark-card">
-                <h3 class="text-sm font-bold text-gray-700 dark:text-white mb-2">Top Applications (L7)</h3>
-                <div class="relative h-full flex items-center justify-center">
-                    <canvas id="appsChart"></canvas>
-                </div>
+            <!-- ROW 4: BGP Neighbors, Active Route Table -->
+            <div class="col-span-12 md:col-span-4 card p-4 bg-white dark:bg-dark-card overflow-auto custom-scrollbar" style="height: 220px;">
+                <h3 class="text-sm font-bold text-gray-700 dark:text-white mb-2">BGP Neighbors</h3>
+                <ul class="space-y-2 text-sm">
+                    <li class="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-800 rounded">
+                        <span class="font-mono text-xs">10.255.0.1 (ISP-A)</span>
+                        <div class="flex items-center gap-1 text-green-600 text-xs font-bold">
+                            <i class="fa-solid fa-check-circle"></i> ESTAB
+                        </div>
+                    </li>
+                    <li class="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-800 rounded">
+                        <span class="font-mono text-xs">10.255.0.5 (ISP-B)</span>
+                        <div class="flex items-center gap-1 text-green-600 text-xs font-bold">
+                            <i class="fa-solid fa-check-circle"></i> ESTAB
+                        </div>
+                    </li>
+                    <li class="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-800 rounded">
+                        <span class="font-mono text-xs">192.168.20.1 (Core)</span>
+                        <div class="flex items-center gap-1 text-red-500 text-xs font-bold">
+                            <i class="fa-solid fa-circle-xmark"></i> IDLE
+                        </div>
+                    </li>
+                </ul>
             </div>
 
-            <div class="col-span-12 md:col-span-6 lg:col-span-3 card p-4 h-80 bg-white dark:bg-dark-card overflow-hidden">
-                <div class="flex justify-between items-center mb-3">
-                    <h3 class="text-sm font-bold text-gray-700 dark:text-white">Wireless Threats</h3>
-                    <span class="bg-red-100 text-red-800 text-xs px-2 py-0.5 rounded-full font-bold">2 Active</span>
-                </div>
-                <div class="flex-1 overflow-auto custom-scrollbar space-y-3">
-                    <div class="p-3 border border-red-200 bg-red-50 dark:bg-red-900/10 dark:border-red-900 rounded-lg">
-                        <div class="flex items-center gap-2 text-red-700 dark:text-red-400 mb-1">
-                            <i class="fa-solid fa-skull-crossbones"></i>
-                            <span class="text-xs font-bold uppercase">Rogue AP</span>
-                        </div>
-                        <p class="text-sm font-semibold dark:text-gray-200">SSID: "Free_WiFi"</p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">Seen by: AP-Lobby (RSSI -65)</p>
-                    </div>
-                    <div class="p-3 border border-amber-200 bg-amber-50 dark:bg-amber-900/10 dark:border-amber-900 rounded-lg">
-                        <div class="flex items-center gap-2 text-amber-700 dark:text-amber-400 mb-1">
-                            <i class="fa-solid fa-triangle-exclamation"></i>
-                            <span class="text-xs font-bold uppercase">Spoof Detected</span>
-                        </div>
-                        <p class="text-sm font-semibold dark:text-gray-200">MAC: ab:cd:ef:12:34</p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">Type: Man-in-the-Middle</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-span-12 lg:col-span-5 card p-0 bg-white dark:bg-dark-card h-80 overflow-hidden">
+            <div class="col-span-12 md:col-span-8 card p-0 bg-white dark:bg-dark-card overflow-hidden" style="height: 220px;">
                 <div class="p-4 border-b border-gray-100 dark:border-gray-700">
                     <h3 class="text-sm font-bold text-gray-700 dark:text-white">Active Route Table (RIB)</h3>
                 </div>
-                <div class="overflow-auto custom-scrollbar h-full">
+                <div class="overflow-auto custom-scrollbar" style="height: calc(100% - 56px);">
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0">
                             <tr>
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Prefix</th>
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Next Hop</th>
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Proto</th>
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Intf</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Destination Prefix</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Next Hop IP</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Protocol</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Interface</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Metric</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white dark:bg-dark-card text-xs divide-y divide-gray-100 dark:divide-gray-700 font-mono">
-                            <tr><td>0.0.0.0/0</td><td>192.168.1.1</td><td class="text-blue-600">STATIC</td><td>ge-0/0/0</td></tr>
-                            <tr><td>10.0.0.0/8</td><td>10.255.0.1</td><td class="text-green-600">BGP</td><td>tun0</td></tr>
-                            <tr><td>172.16.0.0/12</td><td>10.255.0.5</td><td class="text-green-600">BGP</td><td>tun1</td></tr>
-                            <tr><td>192.168.45.0/24</td><td>Direct</td><td class="text-gray-500">CONN</td><td>ge-0/0/1</td></tr>
+                            <tr>
+                                <td class="px-4 py-2">0.0.0.0/0</td>
+                                <td class="px-4 py-2">192.168.1.1</td>
+                                <td class="px-4 py-2 text-blue-600 font-bold">STATIC</td>
+                                <td class="px-4 py-2">ge-0/0/0</td>
+                                <td class="px-4 py-2">10</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-2">10.0.0.0/8</td>
+                                <td class="px-4 py-2">10.255.0.1</td>
+                                <td class="px-4 py-2 text-green-600 font-bold">BGP</td>
+                                <td class="px-4 py-2">tun0</td>
+                                <td class="px-4 py-2">100</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-2">172.16.0.0/12</td>
+                                <td class="px-4 py-2">10.255.0.5</td>
+                                <td class="px-4 py-2 text-green-600 font-bold">BGP</td>
+                                <td class="px-4 py-2">tun1</td>
+                                <td class="px-4 py-2">100</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-2">192.168.45.0/24</td>
+                                <td class="px-4 py-2">Direct</td>
+                                <td class="px-4 py-2 text-gray-500">CONN</td>
+                                <td class="px-4 py-2">ge-0/0/1</td>
+                                <td class="px-4 py-2">0</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-2">192.168.100.0/24</td>
+                                <td class="px-4 py-2">10.255.0.1</td>
+                                <td class="px-4 py-2 text-orange-500 font-bold">OSPF</td>
+                                <td class="px-4 py-2">tun0</td>
+                                <td class="px-4 py-2">110</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-2">10.10.0.0/16</td>
+                                <td class="px-4 py-2">10.255.0.5</td>
+                                <td class="px-4 py-2 text-green-600 font-bold">BGP</td>
+                                <td class="px-4 py-2">tun1</td>
+                                <td class="px-4 py-2">100</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-2">172.20.0.0/16</td>
+                                <td class="px-4 py-2">192.168.1.254</td>
+                                <td class="px-4 py-2 text-blue-600 font-bold">STATIC</td>
+                                <td class="px-4 py-2">ge-0/0/0</td>
+                                <td class="px-4 py-2">20</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <div class="col-span-12 lg:col-span-4 card p-4 h-80 bg-white dark:bg-dark-card overflow-y-auto custom-scrollbar">
-                <h3 class="text-sm font-bold text-gray-700 dark:text-white mb-4">Sequential Event Timeline</h3>
-                <div class="pl-2">
-                    <div class="timeline-item dark:border-gray-700">
-                        <div class="timeline-dot bg-green-500"></div>
-                        <p class="text-xs text-gray-400">10:45 AM</p>
-                        <p class="text-sm font-medium dark:text-white">OSPF Adjacency Restored</p>
-                        <p class="text-xs text-gray-500">Neighbor 192.168.20.1 is UP</p>
-                    </div>
-                    <div class="timeline-item dark:border-gray-700">
-                        <div class="timeline-dot bg-red-500"></div>
-                        <p class="text-xs text-gray-400">10:42 AM</p>
-                        <p class="text-sm font-medium dark:text-white">Link Failure: Port 2</p>
-                        <p class="text-xs text-gray-500">Physical carrier loss detected</p>
-                    </div>
-                    <div class="timeline-item dark:border-gray-700">
-                        <div class="timeline-dot bg-amber-500"></div>
-                        <p class="text-xs text-gray-400">10:38 AM</p>
-                        <p class="text-sm font-medium dark:text-white">High Latency Alert</p>
-                        <p class="text-xs text-gray-500">Uplink 1 latency > 200ms</p>
-                    </div>
-                    <div class="timeline-item border-none dark:border-gray-700">
-                        <div class="timeline-dot bg-blue-500"></div>
-                        <p class="text-xs text-gray-400">08:00 AM</p>
-                        <p class="text-sm font-medium dark:text-white">Configuration Change</p>
-                        <p class="text-xs text-gray-500">Admin committed policy ID #4092</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-span-12 lg:col-span-3 card p-0 bg-white dark:bg-dark-card h-80 flex flex-col">
+            <!-- ROW 5: Firewall Logs -->
+            <div class="col-span-12 card p-0 bg-white dark:bg-dark-card h-96 flex flex-col">
                 <div class="p-4 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
-                    <h3 class="text-sm font-bold text-gray-700 dark:text-white">Firewall Logs</h3>
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-sm font-bold text-gray-700 dark:text-white">Firewall Logs</h3>
+                        <div class="flex gap-2">
+                            <input type="text" id="firewallSearch" placeholder="Search logs..." class="px-3 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <select id="firewallFilter" class="px-3 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="all">All Actions</option>
+                                <option value="ALLOW">ALLOW</option>
+                                <option value="BLOCK">BLOCK</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
                 <div class="flex-1 overflow-auto custom-scrollbar">
                     <table class="w-full text-xs">
-                        <thead class="bg-gray-50 dark:bg-gray-700 text-gray-500">
-                            <tr><th class="p-2 text-left">Time</th><th class="p-2 text-left">Action</th><th class="p-2 text-left">Dst Port</th></tr>
+                        <thead class="bg-gray-50 dark:bg-gray-800 text-gray-500 sticky top-0">
+                            <tr>
+                                <th class="px-4 py-2 text-left font-medium uppercase">Timestamp</th>
+                                <th class="px-4 py-2 text-left font-medium uppercase">Src IP</th>
+                                <th class="px-4 py-2 text-left font-medium uppercase">Dst IP</th>
+                                <th class="px-4 py-2 text-left font-medium uppercase">Port</th>
+                                <th class="px-4 py-2 text-left font-medium uppercase">Protocol</th>
+                                <th class="px-4 py-2 text-left font-medium uppercase">Action</th>
+                                <th class="px-4 py-2 text-left font-medium uppercase">Rule ID</th>
+                            </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-100 dark:divide-gray-700 dark:text-gray-300">
-                            <tr><td class="p-2">11:01:05</td><td class="p-2 text-red-500">BLOCK</td><td class="p-2">445 (SMB)</td></tr>
-                            <tr><td class="p-2">11:01:02</td><td class="p-2 text-green-600">ALLOW</td><td class="p-2">443 (HTTPS)</td></tr>
-                            <tr><td class="p-2">11:00:55</td><td class="p-2 text-green-600">ALLOW</td><td class="p-2">53 (DNS)</td></tr>
-                            <tr><td class="p-2">11:00:41</td><td class="p-2 text-red-500">BLOCK</td><td class="p-2">23 (Telnet)</td></tr>
-                            <tr><td class="p-2">11:00:15</td><td class="p-2 text-green-600">ALLOW</td><td class="p-2">443 (HTTPS)</td></tr>
+                        <tbody id="firewallTableBody" class="divide-y divide-gray-100 dark:divide-gray-700 dark:text-gray-300 font-mono">
+                            <tr>
+                                <td class="px-4 py-2">2024-12-24 11:01:05</td>
+                                <td class="px-4 py-2">192.168.1.100</td>
+                                <td class="px-4 py-2">185.220.101.45</td>
+                                <td class="px-4 py-2">445</td>
+                                <td class="px-4 py-2">TCP</td>
+                                <td class="px-4 py-2 text-red-500 font-bold">BLOCK</td>
+                                <td class="px-4 py-2">R-1024</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-2">2024-12-24 11:01:02</td>
+                                <td class="px-4 py-2">192.168.1.55</td>
+                                <td class="px-4 py-2">1.1.1.1</td>
+                                <td class="px-4 py-2">443</td>
+                                <td class="px-4 py-2">TCP</td>
+                                <td class="px-4 py-2 text-green-600 font-bold">ALLOW</td>
+                                <td class="px-4 py-2">R-0001</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-2">2024-12-24 11:00:55</td>
+                                <td class="px-4 py-2">192.168.1.22</td>
+                                <td class="px-4 py-2">8.8.8.8</td>
+                                <td class="px-4 py-2">53</td>
+                                <td class="px-4 py-2">UDP</td>
+                                <td class="px-4 py-2 text-green-600 font-bold">ALLOW</td>
+                                <td class="px-4 py-2">R-0002</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-2">2024-12-24 11:00:41</td>
+                                <td class="px-4 py-2">192.168.1.88</td>
+                                <td class="px-4 py-2">203.0.113.10</td>
+                                <td class="px-4 py-2">23</td>
+                                <td class="px-4 py-2">TCP</td>
+                                <td class="px-4 py-2 text-red-500 font-bold">BLOCK</td>
+                                <td class="px-4 py-2">R-1025</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-2">2024-12-24 11:00:15</td>
+                                <td class="px-4 py-2">192.168.1.42</td>
+                                <td class="px-4 py-2">172.217.164.46</td>
+                                <td class="px-4 py-2">443</td>
+                                <td class="px-4 py-2">TCP</td>
+                                <td class="px-4 py-2 text-green-600 font-bold">ALLOW</td>
+                                <td class="px-4 py-2">R-0001</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-2">2024-12-24 10:59:58</td>
+                                <td class="px-4 py-2">192.168.1.77</td>
+                                <td class="px-4 py-2">104.26.10.23</td>
+                                <td class="px-4 py-2">80</td>
+                                <td class="px-4 py-2">TCP</td>
+                                <td class="px-4 py-2 text-green-600 font-bold">ALLOW</td>
+                                <td class="px-4 py-2">R-0003</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -510,19 +662,210 @@
                 options: { plugins: { tooltip: { enabled: false } } }
             });
 
-            // 3. Cellular Sparkline
+            // 3. CPU Sparkline
+            charts.cpuSparkline = new Chart(document.getElementById('cpuSparkline'), {
+                type: 'line',
+                data: {
+                    labels: ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'],
+                    datasets: [{
+                        label: 'CPU Usage',
+                        data: [38,40,42,45,43,41,39,42,44,46,45,42,40,38,41,43,45,44,42,40,39,41,42,42],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        pointHoverRadius: 4,
+                        pointHoverBackgroundColor: '#3b82f6',
+                        pointHoverBorderColor: '#fff',
+                        pointHoverBorderWidth: 2,
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            enabled: true,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: '#3b82f6',
+                            borderWidth: 1,
+                            displayColors: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return 'CPU: ' + context.parsed.y + '%';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            grid: { display: false },
+                            ticks: {
+                                maxRotation: 0,
+                                autoSkipPadding: 20,
+                                font: { size: 9 }
+                            }
+                        },
+                        y: {
+                            display: true,
+                            min: 0,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) { return value + '%'; },
+                                font: { size: 9 },
+                                stepSize: 25
+                            },
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' }
+                        }
+                    }
+                }
+            });
+
+            // 4. Memory Sparkline
+            charts.memSparkline = new Chart(document.getElementById('memSparkline'), {
+                type: 'line',
+                data: {
+                    labels: ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'],
+                    datasets: [{
+                        label: 'Memory Usage',
+                        data: [65,66,68,70,69,67,66,68,69,70,71,68,67,65,66,68,69,70,68,67,66,67,68,68],
+                        borderColor: '#8b5cf6',
+                        backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        pointHoverRadius: 4,
+                        pointHoverBackgroundColor: '#8b5cf6',
+                        pointHoverBorderColor: '#fff',
+                        pointHoverBorderWidth: 2,
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            enabled: true,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: '#8b5cf6',
+                            borderWidth: 1,
+                            displayColors: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return 'Memory: ' + context.parsed.y + '%';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            grid: { display: false },
+                            ticks: {
+                                maxRotation: 0,
+                                autoSkipPadding: 20,
+                                font: { size: 9 }
+                            }
+                        },
+                        y: {
+                            display: true,
+                            min: 0,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) { return value + '%'; },
+                                font: { size: 9 },
+                                stepSize: 25
+                            },
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' }
+                        }
+                    }
+                }
+            });
+
+            // 5. Cellular Sparkline
             charts.signal = new Chart(document.getElementById('signalSparkline'), {
                 type: 'line',
                 data: {
-                    labels: Array(24).fill(''),
+                    labels: ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'],
                     datasets: [{
+                        label: 'Signal Strength',
                         data: [85,86,84,85,88,90,89,85,82,80,78,85,88,92,91,89,88,85,86,84,83,85,85,85],
-                        borderColor: '#10b981', borderWidth: 2, pointRadius: 0, tension: 0.4
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        pointHoverRadius: 4,
+                        pointHoverBackgroundColor: '#10b981',
+                        pointHoverBorderColor: '#fff',
+                        pointHoverBorderWidth: 2,
+                        tension: 0.4,
+                        fill: true
                     }]
                 },
-                options: { 
-                    plugins: { legend: { display: false } },
-                    scales: { x: { display: false }, y: { display: false, min: 60, max: 100 } }
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            enabled: true,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: '#10b981',
+                            borderWidth: 1,
+                            displayColors: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return 'Signal: -' + context.parsed.y + ' dBm';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            grid: { display: false },
+                            ticks: {
+                                maxRotation: 0,
+                                autoSkipPadding: 20,
+                                font: { size: 9 }
+                            }
+                        },
+                        y: {
+                            display: true,
+                            min: 60,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) { return '-' + value; },
+                                font: { size: 9 },
+                                stepSize: 10
+                            },
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' }
+                        }
+                    }
                 }
             });
 
@@ -536,6 +879,14 @@
                             label: 'Latency (ms)',
                             data: [24, 28, 45, 120, 35, 26],
                             borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            pointRadius: 3,
+                            pointHoverRadius: 6,
+                            pointBackgroundColor: '#3b82f6',
+                            pointHoverBackgroundColor: '#3b82f6',
+                            pointBorderColor: '#fff',
+                            pointHoverBorderColor: '#fff',
+                            pointBorderWidth: 2,
                             yAxisID: 'y',
                             tension: 0.3
                         },
@@ -543,6 +894,14 @@
                             label: 'Loss (%)',
                             data: [0, 0, 0.5, 2.1, 0.2, 0],
                             borderColor: '#f87171',
+                            backgroundColor: 'rgba(248, 113, 113, 0.1)',
+                            pointRadius: 3,
+                            pointHoverRadius: 6,
+                            pointBackgroundColor: '#f87171',
+                            pointHoverBackgroundColor: '#f87171',
+                            pointBorderColor: '#fff',
+                            pointHoverBorderColor: '#fff',
+                            pointBorderWidth: 2,
                             borderDash: [5, 5],
                             yAxisID: 'y1',
                             tension: 0.1
@@ -550,7 +909,38 @@
                     ]
                 },
                 options: {
-                    plugins: { legend: { display: false } },
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            enabled: true,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: '#3b82f6',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    label += context.parsed.y;
+                                    if (context.datasetIndex === 0) {
+                                        label += ' ms';
+                                    } else {
+                                        label += '%';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
                     scales: {
                         y: { type: 'linear', display: true, position: 'left', title: {display: true, text: 'ms'} },
                         y1: { type: 'linear', display: true, position: 'right', grid: {drawOnChartArea: false}, title: {display: true, text: '%'} }
@@ -569,20 +959,71 @@
                             data: [12, 15, 45, 30, 20, 18],
                             borderColor: '#6366f1',
                             backgroundColor: 'rgba(99, 102, 241, 0.2)',
-                            fill: true, tension: 0.4
+                            pointRadius: 3,
+                            pointHoverRadius: 6,
+                            pointBackgroundColor: '#6366f1',
+                            pointHoverBackgroundColor: '#6366f1',
+                            pointBorderColor: '#fff',
+                            pointHoverBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            fill: true,
+                            tension: 0.4
                         },
                         {
                             label: 'Rx (Download)',
                             data: [40, 55, 120, 85, 60, 50],
                             borderColor: '#10b981',
                             backgroundColor: 'rgba(16, 185, 129, 0.2)',
-                            fill: true, tension: 0.4
+                            pointRadius: 3,
+                            pointHoverRadius: 6,
+                            pointBackgroundColor: '#10b981',
+                            pointHoverBackgroundColor: '#10b981',
+                            pointBorderColor: '#fff',
+                            pointHoverBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            fill: true,
+                            tension: 0.4
                         }
                     ]
                 },
                 options: {
-                    plugins: { legend: { position: 'bottom' } },
-                    scales: { y: { beginAtZero: true } }
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            enabled: true,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: '#6366f1',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    label += context.parsed.y + ' Mbps';
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + ' Mbps';
+                                }
+                            }
+                        }
+                    }
                 }
             });
 
@@ -599,8 +1040,20 @@
                 },
                 options: {
                     cutout: '65%',
-                    plugins: { 
-                        legend: { position: 'right', labels: { boxWidth: 10, font: { size: 10 } } } 
+                    plugins: {
+                        legend: { position: 'right', labels: { boxWidth: 10, font: { size: 10 } } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    label += context.parsed + '%';
+                                    return label;
+                                }
+                            }
+                        }
                     }
                 }
             });
@@ -613,6 +1066,35 @@
         if (isDark) {
             updateChartColors();
         }
+
+        // --- FIREWALL LOGS SEARCH AND FILTER ---
+        const firewallSearch = document.getElementById('firewallSearch');
+        const firewallFilter = document.getElementById('firewallFilter');
+        const firewallTableBody = document.getElementById('firewallTableBody');
+        const allRows = Array.from(firewallTableBody.getElementsByTagName('tr'));
+
+        function filterFirewallLogs() {
+            const searchTerm = firewallSearch.value.toLowerCase();
+            const filterValue = firewallFilter.value;
+
+            allRows.forEach(row => {
+                const cells = row.getElementsByTagName('td');
+                const rowText = Array.from(cells).map(cell => cell.textContent.toLowerCase()).join(' ');
+                const action = cells[5]?.textContent.trim();
+
+                const matchesSearch = rowText.includes(searchTerm);
+                const matchesFilter = filterValue === 'all' || action === filterValue;
+
+                if (matchesSearch && matchesFilter) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        firewallSearch.addEventListener('input', filterFirewallLogs);
+        firewallFilter.addEventListener('change', filterFirewallLogs);
 
     </script>
 </body>
