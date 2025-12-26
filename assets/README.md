@@ -10,8 +10,10 @@ assets/
 │   └── shared-styles.css    # Common styles for all pages
 └── js/
     ├── chart-config.js      # Chart.js configuration and utilities
+    ├── diagnostics-manager.js # Diagnostic tools system
     ├── navigation.js        # Navigation management
-    └── theme-manager.js     # Dark/light mode management
+    ├── theme-manager.js     # Dark/light mode management
+    └── ui-utilities.js      # Common UI helper functions
 ```
 
 ## Modules Overview
@@ -263,7 +265,164 @@ const chart = new Chart(ctx, {
 
 ---
 
-### 4. navigation.js
+### 4. diagnostics-manager.js
+
+Unified diagnostic tools system for all device types.
+
+**Global Object**: `DiagnosticsManager`
+
+**Supported Tools**:
+- **Ping** - ICMP echo requests (Gateway, Switch, AP)
+- **Traceroute** - Network path tracing (Gateway, Switch, AP)
+- **Cable Test** - Physical cable diagnostics (Switch only)
+- **Port Cycle** - PoE port power cycling (Switch only)
+- **LED Blink** - Physical device identification (All devices)
+- **Throughput** - Speed testing (Gateway, AP)
+
+**Methods**:
+
+#### `init(deviceType, containerId)`
+Initialize diagnostics for a specific device type.
+```javascript
+// Initialize for SD-WAN Gateway
+DiagnosticsManager.init('gateway', 'diagnostics-container');
+
+// Initialize for Switch
+DiagnosticsManager.init('switch', 'diagnostics-container');
+
+// Initialize for Access Point
+DiagnosticsManager.init('ap', 'diagnostics-container');
+```
+
+#### `render()`
+Render the diagnostic tools UI (called automatically by init).
+
+#### `selectTool(toolId)`
+Show configuration panel for a specific tool.
+```javascript
+DiagnosticsManager.selectTool('ping');
+```
+
+#### `runJob(toolId)`
+Execute a diagnostic job and display results.
+```javascript
+DiagnosticsManager.runJob('ping');
+```
+
+**Example Usage**:
+```javascript
+// In your page's Diagnostics tab content
+<div id="diagnostics-container" class="h-full"></div>
+
+<script>
+    // Initialize with device type
+    DiagnosticsManager.init('gateway', 'diagnostics-container');
+</script>
+```
+
+---
+
+### 5. ui-utilities.js
+
+Common UI helper functions to reduce code duplication across pages.
+
+**Global Object**: `UIUtilities`
+
+**Methods**:
+
+#### `switchTab(tabName, activeColor)`
+Generic tab switching function.
+```javascript
+function switchTab(tabName) {
+    UIUtilities.switchTab(tabName, 'blue');
+}
+```
+
+#### `createGaugeChart(canvasId, value, color, cutout)`
+Create a gauge/doughnut chart.
+```javascript
+const cpuGauge = UIUtilities.createGaugeChart('cpuGauge', 42, '#3b82f6', '80%');
+```
+
+#### `createSparklineChart(canvasId, labels, data, color, label, valueFormatter)`
+Create a small line chart (sparkline).
+```javascript
+const sparkline = UIUtilities.createSparklineChart(
+    'cpuSparkline',
+    ['00:00', '04:00', '08:00', '12:00'],
+    [20, 25, 30, 28],
+    '#3b82f6',
+    'CPU Usage',
+    (v) => v + '%'
+);
+```
+
+#### `showOverlay(overlayId)` / `hideOverlay(overlayId)`
+Show/hide modal overlays.
+```javascript
+UIUtilities.showOverlay('detailsOverlay');
+UIUtilities.hideOverlay('detailsOverlay');
+```
+
+#### `updateDeviceInfo(deviceName, deviceModel, deviceIP, deviceMAC, deviceUptime, deviceStatus)`
+Update the device info header.
+```javascript
+UIUtilities.updateDeviceInfo('NYC-Switch-01', 'Cisco Meraki MS390', '192.168.1.1');
+```
+
+#### `formatBytes(bytes, decimals)`
+Format bytes to human-readable format.
+```javascript
+UIUtilities.formatBytes(1536000); // Returns: "1.46 MB"
+```
+
+#### `formatUptime(seconds)`
+Format uptime in seconds to human-readable format.
+```javascript
+UIUtilities.formatUptime(2592000); // Returns: "30d 0h 0m"
+```
+
+#### `debounce(func, wait)`
+Debounce function for search/filter inputs.
+```javascript
+const debouncedSearch = UIUtilities.debounce((term) => {
+    console.log('Searching for:', term);
+}, 300);
+```
+
+#### `generateNormalRandom(mean, stdDev)`
+Generate random numbers with normal distribution.
+```javascript
+const randomPercentage = UIUtilities.generateNormalRandom(95, 2);
+```
+
+#### `generateTimeLabels(hours, suffix)`
+Create time label arrays for charts.
+```javascript
+const labels = UIUtilities.generateTimeLabels(24, 'Now');
+// Returns: ['00:00', '01:00', ..., 'Now']
+```
+
+**Example Usage**:
+```javascript
+// Replace duplicated tab switching code
+function switchTab(tabName) {
+    UIUtilities.switchTab(tabName, 'blue');
+}
+
+// Create gauge charts consistently
+const charts = {};
+charts.cpuGauge = UIUtilities.createGaugeChart('cpuGauge', 42, '#3b82f6');
+charts.memGauge = UIUtilities.createGaugeChart('memGauge', 68, '#8b5cf6');
+
+// Format data consistently
+document.getElementById('usage').textContent = UIUtilities.formatBytes(bytes);
+document.getElementById('uptime').textContent = UIUtilities.formatUptime(seconds);
+```
+
+---
+
+### 6. navigation.js
 
 Manages navigation state and active page highlighting.
 
@@ -375,6 +534,8 @@ Here's a complete example of how to use all modules together in a new page:
     <script src="assets/js/theme-manager.js"></script>
     <script src="assets/js/chart-config.js"></script>
     <script src="assets/js/navigation.js"></script>
+    <script src="assets/js/diagnostics-manager.js"></script>
+    <script src="assets/js/ui-utilities.js"></script>
 
     <script>
         // Initialize navigation for this page
@@ -446,6 +607,8 @@ Here's a complete example of how to use all modules together in a new page:
    <script src="assets/js/theme-manager.js"></script>
    <script src="assets/js/chart-config.js"></script>
    <script src="assets/js/navigation.js"></script>
+   <script src="assets/js/diagnostics-manager.js"></script>
+   <script src="assets/js/ui-utilities.js"></script>
    ```
 
 2. **Initialize navigation immediately**:

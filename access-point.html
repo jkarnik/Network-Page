@@ -396,13 +396,7 @@
             </div>
 
             <div id="content-diagnostics" class="tab-content hidden">
-                <div class="grid grid-cols-12 gap-6">
-                    <div class="col-span-12 card p-8 bg-white dark:bg-dark-card text-center">
-                        <i class="fa-solid fa-stethoscope text-gray-300 dark:text-gray-600 text-6xl mb-4"></i>
-                        <h3 class="text-lg font-bold text-gray-700 dark:text-white mb-2">Diagnostics Tab</h3>
-                        <p class="text-gray-500 dark:text-gray-400">Diagnostic tools and utilities will be available here.</p>
-                    </div>
-                </div>
+                <div id="diagnostics-container" class="h-full"></div>
             </div>
 
         </div>
@@ -492,6 +486,7 @@
     <script src="assets/js/theme-manager.js"></script>
     <script src="assets/js/chart-config.js"></script>
     <script src="assets/js/navigation.js"></script>
+    <script src="assets/js/diagnostics-manager.js"></script>
 
     <script>
         // Initialize navigation for AP page
@@ -529,6 +524,7 @@
 
         function initCharts() {
             ChartConfig.initDefaults();
+            DiagnosticsManager.init('ap', 'diagnostics-container')
 
             // Unregister datalabels plugin globally (we'll enable it per chart)
             Chart.unregister(ChartDataLabels);
