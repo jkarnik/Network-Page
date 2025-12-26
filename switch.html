@@ -167,6 +167,9 @@
                         <button onclick="switchTab('overview')" id="tab-overview" class="tab-button border-indigo-500 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
                             Overview
                         </button>
+                        <button onclick="switchTab('advanced')" id="tab-advanced" class="tab-button border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                            Advanced
+                        </button>
                         <button onclick="switchTab('diagnostics')" id="tab-diagnostics" class="tab-button border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
                             Diagnostics
                         </button>
@@ -362,6 +365,14 @@
                     </div>
                 </div>
 
+            </div>
+            </div>
+            <!-- End Overview Tab -->
+
+            <!-- Tab Content: Advanced -->
+            <div id="content-advanced" class="tab-content hidden">
+                <div class="grid grid-cols-12 gap-6">
+
                 <div class="col-span-12 card p-0 bg-white dark:bg-dark-card flex flex-col h-[500px]">
                     <div class="p-4 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 flex justify-between items-center">
                         <div>
@@ -425,9 +436,9 @@
                     </div>
                 </div>
 
+                </div>
             </div>
-            </div>
-            <!-- End Overview Tab -->
+            <!-- End Advanced Tab -->
 
             <!-- Tab Content: Diagnostics -->
             <div id="content-diagnostics" class="tab-content hidden">

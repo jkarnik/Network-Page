@@ -124,6 +124,9 @@
                         <button onclick="switchTab('overview')" id="tab-overview" class="tab-button border-blue-500 text-blue-600 dark:text-blue-400 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
                             Overview
                         </button>
+                        <button onclick="switchTab('advanced')" id="tab-advanced" class="tab-button border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                            Advanced
+                        </button>
                         <button onclick="switchTab('diagnostics')" id="tab-diagnostics" class="tab-button border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
                             Diagnostics
                         </button>
@@ -272,95 +275,13 @@
                         </div>
                     </div>
 
-                    <div class="col-span-12 lg:col-span-8 card p-0 bg-white dark:bg-dark-card flex flex-col h-96">
-                        <div class="p-4 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 flex justify-between items-center">
-                            <h3 class="text-sm font-bold text-gray-700 dark:text-white">Active Client List</h3>
-                            <input type="text" placeholder="Search MAC, IP or User..." class="text-xs border border-gray-300 dark:border-gray-600 rounded px-2 py-1 focus:outline-none focus:border-blue-500 bg-white dark:bg-gray-700 dark:text-white">
-                        </div>
-                        <div class="flex-1 overflow-auto custom-scrollbar">
-                             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                                <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0">
-                                    <tr>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Client MAC</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">IP Address</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">OS</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">SSID</th>
-                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">SNR</th>
-                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Usage</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="bg-white dark:bg-dark-card divide-y divide-gray-200 dark:divide-gray-700 text-sm font-mono">
-                                    <tr>
-                                        <td class="px-6 py-3 text-blue-600 dark:text-blue-400 cursor-pointer hover:underline">a4:b1:c2:d3:e4:f5</td>
-                                        <td class="px-6 py-3">10.128.20.101</td>
-                                        <td class="px-6 py-3"><i class="fa-brands fa-apple"></i> iOS 17</td>
-                                        <td class="px-6 py-3">Corp-Secure</td>
-                                        <td class="px-6 py-3 text-right text-green-600 font-bold">42 dB</td>
-                                        <td class="px-6 py-3 text-right">1.2 GB</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="px-6 py-3 text-blue-600 dark:text-blue-400 cursor-pointer hover:underline">b2:c3:d4:e5:f6:a1</td>
-                                        <td class="px-6 py-3">10.128.20.105</td>
-                                        <td class="px-6 py-3"><i class="fa-brands fa-windows"></i> Win 11</td>
-                                        <td class="px-6 py-3">Corp-Secure</td>
-                                        <td class="px-6 py-3 text-right text-green-600 font-bold">38 dB</td>
-                                        <td class="px-6 py-3 text-right">450 MB</td>
-                                    </tr>
-                                     <tr>
-                                        <td class="px-6 py-3 text-blue-600 dark:text-blue-400 cursor-pointer hover:underline">c3:d4:e5:f6:a1:b2</td>
-                                        <td class="px-6 py-3">10.128.99.20</td>
-                                        <td class="px-6 py-3"><i class="fa-brands fa-android"></i> Android</td>
-                                        <td class="px-6 py-3">Guest-WiFi</td>
-                                        <td class="px-6 py-3 text-right text-amber-500 font-bold">18 dB</td>
-                                        <td class="px-6 py-3 text-right">50 MB</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                </div>
+            </div>
 
-                    <div class="col-span-12 lg:col-span-4 card p-4 bg-white dark:bg-dark-card h-96 flex flex-col">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-sm font-bold text-gray-700 dark:text-white">Recent Client Events</h3>
-                            <span class="text-xs text-gray-400">Live Feed</span>
-                        </div>
-                        <div class="flex-1 overflow-auto custom-scrollbar space-y-3">
-                            <div class="flex gap-3 items-start pb-3 border-b border-gray-100 dark:border-gray-700">
-                                <div class="w-16 text-xs text-gray-500 dark:text-gray-400 pt-1 flex-shrink-0">10:42:15</div>
-                                <div class="w-6 flex flex-col items-center flex-shrink-0">
-                                    <div class="w-2 h-2 rounded-full bg-green-500"></div>
-                                    <div class="h-full w-0.5 bg-gray-200 dark:bg-gray-700 mt-1"></div>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <p class="text-xs font-bold text-gray-800 dark:text-white">Association Success</p>
-                                    <p class="text-xs text-gray-500">Client <span class="font-mono">a4:b1:c2...</span> associated on 5GHz radio (SSID: Corp-Secure).</p>
-                                </div>
-                            </div>
-                            <div class="flex gap-3 items-start pb-3 border-b border-gray-100 dark:border-gray-700">
-                                <div class="w-16 text-xs text-gray-500 dark:text-gray-400 pt-1 flex-shrink-0">10:41:55</div>
-                                <div class="w-6 flex flex-col items-center flex-shrink-0">
-                                    <div class="w-2 h-2 rounded-full bg-amber-500"></div>
-                                    <div class="h-full w-0.5 bg-gray-200 dark:bg-gray-700 mt-1"></div>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <p class="text-xs font-bold text-gray-800 dark:text-white">DHCP Slow Response</p>
-                                    <p class="text-xs text-gray-500">Client <span class="font-mono">e2:11:98...</span> took 4.2s to receive IP address.</p>
-                                </div>
-                            </div>
-                            <div class="flex gap-3 items-start">
-                                <div class="w-16 text-xs text-gray-500 dark:text-gray-400 pt-1 flex-shrink-0">10:38:10</div>
-                                <div class="w-6 flex flex-col items-center flex-shrink-0">
-                                    <div class="w-2 h-2 rounded-full bg-red-500"></div>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <p class="text-xs font-bold text-gray-800 dark:text-white">Auth Failure (4-Way Handshake)</p>
-                                    <p class="text-xs text-gray-500">Client <span class="font-mono">b8:22:11...</span> failed WPA2 authentication.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <div id="content-advanced" class="tab-content hidden">
+                <div class="grid grid-cols-12 gap-6">
 
-                    <div class="col-span-12 card p-0 bg-white dark:bg-dark-card flex flex-col h-96">
+                    <div class="col-span-12 card p-0 bg-white dark:bg-dark-card flex flex-col h-60">
                         <div class="p-4 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 flex justify-between items-center">
                             <h3 class="text-sm font-bold text-gray-700 dark:text-white">Interfering Neighbors (Rogues/Neighbors)</h3>
                             <span class="text-xs bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300 px-2 py-0.5 rounded font-bold">2 High Impact</span>
@@ -397,6 +318,74 @@
                                         <td class="px-6 py-3">36 (5G)</td>
                                         <td class="px-6 py-3 text-gray-500">-82 dBm</td>
                                         <td class="px-6 py-3"><span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">MANAGED</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="col-span-12 card p-0 bg-white dark:bg-dark-card flex flex-col h-96">
+                        <div class="p-4 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 flex justify-between items-center">
+                            <div>
+                                <h3 class="text-sm font-bold text-gray-700 dark:text-white">Active Client List</h3>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                                    <i class="fa-solid fa-circle-info mr-1"></i>Click any row to view detailed metrics
+                                </p>
+                            </div>
+                            <input type="text" placeholder="Search MAC, IP or User..." class="text-xs border border-gray-300 dark:border-gray-600 rounded px-2 py-1 focus:outline-none focus:border-blue-500 bg-white dark:bg-gray-700 dark:text-white">
+                        </div>
+                        <div class="flex-1 overflow-auto custom-scrollbar">
+                             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Client MAC</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">IP Address</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">OS</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">SSID</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Upload</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Download</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Latency</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Packet Loss</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">SNR</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Usage</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white dark:bg-dark-card divide-y divide-gray-200 dark:divide-gray-700 text-sm font-mono">
+                                    <tr class="hover:bg-blue-50 dark:hover:bg-blue-900/20 cursor-pointer transition-colors" onclick="openClientDetails('a4:b1:c2:d3:e4:f5', '10.128.20.101', 'iOS 17', 'Corp-Secure')">
+                                        <td class="px-6 py-3 text-blue-600 dark:text-blue-400 font-bold">a4:b1:c2:d3:e4:f5</td>
+                                        <td class="px-6 py-3">10.128.20.101</td>
+                                        <td class="px-6 py-3"><i class="fa-brands fa-apple"></i> iOS 17</td>
+                                        <td class="px-6 py-3">Corp-Secure</td>
+                                        <td class="px-6 py-3 text-right text-blue-600 dark:text-blue-400">8.5 Mbps</td>
+                                        <td class="px-6 py-3 text-right text-green-600 dark:text-green-400">42.3 Mbps</td>
+                                        <td class="px-6 py-3 text-right text-purple-600 dark:text-purple-400">12 ms</td>
+                                        <td class="px-6 py-3 text-right text-gray-500">0.0%</td>
+                                        <td class="px-6 py-3 text-right text-green-600 font-bold">42 dB</td>
+                                        <td class="px-6 py-3 text-right">1.2 GB</td>
+                                    </tr>
+                                    <tr class="hover:bg-blue-50 dark:hover:bg-blue-900/20 cursor-pointer transition-colors" onclick="openClientDetails('b2:c3:d4:e5:f6:a1', '10.128.20.105', 'Win 11', 'Corp-Secure')">
+                                        <td class="px-6 py-3 text-blue-600 dark:text-blue-400 font-bold">b2:c3:d4:e5:f6:a1</td>
+                                        <td class="px-6 py-3">10.128.20.105</td>
+                                        <td class="px-6 py-3"><i class="fa-brands fa-windows"></i> Win 11</td>
+                                        <td class="px-6 py-3">Corp-Secure</td>
+                                        <td class="px-6 py-3 text-right text-blue-600 dark:text-blue-400">3.2 Mbps</td>
+                                        <td class="px-6 py-3 text-right text-green-600 dark:text-green-400">18.7 Mbps</td>
+                                        <td class="px-6 py-3 text-right text-purple-600 dark:text-purple-400">15 ms</td>
+                                        <td class="px-6 py-3 text-right text-gray-500">0.1%</td>
+                                        <td class="px-6 py-3 text-right text-green-600 font-bold">38 dB</td>
+                                        <td class="px-6 py-3 text-right">450 MB</td>
+                                    </tr>
+                                     <tr class="hover:bg-blue-50 dark:hover:bg-blue-900/20 cursor-pointer transition-colors" onclick="openClientDetails('c3:d4:e5:f6:a1:b2', '10.128.99.20', 'Android', 'Guest-WiFi')">
+                                        <td class="px-6 py-3 text-blue-600 dark:text-blue-400 font-bold">c3:d4:e5:f6:a1:b2</td>
+                                        <td class="px-6 py-3">10.128.99.20</td>
+                                        <td class="px-6 py-3"><i class="fa-brands fa-android"></i> Android</td>
+                                        <td class="px-6 py-3">Guest-WiFi</td>
+                                        <td class="px-6 py-3 text-right text-blue-600 dark:text-blue-400">1.8 Mbps</td>
+                                        <td class="px-6 py-3 text-right text-green-600 dark:text-green-400">6.4 Mbps</td>
+                                        <td class="px-6 py-3 text-right text-purple-600 dark:text-purple-400">28 ms</td>
+                                        <td class="px-6 py-3 text-right text-amber-600">0.8%</td>
+                                        <td class="px-6 py-3 text-right text-amber-500 font-bold">18 dB</td>
+                                        <td class="px-6 py-3 text-right">50 MB</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -456,6 +445,39 @@
                         <h3 class="text-sm font-bold text-gray-700 dark:text-white mb-3">Connected Clients Over Time (Last 24 Hours)</h3>
                         <div style="height: 400px;">
                             <canvas id="clientHistoryOverlayChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Client Details Overlay -->
+        <div id="clientDetailsOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-6">
+            <div class="bg-white dark:bg-dark-card rounded-lg shadow-2xl w-full max-w-5xl overflow-hidden">
+                <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+                    <div class="flex items-center gap-3">
+                        <h2 class="text-xl font-bold text-gray-900 dark:text-white" id="clientDetailsTitle">Client Details</h2>
+                        <span id="clientDetailsInfo" class="text-sm text-gray-500 dark:text-gray-400"></span>
+                    </div>
+                    <button onclick="closeClientDetails()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                        <i class="fa-solid fa-times text-2xl"></i>
+                    </button>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-1 gap-4">
+                        <!-- Bandwidth Chart (Upload + Download) -->
+                        <div class="card p-4 bg-gray-50 dark:bg-gray-800">
+                            <h3 class="text-sm font-bold text-gray-700 dark:text-white mb-3">Bandwidth (Upload & Download)</h3>
+                            <div style="height: 220px;">
+                                <canvas id="clientBandwidthChart"></canvas>
+                            </div>
+                        </div>
+                        <!-- Performance Chart (Packet Loss & SNR) -->
+                        <div class="card p-4 bg-gray-50 dark:bg-gray-800">
+                            <h3 class="text-sm font-bold text-gray-700 dark:text-white mb-3">Performance (Packet Loss & SNR)</h3>
+                            <div style="height: 220px;">
+                                <canvas id="clientPerformanceChart"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1049,6 +1071,284 @@
                 clientHistoryOverlayChart.destroy();
                 clientHistoryOverlayChart = null;
             }
+        }
+
+        // --- CLIENT DETAILS OVERLAY ---
+        let clientCharts = {};
+
+        function openClientDetails(clientMAC, clientIP, clientOS, clientSSID) {
+            const overlay = document.getElementById('clientDetailsOverlay');
+            const title = document.getElementById('clientDetailsTitle');
+            const info = document.getElementById('clientDetailsInfo');
+
+            title.textContent = `Client Details: ${clientMAC}`;
+            info.textContent = `${clientIP} • ${clientOS} • ${clientSSID}`;
+
+            overlay.classList.remove('hidden');
+
+            // Destroy existing charts if they exist
+            Object.values(clientCharts).forEach(chart => {
+                if (chart) chart.destroy();
+            });
+            clientCharts = {};
+
+            // Sample data - in a real app, this would come from an API
+            const timeLabels = ['00:00', '02:00', '04:00', '06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00'];
+
+            // Generate different data based on client MAC
+            const clientData = {
+                'a4:b1:c2:d3:e4:f5': {
+                    upload: [8, 8.5, 9, 9.5, 10, 9.8, 9.2, 9, 8.8, 8.5, 8.3, 8.5],
+                    download: [40, 42, 43, 45, 46, 44, 42, 43, 42.5, 42.3, 42, 42.3],
+                    packetLoss: [0, 0, 0, 0.1, 0, 0, 0, 0, 0, 0, 0, 0],
+                    snr: [42, 42, 41, 41, 40, 41, 42, 42, 42, 42, 42, 42]
+                },
+                'b2:c3:d4:e5:f6:a1': {
+                    upload: [3, 3.2, 3.3, 3.5, 3.4, 3.3, 3.2, 3.3, 3.2, 3.2, 3.1, 3.2],
+                    download: [18, 18.5, 18.7, 19, 19.2, 19, 18.8, 18.7, 18.7, 18.7, 18.5, 18.7],
+                    packetLoss: [0.1, 0.1, 0, 0.2, 0.1, 0.1, 0.1, 0, 0.1, 0.1, 0.1, 0.1],
+                    snr: [38, 38, 38, 37, 37, 38, 38, 38, 38, 38, 38, 38]
+                },
+                'c3:d4:e5:f6:a1:b2': {
+                    upload: [1.5, 1.6, 1.8, 1.9, 1.8, 1.7, 1.8, 1.8, 1.8, 1.8, 1.7, 1.8],
+                    download: [6, 6.2, 6.4, 6.5, 6.6, 6.5, 6.4, 6.4, 6.4, 6.4, 6.3, 6.4],
+                    packetLoss: [0.8, 0.9, 0.8, 1.0, 0.9, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8],
+                    snr: [18, 18, 18, 17, 17, 18, 18, 18, 18, 18, 18, 18]
+                }
+            };
+
+            const data = clientData[clientMAC] || clientData['a4:b1:c2:d3:e4:f5'];
+
+            // Create Bandwidth Chart
+            clientCharts.bandwidth = new Chart(document.getElementById('clientBandwidthChart'), {
+                type: 'line',
+                data: {
+                    labels: timeLabels,
+                    datasets: [
+                        {
+                            label: 'Upload',
+                            data: data.upload,
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            fill: false,
+                            tension: 0.4,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Download',
+                            data: data.download,
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            fill: false,
+                            tension: 0.4,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                            borderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                boxWidth: 12,
+                                font: { size: 12 },
+                                usePointStyle: true,
+                                padding: 15
+                            }
+                        },
+                        tooltip: {
+                            enabled: true,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: '#3b82f6',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    label += context.parsed.y + ' Mbps';
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            grid: { display: true, color: 'rgba(0, 0, 0, 0.05)' },
+                            ticks: {
+                                font: { size: 11 }
+                            }
+                        },
+                        y: {
+                            display: true,
+                            beginAtZero: true,
+                            ticks: {
+                                font: { size: 11 },
+                                callback: function(value) {
+                                    return value + ' Mbps';
+                                }
+                            },
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' }
+                        }
+                    }
+                }
+            });
+
+            // Disable datalabels for this chart
+            clientCharts.bandwidth.options.plugins.datalabels = { display: false };
+            clientCharts.bandwidth.update();
+
+            // Create Performance Chart (Dual Axis: Packet Loss & SNR)
+            clientCharts.performance = new Chart(document.getElementById('clientPerformanceChart'), {
+                type: 'line',
+                data: {
+                    labels: timeLabels,
+                    datasets: [
+                        {
+                            label: 'Packet Loss',
+                            data: data.packetLoss,
+                            borderColor: '#ef4444',
+                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                            fill: false,
+                            tension: 0.4,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                            borderWidth: 2,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'SNR',
+                            data: data.snr,
+                            borderColor: '#8b5cf6',
+                            backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                            fill: false,
+                            tension: 0.4,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                            borderWidth: 2,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                boxWidth: 12,
+                                font: { size: 12 },
+                                usePointStyle: true,
+                                padding: 15
+                            }
+                        },
+                        tooltip: {
+                            enabled: true,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: '#8b5cf6',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.dataset.yAxisID === 'y') {
+                                        label += context.parsed.y + '%';
+                                    } else {
+                                        label += context.parsed.y + ' dB';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            grid: { display: true, color: 'rgba(0, 0, 0, 0.05)' },
+                            ticks: {
+                                font: { size: 11 }
+                            }
+                        },
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Packet Loss (%)',
+                                font: { size: 12 }
+                            },
+                            ticks: {
+                                font: { size: 11 },
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            },
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'SNR (dB)',
+                                font: { size: 12 }
+                            },
+                            ticks: {
+                                font: { size: 11 },
+                                callback: function(value) {
+                                    return value + ' dB';
+                                }
+                            },
+                            grid: {
+                                drawOnChartArea: false
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Disable datalabels for this chart
+            clientCharts.performance.options.plugins.datalabels = { display: false };
+            clientCharts.performance.update();
+        }
+
+        function closeClientDetails() {
+            const overlay = document.getElementById('clientDetailsOverlay');
+            overlay.classList.add('hidden');
+
+            // Destroy charts to prevent memory leaks
+            Object.values(clientCharts).forEach(chart => {
+                if (chart) chart.destroy();
+            });
+            clientCharts = {};
         }
 
     </script>
