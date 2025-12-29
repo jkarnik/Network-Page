@@ -1,4 +1,5 @@
 /* Network Performance Monitoring - Shared Styles */
+/* New Relic Design System Implementation */
 
 /* Base Styles */
 body {
@@ -16,17 +17,20 @@ body {
     animation: fadeIn 0.5s ease-in-out;
 }
 
-/* Card Component */
+/* New Relic Card Component - Dark theme with subtle borders */
 .card {
-    border-radius: 0.75rem;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    border-radius: 0.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     transition: all 0.2s ease-in-out;
     display: flex;
     flex-direction: column;
+    background-color: #1A1F2E;
 }
 
 .card:hover {
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border-color: rgba(0, 206, 209, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 206, 209, 0.1);
 }
 
 /* Custom Scrollbar */

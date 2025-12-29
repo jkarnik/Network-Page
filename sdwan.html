@@ -12,7 +12,22 @@
             theme: {
                 extend: {
                     colors: {
-                        dark: { bg: '#111827', card: '#1f2937', text: '#f3f4f6', border: '#374151' }
+                        // New Relic Design System Colors
+                        dark: {
+                            bg: '#0B1620',      // Deep navy background
+                            card: '#1A1F2E',    // Card background
+                            border: '#2A3036',  // Subtle borders
+                            text: '#F7F8F9',    // Primary text
+                            muted: '#8E9494'    // Secondary text
+                        },
+                        newrelic: {
+                            cyan: '#00CED1',     // Primary brand cyan
+                            teal: '#008C99',     // Deep teal
+                            success: '#11A768',  // Green
+                            warning: '#F5A623',  // Amber/Orange
+                            error: '#DF2D24',    // Red
+                            info: '#0B7EBF'      // Blue
+                        }
                     }
                 }
             }
@@ -28,30 +43,30 @@
     <!-- Shared Styles -->
     <link rel="stylesheet" href="assets/css/shared-styles.css">
 </head>
-<body class="bg-gray-100 text-gray-800 h-screen flex flex-col overflow-hidden dark:bg-dark-bg dark:text-dark-text">
+<body class="bg-dark-bg text-dark-text h-screen flex flex-col overflow-hidden">
 
     <!-- Top Navigation -->
-    <nav class="bg-white border-b border-gray-200 h-16 flex-none z-10 dark:bg-dark-card dark:border-dark-border">
+    <nav class="bg-dark-card border-b border-dark-border h-16 flex-none z-10 shadow-lg">
         <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 h-full">
             <div class="flex justify-between h-full">
                 <div class="flex items-center">
                     <div class="flex-shrink-0 flex items-center gap-3">
-                        <div class="bg-blue-600 text-white p-2 rounded-lg">
+                        <div class="bg-gradient-to-br from-newrelic-cyan to-newrelic-teal text-white p-2 rounded-lg shadow-md">
                             <i class="fa-solid fa-network-wired text-xl"></i>
                         </div>
-                        <span class="font-bold text-xl tracking-tight text-gray-900 dark:text-white">Network Performance Monitoring</span>
+                        <span class="font-bold text-xl tracking-tight text-dark-text">Network Performance Monitoring</span>
                     </div>
                     <div class="hidden sm:ml-8 sm:flex sm:space-x-8">
-                        <a href="index.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Summary Page</a>
-                        <a href="sdwan.html" class="border-blue-500 text-gray-900 dark:text-white inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">SD-WAN Page</a>
-                        <a href="switch.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Switch Page</a>
-                        <a href="access-point.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Access Point Page</a>
+                        <a href="index.html" class="border-transparent text-dark-muted hover:border-newrelic-cyan hover:text-newrelic-cyan transition-colors inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Summary Page</a>
+                        <a href="sdwan.html" class="border-newrelic-cyan text-dark-text inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">SD-WAN Page</a>
+                        <a href="switch.html" class="border-transparent text-dark-muted hover:border-newrelic-cyan hover:text-newrelic-cyan transition-colors inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Switch Page</a>
+                        <a href="access-point.html" class="border-transparent text-dark-muted hover:border-newrelic-cyan hover:text-newrelic-cyan transition-colors inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Access Point Page</a>
                     </div>
                 </div>
                 <div class="flex items-center gap-4">
                     <!-- Scope Selector -->
                     <div class="relative">
-                        <select id="scopeSelector" onchange="updateDashboardScope(this.value)" class="block w-full pl-3 pr-10 py-2 text-sm border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md bg-gray-50 border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <select id="scopeSelector" onchange="updateDashboardScope(this.value)" class="block w-full pl-3 pr-10 py-2 text-sm border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-newrelic-cyan sm:text-sm rounded-md bg-dark-bg border border-dark-border text-dark-text transition-all">
                             <option value="Global">Global Organization</option>
                             <optgroup label="Regions">
                                 <option value="North America">North America</option>
@@ -74,18 +89,12 @@
                         </select>
                     </div>
 
-                    <!-- Dark Mode Toggle -->
-                    <button id="themeToggle" class="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 focus:outline-none">
-                        <i class="fa-solid fa-moon dark:hidden"></i>
-                        <i class="fa-solid fa-sun hidden dark:block text-yellow-400"></i>
-                    </button>
-
-                    <div class="flex items-center gap-3 border-l pl-4 border-gray-200 dark:border-gray-700">
+                    <div class="flex items-center gap-3 border-l pl-4 border-dark-border">
                         <div class="text-right hidden md:block">
-                            <p class="text-sm font-medium text-gray-900 dark:text-white">Admin User</p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">NetOps Lead</p>
+                            <p class="text-sm font-medium text-dark-text">Admin User</p>
+                            <p class="text-xs text-dark-muted">NetOps Lead</p>
                         </div>
-                        <div class="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold">
+                        <div class="h-8 w-8 rounded-full bg-gradient-to-br from-newrelic-cyan to-newrelic-teal flex items-center justify-center text-white shadow-md font-bold">
                             AU
                         </div>
                     </div>
@@ -94,17 +103,17 @@
         </div>
     </nav>
 
-    <main class="flex-1 overflow-y-auto p-6 bg-gray-50 dark:bg-dark-bg">
+    <main class="flex-1 overflow-y-auto p-6 bg-dark-bg">
         <div class="max-w-[1920px] mx-auto">
 
             <!-- Device Info Card -->
-            <div class="card p-4 bg-white dark:bg-dark-card border-l-4 border-green-500 mb-0">
+            <div class="card p-4 bg-dark-card border-l-4 border-green-500 mb-0">
                 <div class="flex items-center justify-between">
                     <!-- Left: Device Name -->
                     <div class="flex items-center gap-2">
                         <i class="fa-solid fa-server text-gray-400 text-lg"></i>
                         <div>
-                            <h2 class="text-lg font-bold text-gray-900 dark:text-white">NYC-Edge-01</h2>
+                            <h2 class="text-lg font-bold text-dark-text">NYC-Edge-01</h2>
                             <p class="text-xs text-gray-500">Juniper Mist SSR-120</p>
                         </div>
                     </div>
@@ -125,7 +134,7 @@
                     <div class="flex items-center gap-4">
                         <div class="text-right">
                             <p class="text-xs text-gray-400 mb-0.5">Uptime</p>
-                            <p class="font-mono text-lg font-bold text-gray-900 dark:text-white">45d 12h 30m</p>
+                            <p class="font-mono text-lg font-bold text-dark-text">45d 12h 30m</p>
                         </div>
                         <span class="px-2 py-1 text-xs font-bold text-green-700 bg-green-100 rounded dark:bg-green-900 dark:text-green-300">ONLINE</span>
                     </div>
@@ -134,9 +143,9 @@
 
             <!-- Tab Navigation -->
             <div class="mb-4 mt-0">
-                <div class="border-b border-gray-200 dark:border-gray-700">
+                <div class="border-b border-dark-border">
                     <nav class="-mb-px flex space-x-8" aria-label="Tabs">
-                        <button onclick="switchTab('overview')" id="tab-overview" class="tab-button border-blue-500 text-blue-600 dark:text-blue-400 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                        <button onclick="switchTab('overview')" id="tab-overview" class="tab-button border-newrelic-cyan text-blue-600 dark:text-blue-400 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
                             Overview
                         </button>
                         <button onclick="switchTab('advanced')" id="tab-advanced" class="tab-button border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
@@ -154,12 +163,12 @@
                 <div class="grid grid-cols-12 gap-6">
 
             <!-- CPU Widget -->
-            <div class="col-span-12 md:col-span-3 card p-4 bg-white dark:bg-dark-card" style="min-height: 180px;">
-                <h3 class="text-sm font-bold text-gray-700 dark:text-white mb-3">CPU Load</h3>
+            <div class="col-span-12 md:col-span-3 card p-4 bg-dark-card" style="min-height: 180px;">
+                <h3 class="text-sm font-bold text-dark-text mb-3">CPU Load</h3>
                 <div class="flex gap-3" style="height: calc(100% - 32px);">
                     <div class="relative w-20 h-20 flex-shrink-0 self-start" style="margin-top: 20px;">
                         <canvas id="cpuGauge"></canvas>
-                        <div class="absolute inset-0 flex flex-col items-center justify-center text-xs text-gray-500 dark:text-gray-400" style="top: 10px;">
+                        <div class="absolute inset-0 flex flex-col items-center justify-center text-xs text-dark-muted" style="top: 10px;">
                             <span class="font-bold text-gray-800 dark:text-white text-sm" id="cpuValue">42%</span>
                             <span class="mt-0.5">CPU</span>
                         </div>
@@ -171,12 +180,12 @@
             </div>
 
             <!-- Memory Widget -->
-            <div class="col-span-12 md:col-span-3 card p-4 bg-white dark:bg-dark-card" style="min-height: 180px;">
-                <h3 class="text-sm font-bold text-gray-700 dark:text-white mb-3">Memory Load</h3>
+            <div class="col-span-12 md:col-span-3 card p-4 bg-dark-card" style="min-height: 180px;">
+                <h3 class="text-sm font-bold text-dark-text mb-3">Memory Load</h3>
                 <div class="flex gap-3" style="height: calc(100% - 32px);">
                     <div class="relative w-20 h-20 flex-shrink-0 self-start" style="margin-top: 20px;">
                         <canvas id="memGauge"></canvas>
-                        <div class="absolute inset-0 flex flex-col items-center justify-center text-xs text-gray-500 dark:text-gray-400" style="top: 10px;">
+                        <div class="absolute inset-0 flex flex-col items-center justify-center text-xs text-dark-muted" style="top: 10px;">
                             <span class="font-bold text-gray-800 dark:text-white text-sm" id="memValue">68%</span>
                             <span class="mt-0.5">MEM</span>
                         </div>
@@ -188,9 +197,9 @@
             </div>
 
             <!-- Cellular Backup Widget -->
-            <div class="col-span-12 md:col-span-3 card p-4 bg-white dark:bg-dark-card" style="min-height: 180px;">
+            <div class="col-span-12 md:col-span-3 card p-4 bg-dark-card" style="min-height: 180px;">
                 <div class="flex justify-between items-start mb-3">
-                    <h3 class="text-sm font-bold text-gray-700 dark:text-white">Cellular Backup</h3>
+                    <h3 class="text-sm font-bold text-dark-text">Cellular Backup</h3>
                     <span class="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded dark:bg-blue-900/30 dark:text-blue-300">Verizon</span>
                 </div>
                 <div class="flex gap-3" style="height: calc(100% - 44px);">
@@ -211,9 +220,9 @@
             </div>
 
             <!-- Wireless Threats Widget -->
-            <div class="col-span-12 md:col-span-3 card p-4 bg-white dark:bg-dark-card overflow-hidden" style="min-height: 180px;">
+            <div class="col-span-12 md:col-span-3 card p-4 bg-dark-card overflow-hidden" style="min-height: 180px;">
                 <div class="flex justify-between items-center mb-3">
-                    <h3 class="text-sm font-bold text-gray-700 dark:text-white">Wireless Threats</h3>
+                    <h3 class="text-sm font-bold text-dark-text">Wireless Threats</h3>
                     <span class="bg-red-100 text-red-800 text-xs px-2 py-0.5 rounded-full font-bold">2 Active</span>
                 </div>
                 <div class="flex-1 overflow-auto custom-scrollbar space-y-3">
@@ -223,7 +232,7 @@
                             <span class="text-xs font-bold uppercase">Rogue AP</span>
                         </div>
                         <p class="text-sm font-semibold dark:text-gray-200">SSID: "Free_WiFi"</p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">Seen by: AP-Lobby (RSSI -65)</p>
+                        <p class="text-xs text-dark-muted">Seen by: AP-Lobby (RSSI -65)</p>
                     </div>
                     <div class="p-3 border border-amber-200 bg-amber-50 dark:bg-amber-900/10 dark:border-amber-900 rounded-lg">
                         <div class="flex items-center gap-2 text-amber-700 dark:text-amber-400 mb-1">
@@ -231,15 +240,15 @@
                             <span class="text-xs font-bold uppercase">Spoof Detected</span>
                         </div>
                         <p class="text-sm font-semibold dark:text-gray-200">MAC: ab:cd:ef:12:34</p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">Type: Man-in-the-Middle</p>
+                        <p class="text-xs text-dark-muted">Type: Man-in-the-Middle</p>
                     </div>
                 </div>
             </div>
 
             <!-- ROW 2: Uplink Health, WAN Throughput, Top Applications, DHCP Utilization -->
-            <div class="col-span-12 lg:col-span-3 card p-4 h-80 bg-white dark:bg-dark-card">
+            <div class="col-span-12 lg:col-span-3 card p-4 h-80 bg-dark-card">
                 <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-sm font-bold text-gray-700 dark:text-white">Uplink Health</h3>
+                    <h3 class="text-sm font-bold text-dark-text">Uplink Health</h3>
                     <div class="flex gap-2">
                         <span class="flex items-center gap-1 text-xs text-gray-500"><span class="w-2 h-2 rounded-full bg-blue-500"></span> Latency</span>
                         <span class="flex items-center gap-1 text-xs text-gray-500"><span class="w-2 h-2 rounded-full bg-purple-500"></span> Jitter</span>
@@ -251,9 +260,9 @@
                 </div>
             </div>
 
-            <div class="col-span-12 lg:col-span-3 card p-4 h-80 bg-white dark:bg-dark-card">
+            <div class="col-span-12 lg:col-span-3 card p-4 h-80 bg-dark-card">
                 <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-sm font-bold text-gray-700 dark:text-white">WAN Throughput</h3>
+                    <h3 class="text-sm font-bold text-dark-text">WAN Throughput</h3>
                     <span class="text-xs text-gray-400">Last 6 Hours</span>
                 </div>
                 <div class="relative h-full w-full pb-4">
@@ -261,16 +270,16 @@
                 </div>
             </div>
 
-            <div class="col-span-12 lg:col-span-3 card p-4 h-80 bg-white dark:bg-dark-card">
-                <h3 class="text-sm font-bold text-gray-700 dark:text-white mb-2">Top Applications (L7)</h3>
+            <div class="col-span-12 lg:col-span-3 card p-4 h-80 bg-dark-card">
+                <h3 class="text-sm font-bold text-dark-text mb-2">Top Applications (L7)</h3>
                 <div class="relative h-full flex items-center justify-center">
                     <canvas id="appsChart"></canvas>
                 </div>
             </div>
 
-            <div class="col-span-12 lg:col-span-3 card p-4 h-80 bg-white dark:bg-dark-card">
+            <div class="col-span-12 lg:col-span-3 card p-4 h-80 bg-dark-card">
                 <div class="flex justify-between items-center mb-3">
-                    <h3 class="text-sm font-bold text-gray-700 dark:text-white">DHCP Utilization</h3>
+                    <h3 class="text-sm font-bold text-dark-text">DHCP Utilization</h3>
                     <span class="text-xs text-gray-400">Pool Status</span>
                 </div>
                 <div class="flex flex-col justify-center" style="height: calc(100% - 2.5rem);">
@@ -283,27 +292,27 @@
                                 <span class="w-2.5 h-2.5 bg-blue-500 rounded-sm"></span>
                                 <p class="text-xl font-bold text-gray-800 dark:text-white" id="dhcpUsedValue">--</p>
                             </div>
-                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Used</p>
+                            <p class="text-xs text-dark-muted mt-1">Used</p>
                         </div>
                         <div class="text-center">
                             <div class="flex items-center justify-center gap-1.5">
                                 <span class="w-2.5 h-2.5 bg-gray-200 dark:bg-gray-600 rounded-sm"></span>
                                 <p class="text-xl font-bold text-gray-800 dark:text-white" id="dhcpAvailableValue">--</p>
                             </div>
-                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Available</p>
+                            <p class="text-xs text-dark-muted mt-1">Available</p>
                         </div>
                         <div class="text-center">
                             <p class="text-xl font-bold text-gray-800 dark:text-white" id="dhcpPercentageValue">--</p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Utilization</p>
+                            <p class="text-xs text-dark-muted mt-1">Utilization</p>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- ROW 3: Sequential Event Timeline, VPN Tunnel Status -->
-            <div class="col-span-12 lg:col-span-4 card p-4 bg-white dark:bg-dark-card overflow-hidden flex flex-col" style="height: 240px;">
+            <div class="col-span-12 lg:col-span-4 card p-4 bg-dark-card overflow-hidden flex flex-col" style="height: 240px;">
                 <div class="flex justify-between items-center mb-4 flex-none">
-                    <h3 class="text-sm font-bold text-gray-700 dark:text-white">Sequential Event Timeline</h3>
+                    <h3 class="text-sm font-bold text-dark-text">Sequential Event Timeline</h3>
                     <span class="text-[10px] text-gray-400">Last 24 Hours</span>
                 </div>
 
@@ -314,13 +323,13 @@
                         <div class="flex justify-between items-start">
                             <div>
                                 <p class="text-xs text-gray-400 dark:text-gray-500">10:50 AM - 11:15 AM</p>
-                                <p class="text-sm font-medium text-gray-900 dark:text-white flex items-center gap-2">
+                                <p class="text-sm font-medium text-dark-text flex items-center gap-2">
                                     OSPF Flapping Detected
                                     <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-200 dark:border-amber-800">
                                         25 Events
                                     </span>
                                 </p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Neighbor 10.255.0.1 state changing repeatedly (Full/Down)</p>
+                                <p class="text-xs text-dark-muted mt-0.5">Neighbor 10.255.0.1 state changing repeatedly (Full/Down)</p>
                             </div>
                         </div>
                     </div>
@@ -328,30 +337,30 @@
                     <div class="timeline-item dark:border-gray-700 pb-5">
                         <div class="timeline-dot bg-red-500 ring-4 ring-white dark:ring-dark-card"></div>
                         <p class="text-xs text-gray-400 dark:text-gray-500">10:42 AM</p>
-                        <p class="text-sm font-medium text-gray-900 dark:text-white">Critical Link Failure</p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Physical carrier loss detected on Port 2 (WAN 1)</p>
+                        <p class="text-sm font-medium text-dark-text">Critical Link Failure</p>
+                        <p class="text-xs text-dark-muted mt-0.5">Physical carrier loss detected on Port 2 (WAN 1)</p>
                     </div>
 
                     <div class="timeline-item dark:border-gray-700 pb-5">
                         <div class="timeline-dot bg-blue-500 ring-4 ring-white dark:ring-dark-card"></div>
                         <p class="text-xs text-gray-400 dark:text-gray-500">10:42 AM</p>
-                        <p class="text-sm font-medium text-gray-900 dark:text-white">Auto-VPN Failover</p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Traffic rerouted to LTE Backup (Verizon) automatically</p>
+                        <p class="text-sm font-medium text-dark-text">Auto-VPN Failover</p>
+                        <p class="text-xs text-dark-muted mt-0.5">Traffic rerouted to LTE Backup (Verizon) automatically</p>
                     </div>
 
                     <div class="timeline-item border-none dark:border-gray-700 pb-2">
                         <div class="timeline-dot bg-gray-400 ring-4 ring-white dark:ring-dark-card"></div>
                         <p class="text-xs text-gray-400 dark:text-gray-500">08:00 AM</p>
-                        <p class="text-sm font-medium text-gray-900 dark:text-white">Daily Backup</p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Configuration snapshot saved successfully</p>
+                        <p class="text-sm font-medium text-dark-text">Daily Backup</p>
+                        <p class="text-xs text-dark-muted mt-0.5">Configuration snapshot saved successfully</p>
                     </div>
 
                 </div>
             </div>
 
-            <div class="col-span-12 lg:col-span-8 card p-0 bg-white dark:bg-dark-card overflow-hidden" style="height: 240px;">
+            <div class="col-span-12 lg:col-span-8 card p-0 bg-dark-card overflow-hidden" style="height: 240px;">
                 <div class="p-4 border-b border-gray-100 dark:border-gray-700">
-                    <h3 class="text-sm font-bold text-gray-700 dark:text-white">VPN Tunnel Status</h3>
+                    <h3 class="text-sm font-bold text-dark-text">VPN Tunnel Status</h3>
                 </div>
                 <div class="overflow-auto custom-scrollbar p-0" style="height: calc(100% - 56px);">
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -366,7 +375,7 @@
                                 <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Loss</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white dark:bg-dark-card divide-y divide-gray-200 dark:divide-gray-700 text-sm">
+                        <tbody class="bg-dark-card divide-y divide-gray-200 dark:divide-gray-700 text-sm">
                             <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors" onclick="openPeerDetails('DC-Primary')">
                                 <td class="px-6 py-3 font-medium dark:text-gray-200 text-blue-600 dark:text-blue-400 hover:underline">DC-Primary</td>
                                 <td class="px-6 py-3 text-center"><span class="px-2 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-800">UP</span></td>
@@ -417,8 +426,8 @@
                 <div class="grid grid-cols-12 gap-6">
 
             <!-- ROW 4: BGP Neighbors, Active Route Table -->
-            <div class="col-span-12 md:col-span-4 card p-4 bg-white dark:bg-dark-card overflow-auto custom-scrollbar" style="height: 220px;">
-                <h3 class="text-sm font-bold text-gray-700 dark:text-white mb-2">BGP Neighbors</h3>
+            <div class="col-span-12 md:col-span-4 card p-4 bg-dark-card overflow-auto custom-scrollbar" style="height: 220px;">
+                <h3 class="text-sm font-bold text-dark-text mb-2">BGP Neighbors</h3>
                 <ul class="space-y-2 text-sm">
                     <li class="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-800 rounded">
                         <span class="font-mono text-xs">10.255.0.1 (ISP-A)</span>
@@ -441,9 +450,9 @@
                 </ul>
             </div>
 
-            <div class="col-span-12 md:col-span-8 card p-0 bg-white dark:bg-dark-card overflow-hidden" style="height: 220px;">
+            <div class="col-span-12 md:col-span-8 card p-0 bg-dark-card overflow-hidden" style="height: 220px;">
                 <div class="p-4 border-b border-gray-100 dark:border-gray-700">
-                    <h3 class="text-sm font-bold text-gray-700 dark:text-white">Active Route Table (RIB)</h3>
+                    <h3 class="text-sm font-bold text-dark-text">Active Route Table (RIB)</h3>
                 </div>
                 <div class="overflow-auto custom-scrollbar" style="height: calc(100% - 56px);">
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -456,7 +465,7 @@
                                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Metric</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white dark:bg-dark-card text-xs divide-y divide-gray-100 dark:divide-gray-700 font-mono">
+                        <tbody class="bg-dark-card text-xs divide-y divide-gray-100 dark:divide-gray-700 font-mono">
                             <tr>
                                 <td class="px-4 py-2">0.0.0.0/0</td>
                                 <td class="px-4 py-2">192.168.1.1</td>
@@ -512,13 +521,13 @@
             </div>
 
             <!-- ROW 5: Firewall Logs -->
-            <div class="col-span-12 card p-0 bg-white dark:bg-dark-card h-96 flex flex-col">
+            <div class="col-span-12 card p-0 bg-dark-card h-96 flex flex-col">
                 <div class="p-4 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
                     <div class="flex justify-between items-center">
-                        <h3 class="text-sm font-bold text-gray-700 dark:text-white">Firewall Logs</h3>
+                        <h3 class="text-sm font-bold text-dark-text">Firewall Logs</h3>
                         <div class="flex gap-2">
-                            <input type="text" id="firewallSearch" placeholder="Search logs..." class="px-3 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <select id="firewallFilter" class="px-3 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <input type="text" id="firewallSearch" placeholder="Search logs..." class="px-3 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-dark-text focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <select id="firewallFilter" class="px-3 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-dark-text focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <option value="all">All Actions</option>
                                 <option value="ALLOW">ALLOW</option>
                                 <option value="BLOCK">BLOCK</option>
@@ -613,10 +622,10 @@
 
         <!-- Peer Details Overlay -->
         <div id="peerDetailsOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-6">
-            <div class="bg-white dark:bg-dark-card rounded-lg shadow-2xl w-full max-w-5xl overflow-hidden">
-                <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+            <div class="bg-dark-card rounded-lg shadow-2xl w-full max-w-5xl overflow-hidden">
+                <div class="p-6 border-b border-dark-border flex justify-between items-center">
                     <div class="flex items-center gap-3">
-                        <h2 class="text-xl font-bold text-gray-900 dark:text-white" id="peerDetailsTitle">Peer Details</h2>
+                        <h2 class="text-xl font-bold text-dark-text" id="peerDetailsTitle">Peer Details</h2>
                         <span id="peerDetailsStatus"></span>
                     </div>
                     <button onclick="closePeerDetails()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
@@ -627,14 +636,14 @@
                     <div class="grid grid-cols-1 gap-4">
                         <!-- Bandwidth Chart (Upload + Download) -->
                         <div class="card p-4 bg-gray-50 dark:bg-gray-800">
-                            <h3 class="text-sm font-bold text-gray-700 dark:text-white mb-3">Bandwidth (Upload & Download)</h3>
+                            <h3 class="text-sm font-bold text-dark-text mb-3">Bandwidth (Upload & Download)</h3>
                             <div style="height: 220px;">
                                 <canvas id="peerBandwidthChart"></canvas>
                             </div>
                         </div>
                         <!-- Performance Chart (Latency, Jitter, Loss) -->
                         <div class="card p-4 bg-gray-50 dark:bg-gray-800">
-                            <h3 class="text-sm font-bold text-gray-700 dark:text-white mb-3">Performance (Latency, Jitter & Packet Loss)</h3>
+                            <h3 class="text-sm font-bold text-dark-text mb-3">Performance (Latency, Jitter & Packet Loss)</h3>
                             <div style="height: 220px;">
                                 <canvas id="peerPerformanceChart"></canvas>
                             </div>
@@ -670,7 +679,7 @@
             // Remove active state from all tab buttons
             const tabButtons = document.querySelectorAll('.tab-button');
             tabButtons.forEach(button => {
-                button.classList.remove('border-blue-500', 'text-blue-600', 'dark:text-blue-400');
+                button.classList.remove('border-newrelic-cyan', 'text-blue-600', 'dark:text-blue-400');
                 button.classList.add('border-transparent', 'text-gray-500', 'dark:text-gray-400');
             });
 
@@ -684,7 +693,7 @@
             const selectedButton = document.getElementById(`tab-${tabName}`);
             if (selectedButton) {
                 selectedButton.classList.remove('border-transparent', 'text-gray-500', 'dark:text-gray-400');
-                selectedButton.classList.add('border-blue-500', 'text-blue-600', 'dark:text-blue-400');
+                selectedButton.classList.add('border-newrelic-cyan', 'text-blue-600', 'dark:text-blue-400');
             }
         }
 

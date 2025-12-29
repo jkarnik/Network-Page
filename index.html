@@ -13,12 +13,21 @@
             theme: {
                 extend: {
                     colors: {
+                        // New Relic Design System Colors
                         dark: {
-                            bg: '#111827',
-                            card: '#1f2937',
-                            text: '#f3f4f6',
-                            muted: '#9ca3af',
-                            border: '#374151'
+                            bg: '#0B1620',      // Deep navy background
+                            card: '#1A1F2E',    // Card background
+                            border: '#2A3036',  // Subtle borders
+                            text: '#F7F8F9',    // Primary text
+                            muted: '#8E9494'    // Secondary text
+                        },
+                        newrelic: {
+                            cyan: '#00CED1',     // Primary brand cyan
+                            teal: '#008C99',     // Deep teal
+                            success: '#11A768',  // Green
+                            warning: '#F5A623',  // Amber/Orange
+                            error: '#DF2D24',    // Red
+                            info: '#0B7EBF'      // Blue
                         }
                     }
                 }
@@ -38,30 +47,30 @@
     <!-- Shared Styles -->
     <link rel="stylesheet" href="assets/css/shared-styles.css">
 </head>
-<body class="bg-gray-100 text-gray-800 h-screen flex flex-col overflow-hidden dark:bg-dark-bg dark:text-dark-text">
+<body class="bg-dark-bg text-dark-text h-screen flex flex-col overflow-hidden">
 
     <!-- Top Navigation -->
-    <nav class="bg-white border-b border-gray-200 h-16 flex-none z-10 dark:bg-dark-card dark:border-dark-border">
+    <nav class="bg-dark-card border-b border-dark-border h-16 flex-none z-10 shadow-lg">
         <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 h-full">
             <div class="flex justify-between h-full">
                 <div class="flex items-center">
                     <div class="flex-shrink-0 flex items-center gap-3">
-                        <div class="bg-blue-600 text-white p-2 rounded-lg">
+                        <div class="bg-gradient-to-br from-newrelic-cyan to-newrelic-teal text-white p-2 rounded-lg shadow-md">
                             <i class="fa-solid fa-network-wired text-xl"></i>
                         </div>
-                        <span class="font-bold text-xl tracking-tight text-gray-900 dark:text-white">Network Performance Monitoring</span>
+                        <span class="font-bold text-xl tracking-tight text-dark-text">Network Performance Monitoring</span>
                     </div>
                     <div class="hidden sm:ml-8 sm:flex sm:space-x-8">
-                        <a href="index.html" class="border-blue-500 text-gray-900 dark:text-white inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Summary Page</a>
-                        <a href="sdwan.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">SD-WAN Page</a>
-                        <a href="switch.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Switch Page</a>
-                        <a href="access-point.html" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Access Point Page</a>
+                        <a href="index.html" class="border-newrelic-cyan text-dark-text inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Summary Page</a>
+                        <a href="sdwan.html" class="border-transparent text-dark-muted hover:border-newrelic-cyan hover:text-newrelic-cyan inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors">SD-WAN Page</a>
+                        <a href="switch.html" class="border-transparent text-dark-muted hover:border-newrelic-cyan hover:text-newrelic-cyan inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors">Switch Page</a>
+                        <a href="access-point.html" class="border-transparent text-dark-muted hover:border-newrelic-cyan hover:text-newrelic-cyan inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors">Access Point Page</a>
                     </div>
                 </div>
                 <div class="flex items-center gap-4">
                     <!-- Scope Selector -->
                     <div class="relative">
-                        <select id="scopeSelector" onchange="updateDashboardScope(this.value)" class="block w-full pl-3 pr-10 py-2 text-sm border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md bg-gray-50 border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <select id="scopeSelector" onchange="updateDashboardScope(this.value)" class="block w-full pl-3 pr-10 py-2 text-sm border-dark-border focus:outline-none focus:ring-newrelic-cyan focus:border-newrelic-cyan sm:text-sm rounded-md bg-dark-bg border text-dark-text transition-all">
                             <option value="Global">Global Organization</option>
                             <optgroup label="Regions">
                                 <option value="North America">North America</option>
@@ -83,19 +92,13 @@
                             </optgroup>
                         </select>
                     </div>
-                    
-                    <!-- Dark Mode Toggle -->
-                    <button id="themeToggle" class="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 focus:outline-none">
-                        <i class="fa-solid fa-moon dark:hidden"></i>
-                        <i class="fa-solid fa-sun hidden dark:block text-yellow-400"></i>
-                    </button>
 
-                    <div class="flex items-center gap-3 border-l pl-4 border-gray-200 dark:border-gray-700">
+                    <div class="flex items-center gap-3 border-l pl-4 border-dark-border">
                         <div class="text-right hidden md:block">
-                            <p class="text-sm font-medium text-gray-900 dark:text-white">Admin User</p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">NetOps Lead</p>
+                            <p class="text-sm font-medium text-dark-text">Admin User</p>
+                            <p class="text-xs text-dark-muted">NetOps Lead</p>
                         </div>
-                        <div class="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold">
+                        <div class="h-8 w-8 rounded-full bg-gradient-to-br from-newrelic-cyan to-newrelic-teal flex items-center justify-center text-white font-bold shadow-md">
                             AU
                         </div>
                     </div>
@@ -108,23 +111,23 @@
     <div id="expandedBackdrop" onclick="closeExpandedWidgets()"></div>
 
     <!-- Main Content Area -->
-    <main class="flex-1 overflow-y-auto p-6 bg-gray-50 dark:bg-dark-bg">
+    <main class="flex-1 overflow-y-auto p-6 bg-dark-bg">
 
         <!-- Dashboard Grid -->
         <div class="grid grid-cols-12 gap-6 max-w-[1920px] mx-auto">
 
             <!-- 1. Executive Summary / Global Health (Top Left) -->
-            <div class="col-span-12 lg:col-span-3 card p-4 relative h-64 bg-white dark:bg-dark-card">
+            <div class="col-span-12 lg:col-span-3 card p-4 relative h-64 bg-dark-card">
                 <div class="flex justify-between items-start mb-2">
-                    <h3 class="text-sm font-bold text-gray-700 dark:text-white">Network Health</h3>
-                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                    <h3 class="text-sm font-bold text-dark-text">Network Health</h3>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-newrelic-success/20 text-newrelic-success">
                         Live
                     </span>
                 </div>
                 <div class="relative h-full flex items-center justify-center pb-2">
                     <canvas id="healthGauge"></canvas>
-                    <div class="gauge-value text-gray-800 dark:text-white" id="healthScoreValue">--</div>
-                    <div class="gauge-label text-gray-500 dark:text-gray-400">Weighted Score</div>
+                    <div class="gauge-value text-dark-text" id="healthScoreValue">--</div>
+                    <div class="gauge-label text-dark-muted">Weighted Score</div>
                     <div class="absolute bottom-4 left-0 right-0 flex justify-between text-xs text-gray-400 px-8">
                         <span>Critical</span>
                         <span>Healthy</span>
@@ -135,25 +138,25 @@
             <!-- 2. Network Issues & Security Posture -->
             <div class="col-span-12 sm:col-span-6 lg:col-span-3 flex flex-col gap-6 h-64">
                 <!-- Network Issues -->
-                <div id="networkIssuesCard" class="card p-4 flex-1 flex flex-col justify-center bg-white dark:bg-dark-card overflow-hidden">
+                <div id="networkIssuesCard" class="card p-4 flex-1 flex flex-col justify-center bg-dark-card overflow-hidden">
                     <div id="issuesSummaryView">
                         <div class="flex items-center justify-center gap-2 mb-3">
-                            <h3 class="text-sm font-bold text-gray-700 dark:text-white">Network Issues</h3>
-                            <span class="text-[10px] text-blue-600 dark:text-blue-400 font-medium bg-blue-50 dark:bg-blue-900/30 px-1.5 py-0.5 rounded flex items-center gap-1">
+                            <h3 class="text-sm font-bold text-dark-text">Network Issues</h3>
+                            <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-1.5 py-0.5 rounded flex items-center gap-1">
                                 <i class="fa-solid fa-hand-pointer text-[7px]"></i> Click
                             </span>
                         </div>
                         <div class="flex items-center justify-between gap-2">
                             <div class="cursor-pointer group flex-1 text-center" onclick="showIssuesAlerts('crit')">
-                                <span class="block text-2xl font-bold text-red-600 group-hover:text-red-500 transition-colors" id="criticalCount">--</span>
-                                <span class="text-xs text-gray-500 dark:text-gray-400 border-b border-dashed border-gray-400 group-hover:border-red-500 inline-block">Critical</span>
+                                <span class="block text-2xl font-bold text-newrelic-error group-hover:text-red-500 transition-colors" id="criticalCount">--</span>
+                                <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-red-500 inline-block">Critical</span>
                             </div>
                             <div class="flex items-center justify-center flex-shrink-0">
-                                <i class="fa-solid fa-triangle-exclamation text-4xl text-red-600 opacity-30 dark:opacity-90"></i>
+                                <i class="fa-solid fa-triangle-exclamation text-4xl text-newrelic-error opacity-30 dark:opacity-90"></i>
                             </div>
                             <div class="cursor-pointer group flex-1 text-center" onclick="showIssuesAlerts('warn')">
                                 <span class="block text-2xl font-bold text-amber-500 group-hover:text-amber-400 transition-colors" id="warningCount">--</span>
-                                <span class="text-xs text-gray-500 dark:text-gray-400 border-b border-dashed border-gray-400 group-hover:border-amber-500 inline-block">Warning</span>
+                                <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-amber-500 inline-block">Warning</span>
                             </div>
                         </div>
                     </div>
@@ -165,7 +168,7 @@
                                 <button onclick="hideIssuesAlerts()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
                                     <i class="fa-solid fa-arrow-left text-sm"></i>
                                 </button>
-                                <h4 class="text-base font-bold text-gray-700 dark:text-white" id="issuesAlertTitle">Network Alerts</h4>
+                                <h4 class="text-base font-bold text-dark-text" id="issuesAlertTitle">Network Alerts</h4>
                                 <span class="text-xs text-gray-400 dark:text-gray-500" id="issuesAlertCount"></span>
                             </div>
                             <!-- Severity Filter -->
@@ -185,14 +188,14 @@
                             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                                 <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0 z-10">
                                     <tr>
-                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Severity</th>
-                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Time</th>
-                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Site</th>
-                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Device</th>
-                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Message</th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Severity</th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Time</th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Site</th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Device</th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Message</th>
                                     </tr>
                                 </thead>
-                                <tbody class="bg-white dark:bg-dark-card divide-y divide-gray-200 dark:divide-gray-700" id="issuesAlertTableBody">
+                                <tbody class="bg-dark-card divide-y divide-gray-200 dark:divide-gray-700" id="issuesAlertTableBody">
                                     <!-- Rows populated by JS -->
                                 </tbody>
                             </table>
@@ -201,25 +204,25 @@
                 </div>
 
                 <!-- Security -->
-                <div id="securityCard" class="card p-4 flex-1 flex flex-col justify-center bg-white dark:bg-dark-card overflow-hidden">
+                <div id="securityCard" class="card p-4 flex-1 flex flex-col justify-center bg-dark-card overflow-hidden">
                     <div id="securitySummaryView">
                         <div class="flex items-center justify-center gap-2 mb-3">
-                            <h3 class="text-sm font-bold text-gray-700 dark:text-white">Security Posture (24h)</h3>
-                            <span class="text-[10px] text-blue-600 dark:text-blue-400 font-medium bg-blue-50 dark:bg-blue-900/30 px-1.5 py-0.5 rounded flex items-center gap-1">
+                            <h3 class="text-sm font-bold text-dark-text">Security Posture (24h)</h3>
+                            <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-1.5 py-0.5 rounded flex items-center gap-1">
                                 <i class="fa-solid fa-hand-pointer text-[7px]"></i> Click
                             </span>
                         </div>
                         <div class="flex items-center justify-between gap-2">
                             <div class="cursor-pointer group flex-1 text-center" onclick="showSecurityAlerts('threat')">
                                 <span class="block text-2xl font-bold text-gray-900 dark:text-white group-hover:text-indigo-600 transition-colors" id="threatsCount">--</span>
-                                <span class="text-xs text-gray-500 dark:text-gray-400 border-b border-dashed border-gray-400 group-hover:border-indigo-600 inline-block">Threats Blocked</span>
+                                <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-indigo-600 inline-block">Threats Blocked</span>
                             </div>
                             <div class="flex items-center justify-center flex-shrink-0">
                                 <i class="fa-solid fa-shield-halved text-4xl text-indigo-600 dark:text-indigo-400 opacity-30 dark:opacity-90"></i>
                             </div>
                             <div class="cursor-pointer group flex-1 text-center" onclick="showSecurityAlerts('rogue')">
-                                <span class="block text-2xl font-bold text-red-600 group-hover:text-red-500 transition-colors" id="roguesCount">--</span>
-                                <span class="text-xs text-gray-500 dark:text-gray-400 border-b border-dashed border-gray-400 group-hover:border-red-500 inline-block">Active Rogues</span>
+                                <span class="block text-2xl font-bold text-newrelic-error group-hover:text-red-500 transition-colors" id="roguesCount">--</span>
+                                <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-red-500 inline-block">Active Rogues</span>
                             </div>
                         </div>
                     </div>
@@ -231,7 +234,7 @@
                                 <button onclick="hideSecurityAlerts()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
                                     <i class="fa-solid fa-arrow-left text-sm"></i>
                                 </button>
-                                <h4 class="text-base font-bold text-gray-700 dark:text-white" id="securityAlertTitle">Security Alerts</h4>
+                                <h4 class="text-base font-bold text-dark-text" id="securityAlertTitle">Security Alerts</h4>
                                 <span class="text-xs text-gray-400 dark:text-gray-500" id="securityAlertCount"></span>
                             </div>
                             <!-- Security Type Filter -->
@@ -250,14 +253,14 @@
                             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                                 <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0 z-10">
                                     <tr>
-                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Type</th>
-                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Time</th>
-                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Site</th>
-                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Device</th>
-                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Message</th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Type</th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Time</th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Site</th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Device</th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Message</th>
                                     </tr>
                                 </thead>
-                                <tbody class="bg-white dark:bg-dark-card divide-y divide-gray-200 dark:divide-gray-700" id="securityAlertTableBody">
+                                <tbody class="bg-dark-card divide-y divide-gray-200 dark:divide-gray-700" id="securityAlertTableBody">
                                     <!-- Rows populated by JS -->
                                 </tbody>
                             </table>
@@ -267,10 +270,10 @@
             </div>
 
             <!-- 3. Active Clients by Device Type -->
-            <div id="activeClientsCard" class="col-span-12 sm:col-span-6 lg:col-span-2 card p-3 h-64 bg-white dark:bg-dark-card overflow-hidden">
+            <div id="activeClientsCard" class="col-span-12 sm:col-span-6 lg:col-span-2 card p-3 h-64 bg-dark-card overflow-hidden">
                 <div class="flex items-baseline gap-2 mb-3">
-                    <h3 class="text-sm font-bold text-gray-700 dark:text-white">Active Clients</h3>
-                    <span class="text-[10px] text-blue-600 dark:text-blue-400 font-medium bg-blue-50 dark:bg-blue-900/30 px-1.5 py-0.5 rounded flex items-center gap-1">
+                    <h3 class="text-sm font-bold text-dark-text">Active Clients</h3>
+                    <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-1.5 py-0.5 rounded flex items-center gap-1">
                         <i class="fa-solid fa-hand-pointer text-[7px]"></i> Click rows
                     </span>
                     <button id="expandToggle" class="ml-auto text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors" onclick="toggleExpand()">
@@ -287,7 +290,7 @@
                         </div>
                         <div class="flex items-center gap-2">
                             <span class="text-lg font-bold text-gray-900 dark:text-white w-14 flex-shrink-0" id="gwClientCount">3,200</span>
-                            <span class="text-[10px] text-green-600 dark:text-green-400 font-medium bg-green-50 dark:bg-green-900/30 px-1 py-0.5 rounded flex items-center gap-0.5 whitespace-nowrap flex-shrink-0">
+                            <span class="text-[10px] text-newrelic-success dark:text-green-400 font-medium bg-green-50 dark:bg-green-900/30 px-1 py-0.5 rounded flex items-center gap-0.5 whitespace-nowrap flex-shrink-0">
                                 <i class="fa-solid fa-arrow-trend-up"></i> <span id="gwClientTrend">2.1%</span>
                             </span>
                             <div class="flex-1 h-4 min-w-0">
@@ -305,7 +308,7 @@
                         </div>
                         <div class="flex items-center gap-2">
                             <span class="text-lg font-bold text-gray-900 dark:text-white w-14 flex-shrink-0" id="swClientCount">7,800</span>
-                            <span class="text-[10px] text-green-600 dark:text-green-400 font-medium bg-green-50 dark:bg-green-900/30 px-1 py-0.5 rounded flex items-center gap-0.5 whitespace-nowrap flex-shrink-0">
+                            <span class="text-[10px] text-newrelic-success dark:text-green-400 font-medium bg-green-50 dark:bg-green-900/30 px-1 py-0.5 rounded flex items-center gap-0.5 whitespace-nowrap flex-shrink-0">
                                 <i class="fa-solid fa-arrow-trend-up"></i> <span id="swClientTrend">5.3%</span>
                             </span>
                             <div class="flex-1 h-4 min-w-0">
@@ -317,13 +320,13 @@
                     <!-- Access Points -->
                     <div class="flex flex-col gap-1 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 p-1 rounded transition-colors" onclick="showDeviceList('ap')">
                         <div class="flex items-center gap-1.5">
-                            <i class="fa-solid fa-wifi text-green-600 text-xs"></i>
+                            <i class="fa-solid fa-wifi text-newrelic-success text-xs"></i>
                             <span class="text-xs font-medium text-gray-600 dark:text-gray-300">Access Points</span>
                             <i class="fa-solid fa-chevron-right text-[8px] text-gray-400 ml-auto"></i>
                         </div>
                         <div class="flex items-center gap-2">
                             <span class="text-lg font-bold text-gray-900 dark:text-white w-14 flex-shrink-0" id="apClientCount">4,342</span>
-                            <span class="text-[10px] text-green-600 dark:text-green-400 font-medium bg-green-50 dark:bg-green-900/30 px-1 py-0.5 rounded flex items-center gap-0.5 whitespace-nowrap flex-shrink-0">
+                            <span class="text-[10px] text-newrelic-success dark:text-green-400 font-medium bg-green-50 dark:bg-green-900/30 px-1 py-0.5 rounded flex items-center gap-0.5 whitespace-nowrap flex-shrink-0">
                                 <i class="fa-solid fa-arrow-trend-up"></i> <span id="apClientTrend">3.7%</span>
                             </span>
                             <div class="flex-1 h-4 min-w-0">
@@ -340,7 +343,7 @@
                             <button onclick="hideDeviceList()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
                                 <i class="fa-solid fa-arrow-left text-sm"></i>
                             </button>
-                            <h4 class="text-base font-bold text-gray-700 dark:text-white" id="deviceListTitle">Devices</h4>
+                            <h4 class="text-base font-bold text-dark-text" id="deviceListTitle">Devices</h4>
                             <span class="text-xs text-gray-400 dark:text-gray-500" id="deviceCount"></span>
                         </div>
                         <!-- Device Type Filter -->
@@ -365,12 +368,12 @@
             </div>
 
              <!-- 4. Device Status Distribution (Status Matrix) -->
-             <div id="deviceStatusCard" class="col-span-12 sm:col-span-6 lg:col-span-4 card p-4 h-64 bg-white dark:bg-dark-card overflow-hidden">
+             <div id="deviceStatusCard" class="col-span-12 sm:col-span-6 lg:col-span-4 card p-4 h-64 bg-dark-card overflow-hidden">
                 <div id="statusSummaryView" class="h-full flex flex-col">
                     <div class="flex justify-between items-center mb-3">
-                        <h3 class="text-sm font-bold text-gray-700 dark:text-white">Device Status Distribution</h3>
+                        <h3 class="text-sm font-bold text-dark-text">Device Status Distribution</h3>
                         <div class="flex items-center gap-2">
-                            <span class="text-[10px] text-blue-600 dark:text-blue-400 font-medium bg-blue-50 dark:bg-blue-900/30 px-2 py-0.5 rounded flex items-center gap-1">
+                            <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-2 py-0.5 rounded flex items-center gap-1">
                                 <i class="fa-solid fa-hand-pointer text-[8px]"></i> Click cells
                             </span>
                         </div>
@@ -379,24 +382,24 @@
                         <div class="status-grid border border-gray-200 dark:border-gray-700">
                             <!-- Header Row -->
                             <div class="status-cell status-header">Type</div>
-                            <div class="status-cell status-header text-green-600 dark:text-green-400">Online</div>
+                            <div class="status-cell status-header text-newrelic-success dark:text-green-400">Online</div>
                             <div class="status-cell status-header text-amber-500">Warning</div>
                             <div class="status-cell status-header text-red-500">Critical</div>
 
                             <!-- Gateways -->
-                            <div class="status-cell font-medium text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800">Gateways</div>
+                            <div class="status-cell font-medium text-xs text-dark-muted bg-gray-50 dark:bg-gray-800">Gateways</div>
                             <div class="status-cell clickable" id="gw-online" onclick="showStatusDevices('gateway', 'online')">--</div>
                             <div class="status-cell clickable bg-amber-50 dark:bg-amber-900/10 text-amber-700 dark:text-amber-400" id="gw-warn" onclick="showStatusDevices('gateway', 'warning')">--</div>
                             <div class="status-cell clickable bg-red-50 dark:bg-red-900/10 text-red-700 dark:text-red-400 font-bold" id="gw-crit" onclick="showStatusDevices('gateway', 'critical')">--</div>
 
                             <!-- Switches -->
-                            <div class="status-cell font-medium text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800">Switches</div>
+                            <div class="status-cell font-medium text-xs text-dark-muted bg-gray-50 dark:bg-gray-800">Switches</div>
                             <div class="status-cell clickable" id="sw-online" onclick="showStatusDevices('switch', 'online')">--</div>
                             <div class="status-cell clickable bg-amber-50 dark:bg-amber-900/10 text-amber-700 dark:text-amber-400" id="sw-warn" onclick="showStatusDevices('switch', 'warning')">--</div>
                             <div class="status-cell clickable bg-red-50 dark:bg-red-900/10 text-red-700 dark:text-red-400 font-bold" id="sw-crit" onclick="showStatusDevices('switch', 'critical')">--</div>
 
                             <!-- APs -->
-                            <div class="status-cell font-medium text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800">Access Points</div>
+                            <div class="status-cell font-medium text-xs text-dark-muted bg-gray-50 dark:bg-gray-800">Access Points</div>
                             <div class="status-cell clickable" id="ap-online" onclick="showStatusDevices('ap', 'online')">--</div>
                             <div class="status-cell clickable bg-amber-50 dark:bg-amber-900/10 text-amber-700 dark:text-amber-400" id="ap-warn" onclick="showStatusDevices('ap', 'warning')">--</div>
                             <div class="status-cell clickable bg-red-50 dark:bg-red-900/10 text-red-700 dark:text-red-400 font-bold" id="ap-crit" onclick="showStatusDevices('ap', 'critical')">--</div>
@@ -411,7 +414,7 @@
                             <button onclick="hideStatusDevices()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
                                 <i class="fa-solid fa-arrow-left text-sm"></i>
                             </button>
-                            <h4 class="text-base font-bold text-gray-700 dark:text-white" id="statusDeviceListTitle">Devices</h4>
+                            <h4 class="text-base font-bold text-dark-text" id="statusDeviceListTitle">Devices</h4>
                             <span class="text-xs text-gray-400 dark:text-gray-500" id="statusDeviceCount"></span>
                         </div>
                         <!-- Status Filter -->
@@ -438,9 +441,9 @@
             <!-- ROW 2: Analytical Charts -->
 
             <!-- 7. Top Impacted SD-WANs (Latency) -->
-            <div class="col-span-12 lg:col-span-4 card p-4 h-80 bg-white dark:bg-dark-card">
+            <div class="col-span-12 lg:col-span-4 card p-4 h-80 bg-dark-card">
                 <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-sm font-bold text-gray-700 dark:text-white">Top Impacted SD-WANs (Latency)</h3>
+                    <h3 class="text-sm font-bold text-dark-text">Top Impacted SD-WANs (Latency)</h3>
                     <span class="text-xs text-gray-400">Avg WAN Latency (ms)</span>
                 </div>
                 <div class="relative h-full w-full pb-4">
@@ -449,9 +452,9 @@
             </div>
 
             <!-- 6. User Frustration Leaderboard -->
-            <div class="col-span-12 lg:col-span-5 card p-4 h-80 bg-white dark:bg-dark-card">
+            <div class="col-span-12 lg:col-span-5 card p-4 h-80 bg-dark-card">
                 <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-sm font-bold text-gray-700 dark:text-white">User Frustration Leaderboard</h3>
+                    <h3 class="text-sm font-bold text-dark-text">User Frustration Leaderboard</h3>
                     <span class="text-xs text-gray-400">Time to Connect (ms)</span>
                 </div>
                 <div class="relative h-full w-full pb-4">
@@ -460,15 +463,15 @@
             </div>
 
             <!-- 8. WAN Resilience (Donut) -->
-            <div class="col-span-12 lg:col-span-3 card p-4 h-80 bg-white dark:bg-dark-card flex flex-col">
+            <div class="col-span-12 lg:col-span-3 card p-4 h-80 bg-dark-card flex flex-col">
                 <div class="flex justify-center items-center mb-4">
-                    <h3 class="text-sm font-bold text-gray-700 dark:text-white">WAN Resilience</h3>
+                    <h3 class="text-sm font-bold text-dark-text">WAN Resilience</h3>
                 </div>
                 <div class="relative flex-1 flex items-center justify-center overflow-hidden px-2">
                     <div class="relative w-full" style="max-width: 231px; max-height: 231px; aspect-ratio: 1/1;">
                         <canvas id="wanDonut"></canvas>
                         <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                            <div class="bg-white dark:bg-dark-card rounded-lg p-3 shadow-sm space-y-2">
+                            <div class="bg-dark-card rounded-lg p-3 shadow-sm space-y-2">
                                 <div class="flex items-center gap-2">
                                     <div class="w-2 h-2 rounded-full bg-blue-500"></div>
                                     <span class="text-sm font-medium text-gray-600 dark:text-gray-300">Primary</span>
@@ -491,9 +494,9 @@
             </div>
 
             <!-- ROW 3: Unified Alert Feed -->
-            <div class="col-span-12 card h-96 flex flex-col bg-white dark:bg-dark-card">
+            <div class="col-span-12 card h-96 flex flex-col bg-dark-card">
                 <div class="p-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
-                    <h3 class="text-sm font-bold text-gray-700 dark:text-white flex items-center gap-2">
+                    <h3 class="text-sm font-bold text-dark-text flex items-center gap-2">
                         <i class="fa-regular fa-bell"></i> Unified Alert Feed
                         <span id="activeFilterBadge" class="hidden ml-2 px-2 py-0.5 rounded text-xs font-normal bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
                             Filtered
@@ -508,20 +511,20 @@
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0 z-10">
                             <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Severity</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Time</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Vendor</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Site</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Device</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Message</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Severity</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Time</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Vendor</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Site</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Device</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Message</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white dark:bg-dark-card divide-y divide-gray-200 dark:divide-gray-700" id="alertTableBody">
+                        <tbody class="bg-dark-card divide-y divide-gray-200 dark:divide-gray-700" id="alertTableBody">
                             <!-- Rows populated by JS -->
                         </tbody>
                     </table>
                 </div>
-                <div class="p-2 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-xs text-center text-gray-500 dark:text-gray-400">
+                <div class="p-2 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-xs text-center text-dark-muted">
                     Streaming live events...
                 </div>
             </div>
@@ -1003,8 +1006,8 @@
         // --- 4. ALERT TABLE LOGIC ---
 
         const sevStyles = {
-            crit: 'text-red-600 bg-red-50 dark:bg-red-900/20 dark:text-red-400 rounded-full px-2 py-0.5 text-xs font-bold border border-red-100 dark:border-red-900',
-            warn: 'text-amber-600 bg-amber-50 dark:bg-amber-900/20 dark:text-amber-400 rounded-full px-2 py-0.5 text-xs font-bold border border-amber-100 dark:border-amber-900',
+            crit: 'text-newrelic-error bg-red-50 dark:bg-red-900/20 dark:text-red-400 rounded-full px-2 py-0.5 text-xs font-bold border border-red-100 dark:border-red-900',
+            warn: 'text-newrelic-warning bg-amber-50 dark:bg-amber-900/20 dark:text-amber-400 rounded-full px-2 py-0.5 text-xs font-bold border border-amber-100 dark:border-amber-900',
             info: 'text-blue-600 bg-blue-50 dark:bg-blue-900/20 dark:text-blue-400 rounded-full px-2 py-0.5 text-xs font-bold border border-blue-100 dark:border-blue-900'
         };
 
@@ -1067,8 +1070,8 @@
                             ${sevIcons[alert.sev]} ${alert.sev.toUpperCase()}
                         </span>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-500 dark:text-gray-400">${alert.time}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                    <td class="px-6 py-4 whitespace-nowrap text-xs text-dark-muted">${alert.time}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-dark-muted">
                         <div class="flex items-center gap-2">
                             ${alert.vendor === 'meraki'
                                 ? '<img src="images/cisco-logo.svg" class="h-4 w-auto opacity-70" alt="Meraki">'
@@ -1080,7 +1083,7 @@
                     <td class="px-6 py-4 whitespace-nowrap text-sm">
                         <a href="#" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 font-medium hover:underline">${alert.device}</a>
                     </td>
-                    <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400 truncate max-w-xs" title="${alert.msg}">${alert.msg}</td>
+                    <td class="px-6 py-4 text-sm text-dark-muted truncate max-w-xs" title="${alert.msg}">${alert.msg}</td>
                 `;
                 tableBody.appendChild(row);
             });
@@ -1292,9 +1295,9 @@
                 };
 
                 const deviceTypeIcons = {
-                    'GW-': { icon: 'fa-network-wired', color: 'text-blue-600 dark:text-blue-400' },
+                    'GW-': { icon: 'fa-network-wired', color: 'text-newrelic-cyan' },
                     'SW-': { icon: 'fa-server', color: 'text-purple-600 dark:text-purple-400' },
-                    'AP-': { icon: 'fa-wifi', color: 'text-green-600 dark:text-green-400' }
+                    'AP-': { icon: 'fa-wifi', color: 'text-newrelic-success dark:text-green-400' }
                 };
 
                 const prefix = device.name.substring(0, 3);
@@ -1310,7 +1313,7 @@
                             </div>
                             <div class="flex-1 min-w-0">
                                 <div class="text-sm font-bold text-gray-900 dark:text-white truncate mb-0.5">${device.name}</div>
-                                <div class="text-xs text-gray-500 dark:text-gray-400">${device.site}</div>
+                                <div class="text-xs text-dark-muted">${device.site}</div>
                             </div>
                         </div>
                         <span class="px-2 py-1 text-[10px] rounded-lg font-semibold ${statusColors[device.status]} flex items-center gap-1">
@@ -1319,14 +1322,14 @@
                         </span>
                     </div>
                     <div class="flex items-center justify-between pt-3 border-t border-gray-200 dark:border-gray-700">
-                        <div class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                        <div class="flex items-center gap-2 text-xs text-dark-muted">
                             <i class="fa-solid fa-network-wired text-[10px]"></i>
                             <span>${device.ip}</span>
                         </div>
                         <div class="flex items-center gap-1.5">
-                            <i class="fa-solid fa-users text-blue-600 dark:text-blue-400 text-xs"></i>
+                            <i class="fa-solid fa-users text-newrelic-cyan text-xs"></i>
                             <span class="text-sm font-bold text-gray-900 dark:text-white">${device.clients}</span>
-                            <span class="text-[10px] text-gray-500 dark:text-gray-400">clients</span>
+                            <span class="text-[10px] text-dark-muted">clients</span>
                         </div>
                     </div>
                 `;
@@ -1496,9 +1499,9 @@
                 };
 
                 const deviceTypeIcons = {
-                    'GW-': { icon: 'fa-network-wired', color: 'text-blue-600 dark:text-blue-400' },
+                    'GW-': { icon: 'fa-network-wired', color: 'text-newrelic-cyan' },
                     'SW-': { icon: 'fa-server', color: 'text-purple-600 dark:text-purple-400' },
-                    'AP-': { icon: 'fa-wifi', color: 'text-green-600 dark:text-green-400' }
+                    'AP-': { icon: 'fa-wifi', color: 'text-newrelic-success dark:text-green-400' }
                 };
 
                 const prefix = device.name.substring(0, 3);
@@ -1514,7 +1517,7 @@
                             </div>
                             <div class="flex-1 min-w-0">
                                 <div class="text-sm font-bold text-gray-900 dark:text-white truncate mb-0.5">${device.name}</div>
-                                <div class="text-xs text-gray-500 dark:text-gray-400">${device.site}</div>
+                                <div class="text-xs text-dark-muted">${device.site}</div>
                             </div>
                         </div>
                         <span class="px-2 py-1 text-[10px] rounded-lg font-semibold ${statusColors[device.status]} flex items-center gap-1">
@@ -1523,14 +1526,14 @@
                         </span>
                     </div>
                     <div class="flex items-center justify-between pt-3 border-t border-gray-200 dark:border-gray-700">
-                        <div class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                        <div class="flex items-center gap-2 text-xs text-dark-muted">
                             <i class="fa-solid fa-network-wired text-[10px]"></i>
                             <span>${device.ip}</span>
                         </div>
                         <div class="flex items-center gap-1.5">
-                            <i class="fa-solid fa-users text-blue-600 dark:text-blue-400 text-xs"></i>
+                            <i class="fa-solid fa-users text-newrelic-cyan text-xs"></i>
                             <span class="text-sm font-bold text-gray-900 dark:text-white">${device.clients}</span>
-                            <span class="text-[10px] text-gray-500 dark:text-gray-400">clients</span>
+                            <span class="text-[10px] text-dark-muted">clients</span>
                         </div>
                     </div>
                 `;
@@ -1677,8 +1680,8 @@
             }
 
             const sevStyles = {
-                crit: 'text-red-600 bg-red-50 dark:bg-red-900/20 dark:text-red-400 rounded-full px-2 py-0.5 text-xs font-bold border border-red-100 dark:border-red-900',
-                warn: 'text-amber-600 bg-amber-50 dark:bg-amber-900/20 dark:text-amber-400 rounded-full px-2 py-0.5 text-xs font-bold border border-amber-100 dark:border-amber-900',
+                crit: 'text-newrelic-error bg-red-50 dark:bg-red-900/20 dark:text-red-400 rounded-full px-2 py-0.5 text-xs font-bold border border-red-100 dark:border-red-900',
+                warn: 'text-newrelic-warning bg-amber-50 dark:bg-amber-900/20 dark:text-amber-400 rounded-full px-2 py-0.5 text-xs font-bold border border-amber-100 dark:border-amber-900',
                 info: 'text-blue-600 bg-blue-50 dark:bg-blue-900/20 dark:text-blue-400 rounded-full px-2 py-0.5 text-xs font-bold border border-blue-100 dark:border-blue-900'
             };
 
@@ -1697,12 +1700,12 @@
                             ${sevIcons[alert.sev]} ${alert.sev.toUpperCase()}
                         </span>
                     </td>
-                    <td class="px-4 py-3 whitespace-nowrap text-xs text-gray-500 dark:text-gray-400">${alert.time}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-xs text-dark-muted">${alert.time}</td>
                     <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">${alert.site}</td>
                     <td class="px-4 py-3 whitespace-nowrap text-sm">
                         <a href="#" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 font-medium hover:underline">${alert.device}</a>
                     </td>
-                    <td class="px-4 py-3 text-sm text-gray-500 dark:text-gray-400 truncate max-w-xs" title="${alert.msg}">${alert.msg}</td>
+                    <td class="px-4 py-3 text-sm text-dark-muted truncate max-w-xs" title="${alert.msg}">${alert.msg}</td>
                 `;
                 tableBody.appendChild(row);
             });
@@ -1856,7 +1859,7 @@
 
             const typeStyles = {
                 threat: 'text-indigo-600 bg-indigo-50 dark:bg-indigo-900/20 dark:text-indigo-400 rounded-full px-2 py-0.5 text-xs font-bold border border-indigo-100 dark:border-indigo-900',
-                rogue: 'text-red-600 bg-red-50 dark:bg-red-900/20 dark:text-red-400 rounded-full px-2 py-0.5 text-xs font-bold border border-red-100 dark:border-red-900'
+                rogue: 'text-newrelic-error bg-red-50 dark:bg-red-900/20 dark:text-red-400 rounded-full px-2 py-0.5 text-xs font-bold border border-red-100 dark:border-red-900'
             };
 
             const typeIcons = {
@@ -1878,12 +1881,12 @@
                             ${typeIcons[alert.type]} ${typeLabels[alert.type]}
                         </span>
                     </td>
-                    <td class="px-4 py-3 whitespace-nowrap text-xs text-gray-500 dark:text-gray-400">${alert.time}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-xs text-dark-muted">${alert.time}</td>
                     <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">${alert.site}</td>
                     <td class="px-4 py-3 whitespace-nowrap text-sm">
                         <a href="#" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 font-medium hover:underline">${alert.device}</a>
                     </td>
-                    <td class="px-4 py-3 text-sm text-gray-500 dark:text-gray-400 truncate max-w-xs" title="${alert.msg}">${alert.msg}</td>
+                    <td class="px-4 py-3 text-sm text-dark-muted truncate max-w-xs" title="${alert.msg}">${alert.msg}</td>
                 `;
                 tableBody.appendChild(row);
             });
