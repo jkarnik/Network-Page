@@ -207,37 +207,19 @@
                         </div>
                     </div>
 
-                    <div class="col-span-12 lg:col-span-5 card p-4 bg-white dark:bg-dark-card h-64 cursor-pointer hover:shadow-lg transition-shadow" onclick="openClientHistoryOverlay()">
+                    <div class="col-span-12 lg:col-span-5 card p-4 bg-white dark:bg-dark-card h-64">
                         <div class="flex justify-between items-center mb-3">
-                            <h3 class="text-sm font-bold text-gray-700 dark:text-white">DHCP Capacity</h3>
-                            <button class="text-xs text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1">
-                                <i class="fa-solid fa-chart-line"></i> View History
-                            </button>
+                            <h3 class="text-sm font-bold text-gray-700 dark:text-white">Active Client Count</h3>
+                            <div class="flex gap-3 text-xs">
+                                <span class="flex items-center gap-1"><span class="w-2 h-2 bg-orange-500 rounded-sm"></span> Total</span>
+                                <span class="flex items-center gap-1"><span class="w-2 h-2 bg-gray-600 rounded-sm"></span> Wired</span>
+                                <span class="flex items-center gap-1"><span class="w-2 h-2 bg-blue-500 rounded-sm"></span> 2.4GHz</span>
+                                <span class="flex items-center gap-1"><span class="w-2 h-2 bg-green-500 rounded-sm"></span> 5GHz</span>
+                                <span class="flex items-center gap-1"><span class="w-2 h-2 bg-purple-500 rounded-sm"></span> 6GHz</span>
+                            </div>
                         </div>
-                        <div class="flex flex-col justify-center" style="height: calc(100% - 2.5rem);">
-                            <div class="relative w-full" style="height: 80px; margin-bottom: 1rem;">
-                                <canvas id="dhcpCapacityBar"></canvas>
-                            </div>
-                            <div class="flex justify-around">
-                                <div class="text-center">
-                                    <div class="flex items-center justify-center gap-1.5">
-                                        <span class="w-2.5 h-2.5 bg-blue-500 rounded-sm"></span>
-                                        <p class="text-xl font-bold text-gray-800 dark:text-white" id="dhcpUsedValue">--</p>
-                                    </div>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Used</p>
-                                </div>
-                                <div class="text-center">
-                                    <div class="flex items-center justify-center gap-1.5">
-                                        <span class="w-2.5 h-2.5 bg-gray-200 dark:bg-gray-600 rounded-sm"></span>
-                                        <p class="text-xl font-bold text-gray-800 dark:text-white" id="dhcpAvailableValue">--</p>
-                                    </div>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Available</p>
-                                </div>
-                                <div class="text-center">
-                                    <p class="text-xl font-bold text-gray-800 dark:text-white" id="dhcpPercentageValue">--</p>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Utilization</p>
-                                </div>
-                            </div>
+                        <div class="relative h-full w-full pb-4">
+                            <canvas id="clientCountTimeSeries"></canvas>
                         </div>
                     </div>
 
@@ -423,28 +405,6 @@
             </div>
         </div>
 
-        <!-- Client Count History Overlay -->
-        <div id="clientHistoryOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-6">
-            <div class="bg-white dark:bg-dark-card rounded-lg shadow-2xl w-full max-w-6xl overflow-hidden">
-                <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-                    <div class="flex items-center gap-3">
-                        <h2 class="text-xl font-bold text-gray-900 dark:text-white">Client Count History</h2>
-                    </div>
-                    <button onclick="closeClientHistoryOverlay()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-                        <i class="fa-solid fa-times text-2xl"></i>
-                    </button>
-                </div>
-                <div class="p-6">
-                    <div class="card p-4 bg-gray-50 dark:bg-gray-800">
-                        <h3 class="text-sm font-bold text-gray-700 dark:text-white mb-3">Connected Clients Over Time (Last 24 Hours)</h3>
-                        <div style="height: 400px;">
-                            <canvas id="clientHistoryOverlayChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- Client Details Overlay -->
         <div id="clientDetailsOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-6">
             <div class="bg-white dark:bg-dark-card rounded-lg shadow-2xl w-full max-w-5xl overflow-hidden">
@@ -599,67 +559,151 @@
             charts.successGauge = createGauge('successGauge', funnelData.success, '#10b981');
             document.getElementById('successValue').textContent = funnelData.success.toFixed(1);
 
-            // 2. DHCP Capacity - Horizontal Stacked Bar
-            const dhcpUsed = 182;
-            const dhcpTotal = 254;
-            const dhcpAvailable = dhcpTotal - dhcpUsed;
-            const dhcpPercentage = (dhcpUsed / dhcpTotal * 100).toFixed(1);
+            // 2. Active Client Count - Time Series
+            const timeLabels = ['00:00', '02:00', '04:00', '06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00', 'Now'];
 
-            charts.dhcpCapacity = new Chart(document.getElementById('dhcpCapacityBar'), {
-                type: 'bar',
+            // Generate realistic data for each client type
+            const wiredData = [12, 12, 12, 13, 14, 15, 15, 15, 15, 14, 14, 13, 13];
+            const wifi24Data = [3, 2, 2, 4, 6, 8, 10, 11, 10, 8, 6, 4, 5];
+            const wifi5Data = [5, 4, 3, 6, 8, 12, 15, 16, 15, 13, 10, 8, 9];
+            const wifi6Data = [2, 1, 1, 2, 3, 5, 7, 8, 8, 6, 5, 4, 5];
+
+            // Calculate total for each time point
+            const totalData = timeLabels.map((_, idx) =>
+                wiredData[idx] + wifi24Data[idx] + wifi5Data[idx] + wifi6Data[idx]
+            );
+
+            charts.clientCount = new Chart(document.getElementById('clientCountTimeSeries'), {
+                type: 'line',
                 data: {
-                    labels: ['DHCP Pool'],
+                    labels: timeLabels,
                     datasets: [
                         {
-                            label: 'Used',
-                            data: [dhcpUsed],
-                            backgroundColor: '#3b82f6',
-                            borderRadius: 4
+                            label: 'Total',
+                            data: totalData,
+                            borderColor: '#f97316',
+                            backgroundColor: 'rgba(249, 115, 22, 0)',
+                            fill: false,
+                            tension: 0.4,
+                            pointRadius: 0,
+                            pointHoverRadius: 6,
+                            pointHoverBackgroundColor: '#f97316',
+                            pointHoverBorderColor: '#fff',
+                            pointHoverBorderWidth: 2,
+                            borderWidth: 3,
+                            borderDash: [5, 5]
                         },
                         {
-                            label: 'Available',
-                            data: [dhcpAvailable],
-                            backgroundColor: '#e5e7eb',
-                            borderRadius: 4
+                            label: 'Wired',
+                            data: wiredData,
+                            borderColor: '#6b7280',
+                            backgroundColor: 'rgba(107, 114, 128, 0.1)',
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 3,
+                            pointHoverRadius: 5,
+                            pointBackgroundColor: '#6b7280',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            borderWidth: 2
+                        },
+                        {
+                            label: '2.4GHz',
+                            data: wifi24Data,
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 3,
+                            pointHoverRadius: 5,
+                            pointBackgroundColor: '#3b82f6',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            borderWidth: 2
+                        },
+                        {
+                            label: '5GHz',
+                            data: wifi5Data,
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 3,
+                            pointHoverRadius: 5,
+                            pointBackgroundColor: '#10b981',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            borderWidth: 2
+                        },
+                        {
+                            label: '6GHz',
+                            data: wifi6Data,
+                            borderColor: '#a855f7',
+                            backgroundColor: 'rgba(168, 85, 247, 0.1)',
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 3,
+                            pointHoverRadius: 5,
+                            pointBackgroundColor: '#a855f7',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            borderWidth: 2
                         }
                     ]
                 },
                 options: {
-                    indexAxis: 'y',
                     responsive: true,
                     maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
                     plugins: {
                         legend: { display: false },
                         tooltip: {
+                            enabled: true,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: '#3b82f6',
+                            borderWidth: 1,
                             callbacks: {
                                 label: function(context) {
-                                    const label = context.dataset.label || '';
-                                    const value = context.parsed.x;
-                                    const percentage = ((value / dhcpTotal) * 100).toFixed(1);
-                                    return label + ': ' + value + ' (' + percentage + '%)';
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    label += context.parsed.y + ' clients';
+                                    return label;
                                 }
                             }
                         }
                     },
                     scales: {
                         x: {
-                            stacked: true,
-                            max: dhcpTotal,
+                            display: true,
                             grid: { display: false },
-                            ticks: { display: false }
+                            ticks: {
+                                font: { size: 10 },
+                                maxRotation: 0,
+                                autoSkipPadding: 15
+                            }
                         },
                         y: {
-                            stacked: true,
-                            grid: { display: false },
-                            ticks: { display: false }
+                            display: true,
+                            beginAtZero: true,
+                            ticks: {
+                                font: { size: 10 },
+                                stepSize: 5,
+                                callback: function(value) {
+                                    return value;
+                                }
+                            },
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' }
                         }
                     }
                 }
             });
-
-            document.getElementById('dhcpUsedValue').textContent = dhcpUsed;
-            document.getElementById('dhcpAvailableValue').textContent = dhcpAvailable;
-            document.getElementById('dhcpPercentageValue').textContent = dhcpPercentage + '%';
 
             // 3. Channel Utilization [cite: 157]
             // Stacked Bar for 2.4/5/6 GHz
@@ -947,125 +991,6 @@
             if (funnelTimeSeriesChart) {
                 funnelTimeSeriesChart.destroy();
                 funnelTimeSeriesChart = null;
-            }
-        }
-
-        // --- CLIENT COUNT HISTORY OVERLAY ---
-        let clientHistoryOverlayChart = null;
-
-        function openClientHistoryOverlay() {
-            const overlay = document.getElementById('clientHistoryOverlay');
-            overlay.classList.remove('hidden');
-
-            // Destroy existing chart if it exists
-            if (clientHistoryOverlayChart) {
-                clientHistoryOverlayChart.destroy();
-            }
-
-            // Generate time labels for 24 hours
-            const timeLabels = [];
-            for (let i = 0; i <= 24; i++) {
-                const hour = i % 24;
-                timeLabels.push(i === 24 ? 'Now' : `${hour.toString().padStart(2, '0')}:00`);
-            }
-
-            // Generate realistic client count data with variation throughout the day
-            const clientData = timeLabels.map((label, idx) => {
-                const hour = idx;
-                // Night hours (0-6): low activity (5-15 clients)
-                if (hour >= 0 && hour < 6) return Math.floor(Math.random() * 10) + 5;
-                // Morning ramp up (6-9): increasing (15-35 clients)
-                if (hour >= 6 && hour < 9) return Math.floor(Math.random() * 20) + 15;
-                // Work hours (9-17): high activity (35-50 clients)
-                if (hour >= 9 && hour < 17) return Math.floor(Math.random() * 15) + 35;
-                // Evening decline (17-22): decreasing (15-35 clients)
-                if (hour >= 17 && hour < 22) return Math.floor(Math.random() * 20) + 15;
-                // Late night (22-24): low activity (5-15 clients)
-                return Math.floor(Math.random() * 10) + 5;
-            });
-
-            // Create time series chart
-            clientHistoryOverlayChart = new Chart(document.getElementById('clientHistoryOverlayChart'), {
-                type: 'line',
-                data: {
-                    labels: timeLabels,
-                    datasets: [{
-                        label: 'Connected Clients',
-                        data: clientData,
-                        borderColor: '#3b82f6',
-                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                        fill: true,
-                        tension: 0.4,
-                        pointRadius: 3,
-                        pointHoverRadius: 6,
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            enabled: true,
-                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                            titleColor: '#fff',
-                            bodyColor: '#fff',
-                            borderColor: '#3b82f6',
-                            borderWidth: 1,
-                            callbacks: {
-                                label: function(context) {
-                                    return 'Clients: ' + context.parsed.y;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            display: true,
-                            grid: { display: true, color: 'rgba(0, 0, 0, 0.05)' },
-                            ticks: {
-                                font: { size: 11 },
-                                maxRotation: 45,
-                                minRotation: 45
-                            }
-                        },
-                        y: {
-                            display: true,
-                            beginAtZero: true,
-                            ticks: {
-                                font: { size: 11 },
-                                callback: function(value) {
-                                    return value;
-                                }
-                            },
-                            grid: { color: 'rgba(0, 0, 0, 0.05)' }
-                        }
-                    }
-                }
-            });
-
-            // Disable datalabels plugin for this specific chart
-            if (clientHistoryOverlayChart.options.plugins) {
-                clientHistoryOverlayChart.options.plugins.datalabels = { display: false };
-            }
-            clientHistoryOverlayChart.update();
-        }
-
-        function closeClientHistoryOverlay() {
-            const overlay = document.getElementById('clientHistoryOverlay');
-            overlay.classList.add('hidden');
-
-            // Destroy chart to prevent memory leaks
-            if (clientHistoryOverlayChart) {
-                clientHistoryOverlayChart.destroy();
-                clientHistoryOverlayChart = null;
             }
         }
 

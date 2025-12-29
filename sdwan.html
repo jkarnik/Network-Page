@@ -236,8 +236,8 @@
                 </div>
             </div>
 
-            <!-- ROW 2: Uplink Health, WAN Throughput, Top Applications -->
-            <div class="col-span-12 lg:col-span-5 card p-4 h-80 bg-white dark:bg-dark-card">
+            <!-- ROW 2: Uplink Health, WAN Throughput, Top Applications, DHCP Utilization -->
+            <div class="col-span-12 lg:col-span-3 card p-4 h-80 bg-white dark:bg-dark-card">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="text-sm font-bold text-gray-700 dark:text-white">Uplink Health</h3>
                     <div class="flex gap-2">
@@ -251,7 +251,7 @@
                 </div>
             </div>
 
-            <div class="col-span-12 lg:col-span-4 card p-4 h-80 bg-white dark:bg-dark-card">
+            <div class="col-span-12 lg:col-span-3 card p-4 h-80 bg-white dark:bg-dark-card">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="text-sm font-bold text-gray-700 dark:text-white">WAN Throughput</h3>
                     <span class="text-xs text-gray-400">Last 6 Hours</span>
@@ -265,6 +265,38 @@
                 <h3 class="text-sm font-bold text-gray-700 dark:text-white mb-2">Top Applications (L7)</h3>
                 <div class="relative h-full flex items-center justify-center">
                     <canvas id="appsChart"></canvas>
+                </div>
+            </div>
+
+            <div class="col-span-12 lg:col-span-3 card p-4 h-80 bg-white dark:bg-dark-card">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="text-sm font-bold text-gray-700 dark:text-white">DHCP Utilization</h3>
+                    <span class="text-xs text-gray-400">Pool Status</span>
+                </div>
+                <div class="flex flex-col justify-center" style="height: calc(100% - 2.5rem);">
+                    <div class="relative w-full" style="height: 80px; margin-bottom: 1rem;">
+                        <canvas id="dhcpCapacityBar"></canvas>
+                    </div>
+                    <div class="flex justify-around">
+                        <div class="text-center">
+                            <div class="flex items-center justify-center gap-1.5">
+                                <span class="w-2.5 h-2.5 bg-blue-500 rounded-sm"></span>
+                                <p class="text-xl font-bold text-gray-800 dark:text-white" id="dhcpUsedValue">--</p>
+                            </div>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Used</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="flex items-center justify-center gap-1.5">
+                                <span class="w-2.5 h-2.5 bg-gray-200 dark:bg-gray-600 rounded-sm"></span>
+                                <p class="text-xl font-bold text-gray-800 dark:text-white" id="dhcpAvailableValue">--</p>
+                            </div>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Available</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-xl font-bold text-gray-800 dark:text-white" id="dhcpPercentageValue">--</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Utilization</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -1122,6 +1154,68 @@
                     }
                 }
             });
+
+            // 7. DHCP Utilization - Horizontal Stacked Bar
+            const dhcpUsed = 182;
+            const dhcpTotal = 254;
+            const dhcpAvailable = dhcpTotal - dhcpUsed;
+            const dhcpPercentage = (dhcpUsed / dhcpTotal * 100).toFixed(1);
+
+            charts.dhcpCapacity = new Chart(document.getElementById('dhcpCapacityBar'), {
+                type: 'bar',
+                data: {
+                    labels: ['DHCP Pool'],
+                    datasets: [
+                        {
+                            label: 'Used',
+                            data: [dhcpUsed],
+                            backgroundColor: '#3b82f6',
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'Available',
+                            data: [dhcpAvailable],
+                            backgroundColor: '#e5e7eb',
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.dataset.label || '';
+                                    const value = context.parsed.x;
+                                    const percentage = ((value / dhcpTotal) * 100).toFixed(1);
+                                    return label + ': ' + value + ' (' + percentage + '%)';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            stacked: true,
+                            max: dhcpTotal,
+                            grid: { display: false },
+                            ticks: { display: false }
+                        },
+                        y: {
+                            stacked: true,
+                            grid: { display: false },
+                            ticks: { display: false }
+                        }
+                    }
+                }
+            });
+
+            document.getElementById('dhcpUsedValue').textContent = dhcpUsed;
+            document.getElementById('dhcpAvailableValue').textContent = dhcpAvailable;
+            document.getElementById('dhcpPercentageValue').textContent = dhcpPercentage + '%';
         }
 
         // Initialize Everything
