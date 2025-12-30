@@ -1132,9 +1132,14 @@
                     scales: {
                         y: {
                             beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Mbps',
+                                font: { size: 11 }
+                            },
                             ticks: {
                                 callback: function(value) {
-                                    return value + ' Mbps';
+                                    return value;
                                 }
                             }
                         }
