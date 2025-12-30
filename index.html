@@ -123,7 +123,7 @@
     <main class="flex-1 overflow-y-auto p-6 bg-dark-bg">
 
         <!-- Dashboard Grid -->
-        <div class="grid grid-cols-12 gap-6 max-w-[1920px] mx-auto">
+        <div class="grid grid-cols-12 gap-3 max-w-[1920px] mx-auto">
 
             <!-- 1. Executive Summary / Global Health (Top Left) -->
             <div class="col-span-12 lg:col-span-3 card p-4 relative h-64 bg-dark-card">
@@ -145,7 +145,7 @@
             </div>
 
             <!-- 2. Network Issues & Security Posture -->
-            <div class="col-span-12 sm:col-span-6 lg:col-span-3 flex flex-col gap-6 h-64">
+            <div class="col-span-12 sm:col-span-6 lg:col-span-3 flex flex-col gap-3 h-64">
                 <!-- Network Issues -->
                 <div id="networkIssuesCard" class="card p-4 flex-1 flex flex-col justify-center bg-dark-card overflow-hidden">
                     <div id="issuesSummaryView">
@@ -278,10 +278,10 @@
                 </div>
             </div>
 
-            <!-- 3. Active Clients by Device Type -->
-            <div id="activeClientsCard" class="col-span-12 sm:col-span-6 lg:col-span-2 card p-3 h-64 bg-dark-card overflow-hidden">
+            <!-- 3. Active Devices by Device Type -->
+            <div id="activeDevicesCard" class="col-span-12 sm:col-span-6 lg:col-span-2 card p-3 h-64 bg-dark-card overflow-hidden">
                 <div class="flex items-baseline gap-2 mb-3">
-                    <h3 class="text-sm font-bold text-dark-text">Active Clients</h3>
+                    <h3 class="text-sm font-bold text-dark-text">Active Devices</h3>
                     <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-1.5 py-0.5 rounded flex items-center gap-1">
                         <i class="fa-solid fa-hand-pointer text-[7px]"></i> Click rows
                     </span>
@@ -640,7 +640,7 @@
         let currentFilter = 'all'; // Alert filter (active fires, threats, etc)
         let currentScope = 'Global'; // Region Scope
         let currentSiteFilter = null; // Site-specific filter
-        let isExpanded = false; // Track if Active Clients widget is expanded
+        let isExpanded = false; // Track if Active Devices widget is expanded
         let currentDeviceFilter = 'all'; // Track current device type filter
         let isStatusExpanded = false; // Track if Status widget is expanded
         let currentStatusDeviceType = 'all'; // Track device type for status view
@@ -1354,7 +1354,7 @@
         // --- STATUS WIDGET FUNCTIONS ---
 
         function showStatusDevices(deviceType, status) {
-            // Close Active Clients widget if it's open
+            // Close Active Devices widget if it's open
             if (isExpanded) {
                 const clientsCard = document.getElementById('activeClientsCard');
                 const clientsIcon = document.querySelector('#expandToggle i');
