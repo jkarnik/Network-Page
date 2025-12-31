@@ -1,0 +1,8 @@
+127.0.0.1 - - [31/Dec/2025 20:52:46] "GET /index.html HTTP/1.1" 200 -
+127.0.0.1 - - [31/Dec/2025 20:52:46] "GET /fontawesome/css/all.min.css HTTP/1.1" 200 -
+127.0.0.1 - - [31/Dec/2025 20:52:46] "GET /assets/bundle.min.css HTTP/1.1" 200 -
+127.0.0.1 - - [31/Dec/2025 20:52:46] "GET /assets/bundle.min.js HTTP/1.1" 200 -
+127.0.0.1 - - [31/Dec/2025 20:52:46] "GET /fontawesome/webfonts/fa-solid-900.woff2 HTTP/1.1" 200 -
+127.0.0.1 - - [31/Dec/2025 20:52:46] "GET /fontawesome/webfonts/fa-regular-400.woff2 HTTP/1.1" 200 -
+127.0.0.1 - - [31/Dec/2025 20:52:47] "GET /images/juniper-logo.svg HTTP/1.1" 200 -
+127.0.0.1 - - [31/Dec/2025 20:52:47] "GET /images/cisco-logo.svg HTTP/1.1" 200 -
