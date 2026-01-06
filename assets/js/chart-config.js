@@ -90,8 +90,9 @@ const ChartConfig = {
             position: options.position || 'top',
             labels: {
                 boxWidth: options.boxWidth || 12,
+                padding: options.padding || 10,
                 font: {
-                    size: options.fontSize || 11
+                    size: options.fontSize || 14
                 }
             }
         };
