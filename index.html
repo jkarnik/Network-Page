@@ -13,6 +13,36 @@
       gtag('js', new Date());
       gtag('config', 'G-3V0WMCMXMQ');
     </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        // New Relic Design System Colors
+                        dark: {
+                            bg: '#0B1620',      // Deep navy background
+                            card: '#1A1F2E',    // Card background
+                            border: '#2A3036',  // Subtle borders
+                            text: '#F7F8F9',    // Primary text
+                            muted: '#8E9494'    // Secondary text
+                        },
+                        newrelic: {
+                            cyan: '#00CED1',     // Primary brand cyan
+                            teal: '#008C99',     // Deep teal
+                            success: '#11A768',  // Green
+                            warning: '#F5A623',  // Amber/Orange
+                            error: '#DF2D24',    // Red
+                            info: '#0B7EBF'      // Blue
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     
     <!-- FontAwesome -->
     <link rel="stylesheet" href="fontawesome/css/all.min.css">
@@ -20,7 +50,7 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Bundled Styles -->
+    <!-- Shared Styles -->
     <link rel="stylesheet" href="assets/bundle.min.css">
 </head>
 <body class="bg-dark-bg text-dark-text h-screen flex flex-col overflow-hidden">
@@ -513,7 +543,6 @@
         </footer>
     </main>
 
-    <!-- Bundled Scripts -->
-    <script src="assets/bundle.min.js" defer></script>
+    <script defer src="assets/bundle.min.js"></script>
 </body>
 </html>

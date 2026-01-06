@@ -1,0 +1,20 @@
+/* Custom Theme Colors based on tailwind.config.js */
+.dark .bg-dark-bg { background-color: #0B1620; }
+.dark .text-dark-text { color: #F7F8F9; }
+.dark .bg-dark-card { background-color: #1A1F2E; }
+.dark .border-dark-border { border-color: #2A3036; }
+.dark .text-dark-muted { color: #8E9494; }
+
+.border-newrelic-cyan { border-color: #00CED1; }
+.text-newrelic-cyan { color: #00CED1; }
+.hover\:border-newrelic-cyan:hover { border-color: #00CED1; }
+.hover\:text-newrelic-cyan:hover { color: #00CED1; }
+.focus\:ring-newrelic-cyan:focus { --tw-ring-color: #00CED1; }
+.focus\:border-newrelic-cyan:focus { border-color: #00CED1; }
+.from-newrelic-cyan { --tw-gradient-from: #00CED1; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(0, 206, 209, 0)); }
+.to-newrelic-teal { --tw-gradient-to: #008C99; }
+
+.bg-newrelic-success\/20 { background-color: rgba(17, 167, 104, 0.2); }
+.text-newrelic-success { color: #11A768; }
+
+.text-newrelic-error { color: #DF2D24; }
