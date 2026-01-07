@@ -40,10 +40,50 @@
 </head>
 <body class="bg-dark-bg text-dark-text h-screen flex flex-col overflow-hidden">
 
+    <!-- Mobile Navigation Overlay -->
+    <div id="mobileNavOverlay" class="mobile-nav-overlay"></div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobileNavDrawer" class="mobile-nav-drawer">
+        <div class="mobile-nav-header">
+            <div class="flex items-center gap-2">
+                <div class="bg-gradient-to-br from-newrelic-cyan to-newrelic-teal text-white p-2 rounded-lg shadow-md">
+                    <i class="fa-solid fa-network-wired"></i>
+                </div>
+                <span class="font-bold text-dark-text">Menu</span>
+            </div>
+            <div id="mobileNavClose" class="mobile-nav-close">
+                <i class="fa-solid fa-times text-xl"></i>
+            </div>
+        </div>
+        <div class="mobile-nav-links">
+            <a href="index.html" class="mobile-nav-link">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Summary Page</span>
+            </a>
+            <a href="sdwan.html" class="mobile-nav-link">
+                <i class="fa-solid fa-network-wired"></i>
+                <span>SD-WAN Page</span>
+            </a>
+            <a href="switch.html" class="mobile-nav-link">
+                <i class="fa-solid fa-server"></i>
+                <span>Switch Page</span>
+            </a>
+            <a href="access-point.html" class="mobile-nav-link">
+                <i class="fa-solid fa-wifi"></i>
+                <span>Access Point Page</span>
+            </a>
+        </div>
+    </div>
+
     <nav class="bg-dark-card border-b border-dark-border h-16 flex-none z-10 shadow-lg">
         <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 h-full">
             <div class="flex justify-between h-full">
                 <div class="flex items-center">
+                    <!-- Mobile Menu Button -->
+                    <button id="mobileMenuButton" class="mobile-menu-button mr-3">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
                     <div class="flex-shrink-0 flex items-center gap-3">
                         <div class="bg-gradient-to-br from-newrelic-cyan to-newrelic-teal text-white p-2 rounded-lg shadow-md">
                             <i class="fa-solid fa-network-wired text-xl"></i>
@@ -442,6 +482,28 @@
             <p>NPM 2.0 Operational Command Center</p>
         </footer>
     </main>
+
+    <!-- Mobile Tab Navigation -->
+    <div class="mobile-tab-menu">
+        <div class="mobile-tab-container">
+            <a href="index.html" class="mobile-tab-link">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Summary</span>
+            </a>
+            <a href="sdwan.html" class="mobile-tab-link">
+                <i class="fa-solid fa-network-wired"></i>
+                <span>SD-WAN</span>
+            </a>
+            <a href="switch.html" class="mobile-tab-link">
+                <i class="fa-solid fa-server"></i>
+                <span>Switch</span>
+            </a>
+            <a href="access-point.html" class="mobile-tab-link">
+                <i class="fa-solid fa-wifi"></i>
+                <span>Access Point</span>
+            </a>
+        </div>
+    </div>
 
     <script src="assets/js/theme-manager.js" defer></script>
     <script src="assets/js/chart-config.js" defer></script>
