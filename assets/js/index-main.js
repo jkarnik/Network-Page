@@ -69,15 +69,15 @@
 
         // Alerts Data Source (with region)
         const allAlerts = [
-            { sev: 'crit', vendor: 'mist', site: 'NYC-HQ', region: 'North America', device: 'Core-Switch-01', msg: 'BGP Neighbor Down (Peer 10.10.10.1)', time: '2m ago', type: 'network' },
-            { sev: 'crit', vendor: 'meraki', site: 'LON-Warehouse', region: 'EMEA', device: 'MX-Edge-Gateway', msg: 'Uplink 1 (WAN) detected packet loss > 15%', time: '5m ago', type: 'network' },
-            { sev: 'warn', vendor: 'meraki', site: 'SFO-Branch', region: 'North America', device: 'MR-AP-Floor2', msg: 'High Interference detected on Channel 6', time: '12m ago', type: 'network' },
-            { sev: 'warn', vendor: 'mist', site: 'TOK-Sales', region: 'APAC', device: 'AP-ConfRoom', msg: 'SLE: Time to Connect exceeded threshold', time: '18m ago', type: 'network' },
-            { sev: 'crit', vendor: 'meraki', site: 'MUM-Hub', region: 'APAC', device: 'MS-Dist-Switch', msg: 'Power Supply Unit 2 Fail', time: '25m ago', type: 'hardware' },
-            { sev: 'info', vendor: 'meraki', site: 'BER-R&D', region: 'EMEA', device: 'Network', msg: 'Firmware upgrade scheduled for 02:00 UTC', time: '1h ago', type: 'system' },
-            { sev: 'warn', vendor: 'mist', site: 'NYC-HQ', region: 'North America', device: 'Gateway-02', msg: 'DHCP Pool Exhaustion approaching (85%)', time: '1h 10m ago', type: 'network' },
-            { sev: 'info', vendor: 'mist', site: 'SYD-Office', region: 'APAC', device: 'AP-Lobby', msg: 'Rogue AP detected (SSID: FreeWifi)', time: '1h 30m ago', type: 'rogue' },
-            { sev: 'crit', vendor: 'meraki', site: 'ATL-Retail', region: 'North America', device: 'MX-Sec', msg: 'Malware blocked (Trojan.Win32.Emotet)', time: '1h 45m ago', type: 'threat' }
+            { sev: 'crit', vendor: 'mist', site: 'NYC-HQ', region: 'North America', device: 'SW-NYC-Core-01', msg: 'BGP Neighbor Down (Peer 10.10.10.1)', time: '2m ago', type: 'network' },
+            { sev: 'crit', vendor: 'meraki', site: 'LON-Warehouse', region: 'EMEA', device: 'GW-LON-Main', msg: 'Uplink 1 (WAN) detected packet loss > 15%', time: '5m ago', type: 'network' },
+            { sev: 'warn', vendor: 'meraki', site: 'SFO-Branch', region: 'North America', device: 'AP-SFO-Main', msg: 'High Interference detected on Channel 6', time: '12m ago', type: 'network' },
+            { sev: 'warn', vendor: 'mist', site: 'TOK-Sales', region: 'APAC', device: 'AP-TOK-Sales-01', msg: 'SLE: Time to Connect exceeded threshold', time: '18m ago', type: 'network' },
+            { sev: 'crit', vendor: 'meraki', site: 'MUM-Hub', region: 'APAC', device: 'SW-MUM-Dist', msg: 'Power Supply Unit 2 Fail', time: '25m ago', type: 'hardware' },
+            { sev: 'info', vendor: 'meraki', site: 'BER-R&D', region: 'EMEA', device: 'SW-BER-Lab', msg: 'Firmware upgrade scheduled for 02:00 UTC', time: '1h ago', type: 'system' },
+            { sev: 'warn', vendor: 'mist', site: 'NYC-HQ', region: 'North America', device: 'GW-NYC-Edge-02', msg: 'DHCP Pool Exhaustion approaching (85%)', time: '1h 10m ago', type: 'network' },
+            { sev: 'info', vendor: 'mist', site: 'SYD-Office', region: 'APAC', device: 'AP-SYD-Floor1', msg: 'Rogue AP detected (SSID: FreeWifi)', time: '1h 30m ago', type: 'rogue' },
+            { sev: 'crit', vendor: 'meraki', site: 'ATL-Retail', region: 'North America', device: 'GW-ATL-Retail', msg: 'Malware blocked (Trojan.Win32.Emotet)', time: '1h 45m ago', type: 'threat' }
         ];
 
         // Global Chart Instances
@@ -535,7 +535,7 @@
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">${alert.site}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm">
-                        <a href="#" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 font-medium hover:underline">${alert.device}</a>
+                        <a href="${getDevicePageUrl(alert.device)}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 font-medium hover:underline">${alert.device}</a>
                     </td>
                     <td class="px-6 py-4 text-sm text-dark-muted truncate max-w-xs" title="${alert.msg}">${alert.msg}</td>
                 `;
@@ -574,6 +574,19 @@
 
         // --- DEVICE LIST FUNCTIONS ---
 
+        function getDevicePageUrl(deviceName) {
+            // Determine device type from name prefix
+            const prefix = deviceName.substring(0, 3);
+            if (prefix === 'GW-') {
+                return 'sdwan.html';
+            } else if (prefix === 'SW-') {
+                return 'switch.html';
+            } else if (prefix === 'AP-') {
+                return 'access-point.html';
+            }
+            return '#'; // Fallback
+        }
+
         function closeExpandedWidgets() {
             if (isExpanded) {
                 toggleExpand();
@@ -590,7 +603,7 @@
         }
 
         function toggleExpand() {
-            const card = document.getElementById('activeClientsCard');
+            const card = document.getElementById('activeDevicesCard');
             const icon = document.querySelector('#expandToggle i');
             const backdrop = document.getElementById('expandedBackdrop');
             const mainContent = document.querySelector('main');
@@ -626,7 +639,7 @@
         function showDeviceList(deviceType) {
             const summaryView = document.getElementById('summaryView');
             const expandedView = document.getElementById('expandedView');
-            const card = document.getElementById('activeClientsCard');
+            const card = document.getElementById('activeDevicesCard');
             const backdrop = document.getElementById('expandedBackdrop');
             const mainContent = document.querySelector('main');
 
@@ -787,6 +800,9 @@
                         </div>
                     </div>
                 `;
+                deviceCard.onclick = () => {
+                    window.location.href = getDevicePageUrl(device.name);
+                };
                 container.appendChild(deviceCard);
             });
 
@@ -801,7 +817,7 @@
         function showStatusDevices(deviceType, status) {
             // Close Active Devices widget if it's open
             if (isExpanded) {
-                const clientsCard = document.getElementById('activeClientsCard');
+                const clientsCard = document.getElementById('activeDevicesCard');
                 const clientsIcon = document.querySelector('#expandToggle i');
                 clientsCard.classList.remove('expanded');
                 clientsIcon.classList.remove('fa-compress');
@@ -991,6 +1007,9 @@
                         </div>
                     </div>
                 `;
+                deviceCard.onclick = () => {
+                    window.location.href = getDevicePageUrl(device.name);
+                };
                 container.appendChild(deviceCard);
             });
 
@@ -1005,7 +1024,7 @@
         function showIssuesAlerts(severity) {
             // Close other widgets if open
             if (isExpanded) {
-                const clientsCard = document.getElementById('activeClientsCard');
+                const clientsCard = document.getElementById('activeDevicesCard');
                 const clientsIcon = document.querySelector('#expandToggle i');
                 clientsCard.classList.remove('expanded');
                 clientsIcon.classList.remove('fa-compress');
@@ -1157,7 +1176,7 @@
                     <td class="px-4 py-3 whitespace-nowrap text-xs text-dark-muted">${alert.time}</td>
                     <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">${alert.site}</td>
                     <td class="px-4 py-3 whitespace-nowrap text-sm">
-                        <a href="#" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 font-medium hover:underline">${alert.device}</a>
+                        <a href="${getDevicePageUrl(alert.device)}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 font-medium hover:underline">${alert.device}</a>
                     </td>
                     <td class="px-4 py-3 text-sm text-dark-muted truncate max-w-xs" title="${alert.msg}">${alert.msg}</td>
                 `;
@@ -1175,7 +1194,7 @@
         function showSecurityAlerts(securityType) {
             // Close other widgets if open
             if (isExpanded) {
-                const clientsCard = document.getElementById('activeClientsCard');
+                const clientsCard = document.getElementById('activeDevicesCard');
                 const clientsIcon = document.querySelector('#expandToggle i');
                 clientsCard.classList.remove('expanded');
                 clientsIcon.classList.remove('fa-compress');
@@ -1338,7 +1357,7 @@
                     <td class="px-4 py-3 whitespace-nowrap text-xs text-dark-muted">${alert.time}</td>
                     <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">${alert.site}</td>
                     <td class="px-4 py-3 whitespace-nowrap text-sm">
-                        <a href="#" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 font-medium hover:underline">${alert.device}</a>
+                        <a href="${getDevicePageUrl(alert.device)}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 font-medium hover:underline">${alert.device}</a>
                     </td>
                     <td class="px-4 py-3 text-sm text-dark-muted truncate max-w-xs" title="${alert.msg}">${alert.msg}</td>
                 `;
