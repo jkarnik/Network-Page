@@ -809,3 +809,159 @@
             peerCharts = {};
         }
 
+        // --- APPLICATION TRENDS OVERLAY ---
+        let appTrendsChart = null;
+
+        function openApplicationTrends() {
+            const overlay = document.getElementById('appTrendsOverlay');
+            overlay.classList.remove('hidden');
+
+            // Destroy existing chart if it exists
+            if (appTrendsChart) {
+                appTrendsChart.destroy();
+            }
+
+            // Generate time labels for 24 hours
+            const timeLabels = [];
+            for (let i = 0; i < 24; i++) {
+                timeLabels.push(i.toString().padStart(2, '0') + ':00');
+            }
+
+            // Generate realistic trend data for each application
+            const generateTrendData = (baseValue, variance, trend = 0) => {
+                const data = [];
+                for (let i = 0; i < 24; i++) {
+                    const trendEffect = trend * i;
+                    const randomVariance = (Math.random() - 0.5) * variance;
+                    const timeEffect = Math.sin(i / 24 * Math.PI * 2) * (variance * 0.3);
+                    data.push(Math.max(0, baseValue + trendEffect + randomVariance + timeEffect));
+                }
+                return data;
+            };
+
+            // Application trend data (in Mbps)
+            const appTrendsData = {
+                'M365': generateTrendData(45, 8, 0.2),
+                'Teams': generateTrendData(25, 6, -0.1),
+                'Salesforce': generateTrendData(15, 4, 0.05),
+                'YouTube': generateTrendData(5, 3, 0.15),
+                'Other': generateTrendData(10, 3, 0)
+            };
+
+            // Colors matching the donut chart
+            const colors = {
+                'M365': '#3b82f6',
+                'Teams': '#6366f1',
+                'Salesforce': '#0ea5e9',
+                'YouTube': '#ef4444',
+                'Other': '#9ca3af'
+            };
+
+            // Create datasets for the trend chart
+            const datasets = Object.keys(appTrendsData).map(app => ({
+                label: app,
+                data: appTrendsData[app],
+                borderColor: colors[app],
+                backgroundColor: colors[app] + '20',
+                borderWidth: 2,
+                pointRadius: 0,
+                pointHoverRadius: 4,
+                pointHoverBackgroundColor: colors[app],
+                pointHoverBorderColor: '#fff',
+                pointHoverBorderWidth: 2,
+                tension: 0.4,
+                fill: true
+            }));
+
+            // Create the trend chart
+            appTrendsChart = new Chart(document.getElementById('appTrendsChart'), {
+                type: 'line',
+                data: {
+                    labels: timeLabels,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                boxWidth: 12,
+                                font: { size: 12 },
+                                padding: 15,
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            enabled: true,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: '#3b82f6',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    label += context.parsed.y.toFixed(1) + ' Mbps';
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            grid: {
+                                display: true,
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            },
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 45,
+                                autoSkipPadding: 10,
+                                font: { size: 10 }
+                            }
+                        },
+                        y: {
+                            display: true,
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Traffic (Mbps)',
+                                font: { size: 12 }
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toFixed(0) + ' Mbps';
+                                },
+                                font: { size: 10 }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function closeApplicationTrends() {
+            const overlay = document.getElementById('appTrendsOverlay');
+            overlay.classList.add('hidden');
+
+            // Destroy chart to prevent memory leaks
+            if (appTrendsChart) {
+                appTrendsChart.destroy();
+                appTrendsChart = null;
+            }
+        }
+
