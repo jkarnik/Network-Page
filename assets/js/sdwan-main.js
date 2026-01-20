@@ -965,3 +965,164 @@
             }
         }
 
+        // --- DHCP TRENDS OVERLAY ---
+        let dhcpTrendsChart = null;
+
+        function openDHCPTrends() {
+            const overlay = document.getElementById('dhcpTrendsOverlay');
+            overlay.classList.remove('hidden');
+
+            // Destroy existing chart if it exists
+            if (dhcpTrendsChart) {
+                dhcpTrendsChart.destroy();
+            }
+
+            // Generate time labels for 24 hours
+            const timeLabels = [];
+            for (let i = 0; i < 24; i++) {
+                timeLabels.push(i.toString().padStart(2, '0') + ':00');
+            }
+
+            // Generate realistic DHCP utilization data
+            const generateDHCPData = () => {
+                const data = [];
+                const dhcpTotal = 254;
+                // Start around 180, vary throughout the day
+                for (let i = 0; i < 24; i++) {
+                    // Business hours (8-18) have higher utilization
+                    const isBusinessHours = i >= 8 && i < 18;
+                    const baseValue = isBusinessHours ? 185 : 165;
+                    const variance = Math.random() * 15 - 7.5;
+                    const value = Math.max(150, Math.min(dhcpTotal, baseValue + variance));
+                    data.push(value);
+                }
+                return data;
+            };
+
+            const dhcpUsedData = generateDHCPData();
+            const dhcpTotal = 254;
+            const dhcpCapacityLine = new Array(24).fill(dhcpTotal);
+
+            // Create the DHCP trend chart
+            dhcpTrendsChart = new Chart(document.getElementById('dhcpTrendsChart'), {
+                type: 'line',
+                data: {
+                    labels: timeLabels,
+                    datasets: [
+                        {
+                            label: 'Used IPs',
+                            data: dhcpUsedData,
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                            borderWidth: 2,
+                            pointRadius: 3,
+                            pointHoverRadius: 6,
+                            pointBackgroundColor: '#3b82f6',
+                            pointHoverBackgroundColor: '#3b82f6',
+                            pointBorderColor: '#fff',
+                            pointHoverBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Max Capacity',
+                            data: dhcpCapacityLine,
+                            borderColor: '#ef4444',
+                            backgroundColor: 'transparent',
+                            borderWidth: 2,
+                            pointRadius: 0,
+                            pointHoverRadius: 0,
+                            borderDash: [5, 5],
+                            tension: 0,
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                boxWidth: 12,
+                                font: { size: 12 },
+                                padding: 15,
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            enabled: true,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: '#3b82f6',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    label += Math.round(context.parsed.y) + ' IPs';
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            grid: {
+                                display: true,
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            },
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 45,
+                                autoSkipPadding: 10,
+                                font: { size: 10 }
+                            }
+                        },
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            beginAtZero: true,
+                            max: dhcpTotal,
+                            title: {
+                                display: true,
+                                text: 'IP Addresses',
+                                font: { size: 12 }
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value + ' IPs';
+                                },
+                                font: { size: 10 }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function closeDHCPTrends() {
+            const overlay = document.getElementById('dhcpTrendsOverlay');
+            overlay.classList.add('hidden');
+
+            // Destroy chart to prevent memory leaks
+            if (dhcpTrendsChart) {
+                dhcpTrendsChart.destroy();
+                dhcpTrendsChart = null;
+            }
+        }
+
