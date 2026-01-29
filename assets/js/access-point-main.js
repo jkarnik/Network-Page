@@ -821,3 +821,224 @@
             clientCharts = {};
         }
 
+        // --- CHANNEL UTILIZATION TRENDS OVERLAY ---
+        let channelUtilTrendsChart = null;
+
+        function openChannelUtilTrends() {
+            const overlay = document.getElementById('channelUtilTrendsOverlay');
+            overlay.classList.remove('hidden');
+
+            // Destroy existing chart if it exists
+            if (channelUtilTrendsChart) {
+                channelUtilTrendsChart.destroy();
+            }
+
+            // Generate time labels for 24 hours
+            const timeLabels = [];
+            for (let i = 0; i < 24; i++) {
+                timeLabels.push(i.toString().padStart(2, '0') + ':00');
+            }
+
+            // Generate realistic channel utilization data for each band
+            const generateChannelData = (baseWifi, baseInterference) => {
+                const wifiData = [];
+                const interferenceData = [];
+
+                for (let i = 0; i < 24; i++) {
+                    // Business hours (8-18) have higher utilization
+                    const isBusinessHours = i >= 8 && i < 18;
+                    const wifiMultiplier = isBusinessHours ? 1.3 : 0.7;
+                    const variance = (Math.random() - 0.5) * 10;
+
+                    const wifiValue = Math.max(0, Math.min(100, baseWifi * wifiMultiplier + variance));
+                    wifiData.push(wifiValue);
+
+                    const interferenceVariance = (Math.random() - 0.5) * 3;
+                    const interferenceValue = Math.max(0, Math.min(100 - wifiValue, baseInterference + interferenceVariance));
+                    interferenceData.push(interferenceValue);
+                }
+
+                return { wifi: wifiData, interference: interferenceData };
+            };
+
+            // Generate data for each band
+            const band24Data = generateChannelData(45, 15);
+            const band5Data = generateChannelData(20, 5);
+            const band6Data = generateChannelData(5, 0);
+
+            // Create the Channel Utilization trend chart
+            channelUtilTrendsChart = new Chart(document.getElementById('channelUtilTrendsChart'), {
+                type: 'line',
+                data: {
+                    labels: timeLabels,
+                    datasets: [
+                        {
+                            label: '2.4 GHz WiFi',
+                            data: band24Data.wifi,
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                            borderWidth: 2,
+                            pointRadius: 3,
+                            pointHoverRadius: 6,
+                            pointBackgroundColor: '#3b82f6',
+                            pointHoverBackgroundColor: '#3b82f6',
+                            pointBorderColor: '#fff',
+                            pointHoverBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: '2.4 GHz Interference',
+                            data: band24Data.interference,
+                            borderColor: '#f87171',
+                            backgroundColor: 'rgba(248, 113, 113, 0.2)',
+                            borderWidth: 2,
+                            pointRadius: 2,
+                            pointHoverRadius: 5,
+                            pointBackgroundColor: '#f87171',
+                            pointHoverBackgroundColor: '#f87171',
+                            pointBorderColor: '#fff',
+                            pointHoverBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            tension: 0.4,
+                            fill: true,
+                            borderDash: [5, 5]
+                        },
+                        {
+                            label: '5 GHz WiFi',
+                            data: band5Data.wifi,
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                            borderWidth: 2,
+                            pointRadius: 3,
+                            pointHoverRadius: 6,
+                            pointBackgroundColor: '#10b981',
+                            pointHoverBackgroundColor: '#10b981',
+                            pointBorderColor: '#fff',
+                            pointHoverBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: '5 GHz Interference',
+                            data: band5Data.interference,
+                            borderColor: '#f59e0b',
+                            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                            borderWidth: 2,
+                            pointRadius: 2,
+                            pointHoverRadius: 5,
+                            pointBackgroundColor: '#f59e0b',
+                            pointHoverBackgroundColor: '#f59e0b',
+                            pointBorderColor: '#fff',
+                            pointHoverBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            tension: 0.4,
+                            fill: true,
+                            borderDash: [5, 5]
+                        },
+                        {
+                            label: '6 GHz WiFi',
+                            data: band6Data.wifi,
+                            borderColor: '#8b5cf6',
+                            backgroundColor: 'rgba(139, 92, 246, 0.2)',
+                            borderWidth: 2,
+                            pointRadius: 3,
+                            pointHoverRadius: 6,
+                            pointBackgroundColor: '#8b5cf6',
+                            pointHoverBackgroundColor: '#8b5cf6',
+                            pointBorderColor: '#fff',
+                            pointHoverBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            tension: 0.4,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                boxWidth: 12,
+                                font: { size: 12 },
+                                padding: 15,
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            enabled: true,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: '#3b82f6',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    label += context.parsed.y.toFixed(1) + '%';
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            grid: {
+                                display: true,
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            },
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 45,
+                                autoSkipPadding: 10,
+                                font: { size: 10 }
+                            }
+                        },
+                        y: {
+                            display: true,
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Channel Utilization (%)',
+                                font: { size: 12 }
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                },
+                                font: { size: 10 }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function closeChannelUtilTrends() {
+            const overlay = document.getElementById('channelUtilTrendsOverlay');
+            overlay.classList.add('hidden');
+
+            // Destroy chart to prevent memory leaks
+            if (channelUtilTrendsChart) {
+                channelUtilTrendsChart.destroy();
+                channelUtilTrendsChart = null;
+            }
+        }
+

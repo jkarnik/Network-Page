@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Performance Monitoring</title>
+
+    <!-- Resource Hints for Performance -->
+    <link rel="preconnect" href="https://www.googletagmanager.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-3V0WMCMXMQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-3V0WMCMXMQ');
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="../assets/js/tailwind-config.js"></script>
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="../fontawesome/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="../assets/css/shared-styles.css">
+
+    <!-- Chart.js - Deferred for Performance -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+</head>
+<body class="bg-dark-bg text-dark-text h-screen flex flex-col overflow-hidden">
+
+    <!-- Mobile Navigation Overlay -->
+    <div id="mobileNavOverlay" class="mobile-nav-overlay"></div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobileNavDrawer" class="mobile-nav-drawer">
+        <div class="mobile-nav-header">
+            <div class="flex items-center gap-2">
+                <div class="bg-gradient-to-br from-newrelic-cyan to-newrelic-teal text-white p-2 rounded-lg shadow-md">
+                    <i class="fa-solid fa-network-wired"></i>
+                </div>
+                <span class="font-bold text-dark-text">Menu</span>
+            </div>
+            <div id="mobileNavClose" class="mobile-nav-close">
+                <i class="fa-solid fa-times text-xl"></i>
+            </div>
+        </div>
+        <div class="mobile-nav-links">
+            <a href="index.html" class="mobile-nav-link">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Summary Page</span>
+            </a>
+            <a href="sdwan.html" class="mobile-nav-link">
+                <i class="fa-solid fa-network-wired"></i>
+                <span>SD-WAN Page</span>
+            </a>
+            <a href="switch.html" class="mobile-nav-link">
+                <i class="fa-solid fa-server"></i>
+                <span>Switch Page</span>
+            </a>
+            <a href="access-point.html" class="mobile-nav-link">
+                <i class="fa-solid fa-wifi"></i>
+                <span>Access Point Page</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Top Navigation -->
+    <nav class="bg-dark-card border-b border-dark-border h-16 flex-none z-10 shadow-lg">
+        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 h-full">
+            <div class="flex justify-between h-full">
+                <div class="flex items-center">
+                    <!-- Mobile Menu Button -->
+                    <button id="mobileMenuButton" class="mobile-menu-button mr-3">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                    <div class="flex-shrink-0 flex items-center gap-3">
+                        <div class="bg-gradient-to-br from-newrelic-cyan to-newrelic-teal text-white p-2 rounded-lg shadow-md">
+                            <i class="fa-solid fa-network-wired text-xl"></i>
+                        </div>
+                        <span class="font-bold text-xl tracking-tight text-dark-text">Network Performance Monitoring</span>
+                    </div>
+                    <div class="hidden sm:ml-8 sm:flex sm:space-x-8">
+                        <a href="index.html" class="border-newrelic-cyan text-dark-text inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Summary Page</a>
+                        <a href="sdwan.html" class="border-transparent text-dark-muted hover:border-newrelic-cyan hover:text-newrelic-cyan inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors">SD-WAN Page</a>
+                        <a href="switch.html" class="border-transparent text-dark-muted hover:border-newrelic-cyan hover:text-newrelic-cyan inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors">Switch Page</a>
+                        <a href="access-point.html" class="border-transparent text-dark-muted hover:border-newrelic-cyan hover:text-newrelic-cyan inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors">Access Point Page</a>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <!-- Scope Selector -->
+                    <div class="relative">
+                        <select id="scopeSelector" onchange="updateDashboardScope(this.value)" class="block w-full pl-3 pr-10 py-2 text-sm border-dark-border focus:outline-none focus:ring-newrelic-cyan focus:border-newrelic-cyan sm:text-sm rounded-md bg-dark-bg border text-dark-text transition-all">
+                            <option value="Global">Global Organization</option>
+                            <optgroup label="Regions">
+                                <option value="North America">North America</option>
+                                <option value="EMEA">EMEA</option>
+                                <option value="APAC">APAC</option>
+                            </optgroup>
+                            <optgroup label="Sites">
+                                <option value="site:NYC-HQ">NYC-HQ</option>
+                                <option value="site:LON-Warehouse">LON-Warehouse</option>
+                                <option value="site:SFO-Branch">SFO-Branch</option>
+                                <option value="site:TOK-Sales">TOK-Sales</option>
+                                <option value="site:MUM-Hub">MUM-Hub</option>
+                                <option value="site:ATL-Retail">ATL-Retail</option>
+                                <option value="site:CHI-Dist">CHI-Dist</option>
+                                <option value="site:BER-R&D">BER-R&D</option>
+                                <option value="site:PAR-Office">PAR-Office</option>
+                                <option value="site:SYD-Office">SYD-Office</option>
+                                <option value="site:BRA-Remote">BRA-Remote</option>
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <div class="flex items-center gap-3 border-l pl-4 border-dark-border">
+                        <div class="text-right hidden md:block">
+                            <p class="text-sm font-medium text-dark-text">Admin User</p>
+                            <p class="text-xs text-dark-muted">NetOps Lead</p>
+                        </div>
+                        <div class="h-8 w-8 rounded-full bg-gradient-to-br from-newrelic-cyan to-newrelic-teal flex items-center justify-center text-white font-bold shadow-md">
+                            AU
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Backdrop for expanded widget -->
+    <div id="expandedBackdrop" onclick="closeExpandedWidgets()"></div>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 overflow-y-auto p-6 bg-dark-bg">
+
+        <!-- Dashboard Grid -->
+        <div class="grid grid-cols-12 gap-3 max-w-[1920px] mx-auto">
+
+            <!-- 1. Executive Summary / Global Health (Top Left) -->
+            <div class="col-span-12 lg:col-span-3 card p-4 relative h-64 bg-dark-card">
+                <div class="flex justify-between items-start mb-2">
+                    <h3 class="text-sm font-bold text-dark-text">Network Health</h3>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-newrelic-success/20 text-newrelic-success">
+                        Live
+                    </span>
+                </div>
+                <div class="relative flex flex-col items-center justify-center" style="height: calc(100% - 2rem);">
+                    <div class="relative w-full flex items-center justify-center" style="max-width: 340px; height: 180px;">
+                        <canvas id="healthGauge"></canvas>
+                        <div class="gauge-value text-dark-text" id="healthScoreValue">--</div>
+                        <div class="gauge-label text-dark-muted">Weighted Score</div>
+                    </div>
+                    <div class="flex justify-between text-xs text-gray-400 w-full px-8 mt-2">
+                        <span>Critical</span>
+                        <span>Healthy</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Network Issues & Security Posture -->
+            <div class="col-span-12 sm:col-span-6 lg:col-span-3 flex flex-col gap-3 h-64">
+                <!-- Network Issues -->
+                <div id="networkIssuesCard" class="card p-4 flex-1 flex flex-col justify-center bg-dark-card overflow-hidden">
+                    <div id="issuesSummaryView">
+                        <div class="flex items-center justify-center gap-2 mb-3">
+                            <h3 class="text-sm font-bold text-dark-text">Network Issues</h3>
+                            <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-1.5 py-0.5 rounded flex items-center gap-1">
+                                <i class="fa-solid fa-hand-pointer text-[7px]"></i> Click
+                            </span>
+                        </div>
+                        <div class="flex items-center justify-between gap-2">
+                            <div class="cursor-pointer group flex-1 text-center" onclick="showIssuesAlerts('crit')">
+                                <span class="block text-2xl font-bold text-newrelic-error group-hover:text-red-500 transition-colors" id="criticalCount">--</span>
+                                <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-red-500 inline-block">Critical</span>
+                            </div>
+                            <div class="flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-triangle-exclamation text-4xl text-newrelic-error opacity-30 dark:opacity-90"></i>
+                            </div>
+                            <div class="cursor-pointer group flex-1 text-center" onclick="showIssuesAlerts('warn')">
+                                <span class="block text-2xl font-bold text-amber-500 group-hover:text-amber-400 transition-colors" id="warningCount">--</span>
+                                <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-amber-500 inline-block">Warning</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Expanded Alert Feed View (Initially Hidden) -->
+                    <div id="issuesExpandedView" class="hidden h-full flex flex-col">
+                        <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                            <div class="flex items-center gap-3">
+                                <button onclick="hideIssuesAlerts()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
+                                    <i class="fa-solid fa-arrow-left text-sm"></i>
+                                </button>
+                                <h4 class="text-base font-bold text-dark-text" id="issuesAlertTitle">Network Alerts</h4>
+                                <span class="text-xs text-gray-400 dark:text-gray-500" id="issuesAlertCount"></span>
+                            </div>
+                            <!-- Severity Filter -->
+                            <div class="flex gap-2">
+                                <button onclick="filterIssuesAlerts('all')" id="issuesFilterAll" class="px-3 py-1.5 text-xs rounded-lg bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors">All</button>
+                                <button onclick="filterIssuesAlerts('crit')" id="issuesFilterCrit" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Critical</button>
+                                <button onclick="filterIssuesAlerts('warn')" id="issuesFilterWarn" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Warning</button>
+                                <button onclick="filterIssuesAlerts('info')" id="issuesFilterInfo" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Info</button>
+                            </div>
+                        </div>
+                        <!-- Search Input -->
+                        <div class="mb-3">
+                            <input type="text" id="issuesSearchInput" placeholder="Search alerts by site, device, or message..." class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500" oninput="searchIssuesAlerts()">
+                        </div>
+                        <!-- Alert Table -->
+                        <div class="flex-1 overflow-auto custom-scrollbar">
+                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0 z-10">
+                                    <tr>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Severity</th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Time</th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Site</th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Device</th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Message</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-dark-card divide-y divide-gray-200 dark:divide-gray-700" id="issuesAlertTableBody">
+                                    <!-- Rows populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security -->
+                <div id="securityCard" class="card p-4 flex-1 flex flex-col justify-center bg-dark-card overflow-hidden">
+                    <div id="securitySummaryView">
+                        <div class="flex items-center justify-center gap-2 mb-3">
+                            <h3 class="text-sm font-bold text-dark-text">Security Posture (24h)</h3>
+                            <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-1.5 py-0.5 rounded flex items-center gap-1">
+                                <i class="fa-solid fa-hand-pointer text-[7px]"></i> Click
+                            </span>
+                        </div>
+                        <div class="flex items-center justify-between gap-2">
+                            <div class="cursor-pointer group flex-1 text-center" onclick="showSecurityAlerts('threat')">
+                                <span class="block text-2xl font-bold text-gray-900 dark:text-white group-hover:text-indigo-600 transition-colors" id="threatsCount">--</span>
+                                <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-indigo-600 inline-block">Threats Blocked</span>
+                            </div>
+                            <div class="flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-shield-halved text-4xl text-indigo-600 dark:text-indigo-400 opacity-30 dark:opacity-90"></i>
+                            </div>
+                            <div class="cursor-pointer group flex-1 text-center" onclick="showSecurityAlerts('rogue')">
+                                <span class="block text-2xl font-bold text-newrelic-error group-hover:text-red-500 transition-colors" id="roguesCount">--</span>
+                                <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-red-500 inline-block">Active Rogues</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Expanded Security Alert Feed View (Initially Hidden) -->
+                    <div id="securityExpandedView" class="hidden h-full flex flex-col">
+                        <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                            <div class="flex items-center gap-3">
+                                <button onclick="hideSecurityAlerts()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
+                                    <i class="fa-solid fa-arrow-left text-sm"></i>
+                                </button>
+                                <h4 class="text-base font-bold text-dark-text" id="securityAlertTitle">Security Alerts</h4>
+                                <span class="text-xs text-gray-400 dark:text-gray-500" id="securityAlertCount"></span>
+                            </div>
+                            <!-- Security Type Filter -->
+                            <div class="flex gap-2">
+                                <button onclick="filterSecurityAlerts('all')" id="securityFilterAll" class="px-3 py-1.5 text-xs rounded-lg bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors">All</button>
+                                <button onclick="filterSecurityAlerts('threat')" id="securityFilterThreat" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Threats</button>
+                                <button onclick="filterSecurityAlerts('rogue')" id="securityFilterRogue" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Rogues</button>
+                            </div>
+                        </div>
+                        <!-- Search Input -->
+                        <div class="mb-3">
+                            <input type="text" id="securitySearchInput" placeholder="Search security alerts by site, device, or message..." class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500" oninput="searchSecurityAlerts()">
+                        </div>
+                        <!-- Alert Table -->
+                        <div class="flex-1 overflow-auto custom-scrollbar">
+                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0 z-10">
+                                    <tr>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Type</th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Time</th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Site</th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Device</th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Message</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-dark-card divide-y divide-gray-200 dark:divide-gray-700" id="securityAlertTableBody">
+                                    <!-- Rows populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Active Devices by Device Type -->
+            <div id="activeDevicesCard" class="col-span-12 sm:col-span-6 lg:col-span-2 card p-3 h-64 bg-dark-card overflow-hidden">
+                <div class="flex items-baseline gap-2 mb-3">
+                    <h3 class="text-sm font-bold text-dark-text">Active Devices</h3>
+                    <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-1.5 py-0.5 rounded flex items-center gap-1">
+                        <i class="fa-solid fa-hand-pointer text-[7px]"></i> Click rows
+                    </span>
+                    <button id="expandToggle" class="ml-auto text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors" onclick="toggleExpand()">
+                        <i class="fa-solid fa-expand text-xs"></i>
+                    </button>
+                </div>
+                <div id="summaryView" class="flex flex-col justify-between h-[calc(100%-2rem)]">
+                    <!-- Gateways -->
+                    <div class="flex flex-col gap-1 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 p-1 rounded transition-colors" onclick="showDeviceList('gateway')">
+                        <div class="flex items-center gap-1.5">
+                            <i class="fa-solid fa-network-wired text-blue-600 text-xs"></i>
+                            <span class="text-xs font-medium text-gray-600 dark:text-gray-300">Gateways</span>
+                            <i class="fa-solid fa-chevron-right text-[8px] text-gray-400 ml-auto"></i>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-bold text-gray-900 dark:text-white w-14 flex-shrink-0" id="gwClientCount">3,200</span>
+                            <span class="text-[10px] text-newrelic-success dark:text-green-400 font-medium bg-green-50 dark:bg-green-900/30 px-1 py-0.5 rounded flex items-center gap-0.5 whitespace-nowrap flex-shrink-0">
+                                <i class="fa-solid fa-arrow-trend-up"></i> <span id="gwClientTrend">2.1%</span>
+                            </span>
+                            <div class="flex-1 h-4 min-w-0">
+                                <canvas id="gwSparkline"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Switches -->
+                    <div class="flex flex-col gap-1 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 p-1 rounded transition-colors" onclick="showDeviceList('switch')">
+                        <div class="flex items-center gap-1.5">
+                            <i class="fa-solid fa-server text-purple-600 text-xs"></i>
+                            <span class="text-xs font-medium text-gray-600 dark:text-gray-300">Switches</span>
+                            <i class="fa-solid fa-chevron-right text-[8px] text-gray-400 ml-auto"></i>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-bold text-gray-900 dark:text-white w-14 flex-shrink-0" id="swClientCount">7,800</span>
+                            <span class="text-[10px] text-newrelic-success dark:text-green-400 font-medium bg-green-50 dark:bg-green-900/30 px-1 py-0.5 rounded flex items-center gap-0.5 whitespace-nowrap flex-shrink-0">
+                                <i class="fa-solid fa-arrow-trend-up"></i> <span id="swClientTrend">5.3%</span>
+                            </span>
+                            <div class="flex-1 h-4 min-w-0">
+                                <canvas id="swSparkline"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Access Points -->
+                    <div class="flex flex-col gap-1 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 p-1 rounded transition-colors" onclick="showDeviceList('ap')">
+                        <div class="flex items-center gap-1.5">
+                            <i class="fa-solid fa-wifi text-newrelic-success text-xs"></i>
+                            <span class="text-xs font-medium text-gray-600 dark:text-gray-300">Access Points</span>
+                            <i class="fa-solid fa-chevron-right text-[8px] text-gray-400 ml-auto"></i>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg font-bold text-gray-900 dark:text-white w-14 flex-shrink-0" id="apClientCount">4,342</span>
+                            <span class="text-[10px] text-newrelic-success dark:text-green-400 font-medium bg-green-50 dark:bg-green-900/30 px-1 py-0.5 rounded flex items-center gap-0.5 whitespace-nowrap flex-shrink-0">
+                                <i class="fa-solid fa-arrow-trend-up"></i> <span id="apClientTrend">3.7%</span>
+                            </span>
+                            <div class="flex-1 h-4 min-w-0">
+                                <canvas id="apSparkline"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Expanded Device List View (Initially Hidden) -->
+                <div id="expandedView" class="hidden h-[calc(100%-2rem)] flex flex-col">
+                    <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                        <div class="flex items-center gap-3">
+                            <button onclick="hideDeviceList()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
+                                <i class="fa-solid fa-arrow-left text-sm"></i>
+                            </button>
+                            <h4 class="text-base font-bold text-dark-text" id="deviceListTitle">Devices</h4>
+                            <span class="text-xs text-gray-400 dark:text-gray-500" id="deviceCount"></span>
+                        </div>
+                        <!-- Device Type Filter -->
+                        <div class="flex gap-2">
+                            <button onclick="filterDevices('all')" id="filterAll" class="px-3 py-1.5 text-xs rounded-lg bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors">All</button>
+                            <button onclick="filterDevices('gateway')" id="filterGateway" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Gateways</button>
+                            <button onclick="filterDevices('switch')" id="filterSwitch" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Switches</button>
+                            <button onclick="filterDevices('ap')" id="filterAp" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Access Points</button>
+                        </div>
+                    </div>
+                    <!-- Search Input -->
+                    <div class="mb-3">
+                        <input type="text" id="clientsSearchInput" placeholder="Search devices by name, site, or IP address..." class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500" oninput="searchDeviceList()">
+                    </div>
+                    <!-- Device List -->
+                    <div class="flex-1 overflow-y-auto custom-scrollbar">
+                        <div id="deviceListContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                            <!-- Device items will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+             <!-- 4. Device Status Distribution (Status Matrix) -->
+             <div id="deviceStatusCard" class="col-span-12 sm:col-span-6 lg:col-span-4 card p-4 h-64 bg-dark-card overflow-hidden">
+                <div id="statusSummaryView" class="h-full flex flex-col">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="text-sm font-bold text-dark-text">Device Status Distribution</h3>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-2 py-0.5 rounded flex items-center gap-1">
+                                <i class="fa-solid fa-hand-pointer text-[8px]"></i> Click cells
+                            </span>
+                        </div>
+                    </div>
+                    <div class="flex-1 flex items-center justify-center overflow-hidden">
+                        <div class="status-grid border border-gray-200 dark:border-gray-700 w-full h-full max-h-[180px]">
+                            <!-- Header Row -->
+                            <div class="status-cell status-header">Type</div>
+                            <div class="status-cell status-header text-newrelic-success dark:text-green-400">Online</div>
+                            <div class="status-cell status-header text-amber-500">Warning</div>
+                            <div class="status-cell status-header text-red-500">Critical</div>
+
+                            <!-- Gateways -->
+                            <div class="status-cell font-medium text-xs text-dark-muted bg-gray-50 dark:bg-gray-800">Gateways</div>
+                            <div class="status-cell clickable" id="gw-online" onclick="showStatusDevices('gateway', 'online')">--</div>
+                            <div class="status-cell clickable bg-amber-50 dark:bg-amber-900/10 text-amber-700 dark:text-amber-400" id="gw-warn" onclick="showStatusDevices('gateway', 'warning')">--</div>
+                            <div class="status-cell clickable bg-red-50 dark:bg-red-900/10 text-red-700 dark:text-red-400 font-bold" id="gw-crit" onclick="showStatusDevices('gateway', 'critical')">--</div>
+
+                            <!-- Switches -->
+                            <div class="status-cell font-medium text-xs text-dark-muted bg-gray-50 dark:bg-gray-800">Switches</div>
+                            <div class="status-cell clickable" id="sw-online" onclick="showStatusDevices('switch', 'online')">--</div>
+                            <div class="status-cell clickable bg-amber-50 dark:bg-amber-900/10 text-amber-700 dark:text-amber-400" id="sw-warn" onclick="showStatusDevices('switch', 'warning')">--</div>
+                            <div class="status-cell clickable bg-red-50 dark:bg-red-900/10 text-red-700 dark:text-red-400 font-bold" id="sw-crit" onclick="showStatusDevices('switch', 'critical')">--</div>
+
+                            <!-- APs -->
+                            <div class="status-cell font-medium text-xs text-dark-muted bg-gray-50 dark:bg-gray-800">Access Points</div>
+                            <div class="status-cell clickable" id="ap-online" onclick="showStatusDevices('ap', 'online')">--</div>
+                            <div class="status-cell clickable bg-amber-50 dark:bg-amber-900/10 text-amber-700 dark:text-amber-400" id="ap-warn" onclick="showStatusDevices('ap', 'warning')">--</div>
+                            <div class="status-cell clickable bg-red-50 dark:bg-red-900/10 text-red-700 dark:text-red-400 font-bold" id="ap-crit" onclick="showStatusDevices('ap', 'critical')">--</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Expanded Status Device List View (Initially Hidden) -->
+                <div id="statusExpandedView" class="hidden h-full flex flex-col">
+                    <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                        <div class="flex items-center gap-3">
+                            <button onclick="hideStatusDevices()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
+                                <i class="fa-solid fa-arrow-left text-sm"></i>
+                            </button>
+                            <h4 class="text-base font-bold text-dark-text" id="statusDeviceListTitle">Devices</h4>
+                            <span class="text-xs text-gray-400 dark:text-gray-500" id="statusDeviceCount"></span>
+                        </div>
+                        <!-- Status Filter -->
+                        <div class="flex gap-2">
+                            <button onclick="filterStatusDevices('all')" id="statusFilterAll" class="px-3 py-1.5 text-xs rounded-lg bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors">All</button>
+                            <button onclick="filterStatusDevices('online')" id="statusFilterOnline" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Online</button>
+                            <button onclick="filterStatusDevices('warning')" id="statusFilterWarning" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Warning</button>
+                            <button onclick="filterStatusDevices('critical')" id="statusFilterCritical" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Critical</button>
+                        </div>
+                    </div>
+                    <!-- Search Input -->
+                    <div class="mb-3">
+                        <input type="text" id="statusSearchInput" placeholder="Search devices by name, site, or IP address..." class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500" oninput="searchStatusDevices()">
+                    </div>
+                    <!-- Device List -->
+                    <div class="flex-1 overflow-y-auto custom-scrollbar">
+                        <div id="statusDeviceListContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                            <!-- Device items will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ROW 2: Analytical Charts -->
+
+            <!-- 7. Top Impacted SD-WANs (Latency) -->
+            <div class="col-span-12 lg:col-span-4 card p-4 h-80 bg-dark-card">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-sm font-bold text-dark-text">Top Impacted SD-WANs (Latency)</h3>
+                    <span class="text-xs text-gray-400">Avg WAN Latency (ms)</span>
+                </div>
+                <div class="relative h-full w-full pb-4">
+                    <canvas id="latencyChart"></canvas>
+                </div>
+            </div>
+
+            <!-- 6. User Frustration Leaderboard -->
+            <div class="col-span-12 lg:col-span-5 card p-4 h-80 bg-dark-card">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-sm font-bold text-dark-text">User Frustration Leaderboard</h3>
+                    <span class="text-xs text-gray-400">Time to Connect (ms)</span>
+                </div>
+                <div class="relative h-full w-full pb-4">
+                    <canvas id="frustrationChart"></canvas>
+                </div>
+            </div>
+
+            <!-- 8. WAN Resilience (Donut) -->
+            <div class="col-span-12 lg:col-span-3 card p-4 h-80 bg-dark-card">
+                <h3 class="text-sm font-bold text-dark-text mb-2">WAN Resilience</h3>
+                <div class="flex items-center justify-center gap-4" style="height: calc(100% - 2rem);">
+                    <!-- 2/3 area for the donut chart -->
+                    <div class="relative flex items-center justify-center" style="flex: 2;">
+                        <canvas id="wanDonut" style="max-width: 230px; max-height: 230px;"></canvas>
+                    </div>
+                    <!-- 1/3 area for the legend -->
+                    <div class="flex items-center justify-center" style="flex: 1;">
+                        <div id="wanLegend">
+                            <div class="flex items-center gap-2 mb-3">
+                                <div class="w-3 h-3 rounded-sm flex-shrink-0 bg-blue-500"></div>
+                                <div class="text-sm text-dark-text">
+                                    <span class="font-medium">Primary</span>
+                                    <span class="text-xs text-dark-muted ml-1" id="wanPrimary">91%</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2 mb-3">
+                                <div class="w-3 h-3 rounded-sm flex-shrink-0 bg-amber-500"></div>
+                                <div class="text-sm text-dark-text">
+                                    <span class="font-medium">Failover</span>
+                                    <span class="text-xs text-dark-muted ml-1" id="wanFailover">8%</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2 mb-3">
+                                <div class="w-3 h-3 rounded-sm flex-shrink-0 bg-red-500"></div>
+                                <div class="text-sm text-dark-text">
+                                    <span class="font-medium">Down</span>
+                                    <span class="text-xs text-dark-muted ml-1" id="wanDown">1%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ROW 3: Unified Alert Feed -->
+            <div class="col-span-12 card h-96 flex flex-col bg-dark-card">
+                <div class="p-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
+                    <h3 class="text-sm font-bold text-dark-text flex items-center gap-2">
+                        <i class="fa-regular fa-bell"></i> Unified Alert Feed
+                        <span id="activeFilterBadge" class="hidden ml-2 px-2 py-0.5 rounded text-xs font-normal bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                            Filtered
+                        </span>
+                    </h3>
+                    <div class="flex gap-2">
+                        <input type="text" placeholder="Search alerts..." class="text-xs border border-gray-300 dark:border-gray-600 rounded px-2 py-1 focus:outline-none focus:border-blue-500 bg-white dark:bg-gray-700 dark:text-white">
+                        <button class="text-xs bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300 px-3 py-1 rounded">Export CSV</button>
+                    </div>
+                </div>
+                <div class="flex-1 overflow-auto custom-scrollbar p-0">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0 z-10">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Severity</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Time</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Vendor</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Site</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Device</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Message</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-dark-card divide-y divide-gray-200 dark:divide-gray-700" id="alertTableBody">
+                            <!-- Rows populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="p-2 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-xs text-center text-dark-muted">
+                    Streaming live events...
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-8 mb-4 text-center text-xs text-gray-400 dark:text-gray-500">
+            <p>NPM 2.0 Operational Command Center • Powered by Meraki & Mist Integration</p>
+        </footer>
+    </main>
+
+    <!-- Mobile Tab Navigation -->
+    <div class="mobile-tab-menu">
+        <div class="mobile-tab-container">
+            <a href="index.html" class="mobile-tab-link">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Summary</span>
+            </a>
+            <a href="sdwan.html" class="mobile-tab-link">
+                <i class="fa-solid fa-network-wired"></i>
+                <span>SD-WAN</span>
+            </a>
+            <a href="switch.html" class="mobile-tab-link">
+                <i class="fa-solid fa-server"></i>
+                <span>Switch</span>
+            </a>
+            <a href="access-point.html" class="mobile-tab-link">
+                <i class="fa-solid fa-wifi"></i>
+                <span>Access Point</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Import shared modules -->
+    <script src="../assets/js/theme-manager.js" defer></script>
+    <script src="../assets/js/chart-config.js" defer></script>
+    <script src="../assets/js/navigation.js" defer></script>
+
+    <!-- Main Application Script - Deferred for Performance -->
+    <script src="../assets/js/index-main.js" defer></script>
+
+</body>
+</html>

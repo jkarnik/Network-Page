@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Switch Performance Monitoring</title>
+
+    <!-- Resource Hints for Performance -->
+    <link rel="preconnect" href="https://www.googletagmanager.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-3V0WMCMXMQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-3V0WMCMXMQ');
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="../assets/js/tailwind-config.js"></script>
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="../fontawesome/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="../assets/css/shared-styles.css">
+
+    <!-- Chart.js - Deferred for Performance -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+
+    <style>
+        /* Specific styles for the digital faceplate */
+        .port-grid {
+            display: grid;
+            grid-template-columns: repeat(24, 1fr);
+            gap: 2px;
+            max-width: 100%;
+        }
+        .port-slot {
+            aspect-ratio: 1/0.8;
+            border-radius: 2px;
+            position: relative;
+            transition: all 0.2s;
+            min-width: 0;
+        }
+        .port-led {
+            width: 12px;
+            height: 8px;
+            margin: 3px auto;
+            border-radius: 2px;
+        }
+        .rj45-shape {
+            width: 70%;
+            height: 40%;
+            background: rgba(0,0,0,0.2);
+            margin: 1px auto 0;
+            border-radius: 1px 1px 2px 2px;
+        }
+        .poe-indicator {
+            position: absolute;
+            bottom: 3px;
+            right: 3px;
+            font-size: 12px;
+            color: #fbbf24;
+            display: none;
+            filter: drop-shadow(0 0 3px rgba(251, 191, 36, 0.8));
+        }
+        .poe-active .poe-indicator {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-dark-bg text-dark-text h-screen flex flex-col overflow-hidden">
+
+    <!-- Mobile Navigation Overlay -->
+    <div id="mobileNavOverlay" class="mobile-nav-overlay"></div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobileNavDrawer" class="mobile-nav-drawer">
+        <div class="mobile-nav-header">
+            <div class="flex items-center gap-2">
+                <div class="bg-gradient-to-br from-newrelic-cyan to-newrelic-teal text-white p-2 rounded-lg shadow-md">
+                    <i class="fa-solid fa-network-wired"></i>
+                </div>
+                <span class="font-bold text-dark-text">Menu</span>
+            </div>
+            <div id="mobileNavClose" class="mobile-nav-close">
+                <i class="fa-solid fa-times text-xl"></i>
+            </div>
+        </div>
+        <div class="mobile-nav-links">
+            <a href="index.html" class="mobile-nav-link">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Summary Page</span>
+            </a>
+            <a href="sdwan.html" class="mobile-nav-link">
+                <i class="fa-solid fa-network-wired"></i>
+                <span>SD-WAN Page</span>
+            </a>
+            <a href="switch.html" class="mobile-nav-link">
+                <i class="fa-solid fa-server"></i>
+                <span>Switch Page</span>
+            </a>
+            <a href="access-point.html" class="mobile-nav-link">
+                <i class="fa-solid fa-wifi"></i>
+                <span>Access Point Page</span>
+            </a>
+        </div>
+    </div>
+
+    <nav class="bg-dark-card border-b border-dark-border h-16 flex-none z-10 shadow-lg">
+        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 h-full">
+            <div class="flex justify-between h-full">
+                <div class="flex items-center">
+                    <!-- Mobile Menu Button -->
+                    <button id="mobileMenuButton" class="mobile-menu-button mr-3">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                    <div class="flex-shrink-0 flex items-center gap-3">
+                        <div class="bg-gradient-to-br from-newrelic-cyan to-newrelic-teal text-white p-2 rounded-lg shadow-md">
+                            <i class="fa-solid fa-network-wired text-xl"></i>
+                        </div>
+                        <span class="font-bold text-xl tracking-tight text-dark-text">Network Performance Monitoring</span>
+                    </div>
+                    <div class="hidden sm:ml-8 sm:flex sm:space-x-8">
+                        <a href="index.html" class="border-transparent text-dark-muted hover:border-newrelic-cyan hover:text-newrelic-cyan transition-colors inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Summary Page</a>
+                        <a href="sdwan.html" class="border-transparent text-dark-muted hover:border-newrelic-cyan hover:text-newrelic-cyan transition-colors inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">SD-WAN Page</a>
+                        <a href="switch.html" class="border-newrelic-cyan text-dark-text inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Switch Page</a>
+                        <a href="access-point.html" class="border-transparent text-dark-muted hover:border-newrelic-cyan hover:text-newrelic-cyan transition-colors inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Access Point Page</a>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="relative">
+                        <select id="scopeSelector" onchange="updateSwitchView(this.value)" class="block w-full pl-3 pr-10 py-2 text-sm border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-newrelic-cyan sm:text-sm rounded-md bg-gray-50 border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                            <option value="NYC-Core-Switch-01">NYC-Core-Switch-01</option>
+                            <option value="NYC-Dist-Switch-01">NYC-Dist-Switch-01</option>
+                            <option value="LON-Access-Switch-04">LON-Access-Switch-04</option>
+                        </select>
+                    </div>
+
+                    <div class="flex items-center gap-3 border-l pl-4 border-dark-border">
+                        <div class="text-right hidden md:block">
+                            <p class="text-sm font-medium text-dark-text">Admin User</p>
+                            <p class="text-xs text-dark-muted">NetOps Lead</p>
+                        </div>
+                        <div class="h-8 w-8 rounded-full bg-gradient-to-br from-newrelic-cyan to-newrelic-teal flex items-center justify-center text-white shadow-md font-bold">
+                            AU
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-1 overflow-y-auto p-6 bg-dark-bg">
+        <div class="max-w-[1920px] mx-auto">
+
+            <!-- Device Info Card -->
+            <div class="card p-4 bg-dark-card border-l-4 border-green-500 mb-0">
+                <div class="flex items-center justify-between">
+                    <!-- Left: Device Name -->
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-server text-gray-400 text-lg"></i>
+                        <div>
+                            <h2 class="text-lg font-bold text-dark-text">NYC-Core-Switch-01</h2>
+                            <p class="text-xs text-gray-500">Cisco Meraki MS390-48P</p>
+                        </div>
+                    </div>
+
+                    <!-- Center: IP and MAC -->
+                    <div class="flex items-center gap-8 text-sm">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-gray-400">IP:</span>
+                            <span class="font-mono text-gray-700 dark:text-gray-300">192.168.10.2</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-gray-400">MAC:</span>
+                            <span class="font-mono text-gray-700 dark:text-gray-300">54:3d:4b:1a:2c:3d</span>
+                        </div>
+                    </div>
+
+                    <!-- Right: Uptime and Status -->
+                    <div class="flex items-center gap-4">
+                        <div class="text-right">
+                            <p class="text-xs text-gray-400 mb-0.5">Uptime</p>
+                            <p class="font-mono text-lg font-bold text-dark-text">124d 10h 32m</p>
+                        </div>
+                        <span class="px-2 py-1 text-xs font-bold text-green-700 bg-green-100 rounded dark:bg-green-900 dark:text-green-300">ONLINE</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabs Navigation -->
+            <div class="mb-4 mt-0">
+                <div class="border-b border-dark-border">
+                    <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+                        <button onclick="switchTab('overview')" id="tab-overview" class="tab-button border-indigo-500 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                            Overview
+                        </button>
+                        <button onclick="switchTab('advanced')" id="tab-advanced" class="tab-button border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                            Advanced
+                        </button>
+                        <button onclick="switchTab('diagnostics')" id="tab-diagnostics" class="tab-button border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                            Diagnostics
+                        </button>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Tab Content: Overview -->
+            <div id="content-overview" class="tab-content">
+            <div class="grid grid-cols-12 gap-3 mb-6">
+
+                <div class="col-span-12 card p-1 bg-white dark:bg-gray-900 border-4 border-gray-300 dark:border-gray-700 shadow-inner">
+                    <div class="flex justify-between items-center px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-t mb-1">
+                        <span class="text-xs font-mono text-gray-800 dark:text-gray-300 font-bold">FRONT PANEL VIEW</span>
+                        <div class="flex gap-4 text-[10px] text-gray-600 dark:text-gray-400">
+                            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-sm bg-green-300 dark:bg-green-500"></span> Up</span>
+                            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-sm bg-gray-300 dark:bg-gray-500"></span> Down</span>
+                            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-sm bg-amber-300 dark:bg-amber-500"></span> Alert</span>
+                            <span class="flex items-center gap-1"><i class="fa-solid fa-bolt text-yellow-400 dark:text-yellow-400"></i> PoE</span>
+                        </div>
+                    </div>
+
+                    <div class="p-3 bg-white dark:bg-gray-900">
+                        <div class="max-w-full">
+                            <div class="flex justify-between mb-2">
+                                <div class="port-grid flex-1" id="faceplateRowTop">
+                                    </div>
+                            </div>
+                            <div class="flex justify-between">
+                                <div class="port-grid flex-1" id="faceplateRowBottom">
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CPU Widget -->
+                <div class="col-span-12 md:col-span-3 card p-4 bg-dark-card" style="min-height: 180px;">
+                    <h3 class="text-sm font-bold text-dark-text mb-3">CPU Load</h3>
+                    <div class="flex gap-3" style="height: calc(100% - 32px);">
+                        <div class="relative w-20 h-20 flex-shrink-0 self-start" style="margin-top: 40px;">
+                            <canvas id="cpuGauge"></canvas>
+                            <div class="absolute inset-0 flex flex-col items-center justify-center text-xs text-dark-muted" style="top: 5px;">
+                                <span class="font-bold text-gray-800 dark:text-white text-sm" id="cpuValue">24%</span>
+                                <span class="mt-0.5">CPU</span>
+                            </div>
+                        </div>
+                        <div class="flex-1" style="min-width: 0; position: relative; height: 100%;">
+                            <canvas id="cpuSparkline"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Memory Widget -->
+                <div class="col-span-12 md:col-span-3 card p-4 bg-dark-card" style="min-height: 180px;">
+                    <h3 class="text-sm font-bold text-dark-text mb-3">Memory Load</h3>
+                    <div class="flex gap-3" style="height: calc(100% - 32px);">
+                        <div class="relative w-20 h-20 flex-shrink-0 self-start" style="margin-top: 40px;">
+                            <canvas id="memGauge"></canvas>
+                            <div class="absolute inset-0 flex flex-col items-center justify-center text-xs text-dark-muted" style="top: 5px;">
+                                <span class="font-bold text-gray-800 dark:text-white text-sm" id="memValue">45%</span>
+                                <span class="mt-0.5">MEM</span>
+                            </div>
+                        </div>
+                        <div class="flex-1" style="min-width: 0; position: relative; height: 100%;">
+                            <canvas id="memSparkline"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PoE Budget Widget -->
+                <div class="col-span-12 md:col-span-3 card p-4 bg-dark-card" style="min-height: 180px;">
+                    <h3 class="text-sm font-bold text-dark-text mb-3">PoE Budget</h3>
+                    <div class="flex gap-3" style="height: calc(100% - 32px);">
+                        <div class="relative w-20 h-20 flex-shrink-0 self-start" style="margin-top: 40px;">
+                            <canvas id="poeGauge"></canvas>
+                            <div class="absolute inset-0 flex flex-col items-center justify-center text-xs text-dark-muted" style="top: 5px;">
+                                <span class="font-bold text-gray-800 dark:text-white text-sm" id="poeValue">51%</span>
+                                <span class="mt-0.5">PoE</span>
+                            </div>
+                        </div>
+                        <div class="flex-1" style="min-width: 0; position: relative; height: 100%;">
+                            <canvas id="poeSparkline"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hardware Redundancy Widget -->
+                <div class="col-span-12 md:col-span-3 card p-4 bg-dark-card" style="min-height: 180px;">
+                    <h3 class="text-sm font-bold text-dark-text mb-4">Hardware Redundancy</h3>
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-plug text-gray-400 text-base"></i>
+                                <div>
+                                    <p class="text-sm font-bold text-gray-700 dark:text-gray-200">PSU 1</p>
+                                    <p class="text-xs text-gray-600 dark:text-gray-400">Slot A</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-1.5 text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 px-2 py-0.5 rounded text-xs font-bold">
+                                <i class="fa-solid fa-check"></i> OK
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-plug text-gray-400 text-base"></i>
+                                <div>
+                                    <p class="text-sm font-bold text-gray-700 dark:text-gray-200">PSU 2</p>
+                                    <p class="text-xs text-gray-600 dark:text-gray-400">Slot B</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-1.5 text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 px-2 py-0.5 rounded text-xs font-bold">
+                                <i class="fa-solid fa-check"></i> OK
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-fan text-gray-400 text-base"></i>
+                                <div>
+                                    <p class="text-sm font-bold text-gray-700 dark:text-gray-200">System Fans</p>
+                                    <p class="text-xs text-gray-600 dark:text-gray-400">4200 RPM</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-1.5 text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 px-2 py-0.5 rounded text-xs font-bold">
+                                <i class="fa-solid fa-check"></i> OK
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ROW 2: Traffic, Error Monitor, Shadow IT -->
+                <div class="col-span-12 lg:col-span-3 card p-4 h-80 bg-dark-card">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-sm font-bold text-dark-text">Traffic (24h)</h3>
+                        <span class="text-xs text-gray-400">Last 6 Hours</span>
+                    </div>
+                    <div class="relative h-full w-full pb-4">
+                        <canvas id="trafficTrendChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="col-span-12 lg:col-span-3 card p-4 h-80 bg-dark-card">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-sm font-bold text-dark-text">Error Monitor</h3>
+                        <span class="text-xs text-gray-400">Last 24 Hours</span>
+                    </div>
+                    <div class="relative h-full w-full pb-4">
+                        <canvas id="errorMonitorChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="col-span-12 lg:col-span-6 card p-0 bg-dark-card flex flex-col h-80">
+                    <div class="p-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-sm font-bold text-dark-text">"Shadow IT" Detector</h3>
+                            <span class="px-2 py-0.5 rounded text-[10px] bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300 font-bold border border-red-200 dark:border-red-900">
+                                3 Anomalies
+                            </span>
+                        </div>
+                        <p class="text-xs text-gray-400">Ports with >1 MAC Address (excluding uplinks)</p>
+                    </div>
+                    <div class="flex-1 overflow-auto custom-scrollbar">
+                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                            <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0">
+                                <tr>
+                                    <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase whitespace-nowrap">Port</th>
+                                    <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase whitespace-nowrap">Description</th>
+                                    <th class="px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase whitespace-nowrap">Clients</th>
+                                    <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase whitespace-nowrap">Vendors</th>
+                                    <th class="px-3 py-3 text-right text-xs font-medium text-gray-500 uppercase whitespace-nowrap">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-dark-card divide-y divide-gray-200 dark:divide-gray-700 text-sm">
+                                <tr class="hover:bg-red-50 dark:hover:bg-red-900/10">
+                                    <td class="px-3 py-3 font-mono font-bold text-dark-text whitespace-nowrap">Ge3</td>
+                                    <td class="px-3 py-3 text-dark-muted">Conf Room Wall Jack</td>
+                                    <td class="px-3 py-3 font-bold text-red-600 text-center whitespace-nowrap">5</td>
+                                    <td class="px-3 py-3 text-xs text-gray-500">Netgear, Apple, Dell</td>
+                                    <td class="px-3 py-3 text-right whitespace-nowrap">
+                                        <button class="text-xs bg-red-100 hover:bg-red-200 text-red-700 px-2 py-1 rounded font-medium dark:bg-red-900/50 dark:hover:bg-red-900 dark:text-red-200">Disable</button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-amber-50 dark:hover:bg-amber-900/10">
+                                    <td class="px-3 py-3 font-mono font-bold text-dark-text whitespace-nowrap">Ge12</td>
+                                    <td class="px-3 py-3 text-dark-muted">Reception Desk</td>
+                                    <td class="px-3 py-3 font-bold text-amber-600 text-center whitespace-nowrap">2</td>
+                                    <td class="px-3 py-3 text-xs text-gray-500">HP, Yealink (VoIP)</td>
+                                    <td class="px-3 py-3 text-right whitespace-nowrap">
+                                        <span class="text-xs text-gray-400 italic">Whitelisted</span>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-red-50 dark:hover:bg-red-900/10">
+                                    <td class="px-3 py-3 font-mono font-bold text-dark-text whitespace-nowrap">Ge42</td>
+                                    <td class="px-3 py-3 text-dark-muted">Lab Bench 4</td>
+                                    <td class="px-3 py-3 font-bold text-red-600 text-center whitespace-nowrap">8</td>
+                                    <td class="px-3 py-3 text-xs text-gray-500">TP-Link, Intel, RPi</td>
+                                    <td class="px-3 py-3 text-right whitespace-nowrap">
+                                        <button class="text-xs bg-red-100 hover:bg-red-200 text-red-700 px-2 py-1 rounded font-medium dark:bg-red-900/50 dark:hover:bg-red-900 dark:text-red-200">Disable</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+            </div>
+            <!-- End Overview Tab -->
+
+            <!-- Tab Content: Advanced -->
+            <div id="content-advanced" class="tab-content hidden">
+                <div class="grid grid-cols-12 gap-3">
+
+                <div class="col-span-12 card p-0 bg-dark-card flex flex-col h-[500px]">
+                    <div class="p-4 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 flex justify-between items-center">
+                        <div>
+                            <h3 class="text-sm font-bold text-dark-text whitespace-nowrap">Port Interface Status</h3>
+                            <p class="text-xs text-dark-muted mt-0.5">
+                                <i class="fa-solid fa-circle-info mr-1"></i>Click any row to view detailed metrics
+                            </p>
+                        </div>
+                        <div class="flex gap-2">
+                             <input type="text" id="portSearch" placeholder="Search ports..." class="text-xs border border-gray-300 dark:border-gray-600 rounded px-2 py-1 focus:outline-none focus:border-newrelic-cyan bg-white dark:bg-gray-700 dark:text-white">
+                            <select class="text-xs border border-gray-300 dark:border-gray-600 rounded px-2 py-1 focus:outline-none focus:border-newrelic-cyan bg-white dark:bg-gray-700 dark:text-white whitespace-nowrap">
+                                <option>All Status</option>
+                                <option>Connected</option>
+                                <option>Not Connected</option>
+                                <option>Alert</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex-1 overflow-auto custom-scrollbar">
+                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                            <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0 z-10">
+                                <tr>
+                                    <th class="px-4 py-2.5 text-left text-[11px] font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 whitespace-nowrap" onclick="sortTable('port')">
+                                        Port <i class="fa-solid fa-sort text-gray-400"></i>
+                                    </th>
+                                    <th class="px-4 py-2.5 text-left text-[11px] font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 whitespace-nowrap" onclick="sortTable('name')">
+                                        Name <i class="fa-solid fa-sort text-gray-400"></i>
+                                    </th>
+                                    <th class="px-4 py-2.5 text-center text-[11px] font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 whitespace-nowrap" onclick="sortTable('status')">
+                                        Status <i class="fa-solid fa-sort text-gray-400"></i>
+                                    </th>
+                                    <th class="px-4 py-2.5 text-left text-[11px] font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 whitespace-nowrap" onclick="sortTable('vlan')">
+                                        VLAN <i class="fa-solid fa-sort text-gray-400"></i>
+                                    </th>
+                                    <th class="px-4 py-2.5 text-left text-[11px] font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 whitespace-nowrap" onclick="sortTable('speed')">
+                                        Speed <i class="fa-solid fa-sort text-gray-400"></i>
+                                    </th>
+                                    <th class="px-4 py-2.5 text-right text-[11px] font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 whitespace-nowrap" onclick="sortTable('upload')">
+                                        Upload <i class="fa-solid fa-sort text-gray-400"></i>
+                                    </th>
+                                    <th class="px-4 py-2.5 text-right text-[11px] font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 whitespace-nowrap" onclick="sortTable('download')">
+                                        Download <i class="fa-solid fa-sort text-gray-400"></i>
+                                    </th>
+                                    <th class="px-4 py-2.5 text-right text-[11px] font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 whitespace-nowrap" onclick="sortTable('latency')">
+                                        Latency <i class="fa-solid fa-sort text-gray-400"></i>
+                                    </th>
+                                    <th class="px-4 py-2.5 text-right text-[11px] font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 whitespace-nowrap" onclick="sortTable('poe')">
+                                        PoE <i class="fa-solid fa-sort text-gray-400"></i>
+                                    </th>
+                                    <th class="px-4 py-2.5 text-right text-[11px] font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 whitespace-nowrap" onclick="sortTable('clients')">
+                                        Clients <i class="fa-solid fa-sort text-gray-400"></i>
+                                    </th>
+                                    <th class="px-4 py-2.5 text-right text-[11px] font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 whitespace-nowrap" onclick="sortTable('errors')">
+                                        Errors <i class="fa-solid fa-sort text-gray-400"></i>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-dark-card divide-y divide-gray-200 dark:divide-gray-700 text-sm font-mono" id="portTableBody">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                </div>
+            </div>
+            <!-- End Advanced Tab -->
+
+            <!-- Tab Content: Diagnostics -->
+            <div id="content-diagnostics" class="tab-content hidden">
+                <div id="diagnostics-container" class="h-full"></div>
+            </div>
+            <!-- End Diagnostics Tab -->
+
+        </div>
+
+        <!-- Port Details Overlay -->
+        <div id="portDetailsOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-6">
+            <div class="bg-dark-card rounded-lg shadow-2xl w-full max-w-5xl overflow-hidden">
+                <div class="p-6 border-b border-dark-border flex justify-between items-center">
+                    <div class="flex items-center gap-3">
+                        <h2 class="text-xl font-bold text-dark-text" id="portDetailsTitle">Port Details</h2>
+                        <span id="portDetailsStatus"></span>
+                    </div>
+                    <button onclick="closePortDetails()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                        <i class="fa-solid fa-times text-2xl"></i>
+                    </button>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-1 gap-4">
+                        <!-- Traffic Chart (Upload + Download) -->
+                        <div class="card p-4 bg-gray-50 dark:bg-gray-800">
+                            <h3 class="text-sm font-bold text-dark-text mb-3">Traffic (Upload & Download)</h3>
+                            <div style="height: 220px;">
+                                <canvas id="portTrafficChart"></canvas>
+                            </div>
+                        </div>
+                        <!-- Performance Chart (Latency, Jitter, Errors) -->
+                        <div class="card p-4 bg-gray-50 dark:bg-gray-800">
+                            <h3 class="text-sm font-bold text-dark-text mb-3">Performance (Latency, Jitter & Errors)</h3>
+                            <div style="height: 220px;">
+                                <canvas id="portPerformanceChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="mt-8 mb-4 text-center text-xs text-gray-400 dark:text-gray-500">
+            <p>NPM 2.0 Operational Command Center</p>
+        </footer>
+    </main>
+
+    <!-- Mobile Tab Navigation -->
+    <div class="mobile-tab-menu">
+        <div class="mobile-tab-container">
+            <a href="index.html" class="mobile-tab-link">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Summary</span>
+            </a>
+            <a href="sdwan.html" class="mobile-tab-link">
+                <i class="fa-solid fa-network-wired"></i>
+                <span>SD-WAN</span>
+            </a>
+            <a href="switch.html" class="mobile-tab-link">
+                <i class="fa-solid fa-server"></i>
+                <span>Switch</span>
+            </a>
+            <a href="access-point.html" class="mobile-tab-link">
+                <i class="fa-solid fa-wifi"></i>
+                <span>Access Point</span>
+            </a>
+        </div>
+    </div>
+
+    <script src="../assets/js/theme-manager.js" defer></script>
+    <script src="../assets/js/chart-config.js" defer></script>
+    <script src="../assets/js/navigation.js" defer></script>
+    <script src="../assets/js/diagnostics-manager.js" defer></script>
+
+
+    <!-- Main Application Script - Deferred for Performance -->
+    <script src="../assets/js/switch-main.js" defer></script>
+
+</body>
+</html>
