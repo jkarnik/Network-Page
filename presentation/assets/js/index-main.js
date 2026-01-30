@@ -3,82 +3,7 @@
 
 
         // --- 1. DATA CONFIGURATION & STATE MANAGEMENT ---
-
-        // Scope Definition
-        const REGIONS = {
-            "Global": { deviceCount: 20000, clientCount: 15342, health: 91, trend: '4.2%' },
-            "North America": { deviceCount: 9000, clientCount: 6240, health: 94, trend: '1.2%' },
-            "EMEA": { deviceCount: 7000, clientCount: 5100, health: 88, trend: '-2.1%' },
-            "APAC": { deviceCount: 4000, clientCount: 4002, health: 92, trend: '0.8%' }
-        };
-
-        // Site to Region Mapping
-        const SITE_TO_REGION = {
-            'NYC-HQ': 'North America',
-            'SFO-Branch': 'North America',
-            'ATL-Retail': 'North America',
-            'CHI-Dist': 'North America',
-            'BRA-Remote': 'North America',
-            'LON-Warehouse': 'EMEA',
-            'BER-R&D': 'EMEA',
-            'PAR-Office': 'EMEA',
-            'TOK-Sales': 'APAC',
-            'MUM-Hub': 'APAC',
-            'SYD-Office': 'APAC'
-        };
-
-        // Site-specific data (mock data for each site)
-        const SITES = {
-            'NYC-HQ': { deviceCount: 1200, clientCount: 980, health: 89, trend: '2.1%' },
-            'LON-Warehouse': { deviceCount: 800, clientCount: 650, health: 85, trend: '-1.5%' },
-            'SFO-Branch': { deviceCount: 600, clientCount: 480, health: 92, trend: '3.2%' },
-            'TOK-Sales': { deviceCount: 500, clientCount: 420, health: 91, trend: '1.8%' },
-            'MUM-Hub': { deviceCount: 900, clientCount: 750, health: 88, trend: '0.5%' },
-            'ATL-Retail': { deviceCount: 400, clientCount: 320, health: 94, trend: '2.5%' },
-            'CHI-Dist': { deviceCount: 700, clientCount: 560, health: 93, trend: '1.2%' },
-            'BER-R&D': { deviceCount: 650, clientCount: 520, health: 87, trend: '-0.8%' },
-            'PAR-Office': { deviceCount: 550, clientCount: 440, health: 90, trend: '1.5%' },
-            'SYD-Office': { deviceCount: 450, clientCount: 380, health: 95, trend: '2.8%' },
-            'BRA-Remote': { deviceCount: 300, clientCount: 240, health: 82, trend: '-2.3%' }
-        };
-
-        // Chart Data Sources (with region mapping)
-        // Values represent Time to Connect in milliseconds (higher = worse)
-        const frustrationData = [
-            { label: 'NYC-HQ (Mist)', region: 'North America', val: 3200, color: '#ef4444' },
-            { label: 'LON-Warehouse (Meraki)', region: 'EMEA', val: 2800, color: '#f87171' },
-            { label: 'SFO-Branch (Meraki)', region: 'North America', val: 2400, color: '#fca5a5' },
-            { label: 'TOK-Sales (Mist)', region: 'APAC', val: 2100, color: '#fbbf24' },
-            { label: 'MUM-Hub (Meraki)', region: 'APAC', val: 1900, color: '#fbbf24' },
-            { label: 'ATL-Retail (Meraki)', region: 'North America', val: 1600, color: '#fcd34d' },
-            { label: 'CHI-Dist (Mist)', region: 'North America', val: 1400, color: '#fcd34d' },
-            { label: 'BER-R&D (Mist)', region: 'EMEA', val: 2600, color: '#fca5a5' },
-            { label: 'PAR-Office (Meraki)', region: 'EMEA', val: 2200, color: '#fbbf24' },
-            { label: 'SYD-Office (Mist)', region: 'APAC', val: 1200, color: '#fcd34d' }
-        ];
-
-        const latencyData = [
-            { label: 'BRA-Remote (Starlink)', region: 'North America', val: 320, color: '#6366f1' }, // Americas grouped to NA for simplicity
-            { label: 'SYD-Office (Fiber)', region: 'APAC', val: 180, color: '#6366f1' },
-            { label: 'CHI-Dist (MPLS)', region: 'North America', val: 145, color: '#6366f1' },
-            { label: 'BER-R&D (VPN)', region: 'EMEA', val: 110, color: '#6366f1' },
-            { label: 'ATL-Retail (LTE)', region: 'North America', val: 95, color: '#6366f1' },
-            { label: 'LON-Warehouse (Broadband)', region: 'EMEA', val: 85, color: '#6366f1' },
-            { label: 'TOK-Sales (Fiber)', region: 'APAC', val: 45, color: '#6366f1' }
-        ];
-
-        // Alerts Data Source (with region)
-        const allAlerts = [
-            { sev: 'crit', vendor: 'mist', site: 'NYC-HQ', region: 'North America', device: 'SW-NYC-Core-01', msg: 'BGP Neighbor Down (Peer 10.10.10.1)', time: '2m ago', type: 'network' },
-            { sev: 'crit', vendor: 'meraki', site: 'LON-Warehouse', region: 'EMEA', device: 'GW-LON-Main', msg: 'Uplink 1 (WAN) detected packet loss > 15%', time: '5m ago', type: 'network' },
-            { sev: 'warn', vendor: 'meraki', site: 'SFO-Branch', region: 'North America', device: 'AP-SFO-Main', msg: 'High Interference detected on Channel 6', time: '12m ago', type: 'network' },
-            { sev: 'warn', vendor: 'mist', site: 'TOK-Sales', region: 'APAC', device: 'AP-TOK-Sales-01', msg: 'SLE: Time to Connect exceeded threshold', time: '18m ago', type: 'network' },
-            { sev: 'crit', vendor: 'meraki', site: 'MUM-Hub', region: 'APAC', device: 'SW-MUM-Dist', msg: 'Power Supply Unit 2 Fail', time: '25m ago', type: 'hardware' },
-            { sev: 'info', vendor: 'meraki', site: 'BER-R&D', region: 'EMEA', device: 'SW-BER-Lab', msg: 'Firmware upgrade scheduled for 02:00 UTC', time: '1h ago', type: 'system' },
-            { sev: 'warn', vendor: 'mist', site: 'NYC-HQ', region: 'North America', device: 'GW-NYC-Edge-02', msg: 'DHCP Pool Exhaustion approaching (85%)', time: '1h 10m ago', type: 'network' },
-            { sev: 'info', vendor: 'mist', site: 'SYD-Office', region: 'APAC', device: 'AP-SYD-Floor1', msg: 'Rogue AP detected (SSID: FreeWifi)', time: '1h 30m ago', type: 'rogue' },
-            { sev: 'crit', vendor: 'meraki', site: 'ATL-Retail', region: 'North America', device: 'GW-ATL-Retail', msg: 'Malware blocked (Trojan.Win32.Emotet)', time: '1h 45m ago', type: 'threat' }
-        ];
+        // Data is now loaded from /data/network-data.json via DataLoader
 
         // Global Chart Instances
         let charts = {};
@@ -99,118 +24,60 @@
         let clientsSearchTerm = ''; // Search term for client devices
         let statusSearchTerm = ''; // Search term for status devices
 
-        // Mock Device Data
-        const MOCK_DEVICES = {
-            gateway: [
-                { name: 'GW-NYC-Core-01', site: 'NYC-HQ', ip: '10.1.1.1', clients: 450, status: 'online', vendor: 'meraki' },
-                { name: 'GW-NYC-Edge-02', site: 'NYC-HQ', ip: '10.1.1.2', clients: 320, status: 'online', vendor: 'mist' },
-                { name: 'GW-LON-Main', site: 'LON-Warehouse', ip: '10.2.1.1', clients: 280, status: 'warning', vendor: 'meraki' },
-                { name: 'GW-SFO-Branch', site: 'SFO-Branch', ip: '10.3.1.1', clients: 190, status: 'online', vendor: 'meraki' },
-                { name: 'GW-TOK-Primary', site: 'TOK-Sales', ip: '10.4.1.1', clients: 210, status: 'online', vendor: 'mist' },
-                { name: 'GW-MUM-Hub-01', site: 'MUM-Hub', ip: '10.5.1.1', clients: 380, status: 'online', vendor: 'meraki' },
-                { name: 'GW-ATL-Retail', site: 'ATL-Retail', ip: '10.6.1.1', clients: 150, status: 'online', vendor: 'meraki' },
-                { name: 'GW-CHI-Dist', site: 'CHI-Dist', ip: '10.7.1.1', clients: 240, status: 'warning', vendor: 'mist' },
-                { name: 'GW-BER-R&D', site: 'BER-R&D', ip: '10.8.1.1', clients: 200, status: 'online', vendor: 'mist' },
-                { name: 'GW-PAR-Office', site: 'PAR-Office', ip: '10.9.1.1', clients: 170, status: 'online', vendor: 'meraki' },
-                { name: 'GW-SYD-Office', site: 'SYD-Office', ip: '10.10.1.1', clients: 160, status: 'online', vendor: 'mist' },
-                { name: 'GW-BRA-Remote', site: 'BRA-Remote', ip: '10.11.1.1', clients: 90, status: 'critical', vendor: 'meraki' }
-            ],
-            switch: [
-                { name: 'SW-NYC-Core-01', site: 'NYC-HQ', ip: '10.1.2.1', clients: 890, status: 'online', vendor: 'meraki' },
-                { name: 'SW-NYC-Floor2', site: 'NYC-HQ', ip: '10.1.2.2', clients: 620, status: 'online', vendor: 'meraki' },
-                { name: 'SW-NYC-Floor3', site: 'NYC-HQ', ip: '10.1.2.3', clients: 540, status: 'warning', vendor: 'mist' },
-                { name: 'SW-LON-Dist-01', site: 'LON-Warehouse', ip: '10.2.2.1', clients: 720, status: 'online', vendor: 'meraki' },
-                { name: 'SW-LON-Dist-02', site: 'LON-Warehouse', ip: '10.2.2.2', clients: 580, status: 'online', vendor: 'mist' },
-                { name: 'SW-SFO-Access', site: 'SFO-Branch', ip: '10.3.2.1', clients: 430, status: 'online', vendor: 'meraki' },
-                { name: 'SW-TOK-Core', site: 'TOK-Sales', ip: '10.4.2.1', clients: 490, status: 'online', vendor: 'mist' },
-                { name: 'SW-MUM-Dist', site: 'MUM-Hub', ip: '10.5.2.1', clients: 810, status: 'critical', vendor: 'meraki' },
-                { name: 'SW-MUM-Access', site: 'MUM-Hub', ip: '10.5.2.2', clients: 650, status: 'online', vendor: 'meraki' },
-                { name: 'SW-ATL-Main', site: 'ATL-Retail', ip: '10.6.2.1', clients: 380, status: 'online', vendor: 'meraki' },
-                { name: 'SW-CHI-Core', site: 'CHI-Dist', ip: '10.7.2.1', clients: 560, status: 'online', vendor: 'mist' },
-                { name: 'SW-BER-Lab', site: 'BER-R&D', ip: '10.8.2.1', clients: 470, status: 'online', vendor: 'mist' },
-                { name: 'SW-PAR-Main', site: 'PAR-Office', ip: '10.9.2.1', clients: 410, status: 'online', vendor: 'meraki' },
-                { name: 'SW-SYD-Core', site: 'SYD-Office', ip: '10.10.2.1', clients: 360, status: 'online', vendor: 'mist' },
-                { name: 'SW-BRA-Access', site: 'BRA-Remote', ip: '10.11.2.1', clients: 220, status: 'warning', vendor: 'meraki' }
-            ],
-            ap: [
-                { name: 'AP-NYC-Floor1-01', site: 'NYC-HQ', ip: '10.1.3.1', clients: 45, status: 'online', vendor: 'mist' },
-                { name: 'AP-NYC-Floor1-02', site: 'NYC-HQ', ip: '10.1.3.2', clients: 38, status: 'online', vendor: 'mist' },
-                { name: 'AP-NYC-Floor2-01', site: 'NYC-HQ', ip: '10.1.3.3', clients: 52, status: 'online', vendor: 'mist' },
-                { name: 'AP-NYC-Lobby', site: 'NYC-HQ', ip: '10.1.3.4', clients: 67, status: 'warning', vendor: 'mist' },
-                { name: 'AP-LON-Warehouse-A', site: 'LON-Warehouse', ip: '10.2.3.1', clients: 42, status: 'online', vendor: 'meraki' },
-                { name: 'AP-LON-Warehouse-B', site: 'LON-Warehouse', ip: '10.2.3.2', clients: 39, status: 'online', vendor: 'meraki' },
-                { name: 'AP-LON-Office-01', site: 'LON-Warehouse', ip: '10.2.3.3', clients: 31, status: 'online', vendor: 'meraki' },
-                { name: 'AP-SFO-Main', site: 'SFO-Branch', ip: '10.3.3.1', clients: 48, status: 'online', vendor: 'meraki' },
-                { name: 'AP-SFO-Conf', site: 'SFO-Branch', ip: '10.3.3.2', clients: 29, status: 'online', vendor: 'meraki' },
-                { name: 'AP-TOK-Sales-01', site: 'TOK-Sales', ip: '10.4.3.1', clients: 56, status: 'warning', vendor: 'mist' },
-                { name: 'AP-TOK-Sales-02', site: 'TOK-Sales', ip: '10.4.3.2', clients: 44, status: 'online', vendor: 'mist' },
-                { name: 'AP-MUM-Hub-01', site: 'MUM-Hub', ip: '10.5.3.1', clients: 61, status: 'online', vendor: 'meraki' },
-                { name: 'AP-MUM-Hub-02', site: 'MUM-Hub', ip: '10.5.3.2', clients: 53, status: 'online', vendor: 'meraki' },
-                { name: 'AP-ATL-Store', site: 'ATL-Retail', ip: '10.6.3.1', clients: 72, status: 'online', vendor: 'meraki' },
-                { name: 'AP-CHI-Warehouse', site: 'CHI-Dist', ip: '10.7.3.1', clients: 37, status: 'online', vendor: 'mist' },
-                { name: 'AP-CHI-Office', site: 'CHI-Dist', ip: '10.7.3.2', clients: 41, status: 'online', vendor: 'mist' },
-                { name: 'AP-BER-Lab-01', site: 'BER-R&D', ip: '10.8.3.1', clients: 49, status: 'online', vendor: 'mist' },
-                { name: 'AP-BER-Lab-02', site: 'BER-R&D', ip: '10.8.3.2', clients: 43, status: 'online', vendor: 'mist' },
-                { name: 'AP-PAR-Main', site: 'PAR-Office', ip: '10.9.3.1', clients: 58, status: 'online', vendor: 'meraki' },
-                { name: 'AP-SYD-Floor1', site: 'SYD-Office', ip: '10.10.3.1', clients: 46, status: 'online', vendor: 'mist' },
-                { name: 'AP-SYD-Floor2', site: 'SYD-Office', ip: '10.10.3.2', clients: 39, status: 'online', vendor: 'mist' },
-                { name: 'AP-BRA-Remote', site: 'BRA-Remote', ip: '10.11.3.1', clients: 28, status: 'critical', vendor: 'meraki' }
-            ]
-        };
-
         // --- 2. LOGIC FUNCTIONS ---
 
         function getFilteredData(scope, siteFilter = null) {
             // Determine if this is a site-level filter
             const isSiteFilter = siteFilter !== null;
+            const effectiveScope = isSiteFilter ? siteFilter : scope;
 
-            // Filter Charts
-            const filterFn = (item) => {
-                if (isSiteFilter) {
-                    // Extract site name from label (e.g., "NYC-HQ (Mist)" -> "NYC-HQ")
-                    const itemSite = item.label.split(' (')[0];
-                    return itemSite === siteFilter;
-                }
-                return scope === 'Global' || item.region === scope;
-            };
+            // Get frustration data from DataLoader
+            const frustrationData = DataLoader.getFrustrationData(effectiveScope, 5);
+            const fData = frustrationData.map(d => ({
+                label: d.label,
+                region: d.region,
+                val: d.totalTime,
+                breakdown: d.breakdown
+            }));
 
-            const fData = frustrationData.filter(filterFn).sort((a,b) => b.val - a.val).slice(0, 5); // Top 5 highest time to connect (worst)
-            const lData = latencyData.filter(filterFn).sort((a,b) => b.val - a.val).slice(0, 5); // Top 5 highest
+            // Get latency data from DataLoader
+            const latencyData = DataLoader.getLatencyData(effectiveScope, 5);
+            const lData = latencyData.map(d => ({
+                label: d.label,
+                region: d.region,
+                val: d.latency
+            }));
 
-            // Filter Alerts
-            const alertFilterFn = (item) => {
-                if (isSiteFilter) return item.site === siteFilter;
-                return scope === 'Global' || item.region === scope;
-            };
-            const aData = allAlerts.filter(alertFilterFn);
+            // Get alerts from DataLoader
+            const aData = DataLoader.getAlertsByScope(effectiveScope).map(a => ({
+                sev: a.severity,
+                vendor: a.vendor,
+                site: a.site,
+                region: a.region,
+                device: a.device,
+                msg: a.message,
+                time: a.timeAgo,
+                type: a.type
+            }));
 
-            // Calculate Device Stats based on scope count
-            const total = isSiteFilter ? SITES[siteFilter].deviceCount : REGIONS[scope].deviceCount;
-
-            // Introduce slight variation per region/site for status matrix
-            let critRate = 0.02;
-            let warnRate = 0.04;
-            if (scope === 'EMEA' || (isSiteFilter && SITE_TO_REGION[siteFilter] === 'EMEA')) {
-                critRate = 0.03; warnRate = 0.06;
-            }
-            if (scope === 'North America' || (isSiteFilter && SITE_TO_REGION[siteFilter] === 'North America')) {
-                critRate = 0.01; warnRate = 0.03;
-            }
+            // Get device stats from DataLoader
+            const gwStats = DataLoader.getDeviceStatusCounts('gateways', effectiveScope);
+            const swStats = DataLoader.getDeviceStatusCounts('switches', effectiveScope);
+            const apStats = DataLoader.getDeviceStatusCounts('accessPoints', effectiveScope);
 
             const stats = {
-                gateway: { online: Math.floor(total * 0.1 * (1-critRate-warnRate)), warn: Math.floor(total * 0.1 * warnRate), crit: Math.floor(total * 0.1 * critRate) },
-                switch: { online: Math.floor(total * 0.3 * (1-critRate-warnRate)), warn: Math.floor(total * 0.3 * warnRate), crit: Math.floor(total * 0.3 * critRate) },
-                ap: { online: Math.floor(total * 0.6 * (1-critRate-warnRate)), warn: Math.floor(total * 0.6 * warnRate), crit: Math.floor(total * 0.6 * critRate) }
+                gateway: { online: gwStats.online, warn: gwStats.warn, crit: gwStats.crit },
+                switch: { online: swStats.online, warn: swStats.warn, crit: swStats.crit },
+                ap: { online: apStats.online, warn: apStats.warn, crit: apStats.crit }
             };
 
             const totalCrit = stats.gateway.crit + stats.switch.crit + stats.ap.crit;
             const totalWarn = stats.gateway.warn + stats.switch.warn + stats.ap.warn;
 
-            // Mock Security Stats
-            const threats = Math.floor(total * 0.08) + Math.floor(Math.random() * 20);
-            const rogues = Math.floor(total * 0.002) + Math.floor(Math.random() * 5);
+            // Get security stats from DataLoader
+            const securityCounts = DataLoader.getSecurityCounts(effectiveScope);
 
-            return { fData, lData, aData, stats, totalCrit, totalWarn, threats, rogues };
+            return { fData, lData, aData, stats, totalCrit, totalWarn, threats: securityCounts.threats, rogues: securityCounts.rogues };
         }
 
         function updateDashboardScope(scope) {
@@ -221,7 +88,7 @@
             if (scope.startsWith('site:')) {
                 isSiteScope = true;
                 siteName = scope.substring(5); // Remove 'site:' prefix
-                currentScope = SITE_TO_REGION[siteName]; // Set scope to parent region
+                currentScope = DataLoader.getRegionForSite(siteName); // Set scope to parent region
                 currentSiteFilter = siteName;
             } else {
                 currentScope = scope;
@@ -229,7 +96,7 @@
             }
 
             const data = getFilteredData(currentScope, siteName);
-            const scopeInfo = isSiteScope ? SITES[siteName] : REGIONS[currentScope];
+            const scopeInfo = DataLoader.getMetrics(isSiteScope ? siteName : currentScope);
 
             // 1. Update Gauge
             charts.health.data.datasets[0].data = [scopeInfo.health, 100 - scopeInfo.health];
@@ -245,33 +112,29 @@
             document.getElementById('threatsCount').innerText = data.threats;
             document.getElementById('roguesCount').innerText = data.rogues;
 
-            // 3. Update Clients by Device Type
-            // Calculate client distribution (approximate split)
-            const totalClients = scopeInfo.clientCount;
-            const gwClients = Math.floor(totalClients * 0.21); // ~21% on gateways
-            const swClients = Math.floor(totalClients * 0.51); // ~51% on switches
-            const apClients = totalClients - gwClients - swClients; // remainder on APs
+            // 3. Update Active Device Counts by Type (from actual device data)
+            const effectiveScopeForDevices = isSiteScope ? siteName : currentScope;
+            const gwCount = DataLoader.getDevicesByScope(effectiveScopeForDevices, 'gateways').length;
+            const swCount = DataLoader.getDevicesByScope(effectiveScopeForDevices, 'switches').length;
+            const apCount = DataLoader.getDevicesByScope(effectiveScopeForDevices, 'accessPoints').length;
 
-            document.getElementById('gwClientCount').innerText = gwClients.toLocaleString();
-            document.getElementById('swClientCount').innerText = swClients.toLocaleString();
-            document.getElementById('apClientCount').innerText = apClients.toLocaleString();
+            document.getElementById('gwClientCount').innerText = gwCount.toLocaleString();
+            document.getElementById('swClientCount').innerText = swCount.toLocaleString();
+            document.getElementById('apClientCount').innerText = apCount.toLocaleString();
 
-            // Set trends (vary slightly by device type)
-            const baseTrend = parseFloat(scopeInfo.trend);
+            // Set trends (from scope metrics)
+            const baseTrend = parseFloat(scopeInfo.trend) || 0;
             document.getElementById('gwClientTrend').innerText = (baseTrend * 0.5).toFixed(1) + '%';
             document.getElementById('swClientTrend').innerText = (baseTrend * 1.2).toFixed(1) + '%';
             document.getElementById('apClientTrend').innerText = (baseTrend * 0.9).toFixed(1) + '%';
 
-            // 4. Update WAN Donut (Mock variation)
-            let fiber = 91, lte = 8, down = 1;
-            const checkScope = isSiteScope ? SITE_TO_REGION[siteName] : currentScope;
-            if(checkScope === 'EMEA') { fiber = 85; lte = 12; down = 3; }
-            if(checkScope === 'APAC') { fiber = 94; lte = 5; down = 1; }
-            charts.wan.data.datasets[0].data = [fiber, lte, down];
+            // 4. Update WAN Donut from DataLoader
+            const wanData = DataLoader.getWanResilience(isSiteScope ? siteName : currentScope);
+            charts.wan.data.datasets[0].data = [wanData.primary, wanData.failover, wanData.down];
             charts.wan.update();
-            document.getElementById('wanPrimary').innerText = fiber + '%';
-            document.getElementById('wanFailover').innerText = lte + '%';
-            document.getElementById('wanDown').innerText = down + '%';
+            document.getElementById('wanPrimary').innerText = wanData.primary + '%';
+            document.getElementById('wanFailover').innerText = wanData.failover + '%';
+            document.getElementById('wanDown').innerText = wanData.down + '%';
 
             // 5. Update Frustration Chart
             // Data is already sorted descending (highest first), which displays at the top in horizontal bar charts
@@ -718,12 +581,13 @@
             const deviceCountEl = document.getElementById('deviceCount');
             container.innerHTML = '';
 
-            // Gather devices based on filter
+            // Gather devices based on filter using DataLoader
             let devices = [];
+            const typeMap = { 'gateway': 'gateways', 'switch': 'switches', 'ap': 'accessPoints' };
             if (deviceType === 'all') {
-                devices = [...MOCK_DEVICES.gateway, ...MOCK_DEVICES.switch, ...MOCK_DEVICES.ap];
+                devices = DataLoader.getAllDevices();
             } else {
-                devices = MOCK_DEVICES[deviceType] || [];
+                devices = DataLoader.getDevices(typeMap[deviceType]) || [];
             }
 
             // Apply site filter if active
@@ -920,12 +784,13 @@
             const deviceCountEl = document.getElementById('statusDeviceCount');
             container.innerHTML = '';
 
-            // Get devices based on type
+            // Get devices based on type using DataLoader
             let devices = [];
+            const typeMap = { 'gateway': 'gateways', 'switch': 'switches', 'ap': 'accessPoints' };
             if (currentStatusDeviceType === 'all') {
-                devices = [...MOCK_DEVICES.gateway, ...MOCK_DEVICES.switch, ...MOCK_DEVICES.ap];
+                devices = DataLoader.getAllDevices();
             } else {
-                devices = MOCK_DEVICES[currentStatusDeviceType] || [];
+                devices = DataLoader.getDevices(typeMap[currentStatusDeviceType]) || [];
             }
 
             // Apply site filter if active
@@ -1370,15 +1235,30 @@
             renderSecurityAlertTable();
         }
 
-        // Initialize
-        initCharts();
-        updateDashboardScope('Global'); // Load Global Data initially
+        // Initialize - Load data first, then initialize charts
+        console.log('Starting data load...');
+        DataLoader.load().then(() => {
+            console.log('Data loaded successfully, initializing charts...');
+            initCharts();
+            updateDashboardScope('Global'); // Load Global Data initially
+            console.log('Dashboard initialized with Global scope');
 
-        // Register charts with theme manager for automatic theme updates
-        themeManager.registerCharts(charts);
+            // Register charts with theme manager for automatic theme updates
+            themeManager.registerCharts(charts);
 
-        // Update chart colors after initialization if dark mode is already active
-        if (themeManager.isDarkMode()) {
-            themeManager.updateChartColors();
-        }
+            // Update chart colors after initialization if dark mode is already active
+            if (themeManager.isDarkMode()) {
+                themeManager.updateChartColors();
+            }
+        }).catch(error => {
+            console.error('Failed to initialize dashboard:', error);
+            // Show user-visible error message
+            const errorMsg = document.createElement('div');
+            errorMsg.className = 'fixed top-20 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+            errorMsg.innerHTML = `
+                <strong>Data Loading Error:</strong> ${error.message}<br>
+                <span class="text-sm">If using file://, please use a local web server (e.g., "python -m http.server 8000")</span>
+            `;
+            document.body.appendChild(errorMsg);
+        });
 

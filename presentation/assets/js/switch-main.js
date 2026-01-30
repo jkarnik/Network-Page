@@ -824,7 +824,7 @@
         renderFaceplate();
         renderPortTable();
         initCharts();
-        
+
         // Register charts for theme switching
         themeManager.registerCharts(charts);
 
@@ -833,3 +833,353 @@
             themeManager.updateChartColors();
         }
 
+        // --- TRAFFIC TRENDS OVERLAY ---
+        let trafficTrendsChart = null;
+
+        function openTrafficTrends() {
+            const overlay = document.getElementById('trafficTrendsOverlay');
+            overlay.classList.remove('hidden');
+
+            // Destroy existing chart if it exists
+            if (trafficTrendsChart) {
+                trafficTrendsChart.destroy();
+            }
+
+            // Generate time labels for 24 hours
+            const timeLabels = [];
+            for (let i = 0; i < 24; i++) {
+                timeLabels.push(i.toString().padStart(2, '0') + ':00');
+            }
+
+            // Generate realistic traffic data
+            const generateTrafficData = () => {
+                const upload = [];
+                const download = [];
+
+                for (let i = 0; i < 24; i++) {
+                    // Business hours (8-18) have higher traffic
+                    const isBusinessHours = i >= 8 && i < 18;
+                    const baseUpload = isBusinessHours ? 45 : 20;
+                    const baseDownload = isBusinessHours ? 350 : 150;
+
+                    // Add some variance
+                    upload.push(baseUpload + (Math.random() - 0.5) * 30);
+                    download.push(baseDownload + (Math.random() - 0.5) * 150);
+                }
+
+                return { upload, download };
+            };
+
+            const trafficData = generateTrafficData();
+
+            // Create the Traffic trend chart
+            trafficTrendsChart = new Chart(document.getElementById('trafficTrendsChart'), {
+                type: 'line',
+                data: {
+                    labels: timeLabels,
+                    datasets: [
+                        {
+                            label: 'Upload (Tx)',
+                            data: trafficData.upload,
+                            borderColor: '#6366f1',
+                            backgroundColor: 'rgba(99, 102, 241, 0.2)',
+                            borderWidth: 2,
+                            pointRadius: 3,
+                            pointHoverRadius: 6,
+                            pointBackgroundColor: '#6366f1',
+                            pointHoverBackgroundColor: '#6366f1',
+                            pointBorderColor: '#fff',
+                            pointHoverBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Download (Rx)',
+                            data: trafficData.download,
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                            borderWidth: 2,
+                            pointRadius: 3,
+                            pointHoverRadius: 6,
+                            pointBackgroundColor: '#10b981',
+                            pointHoverBackgroundColor: '#10b981',
+                            pointBorderColor: '#fff',
+                            pointHoverBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            tension: 0.4,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                boxWidth: 12,
+                                font: { size: 12 },
+                                padding: 15,
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            enabled: true,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: '#6366f1',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    label += context.parsed.y.toFixed(1) + ' Mbps';
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            grid: {
+                                display: true,
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            },
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 45,
+                                autoSkipPadding: 10,
+                                font: { size: 10 }
+                            }
+                        },
+                        y: {
+                            display: true,
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Throughput (Mbps)',
+                                font: { size: 12 }
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toFixed(0) + ' Mbps';
+                                },
+                                font: { size: 10 }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function closeTrafficTrends() {
+            const overlay = document.getElementById('trafficTrendsOverlay');
+            overlay.classList.add('hidden');
+
+            // Destroy chart to prevent memory leaks
+            if (trafficTrendsChart) {
+                trafficTrendsChart.destroy();
+                trafficTrendsChart = null;
+            }
+        }
+
+        // --- ERROR MONITOR EXPANDED OVERLAY ---
+        let errorMonitorExpandedChart = null;
+        let allPortsTrafficChart = null;
+
+        function openErrorMonitorExpanded() {
+            const overlay = document.getElementById('errorMonitorExpandedOverlay');
+            overlay.classList.remove('hidden');
+
+            // Destroy existing charts if they exist
+            if (errorMonitorExpandedChart) {
+                errorMonitorExpandedChart.destroy();
+            }
+            if (allPortsTrafficChart) {
+                allPortsTrafficChart.destroy();
+            }
+
+            // Use the same hardcoded data as the Error Monitor summary chart for consistency
+            const errorLabels = ['Ge48', 'Ge3', 'Ge12', 'Ge27', 'Ge42'];
+            const errorData = [487, 342, 156, 89, 52];
+            const errorColors = ['#ef4444', '#f97316', '#f59e0b', '#eab308', '#84cc16'];
+
+            // Create the expanded Error Monitor chart
+            errorMonitorExpandedChart = new Chart(document.getElementById('errorMonitorExpandedChart'), {
+                type: 'bar',
+                data: {
+                    labels: errorLabels,
+                    datasets: [{
+                        label: 'Error Count',
+                        data: errorData,
+                        backgroundColor: errorColors,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            enabled: true,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: '#ef4444',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    return 'Errors: ' + context.parsed.x;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Error Count',
+                                font: { size: 12 }
+                            },
+                            ticks: {
+                                font: { size: 10 }
+                            },
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' }
+                        },
+                        y: {
+                            ticks: {
+                                font: { size: 11, family: 'monospace', weight: 'bold' }
+                            },
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+
+            // Get all ports with traffic (sorted by download traffic descending)
+            const portsWithTraffic = ports.filter(p => p.status === 'up').sort((a, b) => parseFloat(b.downloadSpeed) - parseFloat(a.downloadSpeed)).slice(0, 15);
+
+            // Generate labels and data for traffic chart (convert to MB - simulated cumulative traffic)
+            const trafficLabels = portsWithTraffic.map(p => p.name);
+            // Simulate cumulative traffic in MB (speed * time factor)
+            const uploadData = portsWithTraffic.map(p => Math.round(parseFloat(p.uploadSpeed) * 60));
+            const downloadData = portsWithTraffic.map(p => Math.round(parseFloat(p.downloadSpeed) * 60));
+
+            // Create the all ports traffic chart
+            allPortsTrafficChart = new Chart(document.getElementById('allPortsTrafficChart'), {
+                type: 'bar',
+                data: {
+                    labels: trafficLabels,
+                    datasets: [
+                        {
+                            label: 'Upload',
+                            data: uploadData,
+                            backgroundColor: '#6366f1',
+                            borderRadius: 2
+                        },
+                        {
+                            label: 'Download',
+                            data: downloadData,
+                            backgroundColor: '#10b981',
+                            borderRadius: 2
+                        }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                boxWidth: 12,
+                                font: { size: 11 }
+                            }
+                        },
+                        tooltip: {
+                            enabled: true,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: '#6366f1',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    label += context.parsed.x.toLocaleString() + ' MB';
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            stacked: false,
+                            title: {
+                                display: true,
+                                text: 'Traffic (MB)',
+                                font: { size: 12 }
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toLocaleString() + ' MB';
+                                },
+                                font: { size: 10 }
+                            },
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' }
+                        },
+                        y: {
+                            stacked: false,
+                            ticks: {
+                                font: { size: 11, family: 'monospace', weight: 'bold' }
+                            },
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        function closeErrorMonitorExpanded() {
+            const overlay = document.getElementById('errorMonitorExpandedOverlay');
+            overlay.classList.add('hidden');
+
+            // Destroy charts to prevent memory leaks
+            if (errorMonitorExpandedChart) {
+                errorMonitorExpandedChart.destroy();
+                errorMonitorExpandedChart = null;
+            }
+            if (allPortsTrafficChart) {
+                allPortsTrafficChart.destroy();
+                allPortsTrafficChart = null;
+            }
+        }
+
+        // Expose new overlay functions to global scope for onclick handlers
+        window.openTrafficTrends = openTrafficTrends;
+        window.closeTrafficTrends = closeTrafficTrends;
+        window.openErrorMonitorExpanded = openErrorMonitorExpanded;
+        window.closeErrorMonitorExpanded = closeErrorMonitorExpanded;

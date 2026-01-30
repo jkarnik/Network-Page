@@ -341,9 +341,12 @@
                 </div>
 
                 <!-- ROW 2: Traffic, Error Monitor, Shadow IT -->
-                <div class="col-span-12 lg:col-span-3 card p-4 h-80 bg-dark-card">
+                <div class="col-span-12 lg:col-span-3 card p-4 h-80 bg-dark-card cursor-pointer hover:shadow-lg transition-shadow" onclick="openTrafficTrends()">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-sm font-bold text-dark-text">Traffic (24h)</h3>
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-sm font-bold text-dark-text">Traffic (24h)</h3>
+                            <i class="fa-solid fa-up-right-and-down-left-from-center text-xs text-gray-400 dark:text-gray-500"></i>
+                        </div>
                         <span class="text-xs text-gray-400">Last 6 Hours</span>
                     </div>
                     <div class="relative h-full w-full pb-4">
@@ -351,9 +354,12 @@
                     </div>
                 </div>
 
-                <div class="col-span-12 lg:col-span-3 card p-4 h-80 bg-dark-card">
+                <div class="col-span-12 lg:col-span-3 card p-4 h-80 bg-dark-card cursor-pointer hover:shadow-lg transition-shadow" onclick="openErrorMonitorExpanded()">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-sm font-bold text-dark-text">Error Monitor</h3>
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-sm font-bold text-dark-text">Error Monitor</h3>
+                            <i class="fa-solid fa-up-right-and-down-left-from-center text-xs text-gray-400 dark:text-gray-500"></i>
+                        </div>
                         <span class="text-xs text-gray-400">Last 24 Hours</span>
                     </div>
                     <div class="relative h-full w-full pb-4">
@@ -531,6 +537,60 @@
             </div>
         </div>
 
+        <!-- Traffic Trends Overlay -->
+        <div id="trafficTrendsOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-6">
+            <div class="bg-dark-card rounded-lg shadow-2xl w-full max-w-6xl overflow-hidden">
+                <div class="p-6 border-b border-dark-border flex justify-between items-center">
+                    <div class="flex items-center gap-3">
+                        <h2 class="text-xl font-bold text-dark-text">Traffic Trends</h2>
+                        <span class="text-xs text-dark-muted">Last 24 Hours</span>
+                    </div>
+                    <button onclick="closeTrafficTrends()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                        <i class="fa-solid fa-times text-2xl"></i>
+                    </button>
+                </div>
+                <div class="p-6">
+                    <div class="card p-4 bg-gray-50 dark:bg-gray-800">
+                        <h3 class="text-sm font-bold text-dark-text mb-3">Upload & Download Throughput Over Time</h3>
+                        <div style="height: 400px;">
+                            <canvas id="trafficTrendsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error Monitor Expanded Overlay -->
+        <div id="errorMonitorExpandedOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-6">
+            <div class="bg-dark-card rounded-lg shadow-2xl w-full max-w-6xl overflow-hidden">
+                <div class="p-6 border-b border-dark-border flex justify-between items-center">
+                    <div class="flex items-center gap-3">
+                        <h2 class="text-xl font-bold text-dark-text">Port Error & Traffic Details</h2>
+                        <span class="text-xs text-dark-muted">All Ports with Errors</span>
+                    </div>
+                    <button onclick="closeErrorMonitorExpanded()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                        <i class="fa-solid fa-times text-2xl"></i>
+                    </button>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="card p-4 bg-gray-50 dark:bg-gray-800">
+                            <h3 class="text-sm font-bold text-dark-text mb-3">Error Count by Port</h3>
+                            <div style="height: 350px;">
+                                <canvas id="errorMonitorExpandedChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="card p-4 bg-gray-50 dark:bg-gray-800">
+                            <h3 class="text-sm font-bold text-dark-text mb-3">Traffic by Port (MB)</h3>
+                            <div style="height: 350px;">
+                                <canvas id="allPortsTrafficChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <footer class="mt-8 mb-4 text-center text-xs text-gray-400 dark:text-gray-500">
             <p>NPM 2.0 Operational Command Center</p>
         </footer>
@@ -562,7 +622,7 @@
     <script src="assets/js/chart-config.js" defer></script>
     <script src="assets/js/navigation.js" defer></script>
     <script src="assets/js/diagnostics-manager.js" defer></script>
-
+    <script src="assets/js/data-loader.js" defer></script>
 
     <!-- Main Application Script - Deferred for Performance -->
     <script src="assets/js/switch-main.js" defer></script>
