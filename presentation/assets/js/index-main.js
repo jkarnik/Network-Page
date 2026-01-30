@@ -1235,6 +1235,537 @@
             renderSecurityAlertTable();
         }
 
+        // --- LATENCY TRENDS OVERLAY ---
+        let latencyTrendsChart = null;
+
+        function openLatencyTrends() {
+            const overlay = document.getElementById('latencyTrendsOverlay');
+            overlay.classList.remove('hidden');
+
+            // Destroy existing chart if it exists
+            if (latencyTrendsChart) {
+                latencyTrendsChart.destroy();
+            }
+
+            // Generate time labels for 24 hours
+            const timeLabels = [];
+            for (let i = 0; i < 24; i++) {
+                timeLabels.push(i.toString().padStart(2, '0') + ':00');
+            }
+
+            // Get top 5 SD-WANs from current data
+            const latencyData = DataLoader.getLatencyData(currentSiteFilter || currentScope, 5);
+            const siteNames = latencyData.map(d => d.label);
+            const siteColors = ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
+
+            // Generate realistic latency trends for each site
+            const datasets = siteNames.map((site, idx) => {
+                const baseLatency = latencyData[idx].latency;
+                const data = [];
+                for (let i = 0; i < 24; i++) {
+                    // Business hours have higher latency
+                    const isBusinessHours = i >= 8 && i < 18;
+                    const hourMultiplier = isBusinessHours ? 1.2 : 0.8;
+                    data.push(Math.max(5, baseLatency * hourMultiplier + (Math.random() - 0.5) * 20));
+                }
+                return {
+                    label: site,
+                    data: data,
+                    borderColor: siteColors[idx],
+                    backgroundColor: siteColors[idx] + '33',
+                    borderWidth: 2,
+                    pointRadius: 2,
+                    pointHoverRadius: 5,
+                    tension: 0.4,
+                    fill: false
+                };
+            });
+
+            // Create the Latency trend chart
+            latencyTrendsChart = new Chart(document.getElementById('latencyTrendsChart'), {
+                type: 'line',
+                data: {
+                    labels: timeLabels,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                boxWidth: 12,
+                                font: { size: 11 },
+                                padding: 15,
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            enabled: true,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: '#6366f1',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.parsed.y.toFixed(1) + ' ms';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            grid: {
+                                display: true,
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            },
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 45,
+                                autoSkipPadding: 10,
+                                font: { size: 10 }
+                            }
+                        },
+                        y: {
+                            display: true,
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Latency (ms)',
+                                font: { size: 12 }
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toFixed(0) + ' ms';
+                                },
+                                font: { size: 10 }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function closeLatencyTrends() {
+            const overlay = document.getElementById('latencyTrendsOverlay');
+            overlay.classList.add('hidden');
+
+            if (latencyTrendsChart) {
+                latencyTrendsChart.destroy();
+                latencyTrendsChart = null;
+            }
+        }
+
+        // --- FRUSTRATION TRENDS OVERLAY ---
+        let frustrationBreakdownChart = null;
+        let frustrationTrendsChart = null;
+
+        function openFrustrationTrends() {
+            const overlay = document.getElementById('frustrationTrendsOverlay');
+            overlay.classList.remove('hidden');
+
+            // Destroy existing charts if they exist
+            if (frustrationBreakdownChart) {
+                frustrationBreakdownChart.destroy();
+            }
+            if (frustrationTrendsChart) {
+                frustrationTrendsChart.destroy();
+            }
+
+            // Get frustration data from current scope
+            const frustrationData = DataLoader.getFrustrationData(currentSiteFilter || currentScope, 10);
+            const siteNames = frustrationData.map(d => d.label);
+
+            // Create breakdown chart (stacked horizontal bar)
+            const breakdownData = frustrationData.map(d => ({
+                association: Math.floor(d.totalTime * 0.35),
+                auth: Math.floor(d.totalTime * 0.25),
+                dhcp: Math.floor(d.totalTime * 0.25),
+                dns: Math.floor(d.totalTime * 0.15)
+            }));
+
+            frustrationBreakdownChart = new Chart(document.getElementById('frustrationBreakdownChart'), {
+                type: 'bar',
+                data: {
+                    labels: siteNames,
+                    datasets: [
+                        { label: 'Association', data: breakdownData.map(d => d.association), backgroundColor: '#dc2626', borderRadius: 2 },
+                        { label: 'Auth', data: breakdownData.map(d => d.auth), backgroundColor: '#ea580c', borderRadius: 2 },
+                        { label: 'DHCP', data: breakdownData.map(d => d.dhcp), backgroundColor: '#f59e0b', borderRadius: 2 },
+                        { label: 'DNS', data: breakdownData.map(d => d.dns), backgroundColor: '#16a34a', borderRadius: 2 }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                boxWidth: 12,
+                                font: { size: 10 },
+                                padding: 10
+                            }
+                        },
+                        tooltip: {
+                            enabled: true,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.parsed.x + ' ms';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            stacked: true,
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Time (ms)',
+                                font: { size: 11 }
+                            },
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' }
+                        },
+                        y: {
+                            stacked: true,
+                            ticks: { font: { size: 10 } },
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+
+            // Generate time labels for 24 hours
+            const timeLabels = [];
+            for (let i = 0; i < 24; i++) {
+                timeLabels.push(i.toString().padStart(2, '0') + ':00');
+            }
+
+            // Generate trends data for top 5 sites
+            const top5Sites = frustrationData.slice(0, 5);
+            const trendColors = ['#dc2626', '#ea580c', '#f59e0b', '#16a34a', '#3b82f6'];
+
+            const trendDatasets = top5Sites.map((site, idx) => {
+                const baseTime = site.totalTime;
+                const data = [];
+                for (let i = 0; i < 24; i++) {
+                    const isBusinessHours = i >= 8 && i < 18;
+                    const hourMultiplier = isBusinessHours ? 1.3 : 0.7;
+                    data.push(Math.max(50, baseTime * hourMultiplier + (Math.random() - 0.5) * 100));
+                }
+                return {
+                    label: site.label,
+                    data: data,
+                    borderColor: trendColors[idx],
+                    backgroundColor: trendColors[idx] + '33',
+                    borderWidth: 2,
+                    pointRadius: 2,
+                    tension: 0.4,
+                    fill: false
+                };
+            });
+
+            frustrationTrendsChart = new Chart(document.getElementById('frustrationTrendsChart'), {
+                type: 'line',
+                data: {
+                    labels: timeLabels,
+                    datasets: trendDatasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                boxWidth: 12,
+                                font: { size: 10 },
+                                padding: 10,
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            enabled: true,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.parsed.y.toFixed(0) + ' ms';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 45,
+                                font: { size: 9 }
+                            }
+                        },
+                        y: {
+                            display: true,
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Connection Time (ms)',
+                                font: { size: 11 }
+                            },
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function closeFrustrationTrends() {
+            const overlay = document.getElementById('frustrationTrendsOverlay');
+            overlay.classList.add('hidden');
+
+            if (frustrationBreakdownChart) {
+                frustrationBreakdownChart.destroy();
+                frustrationBreakdownChart = null;
+            }
+            if (frustrationTrendsChart) {
+                frustrationTrendsChart.destroy();
+                frustrationTrendsChart = null;
+            }
+        }
+
+        // --- WAN RESILIENCE TRENDS OVERLAY ---
+        let wanStatusTrendsChart = null;
+        let failoverEventsChart = null;
+
+        function openWanResilienceTrends() {
+            const overlay = document.getElementById('wanResilienceTrendsOverlay');
+            overlay.classList.remove('hidden');
+
+            // Destroy existing charts if they exist
+            if (wanStatusTrendsChart) {
+                wanStatusTrendsChart.destroy();
+            }
+            if (failoverEventsChart) {
+                failoverEventsChart.destroy();
+            }
+
+            // Generate time labels for 24 hours
+            const timeLabels = [];
+            for (let i = 0; i < 24; i++) {
+                timeLabels.push(i.toString().padStart(2, '0') + ':00');
+            }
+
+            // Generate WAN status trends data
+            const primaryData = [];
+            const failoverData = [];
+            const downData = [];
+
+            for (let i = 0; i < 24; i++) {
+                // Simulate some variation in WAN status
+                const baseDown = i >= 2 && i <= 4 ? 3 : 1; // Higher down during maintenance window
+                const basePrimary = 91 - (i >= 2 && i <= 4 ? 5 : 0);
+                const baseFailover = 100 - basePrimary - baseDown;
+
+                primaryData.push(basePrimary + (Math.random() - 0.5) * 2);
+                failoverData.push(baseFailover + (Math.random() - 0.5) * 2);
+                downData.push(Math.max(0, baseDown + (Math.random() - 0.5) * 1));
+            }
+
+            wanStatusTrendsChart = new Chart(document.getElementById('wanStatusTrendsChart'), {
+                type: 'line',
+                data: {
+                    labels: timeLabels,
+                    datasets: [
+                        {
+                            label: 'Primary',
+                            data: primaryData,
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                            borderWidth: 2,
+                            pointRadius: 2,
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Failover',
+                            data: failoverData,
+                            borderColor: '#f59e0b',
+                            backgroundColor: 'rgba(245, 158, 11, 0.2)',
+                            borderWidth: 2,
+                            pointRadius: 2,
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Down',
+                            data: downData,
+                            borderColor: '#ef4444',
+                            backgroundColor: 'rgba(239, 68, 68, 0.2)',
+                            borderWidth: 2,
+                            pointRadius: 2,
+                            tension: 0.4,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                boxWidth: 12,
+                                font: { size: 11 },
+                                padding: 15,
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            enabled: true,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.parsed.y.toFixed(1) + '%';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 45,
+                                font: { size: 10 }
+                            }
+                        },
+                        y: {
+                            display: true,
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Link Status (%)',
+                                font: { size: 12 }
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                },
+                                font: { size: 10 }
+                            },
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' }
+                        }
+                    }
+                }
+            });
+
+            // Get sites for failover events chart
+            const sites = DataLoader.getSites ? DataLoader.getSites() : ['NYC-HQ', 'LON-Warehouse', 'SFO-Branch', 'TOK-Sales', 'MUM-Hub'];
+            const siteNames = Object.keys(sites).slice(0, 8);
+
+            // Generate failover events data
+            const failoverCounts = siteNames.map(() => Math.floor(Math.random() * 5) + 1);
+            const failoverColors = failoverCounts.map(c => c >= 4 ? '#ef4444' : c >= 2 ? '#f59e0b' : '#10b981');
+
+            failoverEventsChart = new Chart(document.getElementById('failoverEventsChart'), {
+                type: 'bar',
+                data: {
+                    labels: siteNames,
+                    datasets: [{
+                        label: 'Failover Events',
+                        data: failoverCounts,
+                        backgroundColor: failoverColors,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            enabled: true,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            callbacks: {
+                                label: function(context) {
+                                    return 'Failover Events: ' + context.parsed.x;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Number of Events',
+                                font: { size: 12 }
+                            },
+                            ticks: { font: { size: 10 } },
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' }
+                        },
+                        y: {
+                            ticks: {
+                                font: { size: 11 }
+                            },
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        function closeWanResilienceTrends() {
+            const overlay = document.getElementById('wanResilienceTrendsOverlay');
+            overlay.classList.add('hidden');
+
+            if (wanStatusTrendsChart) {
+                wanStatusTrendsChart.destroy();
+                wanStatusTrendsChart = null;
+            }
+            if (failoverEventsChart) {
+                failoverEventsChart.destroy();
+                failoverEventsChart = null;
+            }
+        }
+
+        // Expose overlay functions to global scope for onclick handlers
+        window.openLatencyTrends = openLatencyTrends;
+        window.closeLatencyTrends = closeLatencyTrends;
+        window.openFrustrationTrends = openFrustrationTrends;
+        window.closeFrustrationTrends = closeFrustrationTrends;
+        window.openWanResilienceTrends = openWanResilienceTrends;
+        window.closeWanResilienceTrends = closeWanResilienceTrends;
+
         // Initialize - Load data first, then initialize charts
         console.log('Starting data load...');
         DataLoader.load().then(() => {

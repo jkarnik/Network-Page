@@ -1126,3 +1126,385 @@
             }
         }
 
+        // --- UPLINK HEALTH TRENDS OVERLAY ---
+        let uplinkHealthTrendsChart = null;
+
+        function openUplinkHealthTrends() {
+            const overlay = document.getElementById('uplinkHealthTrendsOverlay');
+            overlay.classList.remove('hidden');
+
+            // Destroy existing chart if it exists
+            if (uplinkHealthTrendsChart) {
+                uplinkHealthTrendsChart.destroy();
+            }
+
+            // Generate time labels for 24 hours
+            const timeLabels = [];
+            for (let i = 0; i < 24; i++) {
+                timeLabels.push(i.toString().padStart(2, '0') + ':00');
+            }
+
+            // Generate realistic uplink health data
+            const generateUplinkData = () => {
+                const latency = [];
+                const jitter = [];
+                const loss = [];
+
+                for (let i = 0; i < 24; i++) {
+                    // Business hours (8-18) have slightly higher latency
+                    const isBusinessHours = i >= 8 && i < 18;
+                    const baseLatency = isBusinessHours ? 35 : 25;
+                    const baseJitter = isBusinessHours ? 5 : 3;
+                    const baseLoss = isBusinessHours ? 0.3 : 0.1;
+
+                    // Add some variance
+                    latency.push(baseLatency + (Math.random() - 0.5) * 20);
+                    jitter.push(baseJitter + (Math.random() - 0.5) * 4);
+                    loss.push(Math.max(0, baseLoss + (Math.random() - 0.5) * 0.4));
+                }
+
+                return { latency, jitter, loss };
+            };
+
+            const uplinkData = generateUplinkData();
+
+            // Create the Uplink Health trend chart
+            uplinkHealthTrendsChart = new Chart(document.getElementById('uplinkHealthTrendsChart'), {
+                type: 'line',
+                data: {
+                    labels: timeLabels,
+                    datasets: [
+                        {
+                            label: 'Latency (ms)',
+                            data: uplinkData.latency,
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                            borderWidth: 2,
+                            pointRadius: 3,
+                            pointHoverRadius: 6,
+                            pointBackgroundColor: '#3b82f6',
+                            pointHoverBackgroundColor: '#3b82f6',
+                            pointBorderColor: '#fff',
+                            pointHoverBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            tension: 0.4,
+                            fill: true,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Jitter (ms)',
+                            data: uplinkData.jitter,
+                            borderColor: '#a855f7',
+                            backgroundColor: 'rgba(168, 85, 247, 0.2)',
+                            borderWidth: 2,
+                            pointRadius: 3,
+                            pointHoverRadius: 6,
+                            pointBackgroundColor: '#a855f7',
+                            pointHoverBackgroundColor: '#a855f7',
+                            pointBorderColor: '#fff',
+                            pointHoverBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            tension: 0.4,
+                            fill: true,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Packet Loss (%)',
+                            data: uplinkData.loss,
+                            borderColor: '#f87171',
+                            backgroundColor: 'rgba(248, 113, 113, 0.2)',
+                            borderWidth: 2,
+                            pointRadius: 3,
+                            pointHoverRadius: 6,
+                            pointBackgroundColor: '#f87171',
+                            pointHoverBackgroundColor: '#f87171',
+                            pointBorderColor: '#fff',
+                            pointHoverBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            borderDash: [5, 5],
+                            tension: 0.4,
+                            fill: true,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                boxWidth: 12,
+                                font: { size: 12 },
+                                padding: 15,
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            enabled: true,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: '#3b82f6',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.dataset.yAxisID === 'y1') {
+                                        label += context.parsed.y.toFixed(2) + '%';
+                                    } else {
+                                        label += context.parsed.y.toFixed(1) + ' ms';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            grid: {
+                                display: true,
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            },
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 45,
+                                autoSkipPadding: 10,
+                                font: { size: 10 }
+                            }
+                        },
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Latency & Jitter (ms)',
+                                font: { size: 12 }
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toFixed(0) + ' ms';
+                                },
+                                font: { size: 10 }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Packet Loss (%)',
+                                font: { size: 12 }
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toFixed(1) + '%';
+                                },
+                                font: { size: 10 }
+                            },
+                            grid: {
+                                drawOnChartArea: false
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function closeUplinkHealthTrends() {
+            const overlay = document.getElementById('uplinkHealthTrendsOverlay');
+            overlay.classList.add('hidden');
+
+            // Destroy chart to prevent memory leaks
+            if (uplinkHealthTrendsChart) {
+                uplinkHealthTrendsChart.destroy();
+                uplinkHealthTrendsChart = null;
+            }
+        }
+
+        // --- WAN THROUGHPUT TRENDS OVERLAY ---
+        let wanThroughputTrendsChart = null;
+
+        function openWanThroughputTrends() {
+            const overlay = document.getElementById('wanThroughputTrendsOverlay');
+            overlay.classList.remove('hidden');
+
+            // Destroy existing chart if it exists
+            if (wanThroughputTrendsChart) {
+                wanThroughputTrendsChart.destroy();
+            }
+
+            // Generate time labels for 24 hours
+            const timeLabels = [];
+            for (let i = 0; i < 24; i++) {
+                timeLabels.push(i.toString().padStart(2, '0') + ':00');
+            }
+
+            // Generate realistic WAN throughput data
+            const generateThroughputData = () => {
+                const upload = [];
+                const download = [];
+
+                for (let i = 0; i < 24; i++) {
+                    // Business hours (8-18) have higher throughput
+                    const isBusinessHours = i >= 8 && i < 18;
+                    const baseUpload = isBusinessHours ? 35 : 15;
+                    const baseDownload = isBusinessHours ? 90 : 40;
+
+                    // Add some variance
+                    upload.push(baseUpload + (Math.random() - 0.5) * 20);
+                    download.push(baseDownload + (Math.random() - 0.5) * 40);
+                }
+
+                return { upload, download };
+            };
+
+            const throughputData = generateThroughputData();
+
+            // Create the WAN Throughput trend chart
+            wanThroughputTrendsChart = new Chart(document.getElementById('wanThroughputTrendsChart'), {
+                type: 'line',
+                data: {
+                    labels: timeLabels,
+                    datasets: [
+                        {
+                            label: 'Upload (Tx)',
+                            data: throughputData.upload,
+                            borderColor: '#6366f1',
+                            backgroundColor: 'rgba(99, 102, 241, 0.2)',
+                            borderWidth: 2,
+                            pointRadius: 3,
+                            pointHoverRadius: 6,
+                            pointBackgroundColor: '#6366f1',
+                            pointHoverBackgroundColor: '#6366f1',
+                            pointBorderColor: '#fff',
+                            pointHoverBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Download (Rx)',
+                            data: throughputData.download,
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                            borderWidth: 2,
+                            pointRadius: 3,
+                            pointHoverRadius: 6,
+                            pointBackgroundColor: '#10b981',
+                            pointHoverBackgroundColor: '#10b981',
+                            pointBorderColor: '#fff',
+                            pointHoverBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            tension: 0.4,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                boxWidth: 12,
+                                font: { size: 12 },
+                                padding: 15,
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            enabled: true,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: '#6366f1',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    label += context.parsed.y.toFixed(1) + ' Mbps';
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            grid: {
+                                display: true,
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            },
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 45,
+                                autoSkipPadding: 10,
+                                font: { size: 10 }
+                            }
+                        },
+                        y: {
+                            display: true,
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Throughput (Mbps)',
+                                font: { size: 12 }
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toFixed(0) + ' Mbps';
+                                },
+                                font: { size: 10 }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function closeWanThroughputTrends() {
+            const overlay = document.getElementById('wanThroughputTrendsOverlay');
+            overlay.classList.add('hidden');
+
+            // Destroy chart to prevent memory leaks
+            if (wanThroughputTrendsChart) {
+                wanThroughputTrendsChart.destroy();
+                wanThroughputTrendsChart = null;
+            }
+        }
+
+        // Expose new overlay functions to global scope for onclick handlers
+        window.openUplinkHealthTrends = openUplinkHealthTrends;
+        window.closeUplinkHealthTrends = closeUplinkHealthTrends;
+        window.openWanThroughputTrends = openWanThroughputTrends;
+        window.closeWanThroughputTrends = closeWanThroughputTrends;

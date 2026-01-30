@@ -473,9 +473,12 @@
             <!-- ROW 2: Analytical Charts -->
 
             <!-- 7. Top Impacted SD-WANs (Latency) -->
-            <div class="col-span-12 lg:col-span-4 card p-4 h-80 bg-dark-card">
+            <div class="col-span-12 lg:col-span-4 card p-4 h-80 bg-dark-card cursor-pointer hover:shadow-lg transition-shadow" onclick="openLatencyTrends()">
                 <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-sm font-bold text-dark-text">Top Impacted SD-WANs (Latency)</h3>
+                    <div class="flex items-center gap-2">
+                        <h3 class="text-sm font-bold text-dark-text">Top Impacted SD-WANs (Latency)</h3>
+                        <i class="fa-solid fa-up-right-and-down-left-from-center text-xs text-gray-400 dark:text-gray-500"></i>
+                    </div>
                     <span class="text-xs text-gray-400">Avg WAN Latency (ms)</span>
                 </div>
                 <div class="relative h-full w-full pb-4">
@@ -484,9 +487,12 @@
             </div>
 
             <!-- 6. User Frustration Leaderboard -->
-            <div class="col-span-12 lg:col-span-5 card p-4 h-80 bg-dark-card">
+            <div class="col-span-12 lg:col-span-5 card p-4 h-80 bg-dark-card cursor-pointer hover:shadow-lg transition-shadow" onclick="openFrustrationTrends()">
                 <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-sm font-bold text-dark-text">User Frustration Leaderboard</h3>
+                    <div class="flex items-center gap-2">
+                        <h3 class="text-sm font-bold text-dark-text">User Frustration Leaderboard</h3>
+                        <i class="fa-solid fa-up-right-and-down-left-from-center text-xs text-gray-400 dark:text-gray-500"></i>
+                    </div>
                     <span class="text-xs text-gray-400">Time to Connect (ms)</span>
                 </div>
                 <div class="relative h-full w-full pb-4">
@@ -495,8 +501,11 @@
             </div>
 
             <!-- 8. WAN Resilience (Donut) -->
-            <div class="col-span-12 lg:col-span-3 card p-4 h-80 bg-dark-card">
-                <h3 class="text-sm font-bold text-dark-text mb-2">WAN Resilience</h3>
+            <div class="col-span-12 lg:col-span-3 card p-4 h-80 bg-dark-card cursor-pointer hover:shadow-lg transition-shadow" onclick="openWanResilienceTrends()">
+                <div class="flex items-center gap-2 mb-2">
+                    <h3 class="text-sm font-bold text-dark-text">WAN Resilience</h3>
+                    <i class="fa-solid fa-up-right-and-down-left-from-center text-xs text-gray-400 dark:text-gray-500"></i>
+                </div>
                 <div class="flex items-center justify-center gap-4" style="height: calc(100% - 2rem);">
                     <!-- 2/3 area for the donut chart -->
                     <div class="relative flex items-center justify-center" style="flex: 2;">
@@ -569,6 +578,91 @@
 
         </div>
 
+        <!-- Latency Trends Overlay -->
+        <div id="latencyTrendsOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-6">
+            <div class="bg-dark-card rounded-lg shadow-2xl w-full max-w-6xl overflow-hidden">
+                <div class="p-6 border-b border-dark-border flex justify-between items-center">
+                    <div class="flex items-center gap-3">
+                        <h2 class="text-xl font-bold text-dark-text">SD-WAN Latency Trends</h2>
+                        <span class="text-xs text-dark-muted">Last 24 Hours</span>
+                    </div>
+                    <button onclick="closeLatencyTrends()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                        <i class="fa-solid fa-times text-2xl"></i>
+                    </button>
+                </div>
+                <div class="p-6">
+                    <div class="card p-4 bg-gray-50 dark:bg-gray-800">
+                        <h3 class="text-sm font-bold text-dark-text mb-3">Top 5 SD-WANs Latency Over Time</h3>
+                        <div style="height: 400px;">
+                            <canvas id="latencyTrendsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Frustration Trends Overlay -->
+        <div id="frustrationTrendsOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-6">
+            <div class="bg-dark-card rounded-lg shadow-2xl w-full max-w-6xl overflow-hidden">
+                <div class="p-6 border-b border-dark-border flex justify-between items-center">
+                    <div class="flex items-center gap-3">
+                        <h2 class="text-xl font-bold text-dark-text">User Frustration Trends</h2>
+                        <span class="text-xs text-dark-muted">Last 24 Hours</span>
+                    </div>
+                    <button onclick="closeFrustrationTrends()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                        <i class="fa-solid fa-times text-2xl"></i>
+                    </button>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="card p-4 bg-gray-50 dark:bg-gray-800">
+                            <h3 class="text-sm font-bold text-dark-text mb-3">Connection Time Breakdown by Site</h3>
+                            <div style="height: 350px;">
+                                <canvas id="frustrationBreakdownChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="card p-4 bg-gray-50 dark:bg-gray-800">
+                            <h3 class="text-sm font-bold text-dark-text mb-3">Connection Time Trends</h3>
+                            <div style="height: 350px;">
+                                <canvas id="frustrationTrendsChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- WAN Resilience Trends Overlay -->
+        <div id="wanResilienceTrendsOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-6">
+            <div class="bg-dark-card rounded-lg shadow-2xl w-full max-w-6xl overflow-hidden">
+                <div class="p-6 border-b border-dark-border flex justify-between items-center">
+                    <div class="flex items-center gap-3">
+                        <h2 class="text-xl font-bold text-dark-text">WAN Resilience Trends</h2>
+                        <span class="text-xs text-dark-muted">Last 24 Hours</span>
+                    </div>
+                    <button onclick="closeWanResilienceTrends()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                        <i class="fa-solid fa-times text-2xl"></i>
+                    </button>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="card p-4 bg-gray-50 dark:bg-gray-800">
+                            <h3 class="text-sm font-bold text-dark-text mb-3">WAN Link Status Over Time</h3>
+                            <div style="height: 350px;">
+                                <canvas id="wanStatusTrendsChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="card p-4 bg-gray-50 dark:bg-gray-800">
+                            <h3 class="text-sm font-bold text-dark-text mb-3">Failover Events by Site</h3>
+                            <div style="height: 350px;">
+                                <canvas id="failoverEventsChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Footer -->
         <footer class="mt-8 mb-4 text-center text-xs text-gray-400 dark:text-gray-500">
             <p>NPM 2.0 Operational Command Center • Powered by Meraki & Mist Integration</p>
@@ -601,6 +695,7 @@
     <script src="assets/js/theme-manager.js" defer></script>
     <script src="assets/js/chart-config.js" defer></script>
     <script src="assets/js/navigation.js" defer></script>
+    <script src="assets/js/data-loader.js" defer></script>
 
     <!-- Main Application Script - Deferred for Performance -->
     <script src="assets/js/index-main.js" defer></script>

@@ -280,9 +280,12 @@
             </div>
 
             <!-- ROW 2: Uplink Health, WAN Throughput, Top Applications, DHCP Utilization -->
-            <div class="col-span-12 lg:col-span-3 card p-4 h-80 bg-dark-card">
+            <div class="col-span-12 lg:col-span-3 card p-4 h-80 bg-dark-card cursor-pointer hover:shadow-lg transition-shadow" onclick="openUplinkHealthTrends()">
                 <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-sm font-bold text-dark-text">Uplink Health</h3>
+                    <div class="flex items-center gap-2">
+                        <h3 class="text-sm font-bold text-dark-text">Uplink Health</h3>
+                        <i class="fa-solid fa-up-right-and-down-left-from-center text-xs text-gray-400 dark:text-gray-500"></i>
+                    </div>
                     <div class="flex gap-2">
                         <span class="flex items-center gap-1 text-xs text-gray-500"><span class="w-2 h-2 rounded-full bg-blue-500"></span> Latency</span>
                         <span class="flex items-center gap-1 text-xs text-gray-500"><span class="w-2 h-2 rounded-full bg-purple-500"></span> Jitter</span>
@@ -294,9 +297,12 @@
                 </div>
             </div>
 
-            <div class="col-span-12 lg:col-span-3 card p-4 h-80 bg-dark-card">
+            <div class="col-span-12 lg:col-span-3 card p-4 h-80 bg-dark-card cursor-pointer hover:shadow-lg transition-shadow" onclick="openWanThroughputTrends()">
                 <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-sm font-bold text-dark-text">WAN Throughput</h3>
+                    <div class="flex items-center gap-2">
+                        <h3 class="text-sm font-bold text-dark-text">WAN Throughput</h3>
+                        <i class="fa-solid fa-up-right-and-down-left-from-center text-xs text-gray-400 dark:text-gray-500"></i>
+                    </div>
                     <span class="text-xs text-gray-400">Last 6 Hours</span>
                 </div>
                 <div class="relative h-full w-full pb-4">
@@ -306,8 +312,10 @@
 
             <div class="col-span-12 lg:col-span-3 card p-4 h-80 bg-dark-card cursor-pointer hover:shadow-lg transition-shadow" onclick="openApplicationTrends()">
                 <div class="flex justify-between items-center mb-2">
-                    <h3 class="text-sm font-bold text-dark-text">Top Applications</h3>
-                    <i class="fa-solid fa-up-right-and-down-left-from-center text-xs text-gray-400 dark:text-gray-500"></i>
+                    <div class="flex items-center gap-2">
+                        <h3 class="text-sm font-bold text-dark-text">Top Applications</h3>
+                        <i class="fa-solid fa-up-right-and-down-left-from-center text-xs text-gray-400 dark:text-gray-500"></i>
+                    </div>
                 </div>
                 <div class="flex items-center justify-center gap-4" style="height: calc(100% - 2rem);">
                     <!-- 2/3 area for the donut chart -->
@@ -323,11 +331,11 @@
 
             <div class="col-span-12 lg:col-span-3 card p-4 h-80 bg-dark-card cursor-pointer hover:shadow-lg transition-shadow" onclick="openDHCPTrends()">
                 <div class="flex justify-between items-center mb-3">
-                    <h3 class="text-sm font-bold text-dark-text">DHCP Utilization</h3>
                     <div class="flex items-center gap-2">
-                        <span class="text-xs text-gray-400">Pool Status</span>
+                        <h3 class="text-sm font-bold text-dark-text">DHCP Utilization</h3>
                         <i class="fa-solid fa-up-right-and-down-left-from-center text-xs text-gray-400 dark:text-gray-500"></i>
                     </div>
+                    <span class="text-xs text-gray-400">Pool Status</span>
                 </div>
                 <div class="flex flex-col justify-center" style="height: calc(100% - 2.5rem);">
                     <div class="relative w-full" style="height: 80px; margin-bottom: 1rem;">
@@ -751,6 +759,52 @@
             </div>
         </div>
 
+        <!-- Uplink Health Trends Overlay -->
+        <div id="uplinkHealthTrendsOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-6">
+            <div class="bg-dark-card rounded-lg shadow-2xl w-full max-w-6xl overflow-hidden">
+                <div class="p-6 border-b border-dark-border flex justify-between items-center">
+                    <div class="flex items-center gap-3">
+                        <h2 class="text-xl font-bold text-dark-text">Uplink Health Trends</h2>
+                        <span class="text-xs text-dark-muted">Last 24 Hours</span>
+                    </div>
+                    <button onclick="closeUplinkHealthTrends()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                        <i class="fa-solid fa-times text-2xl"></i>
+                    </button>
+                </div>
+                <div class="p-6">
+                    <div class="card p-4 bg-gray-50 dark:bg-gray-800">
+                        <h3 class="text-sm font-bold text-dark-text mb-3">Latency, Jitter & Packet Loss Over Time</h3>
+                        <div style="height: 400px;">
+                            <canvas id="uplinkHealthTrendsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- WAN Throughput Trends Overlay -->
+        <div id="wanThroughputTrendsOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-6">
+            <div class="bg-dark-card rounded-lg shadow-2xl w-full max-w-6xl overflow-hidden">
+                <div class="p-6 border-b border-dark-border flex justify-between items-center">
+                    <div class="flex items-center gap-3">
+                        <h2 class="text-xl font-bold text-dark-text">WAN Throughput Trends</h2>
+                        <span class="text-xs text-dark-muted">Last 24 Hours</span>
+                    </div>
+                    <button onclick="closeWanThroughputTrends()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                        <i class="fa-solid fa-times text-2xl"></i>
+                    </button>
+                </div>
+                <div class="p-6">
+                    <div class="card p-4 bg-gray-50 dark:bg-gray-800">
+                        <h3 class="text-sm font-bold text-dark-text mb-3">Upload & Download Throughput Over Time</h3>
+                        <div style="height: 400px;">
+                            <canvas id="wanThroughputTrendsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <footer class="mt-8 mb-4 text-center text-xs text-gray-400 dark:text-gray-500">
             <p>NPM 2.0 Operational Command Center</p>
         </footer>
@@ -783,7 +837,7 @@
     <script src="assets/js/chart-config.js" defer></script>
     <script src="assets/js/navigation.js" defer></script>
     <script src="assets/js/diagnostics-manager.js" defer></script>
-
+    <script src="assets/js/data-loader.js" defer></script>
 
     <!-- Main Application Script - Deferred for Performance -->
     <script src="assets/js/sdwan-main.js" defer></script>
