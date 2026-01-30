@@ -845,32 +845,15 @@
                 trafficTrendsChart.destroy();
             }
 
-            // Generate time labels for 24 hours
-            const timeLabels = [];
-            for (let i = 0; i < 24; i++) {
-                timeLabels.push(i.toString().padStart(2, '0') + ':00');
-            }
+            // Time labels for 24 hours
+            const timeLabels = ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'];
 
-            // Generate realistic traffic data
-            const generateTrafficData = () => {
-                const upload = [];
-                const download = [];
-
-                for (let i = 0; i < 24; i++) {
-                    // Business hours (8-18) have higher traffic
-                    const isBusinessHours = i >= 8 && i < 18;
-                    const baseUpload = isBusinessHours ? 45 : 20;
-                    const baseDownload = isBusinessHours ? 350 : 150;
-
-                    // Add some variance
-                    upload.push(baseUpload + (Math.random() - 0.5) * 30);
-                    download.push(baseDownload + (Math.random() - 0.5) * 150);
-                }
-
-                return { upload, download };
+            // Hardcoded traffic data - consistent with minimized view pattern
+            // Minimized shows last 6h: Tx [25, 30, 55, 45, 35, 40], Rx [120, 150, 450, 320, 250, 210]
+            const trafficData = {
+                upload: [18, 16, 15, 14, 15, 18, 22, 25, 35, 48, 55, 52, 48, 45, 50, 52, 48, 45, 40, 35, 32, 30, 35, 40],
+                download: [140, 130, 120, 115, 118, 125, 140, 165, 250, 380, 450, 420, 380, 350, 360, 370, 340, 320, 280, 250, 230, 210, 200, 210]
             };
-
-            const trafficData = generateTrafficData();
 
             // Create the Traffic trend chart
             trafficTrendsChart = new Chart(document.getElementById('trafficTrendsChart'), {
@@ -1013,10 +996,10 @@
                 allPortsTrafficChart.destroy();
             }
 
-            // Use the same hardcoded data as the Error Monitor summary chart for consistency
-            const errorLabels = ['Ge48', 'Ge3', 'Ge12', 'Ge27', 'Ge42'];
-            const errorData = [487, 342, 156, 89, 52];
-            const errorColors = ['#ef4444', '#f97316', '#f59e0b', '#eab308', '#84cc16'];
+            // Hardcoded error data for all ports with errors (expanded from top 5 summary)
+            const errorLabels = ['Ge48', 'Ge3', 'Ge12', 'Ge27', 'Ge42', 'Ge15', 'Ge31', 'Ge8', 'Ge22', 'Ge36', 'Ge44', 'Ge19', 'Ge7', 'Ge33', 'Ge46'];
+            const errorData = [487, 342, 156, 89, 52, 45, 38, 32, 28, 24, 19, 15, 12, 8, 5];
+            const errorColors = ['#ef4444', '#ef4444', '#f97316', '#f97316', '#f59e0b', '#f59e0b', '#eab308', '#eab308', '#eab308', '#84cc16', '#84cc16', '#84cc16', '#22c55e', '#22c55e', '#22c55e'];
 
             // Create the expanded Error Monitor chart
             errorMonitorExpandedChart = new Chart(document.getElementById('errorMonitorExpandedChart'), {
@@ -1073,14 +1056,11 @@
                 }
             });
 
-            // Get all ports with traffic (sorted by download traffic descending)
-            const portsWithTraffic = ports.filter(p => p.status === 'up').sort((a, b) => parseFloat(b.downloadSpeed) - parseFloat(a.downloadSpeed)).slice(0, 15);
-
-            // Generate labels and data for traffic chart (convert to MB - simulated cumulative traffic)
-            const trafficLabels = portsWithTraffic.map(p => p.name);
-            // Simulate cumulative traffic in MB (speed * time factor)
-            const uploadData = portsWithTraffic.map(p => Math.round(parseFloat(p.uploadSpeed) * 60));
-            const downloadData = portsWithTraffic.map(p => Math.round(parseFloat(p.downloadSpeed) * 60));
+            // Hardcoded port traffic data (top 15 ports by download traffic)
+            const trafficLabels = ['Ge48', 'Ge24', 'Ge12', 'Ge36', 'Ge8', 'Ge16', 'Ge32', 'Ge4', 'Ge20', 'Ge28', 'Ge40', 'Ge44', 'Ge6', 'Ge18', 'Ge30'];
+            // Cumulative traffic in MB
+            const uploadData = [18000, 2400, 2100, 1980, 1860, 1740, 1620, 1500, 1380, 1260, 1140, 1020, 900, 780, 660];
+            const downloadData = [48000, 5400, 4800, 4500, 4200, 3900, 3600, 3300, 3000, 2700, 2400, 2100, 1800, 1500, 1200];
 
             // Create the all ports traffic chart
             allPortsTrafficChart = new Chart(document.getElementById('allPortsTrafficChart'), {

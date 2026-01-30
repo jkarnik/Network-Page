@@ -39,23 +39,12 @@
             Chart.unregister(ChartDataLabels);
 
             // 1. Client Journey Funnel - Dial Gauges
-            // Generate random percentages with mean 95% and std dev 2% (using Box-Muller transform)
-            function generateRandomPercentage(mean = 95, stdDev = 2) {
-                // Box-Muller transform for normal distribution
-                const u1 = Math.random();
-                const u2 = Math.random();
-                const z0 = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
-                const value = mean + z0 * stdDev;
-                // Cap at 100%
-                return Math.min(100, value);
-            }
-
-            // Generate percentages for each stage
+            // Hardcoded percentages for each stage
             const funnelData = {
-                association: generateRandomPercentage(), // Random ~95%
-                authentication: generateRandomPercentage(), // Random ~95%
-                dhcp: generateRandomPercentage(), // Random ~95%
-                dns: generateRandomPercentage(), // Random ~95%
+                association: 96.2,
+                authentication: 94.8,
+                dhcp: 95.5,
+                dns: 97.1,
                 success: 0 // Will be calculated as product
             };
 
@@ -347,24 +336,15 @@
                 funnelTimeSeriesChart.destroy();
             }
 
-            // Sample time series data - in a real app, this would come from an API
+            // Time series data - hardcoded to end at current gauge values
             const timeLabels = ['00:00', '02:00', '04:00', '06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00', 'Now'];
 
-            // Helper function to generate random percentage with normal distribution
-            function generateRandomPercentageTS(mean = 95, stdDev = 2) {
-                const u1 = Math.random();
-                const u2 = Math.random();
-                const z0 = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
-                const value = mean + z0 * stdDev;
-                return Math.min(100, value);
-            }
-
-            // Generate random percentages for time series (mean 95%, std dev 2%)
+            // Hardcoded percentages for time series - ends at gauge values (association: 96.2, authentication: 94.8, dhcp: 95.5, dns: 97.1)
             const percentageData = {
-                association: timeLabels.map(() => parseFloat(generateRandomPercentageTS().toFixed(2))),
-                authentication: timeLabels.map(() => parseFloat(generateRandomPercentageTS().toFixed(2))),
-                dhcp: timeLabels.map(() => parseFloat(generateRandomPercentageTS().toFixed(2))),
-                dns: timeLabels.map(() => parseFloat(generateRandomPercentageTS().toFixed(2))),
+                association: [95.8, 95.5, 95.2, 95.0, 95.3, 95.8, 96.0, 96.3, 96.5, 96.4, 96.3, 96.1, 96.2],
+                authentication: [94.2, 94.0, 93.8, 93.5, 93.8, 94.2, 94.5, 94.8, 95.0, 95.1, 95.0, 94.9, 94.8],
+                dhcp: [95.0, 94.8, 94.5, 94.2, 94.5, 95.0, 95.2, 95.5, 95.8, 95.7, 95.6, 95.5, 95.5],
+                dns: [96.8, 96.5, 96.2, 96.0, 96.3, 96.8, 97.0, 97.2, 97.4, 97.3, 97.2, 97.1, 97.1],
                 success: [] // Will be calculated as product
             };
 
@@ -833,38 +813,23 @@
                 channelUtilTrendsChart.destroy();
             }
 
-            // Generate time labels for 24 hours
-            const timeLabels = [];
-            for (let i = 0; i < 24; i++) {
-                timeLabels.push(i.toString().padStart(2, '0') + ':00');
-            }
+            // Time labels for 24 hours
+            const timeLabels = ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'];
 
-            // Generate realistic channel utilization data for each band
-            const generateChannelData = (baseWifi, baseInterference) => {
-                const wifiData = [];
-                const interferenceData = [];
-
-                for (let i = 0; i < 24; i++) {
-                    // Business hours (8-18) have higher utilization
-                    const isBusinessHours = i >= 8 && i < 18;
-                    const wifiMultiplier = isBusinessHours ? 1.3 : 0.7;
-                    const variance = (Math.random() - 0.5) * 10;
-
-                    const wifiValue = Math.max(0, Math.min(100, baseWifi * wifiMultiplier + variance));
-                    wifiData.push(wifiValue);
-
-                    const interferenceVariance = (Math.random() - 0.5) * 3;
-                    const interferenceValue = Math.max(0, Math.min(100 - wifiValue, baseInterference + interferenceVariance));
-                    interferenceData.push(interferenceValue);
-                }
-
-                return { wifi: wifiData, interference: interferenceData };
+            // Hardcoded channel utilization data - ends at current bar chart values
+            // Minimized shows: 2.4GHz [45, 15], 5GHz [20, 5], 6GHz [5, 0]
+            const band24Data = {
+                wifi: [32, 30, 28, 26, 28, 32, 38, 42, 48, 52, 55, 54, 52, 50, 51, 52, 50, 48, 46, 45, 44, 43, 44, 45],
+                interference: [12, 11, 10, 9, 10, 12, 13, 14, 15, 16, 17, 17, 16, 15, 15, 16, 16, 15, 15, 15, 14, 14, 14, 15]
             };
-
-            // Generate data for each band
-            const band24Data = generateChannelData(45, 15);
-            const band5Data = generateChannelData(20, 5);
-            const band6Data = generateChannelData(5, 0);
+            const band5Data = {
+                wifi: [14, 13, 12, 11, 12, 14, 16, 18, 22, 25, 28, 27, 25, 23, 24, 25, 24, 22, 21, 20, 19, 19, 19, 20],
+                interference: [4, 4, 3, 3, 3, 4, 4, 5, 5, 6, 6, 6, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+            };
+            const band6Data = {
+                wifi: [3, 3, 2, 2, 2, 3, 4, 4, 5, 6, 7, 7, 6, 6, 6, 6, 6, 5, 5, 5, 5, 5, 5, 5],
+                interference: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            };
 
             // Create the Channel Utilization trend chart
             channelUtilTrendsChart = new Chart(document.getElementById('channelUtilTrendsChart'), {

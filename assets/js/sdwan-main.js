@@ -821,31 +821,16 @@
                 appTrendsChart.destroy();
             }
 
-            // Generate time labels for 24 hours
-            const timeLabels = [];
-            for (let i = 0; i < 24; i++) {
-                timeLabels.push(i.toString().padStart(2, '0') + ':00');
-            }
+            // Time labels for 24 hours
+            const timeLabels = ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'];
 
-            // Generate realistic trend data for each application
-            const generateTrendData = (baseValue, variance, trend = 0) => {
-                const data = [];
-                for (let i = 0; i < 24; i++) {
-                    const trendEffect = trend * i;
-                    const randomVariance = (Math.random() - 0.5) * variance;
-                    const timeEffect = Math.sin(i / 24 * Math.PI * 2) * (variance * 0.3);
-                    data.push(Math.max(0, baseValue + trendEffect + randomVariance + timeEffect));
-                }
-                return data;
-            };
-
-            // Application trend data (in Mbps)
+            // Hardcoded application trend data (in Mbps) - ends at current donut values (M365:45, Teams:25, Salesforce:15, YouTube:5, Other:10)
             const appTrendsData = {
-                'M365': generateTrendData(45, 8, 0.2),
-                'Teams': generateTrendData(25, 6, -0.1),
-                'Salesforce': generateTrendData(15, 4, 0.05),
-                'YouTube': generateTrendData(5, 3, 0.15),
-                'Other': generateTrendData(10, 3, 0)
+                'M365': [38, 36, 35, 34, 35, 37, 40, 44, 48, 50, 52, 51, 49, 48, 50, 52, 51, 49, 47, 46, 45, 44, 44, 45],
+                'Teams': [18, 16, 15, 14, 15, 18, 22, 26, 30, 32, 33, 32, 30, 28, 29, 30, 29, 28, 27, 26, 25, 24, 24, 25],
+                'Salesforce': [12, 11, 10, 10, 10, 11, 13, 15, 17, 18, 19, 18, 17, 16, 17, 18, 17, 16, 16, 15, 15, 15, 15, 15],
+                'YouTube': [3, 2, 2, 2, 2, 2, 3, 4, 5, 6, 7, 8, 8, 7, 6, 5, 5, 5, 5, 5, 5, 5, 5, 5],
+                'Other': [8, 7, 7, 7, 7, 8, 9, 10, 11, 12, 12, 11, 11, 10, 10, 11, 11, 10, 10, 10, 10, 10, 10, 10]
             };
 
             // Colors matching the donut chart
@@ -977,29 +962,11 @@
                 dhcpTrendsChart.destroy();
             }
 
-            // Generate time labels for 24 hours
-            const timeLabels = [];
-            for (let i = 0; i < 24; i++) {
-                timeLabels.push(i.toString().padStart(2, '0') + ':00');
-            }
+            // Time labels for 24 hours
+            const timeLabels = ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'];
 
-            // Generate realistic DHCP utilization data
-            const generateDHCPData = () => {
-                const data = [];
-                const dhcpTotal = 254;
-                // Start around 180, vary throughout the day
-                for (let i = 0; i < 24; i++) {
-                    // Business hours (8-18) have higher utilization
-                    const isBusinessHours = i >= 8 && i < 18;
-                    const baseValue = isBusinessHours ? 185 : 165;
-                    const variance = Math.random() * 15 - 7.5;
-                    const value = Math.max(150, Math.min(dhcpTotal, baseValue + variance));
-                    data.push(value);
-                }
-                return data;
-            };
-
-            const dhcpUsedData = generateDHCPData();
+            // Hardcoded DHCP utilization data - ends at current value of 182
+            const dhcpUsedData = [162, 160, 158, 156, 155, 158, 165, 172, 180, 186, 190, 192, 194, 193, 191, 189, 187, 185, 184, 183, 182, 181, 181, 182];
             const dhcpTotal = 254;
             const dhcpCapacityLine = new Array(24).fill(dhcpTotal);
 
@@ -1138,35 +1105,16 @@
                 uplinkHealthTrendsChart.destroy();
             }
 
-            // Generate time labels for 24 hours
-            const timeLabels = [];
-            for (let i = 0; i < 24; i++) {
-                timeLabels.push(i.toString().padStart(2, '0') + ':00');
-            }
+            // Time labels for 24 hours
+            const timeLabels = ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'];
 
-            // Generate realistic uplink health data
-            const generateUplinkData = () => {
-                const latency = [];
-                const jitter = [];
-                const loss = [];
-
-                for (let i = 0; i < 24; i++) {
-                    // Business hours (8-18) have slightly higher latency
-                    const isBusinessHours = i >= 8 && i < 18;
-                    const baseLatency = isBusinessHours ? 35 : 25;
-                    const baseJitter = isBusinessHours ? 5 : 3;
-                    const baseLoss = isBusinessHours ? 0.3 : 0.1;
-
-                    // Add some variance
-                    latency.push(baseLatency + (Math.random() - 0.5) * 20);
-                    jitter.push(baseJitter + (Math.random() - 0.5) * 4);
-                    loss.push(Math.max(0, baseLoss + (Math.random() - 0.5) * 0.4));
-                }
-
-                return { latency, jitter, loss };
+            // Hardcoded uplink health data - consistent with minimized view pattern
+            // Minimized shows: Latency [24, 28, 45, 120, 35, 26], Jitter [2, 3, 5, 15, 4, 2], Loss [0, 0, 0.5, 2.1, 0.2, 0]
+            const uplinkData = {
+                latency: [24, 25, 26, 27, 28, 30, 35, 40, 45, 55, 80, 120, 95, 60, 45, 40, 35, 32, 30, 28, 26, 25, 25, 26],
+                jitter: [2, 2.2, 2.5, 2.8, 3, 3.5, 4, 4.5, 5, 7, 12, 15, 10, 6, 5, 4.5, 4, 3.5, 3, 2.8, 2.5, 2.2, 2, 2],
+                loss: [0, 0, 0, 0, 0, 0.1, 0.2, 0.3, 0.5, 1.0, 1.8, 2.1, 1.5, 0.8, 0.4, 0.3, 0.2, 0.1, 0.1, 0, 0, 0, 0, 0]
             };
-
-            const uplinkData = generateUplinkData();
 
             // Create the Uplink Health trend chart
             uplinkHealthTrendsChart = new Chart(document.getElementById('uplinkHealthTrendsChart'), {
@@ -1351,32 +1299,15 @@
                 wanThroughputTrendsChart.destroy();
             }
 
-            // Generate time labels for 24 hours
-            const timeLabels = [];
-            for (let i = 0; i < 24; i++) {
-                timeLabels.push(i.toString().padStart(2, '0') + ':00');
-            }
+            // Time labels for 24 hours
+            const timeLabels = ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'];
 
-            // Generate realistic WAN throughput data
-            const generateThroughputData = () => {
-                const upload = [];
-                const download = [];
-
-                for (let i = 0; i < 24; i++) {
-                    // Business hours (8-18) have higher throughput
-                    const isBusinessHours = i >= 8 && i < 18;
-                    const baseUpload = isBusinessHours ? 35 : 15;
-                    const baseDownload = isBusinessHours ? 90 : 40;
-
-                    // Add some variance
-                    upload.push(baseUpload + (Math.random() - 0.5) * 20);
-                    download.push(baseDownload + (Math.random() - 0.5) * 40);
-                }
-
-                return { upload, download };
+            // Hardcoded WAN throughput data - consistent with minimized view pattern
+            // Minimized shows last 6h: Upload [12, 15, 45, 30, 20, 18], Download [40, 55, 120, 85, 60, 50]
+            const throughputData = {
+                upload: [10, 9, 8, 8, 9, 10, 12, 15, 25, 35, 45, 42, 38, 35, 32, 30, 28, 25, 20, 18, 16, 15, 14, 18],
+                download: [35, 32, 30, 28, 30, 35, 40, 55, 75, 100, 120, 115, 105, 95, 90, 85, 80, 70, 60, 50, 48, 45, 48, 50]
             };
-
-            const throughputData = generateThroughputData();
 
             // Create the WAN Throughput trend chart
             wanThroughputTrendsChart = new Chart(document.getElementById('wanThroughputTrendsChart'), {
