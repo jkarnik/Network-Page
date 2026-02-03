@@ -1,14 +1,128 @@
         // Initialize navigation for AP page
         NavigationManager.init('ap');
 
-        // --- ACCESS POINT SELECTOR ---
-        function updateAccessPointView(apName) {
-            console.log('Access point view changed to:', apName);
-            // Update the device info card header
-            document.querySelector('h2.text-lg.font-bold').textContent = apName;
+        // --- DEVICE MANAGEMENT ---
+        let currentDevice = null;
+        let currentDeviceData = null;
 
-            // In a real application, this would reload the data for the selected access point
-            // For now, it just logs the change
+        /**
+         * Initialize the device selector dropdown
+         */
+        async function initDeviceSelector() {
+            try {
+                console.log('AP initDeviceSelector: Starting...');
+                await DataLoader.load();
+                console.log('AP initDeviceSelector: DataLoader loaded');
+                const accessPoints = DataLoader.getDevices('accessPoints');
+                console.log('AP initDeviceSelector: Found', accessPoints.length, 'access points');
+                const selector = document.getElementById('deviceSelector');
+
+                if (!selector) {
+                    console.warn('Device selector element not found');
+                    return;
+                }
+                if (accessPoints.length === 0) {
+                    console.warn('No access points found in data');
+                    return;
+                }
+
+                // Group access points by site
+                const siteGroups = {};
+                accessPoints.forEach(ap => {
+                    if (!siteGroups[ap.site]) {
+                        siteGroups[ap.site] = [];
+                    }
+                    siteGroups[ap.site].push(ap);
+                });
+
+                // Build the dropdown options
+                let optionsHtml = '';
+                Object.keys(siteGroups).sort().forEach(site => {
+                    optionsHtml += `<optgroup label="${site}">`;
+                    siteGroups[site].forEach(ap => {
+                        optionsHtml += `<option value="${ap.id}">${ap.name}</option>`;
+                    });
+                    optionsHtml += '</optgroup>';
+                });
+
+                selector.innerHTML = optionsHtml;
+                console.log('AP initDeviceSelector: Populated dropdown with', accessPoints.length, 'options');
+
+                // Check for URL parameter to pre-select device
+                const urlParams = new URLSearchParams(window.location.search);
+                const deviceParam = urlParams.get('device');
+
+                if (deviceParam) {
+                    // Try to find the device by ID or name
+                    const device = accessPoints.find(ap => ap.id === deviceParam || ap.name === deviceParam);
+                    if (device) {
+                        selector.value = device.id;
+                        currentDevice = device;
+                    }
+                }
+
+                // If no device selected, use the first one
+                if (!currentDevice && accessPoints.length > 0) {
+                    currentDevice = accessPoints[0];
+                    selector.value = currentDevice.id;
+                }
+
+                // Update display
+                if (currentDevice) {
+                    updateDeviceInfo();
+                }
+            } catch (error) {
+                console.error('AP initDeviceSelector failed:', error);
+            }
+        }
+
+        /**
+         * Handle access point selection change
+         */
+        async function updateAccessPointView(deviceId) {
+            const device = DataLoader.getDeviceById(deviceId);
+            if (!device) {
+                console.warn('Device not found:', deviceId);
+                return;
+            }
+
+            currentDevice = device;
+
+            // Update URL without reloading
+            const url = new URL(window.location);
+            url.searchParams.set('device', deviceId);
+            window.history.replaceState({}, '', url);
+
+            // Update device info header
+            updateDeviceInfo();
+        }
+
+        /**
+         * Update the device info header
+         */
+        function updateDeviceInfo() {
+            if (!currentDevice) return;
+
+            // Update device name in the device info card
+            const deviceInfoCard = document.querySelector('.border-l-4.border-newrelic-success');
+            if (deviceInfoCard) {
+                const deviceNameEl = deviceInfoCard.querySelector('h2.text-lg.font-bold');
+                if (deviceNameEl) {
+                    deviceNameEl.textContent = currentDevice.name;
+                }
+
+                // Update model text
+                const modelEl = deviceInfoCard.querySelector('p.text-xs.text-dark-muted');
+                if (modelEl && currentDevice.model) {
+                    modelEl.textContent = currentDevice.model;
+                }
+
+                // Update IP address
+                const ipSpans = deviceInfoCard.querySelectorAll('.font-mono');
+                if (ipSpans[0] && currentDevice.ip) {
+                    ipSpans[0].textContent = currentDevice.ip;
+                }
+            }
         }
 
         // --- TAB SWITCHING LOGIC ---
@@ -315,6 +429,9 @@
 
         // Initialize Everything
         initCharts();
+
+        // Initialize device selector and load device data
+        initDeviceSelector();
 
         // Register charts for theme switching
         themeManager.registerCharts(charts);
@@ -1006,4 +1123,11 @@
                 channelUtilTrendsChart = null;
             }
         }
+
+        // Expose functions to global scope for onclick handlers
+        window.updateAccessPointView = updateAccessPointView;
+        window.openFunnelTimeSeries = openFunnelTimeSeries;
+        window.closeFunnelTimeSeries = closeFunnelTimeSeries;
+        window.openChannelUtilTrends = openChannelUtilTrends;
+        window.closeChannelUtilTrends = closeChannelUtilTrends;
 

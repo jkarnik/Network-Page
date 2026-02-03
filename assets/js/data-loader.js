@@ -517,6 +517,152 @@ const DataLoader = {
         if (this._data?.sites?.[scope]) return 'site';
         if (this._data?.regions?.[scope]) return 'region';
         return 'unknown';
+    },
+
+    // ==================== DEVICE DATA ACCESSORS ====================
+
+    _deviceDefaults: {},
+    _deviceOverrides: {},
+
+    /**
+     * Load device defaults for a specific type
+     * @param {string} deviceType - 'gateway', 'switch', or 'accesspoint'
+     * @returns {Promise<Object|null>} The defaults data or null if not found
+     */
+    async loadDeviceDefaults(deviceType) {
+        if (this._deviceDefaults[deviceType]) {
+            return this._deviceDefaults[deviceType];
+        }
+
+        const typeMap = {
+            'gateway': 'gateway-defaults.json',
+            'gateways': 'gateway-defaults.json',
+            'switch': 'switch-defaults.json',
+            'switches': 'switch-defaults.json',
+            'accesspoint': 'accesspoint-defaults.json',
+            'accessPoints': 'accesspoint-defaults.json'
+        };
+
+        const filename = typeMap[deviceType];
+        if (!filename) {
+            console.warn('Unknown device type:', deviceType);
+            return null;
+        }
+
+        try {
+            const dataPath = this._basePath ? `${this._basePath}/data/${filename}` : `data/${filename}`;
+            const response = await fetch(dataPath);
+            if (!response.ok) {
+                console.warn(`Failed to load device defaults for ${deviceType}: HTTP ${response.status}`);
+                return null;
+            }
+            this._deviceDefaults[deviceType] = await response.json();
+            return this._deviceDefaults[deviceType];
+        } catch (error) {
+            console.warn(`Failed to load device defaults for ${deviceType}:`, error);
+            return null;
+        }
+    },
+
+    /**
+     * Load device override for a specific device ID
+     * @param {string} deviceId - The device ID (e.g., 'gw-nj-primary')
+     * @returns {Promise<Object|null>} The override data or null if not found
+     */
+    async loadDeviceOverride(deviceId) {
+        if (this._deviceOverrides[deviceId] !== undefined) {
+            return this._deviceOverrides[deviceId];
+        }
+
+        try {
+            const dataPath = this._basePath
+                ? `${this._basePath}/data/device-overrides/${deviceId}.json`
+                : `data/device-overrides/${deviceId}.json`;
+            const response = await fetch(dataPath);
+            if (!response.ok) {
+                // No override found - this is normal for most devices
+                this._deviceOverrides[deviceId] = null;
+                return null;
+            }
+            this._deviceOverrides[deviceId] = await response.json();
+            return this._deviceOverrides[deviceId];
+        } catch (error) {
+            // No override found - this is normal for most devices
+            this._deviceOverrides[deviceId] = null;
+            return null;
+        }
+    },
+
+    /**
+     * Get merged device data (defaults + override)
+     * @param {string} deviceId - The device ID
+     * @param {string} deviceType - The device type ('gateway', 'switch', 'accesspoint')
+     * @returns {Promise<Object>} The merged device data
+     */
+    async getDeviceData(deviceId, deviceType) {
+        const defaults = await this.loadDeviceDefaults(deviceType);
+        const override = await this.loadDeviceOverride(deviceId);
+
+        if (!defaults) {
+            return override || {};
+        }
+
+        if (!override) {
+            return defaults;
+        }
+
+        // Deep merge: override takes precedence
+        return this._deepMerge(defaults, override);
+    },
+
+    /**
+     * Deep merge two objects
+     * @private
+     */
+    _deepMerge(target, source) {
+        const result = { ...target };
+
+        for (const key in source) {
+            if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
+                result[key] = this._deepMerge(target[key] || {}, source[key]);
+            } else {
+                result[key] = source[key];
+            }
+        }
+
+        return result;
+    },
+
+    /**
+     * Get device by name from network-data.json
+     * @param {string} name - The device name (e.g., 'GW-NYC-Core-01')
+     * @returns {Object|null} The device object or null if not found
+     */
+    getDeviceByName(name) {
+        const allDevices = this.getAllDevices();
+        return allDevices.find(d => d.name === name || d.id === name) || null;
+    },
+
+    /**
+     * Get device type from device ID or name
+     * @param {string} deviceIdOrName - The device ID or name
+     * @returns {string|null} The device type ('gateways', 'switches', 'accessPoints') or null
+     */
+    getDeviceType(deviceIdOrName) {
+        const device = this.getDeviceByName(deviceIdOrName);
+        if (!device) return null;
+
+        // Check which array contains this device
+        if (this._data?.devices?.gateways?.some(d => d.id === device.id || d.name === device.name)) {
+            return 'gateways';
+        }
+        if (this._data?.devices?.switches?.some(d => d.id === device.id || d.name === device.name)) {
+            return 'switches';
+        }
+        if (this._data?.devices?.accessPoints?.some(d => d.id === device.id || d.name === device.name)) {
+            return 'accessPoints';
+        }
+        return null;
     }
 };
 

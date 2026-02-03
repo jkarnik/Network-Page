@@ -141,10 +141,8 @@
                 </div>
                 <div class="flex items-center gap-4">
                     <div class="relative">
-                        <select id="scopeSelector" onchange="updateSwitchView(this.value)" class="block w-full pl-3 pr-10 py-2 text-sm border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-newrelic-cyan sm:text-sm rounded-md bg-gray-50 border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                            <option value="NYC-Core-Switch-01">NYC-Core-Switch-01</option>
-                            <option value="NYC-Dist-Switch-01">NYC-Dist-Switch-01</option>
-                            <option value="LON-Access-Switch-04">LON-Access-Switch-04</option>
+                        <select id="deviceSelector" onchange="updateSwitchView(this.value)" class="block w-full pl-3 pr-10 py-2 text-sm border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-newrelic-cyan sm:text-sm rounded-md bg-gray-50 border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                            <!-- Options populated dynamically by JavaScript -->
                         </select>
                     </div>
 

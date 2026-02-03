@@ -438,14 +438,18 @@
         // --- DEVICE LIST FUNCTIONS ---
 
         function getDevicePageUrl(deviceName) {
+            // Find the device to get its ID
+            const device = DataLoader.getDeviceByName(deviceName);
+            const deviceId = device ? device.id : deviceName.toLowerCase().replace(/\s+/g, '-');
+
             // Determine device type from name prefix
             const prefix = deviceName.substring(0, 3);
             if (prefix === 'GW-') {
-                return 'sdwan.html';
+                return `sdwan.html?device=${deviceId}`;
             } else if (prefix === 'SW-') {
-                return 'switch.html';
+                return `switch.html?device=${deviceId}`;
             } else if (prefix === 'AP-') {
-                return 'access-point.html';
+                return `access-point.html?device=${deviceId}`;
             }
             return '#'; // Fallback
         }

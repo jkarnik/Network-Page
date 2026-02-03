@@ -1,14 +1,128 @@
         // Initialize navigation for Switch page
         NavigationManager.init('switch');
 
-        // --- SWITCH SELECTION HANDLER ---
-        function updateSwitchView(switchName) {
-            console.log('Switch view changed to:', switchName);
-            // Update the device info card header
-            document.querySelector('h2.text-lg.font-bold').textContent = switchName;
+        // --- DEVICE MANAGEMENT ---
+        let currentDevice = null;
+        let currentDeviceData = null;
 
-            // In a real application, this would reload the port data for the selected switch
-            // For now, it just logs the change
+        /**
+         * Initialize the device selector dropdown
+         */
+        async function initDeviceSelector() {
+            try {
+                console.log('Switch initDeviceSelector: Starting...');
+                await DataLoader.load();
+                console.log('Switch initDeviceSelector: DataLoader loaded');
+                const switches = DataLoader.getDevices('switches');
+                console.log('Switch initDeviceSelector: Found', switches.length, 'switches');
+                const selector = document.getElementById('deviceSelector');
+
+                if (!selector) {
+                    console.warn('Device selector element not found');
+                    return;
+                }
+                if (switches.length === 0) {
+                    console.warn('No switches found in data');
+                    return;
+                }
+
+                // Group switches by site
+                const siteGroups = {};
+                switches.forEach(sw => {
+                    if (!siteGroups[sw.site]) {
+                        siteGroups[sw.site] = [];
+                    }
+                    siteGroups[sw.site].push(sw);
+                });
+
+                // Build the dropdown options
+                let optionsHtml = '';
+                Object.keys(siteGroups).sort().forEach(site => {
+                    optionsHtml += `<optgroup label="${site}">`;
+                    siteGroups[site].forEach(sw => {
+                        optionsHtml += `<option value="${sw.id}">${sw.name}</option>`;
+                    });
+                    optionsHtml += '</optgroup>';
+                });
+
+                selector.innerHTML = optionsHtml;
+                console.log('Switch initDeviceSelector: Populated dropdown with', switches.length, 'options');
+
+                // Check for URL parameter to pre-select device
+                const urlParams = new URLSearchParams(window.location.search);
+                const deviceParam = urlParams.get('device');
+
+                if (deviceParam) {
+                    // Try to find the device by ID or name
+                    const device = switches.find(s => s.id === deviceParam || s.name === deviceParam);
+                    if (device) {
+                        selector.value = device.id;
+                        currentDevice = device;
+                    }
+                }
+
+                // If no device selected, use the first one
+                if (!currentDevice && switches.length > 0) {
+                    currentDevice = switches[0];
+                    selector.value = currentDevice.id;
+                }
+
+                // Update display
+                if (currentDevice) {
+                    updateDeviceInfo();
+                }
+            } catch (error) {
+                console.error('Switch initDeviceSelector failed:', error);
+            }
+        }
+
+        /**
+         * Handle switch selection change
+         */
+        async function updateSwitchView(deviceId) {
+            const device = DataLoader.getDeviceById(deviceId);
+            if (!device) {
+                console.warn('Device not found:', deviceId);
+                return;
+            }
+
+            currentDevice = device;
+
+            // Update URL without reloading
+            const url = new URL(window.location);
+            url.searchParams.set('device', deviceId);
+            window.history.replaceState({}, '', url);
+
+            // Update device info header
+            updateDeviceInfo();
+        }
+
+        /**
+         * Update the device info header
+         */
+        function updateDeviceInfo() {
+            if (!currentDevice) return;
+
+            // Update device name in the device info card
+            const deviceInfoCard = document.querySelector('.border-l-4.border-green-500');
+            if (deviceInfoCard) {
+                const deviceNameEl = deviceInfoCard.querySelector('h2.text-lg.font-bold');
+                if (deviceNameEl) {
+                    deviceNameEl.textContent = currentDevice.name;
+                }
+
+                // Update model text
+                const modelEl = deviceInfoCard.querySelector('p.text-xs.text-gray-500');
+                if (modelEl && currentDevice.model) {
+                    modelEl.textContent = currentDevice.model;
+                }
+
+                // Update IP address
+                const ipSpans = deviceInfoCard.querySelectorAll('.font-mono');
+                if (ipSpans[0] && currentDevice.ip) {
+                    ipSpans[0].textContent = currentDevice.ip;
+                }
+            }
         }
 
         // --- MOCK DATA GENERATION ---
@@ -825,6 +939,9 @@
         renderPortTable();
         initCharts();
 
+        // Initialize device selector and load device data
+        initDeviceSelector();
+
         // Register charts for theme switching
         themeManager.registerCharts(charts);
 
@@ -1163,3 +1280,6 @@
         window.closeTrafficTrends = closeTrafficTrends;
         window.openErrorMonitorExpanded = openErrorMonitorExpanded;
         window.closeErrorMonitorExpanded = closeErrorMonitorExpanded;
+
+        // Expose device management function for dropdown
+        window.updateSwitchView = updateSwitchView;

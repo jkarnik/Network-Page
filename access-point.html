@@ -99,10 +99,8 @@
                 </div>
                 <div class="flex items-center gap-4">
                     <div class="relative">
-                        <select id="scopeSelector" onchange="updateAccessPointView(this.value)" class="block w-full pl-3 pr-10 py-2 text-sm border-dark-border focus:outline-none focus:ring-newrelic-cyan focus:border-newrelic-cyan sm:text-sm rounded-md bg-dark-bg border text-dark-text transition-all">
-                            <option value="NYC-Lobby-AP-01">NYC-Lobby-AP-01</option>
-                            <option value="NYC-ConfRoom-AP-04">NYC-ConfRoom-AP-04</option>
-                            <option value="NJ-Warehouse-AP-12">NJ-Warehouse-AP-12</option>
+                        <select id="deviceSelector" onchange="updateAccessPointView(this.value)" class="block w-full pl-3 pr-10 py-2 text-sm border-dark-border focus:outline-none focus:ring-newrelic-cyan focus:border-newrelic-cyan sm:text-sm rounded-md bg-dark-bg border text-dark-text transition-all">
+                            <!-- Options populated dynamically by JavaScript -->
                         </select>
                     </div>
 

@@ -189,19 +189,19 @@
         "clients": 320
       },
       {
-        "id": "gw-lon-core-01",
-        "name": "GW-LON-Core-01",
+        "id": "gw-nj-primary",
+        "name": "GW-NJ-Primary",
         "site": "NJ-Warehouse",
         "region": "EMEA",
         "ip": "10.2.1.1",
         "model": "Meraki MX250",
         "vendor": "meraki",
-        "status": "online",
+        "status": "warning",
         "clients": 280
       },
       {
-        "id": "gw-lon-edge-02",
-        "name": "GW-LON-Edge-02",
+        "id": "gw-nj-backup",
+        "name": "GW-NJ-Backup",
         "site": "NJ-Warehouse",
         "region": "EMEA",
         "ip": "10.2.1.2",
@@ -2356,8 +2356,8 @@
       "vendor": "meraki",
       "site": "NJ-Warehouse",
       "region": "EMEA",
-      "device": "GW-LON-Edge-02",
-      "deviceId": "gw-lon-edge-02",
+      "device": "GW-NJ-Backup",
+      "deviceId": "gw-nj-backup",
       "message": "High CPU utilization (92%)",
       "timestamp": "2025-01-30T11:45:00Z",
       "timeAgo": "15m ago"
@@ -2577,8 +2577,8 @@
       "vendor": "meraki",
       "site": "NJ-Warehouse",
       "region": "EMEA",
-      "device": "GW-LON-Core-01",
-      "deviceId": "gw-lon-core-01",
+      "device": "GW-NJ-Primary",
+      "deviceId": "gw-nj-primary",
       "message": "Intrusion attempt blocked (SQL injection)",
       "timestamp": "2025-01-30T11:48:00Z",
       "timeAgo": "12m ago"

@@ -98,28 +98,10 @@
                     </div>
                 </div>
                 <div class="flex items-center gap-4">
-                    <!-- Scope Selector -->
+                    <!-- Device Selector -->
                     <div class="relative">
-                        <select id="scopeSelector" onchange="updateDashboardScope(this.value)" class="block w-full pl-3 pr-10 py-2 text-sm border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-newrelic-cyan sm:text-sm rounded-md bg-dark-bg border border-dark-border text-dark-text transition-all">
-                            <option value="Global">Global Organization</option>
-                            <optgroup label="Regions">
-                                <option value="North America">North America</option>
-                                <option value="EMEA">EMEA</option>
-                                <option value="APAC">APAC</option>
-                            </optgroup>
-                            <optgroup label="Sites">
-                                <option value="site:NYC-HQ">NYC-HQ</option>
-                                <option value="site:NJ-Warehouse">NJ-Warehouse</option>
-                                <option value="site:SFO-Branch">SFO-Branch</option>
-                                <option value="site:TOK-Sales">TOK-Sales</option>
-                                <option value="site:MUM-Hub">MUM-Hub</option>
-                                <option value="site:ATL-Retail">ATL-Retail</option>
-                                <option value="site:CHI-Dist">CHI-Dist</option>
-                                <option value="site:BER-R&D">BER-R&D</option>
-                                <option value="site:PAR-Office">PAR-Office</option>
-                                <option value="site:SYD-Office">SYD-Office</option>
-                                <option value="site:BRA-Remote">BRA-Remote</option>
-                            </optgroup>
+                        <select id="deviceSelector" onchange="updateGatewayView(this.value)" class="block w-full pl-3 pr-10 py-2 text-sm border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-newrelic-cyan sm:text-sm rounded-md bg-dark-bg border border-dark-border text-dark-text transition-all">
+                            <!-- Options populated dynamically by JavaScript -->
                         </select>
                     </div>
 
@@ -234,7 +216,7 @@
             <div class="col-span-12 md:col-span-3 card p-4 bg-dark-card" style="min-height: 180px;">
                 <div class="flex justify-between items-start mb-3">
                     <h3 class="text-sm font-bold text-dark-text">Cellular Backup</h3>
-                    <span class="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded dark:bg-blue-900/30 dark:text-blue-300">Active</span>
+                    <span id="cellularStatus" class="text-xs font-medium text-gray-600 bg-gray-100 px-2 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">Standby</span>
                 </div>
                 <div class="flex gap-3" style="height: calc(100% - 44px);">
                     <div class="flex flex-col items-center gap-1 flex-shrink-0 self-start" style="margin-top: 40px;">

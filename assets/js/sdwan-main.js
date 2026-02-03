@@ -1,6 +1,296 @@
         // Initialize navigation for SD-WAN page
         NavigationManager.init('sdwan');
 
+        // --- DEVICE MANAGEMENT ---
+        let currentDevice = null;
+        let currentDeviceData = null;
+
+        /**
+         * Initialize the device selector dropdown
+         */
+        async function initDeviceSelector() {
+            try {
+                console.log('initDeviceSelector: Starting...');
+                await DataLoader.load();
+                console.log('initDeviceSelector: DataLoader loaded');
+                const gateways = DataLoader.getDevices('gateways');
+                console.log('initDeviceSelector: Found', gateways.length, 'gateways');
+                const selector = document.getElementById('deviceSelector');
+                console.log('initDeviceSelector: Selector element:', selector);
+
+                if (!selector) {
+                    console.warn('Device selector element not found');
+                    return;
+                }
+                if (gateways.length === 0) {
+                    console.warn('No gateways found in data');
+                    return;
+                }
+
+            // Group gateways by site
+            const siteGroups = {};
+            gateways.forEach(gw => {
+                if (!siteGroups[gw.site]) {
+                    siteGroups[gw.site] = [];
+                }
+                siteGroups[gw.site].push(gw);
+            });
+
+            // Build the dropdown options
+            let optionsHtml = '';
+            Object.keys(siteGroups).sort().forEach(site => {
+                optionsHtml += `<optgroup label="${site}">`;
+                siteGroups[site].forEach(gw => {
+                    optionsHtml += `<option value="${gw.id}">${gw.name}</option>`;
+                });
+                optionsHtml += '</optgroup>';
+            });
+
+            selector.innerHTML = optionsHtml;
+
+            // Check for URL parameter to pre-select device
+            const urlParams = new URLSearchParams(window.location.search);
+            const deviceParam = urlParams.get('device');
+
+            if (deviceParam) {
+                // Try to find the device by ID or name
+                const device = gateways.find(g => g.id === deviceParam || g.name === deviceParam);
+                if (device) {
+                    selector.value = device.id;
+                    currentDevice = device;
+                }
+            }
+
+            // If no device selected, use the first one
+            if (!currentDevice && gateways.length > 0) {
+                currentDevice = gateways[0];
+                selector.value = currentDevice.id;
+            }
+
+            // Load device data and update display
+            if (currentDevice) {
+                await loadDeviceData(currentDevice.id);
+            }
+            } catch (error) {
+                console.error('initDeviceSelector failed:', error);
+            }
+        }
+
+        /**
+         * Handle gateway selection change
+         */
+        async function updateGatewayView(deviceId) {
+            const device = DataLoader.getDeviceById(deviceId);
+            if (!device) {
+                console.warn('Device not found:', deviceId);
+                return;
+            }
+
+            currentDevice = device;
+
+            // Update URL without reloading
+            const url = new URL(window.location);
+            url.searchParams.set('device', deviceId);
+            window.history.replaceState({}, '', url);
+
+            // Load and apply device data
+            await loadDeviceData(deviceId);
+        }
+
+        /**
+         * Load device data and update all charts
+         */
+        async function loadDeviceData(deviceId) {
+            currentDeviceData = await DataLoader.getDeviceData(deviceId, 'gateway');
+
+            // Update device info header
+            updateDeviceInfo();
+
+            // Update all charts with new data
+            if (charts.cpu && currentDeviceData) {
+                updateChartsWithDeviceData();
+            }
+        }
+
+        /**
+         * Update the device info header
+         */
+        function updateDeviceInfo() {
+            if (!currentDevice) return;
+
+            // Update device name in the device info card
+            const deviceInfoCard = document.querySelector('.border-l-4.border-green-500');
+            if (deviceInfoCard) {
+                const deviceNameEl = deviceInfoCard.querySelector('h2.text-lg.font-bold');
+                if (deviceNameEl) {
+                    deviceNameEl.textContent = currentDevice.name;
+                }
+
+                // Update model text
+                const modelEl = deviceInfoCard.querySelector('p.text-xs.text-gray-500');
+                if (modelEl && currentDevice.model) {
+                    modelEl.textContent = currentDevice.model;
+                }
+
+                // Update IP address
+                const ipSpans = deviceInfoCard.querySelectorAll('.font-mono');
+                if (ipSpans[0] && currentDevice.ip) {
+                    ipSpans[0].textContent = currentDevice.ip;
+                }
+            }
+        }
+
+        /**
+         * Update all charts with device-specific data
+         */
+        function updateChartsWithDeviceData() {
+            if (!currentDeviceData) return;
+
+            // Update CPU gauge
+            if (charts.cpu && currentDeviceData.cpuUsage !== undefined) {
+                charts.cpu.data.datasets[0].data = [currentDeviceData.cpuUsage, 100 - currentDeviceData.cpuUsage];
+                charts.cpu.update();
+                const cpuValue = document.getElementById('cpuValue');
+                if (cpuValue) cpuValue.textContent = currentDeviceData.cpuUsage;
+            }
+
+            // Update Memory gauge
+            if (charts.mem && currentDeviceData.memoryUsage !== undefined) {
+                charts.mem.data.datasets[0].data = [currentDeviceData.memoryUsage, 100 - currentDeviceData.memoryUsage];
+                charts.mem.update();
+                const memValue = document.getElementById('memValue');
+                if (memValue) memValue.textContent = currentDeviceData.memoryUsage;
+            }
+
+            // Update Cellular Backup status
+            const cellularStatusEl = document.getElementById('cellularStatus');
+            if (cellularStatusEl && currentDeviceData.cellular) {
+                const status = currentDeviceData.cellular.status || 'Standby';
+                cellularStatusEl.textContent = status;
+                if (status === 'Active') {
+                    cellularStatusEl.className = 'text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded dark:bg-blue-900/30 dark:text-blue-300';
+                } else {
+                    cellularStatusEl.className = 'text-xs font-medium text-gray-600 bg-gray-100 px-2 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300';
+                }
+            }
+
+            // Update CPU Sparkline
+            if (charts.cpuSparkline && currentDeviceData.cpuTrend) {
+                charts.cpuSparkline.data.labels = currentDeviceData.cpuTrend.labels;
+                charts.cpuSparkline.data.datasets[0].data = currentDeviceData.cpuTrend.data;
+                charts.cpuSparkline.update();
+            }
+
+            // Update Memory Sparkline
+            if (charts.memSparkline && currentDeviceData.memoryTrend) {
+                charts.memSparkline.data.labels = currentDeviceData.memoryTrend.labels;
+                charts.memSparkline.data.datasets[0].data = currentDeviceData.memoryTrend.data;
+                charts.memSparkline.update();
+            }
+
+            // Update Signal Sparkline
+            if (charts.signal && currentDeviceData.signalTrend) {
+                charts.signal.data.labels = currentDeviceData.signalTrend.labels;
+                charts.signal.data.datasets[0].data = currentDeviceData.signalTrend.data;
+                charts.signal.update();
+            }
+
+            // Update Uplink Health chart
+            if (charts.uplink && currentDeviceData.uplinkHealth) {
+                const uplink = currentDeviceData.uplinkHealth;
+                charts.uplink.data.labels = uplink.labels;
+                charts.uplink.data.datasets[0].data = uplink.latency;
+                charts.uplink.data.datasets[1].data = uplink.jitter;
+                charts.uplink.data.datasets[2].data = uplink.loss;
+
+                // Handle spanGaps for ISP failure scenario
+                if (uplink.spanGaps === false) {
+                    charts.uplink.data.datasets[0].spanGaps = false;
+                    charts.uplink.data.datasets[1].spanGaps = false;
+                }
+
+                // Dynamic Y-axis adjustment based on data
+                const latencyMax = Math.max(...uplink.latency.filter(v => v !== null));
+                const jitterMax = Math.max(...uplink.jitter.filter(v => v !== null));
+                const lossMax = Math.max(...uplink.loss.filter(v => v !== null));
+
+                // Calculate appropriate Y-axis max with padding (20% headroom)
+                const yMax = Math.ceil(Math.max(latencyMax, jitterMax) * 1.2);
+                const y1Max = lossMax > 10 ? 100 : Math.ceil(lossMax * 1.5);
+
+                charts.uplink.options.scales.y.suggestedMax = yMax;
+                charts.uplink.options.scales.y1.max = y1Max;
+
+                charts.uplink.update();
+            }
+
+            // Update Throughput chart
+            if (charts.throughput && currentDeviceData.throughput) {
+                const throughput = currentDeviceData.throughput;
+                charts.throughput.data.labels = throughput.labels;
+                charts.throughput.data.datasets[0].data = throughput.upload;
+                charts.throughput.data.datasets[1].data = throughput.download;
+                charts.throughput.update();
+            }
+
+            // Update Top Apps chart
+            if (charts.apps && currentDeviceData.topApps) {
+                const topApps = currentDeviceData.topApps;
+                charts.apps.data.labels = topApps.labels;
+                charts.apps.data.datasets[0].data = topApps.data;
+                if (topApps.colors) {
+                    charts.apps.data.datasets[0].backgroundColor = topApps.colors;
+                }
+                charts.apps.update();
+
+                // Update legend
+                updateAppsLegend(topApps);
+            }
+
+            // Update DHCP
+            if (charts.dhcpCapacity && currentDeviceData.dhcp) {
+                const dhcp = currentDeviceData.dhcp;
+                const dhcpAvailable = dhcp.total - dhcp.used;
+                const dhcpPercentage = ((dhcp.used / dhcp.total) * 100).toFixed(1);
+
+                charts.dhcpCapacity.data.datasets[0].data = [dhcp.used];
+                charts.dhcpCapacity.data.datasets[1].data = [dhcpAvailable];
+                charts.dhcpCapacity.options.scales.x.max = dhcp.total;
+                charts.dhcpCapacity.update();
+
+                const dhcpUsedValue = document.getElementById('dhcpUsedValue');
+                const dhcpAvailableValue = document.getElementById('dhcpAvailableValue');
+                const dhcpPercentageValue = document.getElementById('dhcpPercentageValue');
+                if (dhcpUsedValue) dhcpUsedValue.textContent = dhcp.used;
+                if (dhcpAvailableValue) dhcpAvailableValue.textContent = dhcpAvailable;
+                if (dhcpPercentageValue) dhcpPercentageValue.textContent = dhcpPercentage + '%';
+            }
+        }
+
+        /**
+         * Update the apps legend
+         */
+        function updateAppsLegend(topApps) {
+            const legendContainer = document.getElementById('appsLegend');
+            if (!legendContainer || !topApps) return;
+
+            const colors = topApps.colors || ['#3b82f6', '#6366f1', '#0ea5e9', '#ef4444', '#9ca3af'];
+            const legendHTML = topApps.labels.map((label, index) => {
+                const color = colors[index];
+                const value = topApps.data[index];
+                return `
+                    <div class="flex items-center gap-2 mb-3">
+                        <div class="w-3 h-3 rounded-sm flex-shrink-0" style="background-color: ${color};"></div>
+                        <div class="text-sm text-dark-text">
+                            <span class="font-medium">${label}</span>
+                            <span class="text-xs text-dark-muted ml-1">${value}%</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            legendContainer.innerHTML = legendHTML;
+        }
+
         // --- TAB SWITCHING LOGIC ---
         function switchTab(tabName) {
             // Hide all tab contents
@@ -28,28 +318,6 @@
                 selectedButton.classList.remove('border-transparent', 'text-gray-500', 'dark:text-gray-400');
                 selectedButton.classList.add('border-newrelic-cyan', 'text-blue-600', 'dark:text-blue-400');
             }
-        }
-
-        // --- SCOPE MANAGEMENT ---
-        let currentScope = 'Global';
-        let currentSiteFilter = null;
-
-        function updateDashboardScope(scope) {
-            // Check if this is a site-specific filter
-            let isSiteScope = false;
-            let siteName = null;
-
-            if (scope.startsWith('site:')) {
-                isSiteScope = true;
-                siteName = scope.substring(5); // Remove 'site:' prefix
-                currentSiteFilter = siteName;
-            } else {
-                currentScope = scope;
-                currentSiteFilter = null;
-            }
-
-            // TODO: Update dashboard data based on scope
-            console.log('Scope changed to:', isSiteScope ? siteName : currentScope);
         }
 
         // --- Chart Initialization ---
@@ -294,14 +562,15 @@
             });
 
             // 4. Uplink Health (Dual Axis) [cite: 16]
+            // Timeline: Before 13:45 normal, 13:45 jitter spike, 13:50 ISP failure (100% loss momentarily), Post 13:50 failover to backup
             charts.uplink = new Chart(document.getElementById('uplinkChart'), {
                 type: 'line',
                 data: {
-                    labels: ['00:00','04:00','08:00','12:00','16:00','20:00'],
+                    labels: ['13:30','13:45','13:47','13:49','13:50:00','13:50:05','13:50:10','13:51','13:55','14:00'],
                     datasets: [
                         {
                             label: 'Latency (ms)',
-                            data: [24, 28, 45, 120, 35, 26],
+                            data: [20, 25, 35, 50, null, null, null, 300, 300, 300],
                             borderColor: '#3b82f6',
                             backgroundColor: 'rgba(59, 130, 246, 0.1)',
                             pointRadius: 3,
@@ -312,11 +581,12 @@
                             pointHoverBorderColor: '#fff',
                             pointBorderWidth: 2,
                             yAxisID: 'y',
-                            tension: 0.3
+                            tension: 0.3,
+                            spanGaps: false
                         },
                         {
                             label: 'Jitter (ms)',
-                            data: [2, 3, 5, 15, 4, 2],
+                            data: [5, 100, 300, 500, null, null, null, 30, 30, 30],
                             borderColor: '#a855f7',
                             backgroundColor: 'rgba(168, 85, 247, 0.1)',
                             pointRadius: 3,
@@ -327,11 +597,12 @@
                             pointHoverBorderColor: '#fff',
                             pointBorderWidth: 2,
                             yAxisID: 'y',
-                            tension: 0.3
+                            tension: 0.3,
+                            spanGaps: false
                         },
                         {
                             label: 'Loss (%)',
-                            data: [0, 0, 0.5, 2.1, 0.2, 0],
+                            data: [0.05, 2, 5, 10, 100, 100, 100, 8, 0.4, 0.3],
                             borderColor: '#f87171',
                             backgroundColor: 'rgba(248, 113, 113, 0.1)',
                             pointRadius: 3,
@@ -343,7 +614,7 @@
                             pointBorderWidth: 2,
                             borderDash: [5, 5],
                             yAxisID: 'y1',
-                            tension: 0.1
+                            tension: 0.3
                         }
                     ]
                 },
@@ -369,11 +640,14 @@
                                     if (label) {
                                         label += ': ';
                                     }
+                                    if (context.parsed.y === null) {
+                                        return label + 'ISP Failed';
+                                    }
                                     label += context.parsed.y;
-                                    if (context.datasetIndex === 0) {
-                                        label += ' ms';
-                                    } else {
+                                    if (context.datasetIndex === 2) {
                                         label += '%';
+                                    } else {
+                                        label += ' ms';
                                     }
                                     return label;
                                 }
@@ -381,8 +655,8 @@
                         }
                     },
                     scales: {
-                        y: { type: 'linear', display: true, position: 'left', title: {display: true, text: 'ms'} },
-                        y1: { type: 'linear', display: true, position: 'right', grid: {drawOnChartArea: false}, title: {display: true, text: '%'} }
+                        y: { type: 'linear', display: true, position: 'left', title: {display: true, text: 'ms'}, suggestedMax: 600 },
+                        y1: { type: 'linear', display: true, position: 'right', grid: {drawOnChartArea: false}, title: {display: true, text: '%'}, max: 100 }
                     }
                 }
             });
@@ -589,6 +863,9 @@
 
         // Initialize Everything
         initCharts();
+
+        // Initialize device selector and load device data
+        initDeviceSelector();
 
         // Register charts with theme manager for automatic theme updates
         themeManager.registerCharts(charts);
@@ -1105,16 +1382,40 @@
                 uplinkHealthTrendsChart.destroy();
             }
 
-            // Time labels for 24 hours
-            const timeLabels = ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'];
+            // Use device-specific expanded uplink health data if available
+            let timeLabels, uplinkData;
 
-            // Hardcoded uplink health data - consistent with minimized view pattern
-            // Minimized shows: Latency [24, 28, 45, 120, 35, 26], Jitter [2, 3, 5, 15, 4, 2], Loss [0, 0, 0.5, 2.1, 0.2, 0]
-            const uplinkData = {
-                latency: [24, 25, 26, 27, 28, 30, 35, 40, 45, 55, 80, 120, 95, 60, 45, 40, 35, 32, 30, 28, 26, 25, 25, 26],
-                jitter: [2, 2.2, 2.5, 2.8, 3, 3.5, 4, 4.5, 5, 7, 12, 15, 10, 6, 5, 4.5, 4, 3.5, 3, 2.8, 2.5, 2.2, 2, 2],
-                loss: [0, 0, 0, 0, 0, 0.1, 0.2, 0.3, 0.5, 1.0, 1.8, 2.1, 1.5, 0.8, 0.4, 0.3, 0.2, 0.1, 0.1, 0, 0, 0, 0, 0]
-            };
+            if (currentDeviceData && currentDeviceData.uplinkHealthExpanded) {
+                // Use data from loaded device data
+                const expanded = currentDeviceData.uplinkHealthExpanded;
+                timeLabels = expanded.labels;
+                uplinkData = {
+                    latency: expanded.latency,
+                    jitter: expanded.jitter,
+                    loss: expanded.loss
+                };
+            } else {
+                // Fallback to default 24-hour pattern
+                timeLabels = ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'];
+                uplinkData = {
+                    latency: [24, 25, 26, 27, 28, 30, 35, 40, 45, 55, 80, 120, 95, 60, 45, 40, 35, 32, 30, 28, 26, 25, 25, 26],
+                    jitter: [2, 2.2, 2.5, 2.8, 3, 3.5, 4, 4.5, 5, 7, 12, 15, 10, 6, 5, 4.5, 4, 3.5, 3, 2.8, 2.5, 2.2, 2, 2],
+                    loss: [0, 0, 0, 0, 0, 0.1, 0.2, 0.3, 0.5, 1.0, 1.8, 2.1, 1.5, 0.8, 0.4, 0.3, 0.2, 0.1, 0.1, 0, 0, 0, 0, 0]
+                };
+            }
+
+            // Determine if data contains ISP failure (null values or 100% loss)
+            const hasIspFailure = uplinkData.latency.some(v => v === null) || uplinkData.loss.some(v => v >= 100);
+            const spanGaps = hasIspFailure ? false : true;
+
+            // Dynamic Y-axis calculation based on data
+            const latencyMax = Math.max(...uplinkData.latency.filter(v => v !== null));
+            const jitterMax = Math.max(...uplinkData.jitter.filter(v => v !== null));
+            const lossMax = Math.max(...uplinkData.loss.filter(v => v !== null));
+
+            // Calculate appropriate Y-axis max with padding (20% headroom)
+            const yAxisMax = Math.ceil(Math.max(latencyMax, jitterMax) * 1.2);
+            const y1AxisMax = lossMax > 10 ? 100 : Math.ceil(lossMax * 1.5);
 
             // Create the Uplink Health trend chart
             uplinkHealthTrendsChart = new Chart(document.getElementById('uplinkHealthTrendsChart'), {
@@ -1137,7 +1438,8 @@
                             pointBorderWidth: 2,
                             tension: 0.4,
                             fill: true,
-                            yAxisID: 'y'
+                            yAxisID: 'y',
+                            spanGaps: spanGaps
                         },
                         {
                             label: 'Jitter (ms)',
@@ -1154,7 +1456,8 @@
                             pointBorderWidth: 2,
                             tension: 0.4,
                             fill: true,
-                            yAxisID: 'y'
+                            yAxisID: 'y',
+                            spanGaps: spanGaps
                         },
                         {
                             label: 'Packet Loss (%)',
@@ -1170,7 +1473,7 @@
                             pointHoverBorderColor: '#fff',
                             pointBorderWidth: 2,
                             borderDash: [5, 5],
-                            tension: 0.4,
+                            tension: 0.3,
                             fill: true,
                             yAxisID: 'y1'
                         }
@@ -1207,6 +1510,9 @@
                                     if (label) {
                                         label += ': ';
                                     }
+                                    if (context.parsed.y === null) {
+                                        return label + 'ISP Failed';
+                                    }
                                     if (context.dataset.yAxisID === 'y1') {
                                         label += context.parsed.y.toFixed(2) + '%';
                                     } else {
@@ -1236,6 +1542,7 @@
                             display: true,
                             position: 'left',
                             beginAtZero: true,
+                            suggestedMax: yAxisMax,
                             title: {
                                 display: true,
                                 text: 'Latency & Jitter (ms)',
@@ -1256,6 +1563,7 @@
                             display: true,
                             position: 'right',
                             beginAtZero: true,
+                            max: y1AxisMax,
                             title: {
                                 display: true,
                                 text: 'Packet Loss (%)',
@@ -1439,3 +1747,6 @@
         window.closeUplinkHealthTrends = closeUplinkHealthTrends;
         window.openWanThroughputTrends = openWanThroughputTrends;
         window.closeWanThroughputTrends = closeWanThroughputTrends;
+
+        // Expose device management function for dropdown
+        window.updateGatewayView = updateGatewayView;
