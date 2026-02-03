@@ -1688,7 +1688,7 @@
             });
 
             // Get sites for failover events chart
-            const sites = DataLoader.getSites ? DataLoader.getSites() : ['NYC-HQ', 'LON-Warehouse', 'SFO-Branch', 'TOK-Sales', 'MUM-Hub'];
+            const sites = DataLoader.getSites ? DataLoader.getSites() : ['NYC-HQ', 'NJ-Warehouse', 'SFO-Branch', 'TOK-Sales', 'MUM-Hub'];
             const siteNames = Object.keys(sites).slice(0, 8);
 
             // Generate failover events data

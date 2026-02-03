@@ -294,14 +294,15 @@
             });
 
             // 4. Uplink Health (Dual Axis) [cite: 16]
+            // Timeline: Before 13:45 normal, 13:45 jitter spike, 13:50 ISP failure (100% loss momentarily), Post 13:50 failover to backup
             charts.uplink = new Chart(document.getElementById('uplinkChart'), {
                 type: 'line',
                 data: {
-                    labels: ['00:00','04:00','08:00','12:00','16:00','20:00'],
+                    labels: ['13:30','13:45','13:47','13:49','13:50:00','13:50:05','13:50:10','13:51','13:55','14:00'],
                     datasets: [
                         {
                             label: 'Latency (ms)',
-                            data: [24, 28, 45, 120, 35, 26],
+                            data: [20, 25, 35, 50, null, null, null, 300, 300, 300],
                             borderColor: '#3b82f6',
                             backgroundColor: 'rgba(59, 130, 246, 0.1)',
                             pointRadius: 3,
@@ -312,11 +313,12 @@
                             pointHoverBorderColor: '#fff',
                             pointBorderWidth: 2,
                             yAxisID: 'y',
-                            tension: 0.3
+                            tension: 0.3,
+                            spanGaps: false
                         },
                         {
                             label: 'Jitter (ms)',
-                            data: [2, 3, 5, 15, 4, 2],
+                            data: [5, 100, 300, 500, null, null, null, 30, 30, 30],
                             borderColor: '#a855f7',
                             backgroundColor: 'rgba(168, 85, 247, 0.1)',
                             pointRadius: 3,
@@ -327,11 +329,12 @@
                             pointHoverBorderColor: '#fff',
                             pointBorderWidth: 2,
                             yAxisID: 'y',
-                            tension: 0.3
+                            tension: 0.3,
+                            spanGaps: false
                         },
                         {
                             label: 'Loss (%)',
-                            data: [0, 0, 0.5, 2.1, 0.2, 0],
+                            data: [0.05, 2, 5, 10, 100, 100, 100, 8, 0.4, 0.3],
                             borderColor: '#f87171',
                             backgroundColor: 'rgba(248, 113, 113, 0.1)',
                             pointRadius: 3,
@@ -343,7 +346,7 @@
                             pointBorderWidth: 2,
                             borderDash: [5, 5],
                             yAxisID: 'y1',
-                            tension: 0.1
+                            tension: 0.3
                         }
                     ]
                 },
@@ -369,11 +372,14 @@
                                     if (label) {
                                         label += ': ';
                                     }
+                                    if (context.parsed.y === null) {
+                                        return label + 'ISP Failed';
+                                    }
                                     label += context.parsed.y;
-                                    if (context.datasetIndex === 0) {
-                                        label += ' ms';
-                                    } else {
+                                    if (context.datasetIndex === 2) {
                                         label += '%';
+                                    } else {
+                                        label += ' ms';
                                     }
                                     return label;
                                 }
@@ -381,8 +387,8 @@
                         }
                     },
                     scales: {
-                        y: { type: 'linear', display: true, position: 'left', title: {display: true, text: 'ms'} },
-                        y1: { type: 'linear', display: true, position: 'right', grid: {drawOnChartArea: false}, title: {display: true, text: '%'} }
+                        y: { type: 'linear', display: true, position: 'left', title: {display: true, text: 'ms'}, suggestedMax: 600 },
+                        y1: { type: 'linear', display: true, position: 'right', grid: {drawOnChartArea: false}, title: {display: true, text: '%'}, max: 100 }
                     }
                 }
             });
@@ -1105,15 +1111,20 @@
                 uplinkHealthTrendsChart.destroy();
             }
 
-            // Time labels for 24 hours
-            const timeLabels = ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'];
+            // Time labels showing 6-hour window (8:30-14:30) with higher granularity around the incident
+            const timeLabels = ['8:30','9:00','9:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:10','13:20','13:30','13:40','13:45','13:46','13:47','13:48','13:49','13:50:00','13:50:05','13:50:10','13:51','13:52','13:55','14:00','14:10','14:20','14:30'];
 
-            // Hardcoded uplink health data - consistent with minimized view pattern
-            // Minimized shows: Latency [24, 28, 45, 120, 35, 26], Jitter [2, 3, 5, 15, 4, 2], Loss [0, 0, 0.5, 2.1, 0.2, 0]
+            // ISP Failure scenario:
+            // Before 13:45: latency 20ms, packet loss <0.1%, jitter 5ms
+            // At 13:45: jitter starts increasing, latency starts increasing, packet loss starts increasing
+            // 13:45-13:49: gradual increase in jitter, latency, and packet loss
+            // At 13:49: packet loss at 10%, jitter at 500ms
+            // At 13:50: packet loss spikes to 100% (ISP Failed) - plateau for ~10 seconds
+            // Post 13:50: failover to backup - latency 300ms, jitter 30ms, packet loss <0.5%
             const uplinkData = {
-                latency: [24, 25, 26, 27, 28, 30, 35, 40, 45, 55, 80, 120, 95, 60, 45, 40, 35, 32, 30, 28, 26, 25, 25, 26],
-                jitter: [2, 2.2, 2.5, 2.8, 3, 3.5, 4, 4.5, 5, 7, 12, 15, 10, 6, 5, 4.5, 4, 3.5, 3, 2.8, 2.5, 2.2, 2, 2],
-                loss: [0, 0, 0, 0, 0, 0.1, 0.2, 0.3, 0.5, 1.0, 1.8, 2.1, 1.5, 0.8, 0.4, 0.3, 0.2, 0.1, 0.1, 0, 0, 0, 0, 0]
+                latency: [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 25, 30, 35, 42, 50, null, null, null, 300, 300, 300, 300, 300, 300, 300],
+                jitter: [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 100, 200, 300, 400, 500, null, null, null, 30, 30, 30, 30, 30, 30, 30],
+                loss: [0.05, 0.05, 0.06, 0.05, 0.06, 0.05, 0.05, 0.06, 0.05, 0.05, 0.06, 0.05, 0.07, 0.05, 2, 4, 5, 7, 10, 100, 100, 100, 8, 2, 0.4, 0.35, 0.3, 0.35, 0.3]
             };
 
             // Create the Uplink Health trend chart
@@ -1137,7 +1148,8 @@
                             pointBorderWidth: 2,
                             tension: 0.4,
                             fill: true,
-                            yAxisID: 'y'
+                            yAxisID: 'y',
+                            spanGaps: false
                         },
                         {
                             label: 'Jitter (ms)',
@@ -1154,7 +1166,8 @@
                             pointBorderWidth: 2,
                             tension: 0.4,
                             fill: true,
-                            yAxisID: 'y'
+                            yAxisID: 'y',
+                            spanGaps: false
                         },
                         {
                             label: 'Packet Loss (%)',
@@ -1170,7 +1183,7 @@
                             pointHoverBorderColor: '#fff',
                             pointBorderWidth: 2,
                             borderDash: [5, 5],
-                            tension: 0.4,
+                            tension: 0.3,
                             fill: true,
                             yAxisID: 'y1'
                         }
@@ -1207,6 +1220,9 @@
                                     if (label) {
                                         label += ': ';
                                     }
+                                    if (context.parsed.y === null) {
+                                        return label + 'ISP Failed';
+                                    }
                                     if (context.dataset.yAxisID === 'y1') {
                                         label += context.parsed.y.toFixed(2) + '%';
                                     } else {
@@ -1236,6 +1252,7 @@
                             display: true,
                             position: 'left',
                             beginAtZero: true,
+                            suggestedMax: 600,
                             title: {
                                 display: true,
                                 text: 'Latency & Jitter (ms)',
@@ -1256,6 +1273,7 @@
                             display: true,
                             position: 'right',
                             beginAtZero: true,
+                            max: 100,
                             title: {
                                 display: true,
                                 text: 'Packet Loss (%)',

@@ -33,7 +33,7 @@
       "health": 88,
       "trend": "-2.1%",
       "sites": [
-        "LON-Warehouse",
+        "NJ-Warehouse",
         "BER-R&D",
         "PAR-Office"
       ]
@@ -63,9 +63,9 @@
       "trend": "2.1%",
       "vendor": "mixed"
     },
-    "LON-Warehouse": {
-      "id": "lon-warehouse",
-      "name": "LON-Warehouse",
+    "NJ-Warehouse": {
+      "id": "nj-warehouse",
+      "name": "NJ-Warehouse",
       "region": "EMEA",
       "deviceCount": 68,
       "clientCount": 650,
@@ -191,7 +191,7 @@
       {
         "id": "gw-lon-core-01",
         "name": "GW-LON-Core-01",
-        "site": "LON-Warehouse",
+        "site": "NJ-Warehouse",
         "region": "EMEA",
         "ip": "10.2.1.1",
         "model": "Meraki MX250",
@@ -202,7 +202,7 @@
       {
         "id": "gw-lon-edge-02",
         "name": "GW-LON-Edge-02",
-        "site": "LON-Warehouse",
+        "site": "NJ-Warehouse",
         "region": "EMEA",
         "ip": "10.2.1.2",
         "model": "Meraki MX84",
@@ -509,7 +509,7 @@
       {
         "id": "sw-lon-core-01",
         "name": "SW-LON-Core-01",
-        "site": "LON-Warehouse",
+        "site": "NJ-Warehouse",
         "region": "EMEA",
         "ip": "10.2.2.1",
         "model": "Meraki MS425-32",
@@ -521,7 +521,7 @@
       {
         "id": "sw-lon-dist-01",
         "name": "SW-LON-Dist-01",
-        "site": "LON-Warehouse",
+        "site": "NJ-Warehouse",
         "region": "EMEA",
         "ip": "10.2.2.2",
         "model": "Meraki MS225-48",
@@ -533,7 +533,7 @@
       {
         "id": "sw-lon-dist-02",
         "name": "SW-LON-Dist-02",
-        "site": "LON-Warehouse",
+        "site": "NJ-Warehouse",
         "region": "EMEA",
         "ip": "10.2.2.3",
         "model": "Meraki MS225-48",
@@ -545,7 +545,7 @@
       {
         "id": "sw-lon-access-01",
         "name": "SW-LON-Access-01",
-        "site": "LON-Warehouse",
+        "site": "NJ-Warehouse",
         "region": "EMEA",
         "ip": "10.2.2.4",
         "model": "Meraki MS120-24",
@@ -557,7 +557,7 @@
       {
         "id": "sw-lon-access-02",
         "name": "SW-LON-Access-02",
-        "site": "LON-Warehouse",
+        "site": "NJ-Warehouse",
         "region": "EMEA",
         "ip": "10.2.2.5",
         "model": "Meraki MS120-24",
@@ -569,7 +569,7 @@
       {
         "id": "sw-lon-access-03",
         "name": "SW-LON-Access-03",
-        "site": "LON-Warehouse",
+        "site": "NJ-Warehouse",
         "region": "EMEA",
         "ip": "10.2.2.6",
         "model": "Meraki MS120-24",
@@ -1291,7 +1291,7 @@
       {
         "id": "ap-lon-wh-01",
         "name": "AP-LON-WH-01",
-        "site": "LON-Warehouse",
+        "site": "NJ-Warehouse",
         "region": "EMEA",
         "ip": "10.2.3.1",
         "model": "Meraki MR46",
@@ -1303,7 +1303,7 @@
       {
         "id": "ap-lon-wh-02",
         "name": "AP-LON-WH-02",
-        "site": "LON-Warehouse",
+        "site": "NJ-Warehouse",
         "region": "EMEA",
         "ip": "10.2.3.2",
         "model": "Meraki MR46",
@@ -1315,7 +1315,7 @@
       {
         "id": "ap-lon-wh-03",
         "name": "AP-LON-WH-03",
-        "site": "LON-Warehouse",
+        "site": "NJ-Warehouse",
         "region": "EMEA",
         "ip": "10.2.3.3",
         "model": "Meraki MR46",
@@ -1327,7 +1327,7 @@
       {
         "id": "ap-lon-wh-04",
         "name": "AP-LON-WH-04",
-        "site": "LON-Warehouse",
+        "site": "NJ-Warehouse",
         "region": "EMEA",
         "ip": "10.2.3.4",
         "model": "Meraki MR46",
@@ -1339,7 +1339,7 @@
       {
         "id": "ap-lon-wh-05",
         "name": "AP-LON-WH-05",
-        "site": "LON-Warehouse",
+        "site": "NJ-Warehouse",
         "region": "EMEA",
         "ip": "10.2.3.5",
         "model": "Meraki MR46",
@@ -1351,7 +1351,7 @@
       {
         "id": "ap-lon-off-01",
         "name": "AP-LON-Office-01",
-        "site": "LON-Warehouse",
+        "site": "NJ-Warehouse",
         "region": "EMEA",
         "ip": "10.2.3.11",
         "model": "Meraki MR56",
@@ -1363,7 +1363,7 @@
       {
         "id": "ap-lon-off-02",
         "name": "AP-LON-Office-02",
-        "site": "LON-Warehouse",
+        "site": "NJ-Warehouse",
         "region": "EMEA",
         "ip": "10.2.3.12",
         "model": "Meraki MR56",
@@ -1375,7 +1375,7 @@
       {
         "id": "ap-lon-off-03",
         "name": "AP-LON-Office-03",
-        "site": "LON-Warehouse",
+        "site": "NJ-Warehouse",
         "region": "EMEA",
         "ip": "10.2.3.13",
         "model": "Meraki MR56",
@@ -1387,7 +1387,7 @@
       {
         "id": "ap-lon-off-04",
         "name": "AP-LON-Office-04",
-        "site": "LON-Warehouse",
+        "site": "NJ-Warehouse",
         "region": "EMEA",
         "ip": "10.2.3.14",
         "model": "Meraki MR56",
@@ -1399,7 +1399,7 @@
       {
         "id": "ap-lon-off-05",
         "name": "AP-LON-Office-05",
-        "site": "LON-Warehouse",
+        "site": "NJ-Warehouse",
         "region": "EMEA",
         "ip": "10.2.3.15",
         "model": "Meraki MR56",
@@ -2354,7 +2354,7 @@
       "severity": "warn",
       "type": "hardware",
       "vendor": "meraki",
-      "site": "LON-Warehouse",
+      "site": "NJ-Warehouse",
       "region": "EMEA",
       "device": "GW-LON-Edge-02",
       "deviceId": "gw-lon-edge-02",
@@ -2380,7 +2380,7 @@
       "severity": "crit",
       "type": "hardware",
       "vendor": "meraki",
-      "site": "LON-Warehouse",
+      "site": "NJ-Warehouse",
       "region": "EMEA",
       "device": "SW-LON-Access-02",
       "deviceId": "sw-lon-access-02",
@@ -2458,7 +2458,7 @@
       "severity": "crit",
       "type": "hardware",
       "vendor": "meraki",
-      "site": "LON-Warehouse",
+      "site": "NJ-Warehouse",
       "region": "EMEA",
       "device": "AP-LON-WH-04",
       "deviceId": "ap-lon-wh-04",
@@ -2575,7 +2575,7 @@
       "severity": "crit",
       "type": "threat",
       "vendor": "meraki",
-      "site": "LON-Warehouse",
+      "site": "NJ-Warehouse",
       "region": "EMEA",
       "device": "GW-LON-Core-01",
       "deviceId": "gw-lon-core-01",
@@ -2601,10 +2601,10 @@
         "latency": 180
       },
       {
-        "site": "LON-Warehouse",
+        "site": "NJ-Warehouse",
         "region": "EMEA",
         "connectionType": "Fiber",
-        "label": "LON-Warehouse (Fiber)",
+        "label": "NJ-Warehouse (Fiber)",
         "latency": 145
       },
       {
