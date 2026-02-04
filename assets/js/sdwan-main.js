@@ -198,7 +198,8 @@
             // Update Uplink Health chart
             if (charts.uplink && currentDeviceData.uplinkHealth) {
                 const uplink = currentDeviceData.uplinkHealth;
-                charts.uplink.data.labels = uplink.labels;
+                // Convert string labels to Date objects for time-based X-axis
+                charts.uplink.data.labels = convertLabelsToTimestamps(uplink.labels);
                 charts.uplink.data.datasets[0].data = uplink.latency;
                 charts.uplink.data.datasets[1].data = uplink.jitter;
                 charts.uplink.data.datasets[2].data = uplink.loss;
@@ -318,6 +319,22 @@
                 selectedButton.classList.remove('border-transparent', 'text-gray-500', 'dark:text-gray-400');
                 selectedButton.classList.add('border-newrelic-cyan', 'text-blue-600', 'dark:text-blue-400');
             }
+        }
+
+        // --- Time Helper Functions ---
+        // Helper function to convert time string to Date object for today
+        function timeStringToDate(timeStr) {
+            const today = new Date();
+            const parts = timeStr.split(':');
+            const hours = parseInt(parts[0], 10);
+            const minutes = parseInt(parts[1], 10);
+            const seconds = parts[2] ? parseInt(parts[2], 10) : 0;
+            return new Date(today.getFullYear(), today.getMonth(), today.getDate(), hours, minutes, seconds);
+        }
+
+        // Convert time labels to Date objects for time-based X-axis
+        function convertLabelsToTimestamps(labels) {
+            return labels.map(label => timeStringToDate(label));
         }
 
         // --- Chart Initialization ---
@@ -563,10 +580,13 @@
 
             // 4. Uplink Health (Dual Axis) [cite: 16]
             // Timeline: Before 13:45 normal, 13:45 jitter spike, 13:50 ISP failure (100% loss momentarily), Post 13:50 failover to backup
+            const uplinkTimeLabels = ['13:30','13:45','13:47','13:49','13:50:00','13:50:05','13:50:10','13:51','13:55','14:00'];
+            const uplinkTimestamps = convertLabelsToTimestamps(uplinkTimeLabels);
+
             charts.uplink = new Chart(document.getElementById('uplinkChart'), {
                 type: 'line',
                 data: {
-                    labels: ['13:30','13:45','13:47','13:49','13:50:00','13:50:05','13:50:10','13:51','13:55','14:00'],
+                    labels: uplinkTimestamps,
                     datasets: [
                         {
                             label: 'Latency (ms)',
@@ -655,6 +675,24 @@
                         }
                     },
                     scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'minute',
+                                displayFormats: {
+                                    minute: 'HH:mm'
+                                },
+                                tooltipFormat: 'HH:mm:ss'
+                            },
+                            title: {
+                                display: false
+                            },
+                            ticks: {
+                                maxRotation: 0,
+                                autoSkip: true,
+                                maxTicksLimit: 8
+                            }
+                        },
                         y: { type: 'linear', display: true, position: 'left', title: {display: true, text: 'ms'}, suggestedMax: 600 },
                         y1: { type: 'linear', display: true, position: 'right', grid: {drawOnChartArea: false}, title: {display: true, text: '%'}, max: 100 }
                     }
@@ -1383,12 +1421,13 @@
             }
 
             // Use device-specific expanded uplink health data if available
-            let timeLabels, uplinkData;
+            let timeLabels, uplinkData, timeStamps;
 
             if (currentDeviceData && currentDeviceData.uplinkHealthExpanded) {
                 // Use data from loaded device data
                 const expanded = currentDeviceData.uplinkHealthExpanded;
                 timeLabels = expanded.labels;
+                timeStamps = convertLabelsToTimestamps(expanded.labels);
                 uplinkData = {
                     latency: expanded.latency,
                     jitter: expanded.jitter,
@@ -1397,6 +1436,7 @@
             } else {
                 // Fallback to default 24-hour pattern
                 timeLabels = ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'];
+                timeStamps = convertLabelsToTimestamps(timeLabels);
                 uplinkData = {
                     latency: [24, 25, 26, 27, 28, 30, 35, 40, 45, 55, 80, 120, 95, 60, 45, 40, 35, 32, 30, 28, 26, 25, 25, 26],
                     jitter: [2, 2.2, 2.5, 2.8, 3, 3.5, 4, 4.5, 5, 7, 12, 15, 10, 6, 5, 4.5, 4, 3.5, 3, 2.8, 2.5, 2.2, 2, 2],
@@ -1421,7 +1461,7 @@
             uplinkHealthTrendsChart = new Chart(document.getElementById('uplinkHealthTrendsChart'), {
                 type: 'line',
                 data: {
-                    labels: timeLabels,
+                    labels: timeStamps,
                     datasets: [
                         {
                             label: 'Latency (ms)',
@@ -1525,6 +1565,14 @@
                     },
                     scales: {
                         x: {
+                            type: 'time',
+                            time: {
+                                unit: 'minute',
+                                displayFormats: {
+                                    minute: 'HH:mm'
+                                },
+                                tooltipFormat: 'HH:mm:ss'
+                            },
                             display: true,
                             grid: {
                                 display: true,
@@ -1533,7 +1581,8 @@
                             ticks: {
                                 maxRotation: 45,
                                 minRotation: 45,
-                                autoSkipPadding: 10,
+                                autoSkip: true,
+                                maxTicksLimit: 12,
                                 font: { size: 10 }
                             }
                         },
