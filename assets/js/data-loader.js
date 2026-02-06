@@ -4,6 +4,7 @@
  */
 const DataLoader = {
     _data: null,
+    _deviceManifest: null,
     _loading: false,
     _loaded: false,
     _callbacks: [],
@@ -14,6 +15,83 @@ const DataLoader = {
      */
     init(basePath = '') {
         this._basePath = basePath;
+    },
+
+    /**
+     * Load device manifest from JSON file
+     * @returns {Promise<Object>} The loaded manifest
+     */
+    async loadDeviceManifest() {
+        if (this._deviceManifest) return this._deviceManifest;
+
+        const manifestPath = this._basePath
+            ? `${this._basePath}/data/devices.json`
+            : 'data/devices.json';
+
+        try {
+            const response = await fetch(manifestPath);
+            if (!response.ok) {
+                throw new Error(`Failed to load device manifest: HTTP ${response.status}`);
+            }
+            this._deviceManifest = await response.json();
+            console.log('Device manifest loaded:', this._deviceManifest.version);
+            return this._deviceManifest;
+        } catch (error) {
+            console.error('Failed to load device manifest:', error);
+            throw error;
+        }
+    },
+
+    /**
+     * Build device arrays from manifest + deviceStatus
+     * @private
+     */
+    _buildDeviceArrays() {
+        if (!this._deviceManifest || !this._data) return;
+
+        const deviceStatus = this._data.deviceStatus || {};
+        const defaultStatus = { status: 'online', clients: 0 };
+
+        // Initialize device arrays
+        this._data.devices = {
+            gateways: [],
+            switches: [],
+            accessPoints: []
+        };
+
+        // Map type to array key
+        const typeMap = {
+            'gateway': 'gateways',
+            'switch': 'switches',
+            'accessPoint': 'accessPoints'
+        };
+
+        // Build arrays from manifest
+        this._deviceManifest.devices.forEach(device => {
+            const arrayKey = typeMap[device.type];
+            if (!arrayKey) return;
+
+            // Merge manifest data with operational status
+            const status = deviceStatus[device.id] || defaultStatus;
+            const mergedDevice = {
+                ...device,
+                status: status.status || 'online',
+                clients: status.clients || 0
+            };
+
+            // Add timeToConnect for access points if available
+            if (device.type === 'accessPoint' && status.timeToConnect) {
+                mergedDevice.timeToConnect = status.timeToConnect;
+            }
+
+            this._data.devices[arrayKey].push(mergedDevice);
+        });
+
+        console.log('Built device arrays from manifest:', {
+            gateways: this._data.devices.gateways.length,
+            switches: this._data.devices.switches.length,
+            accessPoints: this._data.devices.accessPoints.length
+        });
     },
 
     /**
@@ -28,6 +106,9 @@ const DataLoader = {
 
         this._loading = true;
         try {
+            // Load device manifest first
+            await this.loadDeviceManifest();
+
             const dataPath = this._basePath ? `${this._basePath}/data/network-data.json` : 'data/network-data.json';
             console.log('Attempting to load data from:', dataPath);
             console.log('Current location:', window.location.href);
@@ -43,6 +124,10 @@ const DataLoader = {
                 throw new Error(`Failed to fetch data: HTTP ${response.status}`);
             }
             this._data = await response.json();
+
+            // Build device arrays from manifest + deviceStatus
+            this._buildDeviceArrays();
+
             this._loaded = true;
             this._callbacks.forEach(cb => cb(this._data));
             this._callbacks = [];
@@ -522,7 +607,7 @@ const DataLoader = {
     // ==================== DEVICE DATA ACCESSORS ====================
 
     _deviceDefaults: {},
-    _deviceOverrides: {},
+    _deviceOverrides: null,
 
     /**
      * Load device defaults for a specific type
@@ -565,32 +650,43 @@ const DataLoader = {
     },
 
     /**
-     * Load device override for a specific device ID
-     * @param {string} deviceId - The device ID (e.g., 'gw-nj-primary')
-     * @returns {Promise<Object|null>} The override data or null if not found
+     * Load all device overrides from consolidated file
+     * @returns {Promise<Object>} The overrides object keyed by device ID
      */
-    async loadDeviceOverride(deviceId) {
-        if (this._deviceOverrides[deviceId] !== undefined) {
-            return this._deviceOverrides[deviceId];
+    async loadDeviceOverrides() {
+        if (this._deviceOverrides !== null) {
+            return this._deviceOverrides;
         }
 
         try {
             const dataPath = this._basePath
-                ? `${this._basePath}/data/device-overrides/${deviceId}.json`
-                : `data/device-overrides/${deviceId}.json`;
+                ? `${this._basePath}/data/device-overrides.json`
+                : 'data/device-overrides.json';
             const response = await fetch(dataPath);
             if (!response.ok) {
-                // No override found - this is normal for most devices
-                this._deviceOverrides[deviceId] = null;
-                return null;
+                console.warn('Failed to load device overrides:', response.status);
+                this._deviceOverrides = {};
+                return this._deviceOverrides;
             }
-            this._deviceOverrides[deviceId] = await response.json();
-            return this._deviceOverrides[deviceId];
+            const data = await response.json();
+            this._deviceOverrides = data.overrides || {};
+            console.log('Device overrides loaded:', Object.keys(this._deviceOverrides).length, 'devices');
+            return this._deviceOverrides;
         } catch (error) {
-            // No override found - this is normal for most devices
-            this._deviceOverrides[deviceId] = null;
-            return null;
+            console.warn('Failed to load device overrides:', error);
+            this._deviceOverrides = {};
+            return this._deviceOverrides;
         }
+    },
+
+    /**
+     * Get device override for a specific device ID
+     * @param {string} deviceId - The device ID (e.g., 'gw-nj-primary')
+     * @returns {Promise<Object|null>} The override data or null if not found
+     */
+    async loadDeviceOverride(deviceId) {
+        const overrides = await this.loadDeviceOverrides();
+        return overrides[deviceId] || null;
     },
 
     /**
@@ -644,11 +740,40 @@ const DataLoader = {
     },
 
     /**
+     * Get device from manifest by ID
+     * @param {string} deviceId - The device ID
+     * @returns {Object|null} The device from manifest or null
+     */
+    getDeviceFromManifest(deviceId) {
+        if (!this._deviceManifest) return null;
+        return this._deviceManifest.devices.find(d => d.id === deviceId) || null;
+    },
+
+    /**
+     * Get the device manifest
+     * @returns {Object|null} The device manifest
+     */
+    getManifest() {
+        return this._deviceManifest;
+    },
+
+    /**
      * Get device type from device ID or name
      * @param {string} deviceIdOrName - The device ID or name
      * @returns {string|null} The device type ('gateways', 'switches', 'accessPoints') or null
      */
     getDeviceType(deviceIdOrName) {
+        // First check manifest for faster lookup
+        const manifestDevice = this.getDeviceFromManifest(deviceIdOrName);
+        if (manifestDevice) {
+            const typeMap = {
+                'gateway': 'gateways',
+                'switch': 'switches',
+                'accessPoint': 'accessPoints'
+            };
+            return typeMap[manifestDevice.type] || null;
+        }
+
         const device = this.getDeviceByName(deviceIdOrName);
         if (!device) return null;
 

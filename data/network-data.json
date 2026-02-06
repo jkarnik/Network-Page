@@ -164,2164 +164,6 @@
       "vendor": "meraki"
     }
   },
-  "devices": {
-    "gateways": [
-      {
-        "id": "gw-nyc-core-01",
-        "name": "GW-NYC-Core-01",
-        "site": "NYC-HQ",
-        "region": "North America",
-        "ip": "10.1.1.1",
-        "model": "Meraki MX450",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 450
-      },
-      {
-        "id": "gw-nyc-edge-02",
-        "name": "GW-NYC-Edge-02",
-        "site": "NYC-HQ",
-        "region": "North America",
-        "ip": "10.1.1.2",
-        "model": "Mist SSR-120",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 320
-      },
-      {
-        "id": "gw-nj-primary",
-        "name": "GW-NJ-Primary",
-        "site": "NJ-Warehouse",
-        "region": "EMEA",
-        "ip": "10.2.1.1",
-        "model": "Meraki MX250",
-        "vendor": "meraki",
-        "status": "warning",
-        "clients": 280
-      },
-      {
-        "id": "gw-nj-backup",
-        "name": "GW-NJ-Backup",
-        "site": "NJ-Warehouse",
-        "region": "EMEA",
-        "ip": "10.2.1.2",
-        "model": "Meraki MX84",
-        "vendor": "meraki",
-        "status": "warning",
-        "clients": 180
-      },
-      {
-        "id": "gw-sfo-core-01",
-        "name": "GW-SFO-Core-01",
-        "site": "SFO-Branch",
-        "region": "North America",
-        "ip": "10.3.1.1",
-        "model": "Mist SSR-120",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 210
-      },
-      {
-        "id": "gw-sfo-edge-02",
-        "name": "GW-SFO-Edge-02",
-        "site": "SFO-Branch",
-        "region": "North America",
-        "ip": "10.3.1.2",
-        "model": "Mist SSR-120",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 190
-      },
-      {
-        "id": "gw-tok-core-01",
-        "name": "GW-TOK-Core-01",
-        "site": "TOK-Sales",
-        "region": "APAC",
-        "ip": "10.4.1.1",
-        "model": "Meraki MX250",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 195
-      },
-      {
-        "id": "gw-tok-edge-02",
-        "name": "GW-TOK-Edge-02",
-        "site": "TOK-Sales",
-        "region": "APAC",
-        "ip": "10.4.1.2",
-        "model": "Meraki MX84",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 165
-      },
-      {
-        "id": "gw-mum-core-01",
-        "name": "GW-MUM-Core-01",
-        "site": "MUM-Hub",
-        "region": "APAC",
-        "ip": "10.5.1.1",
-        "model": "Meraki MX450",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 420
-      },
-      {
-        "id": "gw-mum-edge-02",
-        "name": "GW-MUM-Edge-02",
-        "site": "MUM-Hub",
-        "region": "APAC",
-        "ip": "10.5.1.2",
-        "model": "Mist SSR-120",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 380
-      },
-      {
-        "id": "gw-atl-core-01",
-        "name": "GW-ATL-Core-01",
-        "site": "ATL-Retail",
-        "region": "North America",
-        "ip": "10.6.1.1",
-        "model": "Meraki MX84",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 145
-      },
-      {
-        "id": "gw-atl-edge-02",
-        "name": "GW-ATL-Edge-02",
-        "site": "ATL-Retail",
-        "region": "North America",
-        "ip": "10.6.1.2",
-        "model": "Meraki MX67",
-        "vendor": "meraki",
-        "status": "critical",
-        "clients": 0
-      },
-      {
-        "id": "gw-chi-core-01",
-        "name": "GW-CHI-Core-01",
-        "site": "CHI-Dist",
-        "region": "North America",
-        "ip": "10.7.1.1",
-        "model": "Mist SSR-120",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 275
-      },
-      {
-        "id": "gw-chi-edge-02",
-        "name": "GW-CHI-Edge-02",
-        "site": "CHI-Dist",
-        "region": "North America",
-        "ip": "10.7.1.2",
-        "model": "Mist SSR-120",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 245
-      },
-      {
-        "id": "gw-ber-core-01",
-        "name": "GW-BER-Core-01",
-        "site": "BER-R&D",
-        "region": "EMEA",
-        "ip": "10.8.1.1",
-        "model": "Mist SSR-120",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 240
-      },
-      {
-        "id": "gw-ber-edge-02",
-        "name": "GW-BER-Edge-02",
-        "site": "BER-R&D",
-        "region": "EMEA",
-        "ip": "10.8.1.2",
-        "model": "Mist SSR-120",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 220
-      },
-      {
-        "id": "gw-par-core-01",
-        "name": "GW-PAR-Core-01",
-        "site": "PAR-Office",
-        "region": "EMEA",
-        "ip": "10.9.1.1",
-        "model": "Meraki MX250",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 195
-      },
-      {
-        "id": "gw-par-edge-02",
-        "name": "GW-PAR-Edge-02",
-        "site": "PAR-Office",
-        "region": "EMEA",
-        "ip": "10.9.1.2",
-        "model": "Meraki MX84",
-        "vendor": "meraki",
-        "status": "warning",
-        "clients": 175
-      },
-      {
-        "id": "gw-syd-core-01",
-        "name": "GW-SYD-Core-01",
-        "site": "SYD-Office",
-        "region": "APAC",
-        "ip": "10.10.1.1",
-        "model": "Mist SSR-120",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 175
-      },
-      {
-        "id": "gw-syd-edge-02",
-        "name": "GW-SYD-Edge-02",
-        "site": "SYD-Office",
-        "region": "APAC",
-        "ip": "10.10.1.2",
-        "model": "Mist SSR-120",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 160
-      },
-      {
-        "id": "gw-bra-core-01",
-        "name": "GW-BRA-Core-01",
-        "site": "BRA-Remote",
-        "region": "North America",
-        "ip": "10.11.1.1",
-        "model": "Meraki MX67",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 95
-      },
-      {
-        "id": "gw-bra-edge-02",
-        "name": "GW-BRA-Edge-02",
-        "site": "BRA-Remote",
-        "region": "North America",
-        "ip": "10.11.1.2",
-        "model": "Meraki MX67",
-        "vendor": "meraki",
-        "status": "warning",
-        "clients": 75
-      }
-    ],
-    "switches": [
-      {
-        "id": "sw-nyc-core-01",
-        "name": "SW-NYC-Core-01",
-        "site": "NYC-HQ",
-        "region": "North America",
-        "ip": "10.1.2.1",
-        "model": "Meraki MS425-32",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 890,
-        "portCount": 48
-      },
-      {
-        "id": "sw-nyc-core-02",
-        "name": "SW-NYC-Core-02",
-        "site": "NYC-HQ",
-        "region": "North America",
-        "ip": "10.1.2.2",
-        "model": "Meraki MS425-32",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 780,
-        "portCount": 48
-      },
-      {
-        "id": "sw-nyc-dist-01",
-        "name": "SW-NYC-Dist-01",
-        "site": "NYC-HQ",
-        "region": "North America",
-        "ip": "10.1.2.3",
-        "model": "Mist EX4400",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 445,
-        "portCount": 48
-      },
-      {
-        "id": "sw-nyc-dist-02",
-        "name": "SW-NYC-Dist-02",
-        "site": "NYC-HQ",
-        "region": "North America",
-        "ip": "10.1.2.4",
-        "model": "Mist EX4400",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 420,
-        "portCount": 48
-      },
-      {
-        "id": "sw-nyc-access-01",
-        "name": "SW-NYC-Access-01",
-        "site": "NYC-HQ",
-        "region": "North America",
-        "ip": "10.1.2.5",
-        "model": "Meraki MS225-48",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 180,
-        "portCount": 48
-      },
-      {
-        "id": "sw-nyc-access-02",
-        "name": "SW-NYC-Access-02",
-        "site": "NYC-HQ",
-        "region": "North America",
-        "ip": "10.1.2.6",
-        "model": "Meraki MS225-48",
-        "vendor": "meraki",
-        "status": "warning",
-        "clients": 165,
-        "portCount": 48
-      },
-      {
-        "id": "sw-nyc-access-03",
-        "name": "SW-NYC-Access-03",
-        "site": "NYC-HQ",
-        "region": "North America",
-        "ip": "10.1.2.7",
-        "model": "Mist EX2300",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 145,
-        "portCount": 24
-      },
-      {
-        "id": "sw-nyc-access-04",
-        "name": "SW-NYC-Access-04",
-        "site": "NYC-HQ",
-        "region": "North America",
-        "ip": "10.1.2.8",
-        "model": "Mist EX2300",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 130,
-        "portCount": 24
-      },
-      {
-        "id": "sw-lon-core-01",
-        "name": "SW-LON-Core-01",
-        "site": "NJ-Warehouse",
-        "region": "EMEA",
-        "ip": "10.2.2.1",
-        "model": "Meraki MS425-32",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 520,
-        "portCount": 48
-      },
-      {
-        "id": "sw-lon-dist-01",
-        "name": "SW-LON-Dist-01",
-        "site": "NJ-Warehouse",
-        "region": "EMEA",
-        "ip": "10.2.2.2",
-        "model": "Meraki MS225-48",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 340,
-        "portCount": 48
-      },
-      {
-        "id": "sw-lon-dist-02",
-        "name": "SW-LON-Dist-02",
-        "site": "NJ-Warehouse",
-        "region": "EMEA",
-        "ip": "10.2.2.3",
-        "model": "Meraki MS225-48",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 290,
-        "portCount": 48
-      },
-      {
-        "id": "sw-lon-access-01",
-        "name": "SW-LON-Access-01",
-        "site": "NJ-Warehouse",
-        "region": "EMEA",
-        "ip": "10.2.2.4",
-        "model": "Meraki MS120-24",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 120,
-        "portCount": 24
-      },
-      {
-        "id": "sw-lon-access-02",
-        "name": "SW-LON-Access-02",
-        "site": "NJ-Warehouse",
-        "region": "EMEA",
-        "ip": "10.2.2.5",
-        "model": "Meraki MS120-24",
-        "vendor": "meraki",
-        "status": "critical",
-        "clients": 0,
-        "portCount": 24
-      },
-      {
-        "id": "sw-lon-access-03",
-        "name": "SW-LON-Access-03",
-        "site": "NJ-Warehouse",
-        "region": "EMEA",
-        "ip": "10.2.2.6",
-        "model": "Meraki MS120-24",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 95,
-        "portCount": 24
-      },
-      {
-        "id": "sw-sfo-core-01",
-        "name": "SW-SFO-Core-01",
-        "site": "SFO-Branch",
-        "region": "North America",
-        "ip": "10.3.2.1",
-        "model": "Mist EX4400",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 280,
-        "portCount": 48
-      },
-      {
-        "id": "sw-sfo-dist-01",
-        "name": "SW-SFO-Dist-01",
-        "site": "SFO-Branch",
-        "region": "North America",
-        "ip": "10.3.2.2",
-        "model": "Mist EX2300",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 165,
-        "portCount": 24
-      },
-      {
-        "id": "sw-sfo-access-01",
-        "name": "SW-SFO-Access-01",
-        "site": "SFO-Branch",
-        "region": "North America",
-        "ip": "10.3.2.3",
-        "model": "Mist EX2300",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 95,
-        "portCount": 24
-      },
-      {
-        "id": "sw-sfo-access-02",
-        "name": "SW-SFO-Access-02",
-        "site": "SFO-Branch",
-        "region": "North America",
-        "ip": "10.3.2.4",
-        "model": "Mist EX2300",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 85,
-        "portCount": 24
-      },
-      {
-        "id": "sw-tok-core-01",
-        "name": "SW-TOK-Core-01",
-        "site": "TOK-Sales",
-        "region": "APAC",
-        "ip": "10.4.2.1",
-        "model": "Meraki MS425-32",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 245,
-        "portCount": 48
-      },
-      {
-        "id": "sw-tok-dist-01",
-        "name": "SW-TOK-Dist-01",
-        "site": "TOK-Sales",
-        "region": "APAC",
-        "ip": "10.4.2.2",
-        "model": "Meraki MS225-48",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 180,
-        "portCount": 48
-      },
-      {
-        "id": "sw-tok-access-01",
-        "name": "SW-TOK-Access-01",
-        "site": "TOK-Sales",
-        "region": "APAC",
-        "ip": "10.4.2.3",
-        "model": "Meraki MS120-24",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 85,
-        "portCount": 24
-      },
-      {
-        "id": "sw-tok-access-02",
-        "name": "SW-TOK-Access-02",
-        "site": "TOK-Sales",
-        "region": "APAC",
-        "ip": "10.4.2.4",
-        "model": "Meraki MS120-24",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 75,
-        "portCount": 24
-      },
-      {
-        "id": "sw-mum-core-01",
-        "name": "SW-MUM-Core-01",
-        "site": "MUM-Hub",
-        "region": "APAC",
-        "ip": "10.5.2.1",
-        "model": "Meraki MS425-32",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 620,
-        "portCount": 48
-      },
-      {
-        "id": "sw-mum-core-02",
-        "name": "SW-MUM-Core-02",
-        "site": "MUM-Hub",
-        "region": "APAC",
-        "ip": "10.5.2.2",
-        "model": "Mist EX4400",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 580,
-        "portCount": 48
-      },
-      {
-        "id": "sw-mum-dist-01",
-        "name": "SW-MUM-Dist-01",
-        "site": "MUM-Hub",
-        "region": "APAC",
-        "ip": "10.5.2.3",
-        "model": "Mist EX4400",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 340,
-        "portCount": 48
-      },
-      {
-        "id": "sw-mum-dist-02",
-        "name": "SW-MUM-Dist-02",
-        "site": "MUM-Hub",
-        "region": "APAC",
-        "ip": "10.5.2.4",
-        "model": "Meraki MS225-48",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 290,
-        "portCount": 48
-      },
-      {
-        "id": "sw-mum-access-01",
-        "name": "SW-MUM-Access-01",
-        "site": "MUM-Hub",
-        "region": "APAC",
-        "ip": "10.5.2.5",
-        "model": "Meraki MS120-24",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 145,
-        "portCount": 24
-      },
-      {
-        "id": "sw-mum-access-02",
-        "name": "SW-MUM-Access-02",
-        "site": "MUM-Hub",
-        "region": "APAC",
-        "ip": "10.5.2.6",
-        "model": "Mist EX2300",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 125,
-        "portCount": 24
-      },
-      {
-        "id": "sw-mum-access-03",
-        "name": "SW-MUM-Access-03",
-        "site": "MUM-Hub",
-        "region": "APAC",
-        "ip": "10.5.2.7",
-        "model": "Mist EX2300",
-        "vendor": "mist",
-        "status": "warning",
-        "clients": 110,
-        "portCount": 24
-      },
-      {
-        "id": "sw-atl-core-01",
-        "name": "SW-ATL-Core-01",
-        "site": "ATL-Retail",
-        "region": "North America",
-        "ip": "10.6.2.1",
-        "model": "Meraki MS225-48",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 185,
-        "portCount": 48
-      },
-      {
-        "id": "sw-atl-access-01",
-        "name": "SW-ATL-Access-01",
-        "site": "ATL-Retail",
-        "region": "North America",
-        "ip": "10.6.2.2",
-        "model": "Meraki MS120-24",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 95,
-        "portCount": 24
-      },
-      {
-        "id": "sw-atl-access-02",
-        "name": "SW-ATL-Access-02",
-        "site": "ATL-Retail",
-        "region": "North America",
-        "ip": "10.6.2.3",
-        "model": "Meraki MS120-24",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 85,
-        "portCount": 24
-      },
-      {
-        "id": "sw-chi-core-01",
-        "name": "SW-CHI-Core-01",
-        "site": "CHI-Dist",
-        "region": "North America",
-        "ip": "10.7.2.1",
-        "model": "Mist EX4400",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 380,
-        "portCount": 48
-      },
-      {
-        "id": "sw-chi-dist-01",
-        "name": "SW-CHI-Dist-01",
-        "site": "CHI-Dist",
-        "region": "North America",
-        "ip": "10.7.2.2",
-        "model": "Mist EX4400",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 245,
-        "portCount": 48
-      },
-      {
-        "id": "sw-chi-access-01",
-        "name": "SW-CHI-Access-01",
-        "site": "CHI-Dist",
-        "region": "North America",
-        "ip": "10.7.2.3",
-        "model": "Mist EX2300",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 125,
-        "portCount": 24
-      },
-      {
-        "id": "sw-chi-access-02",
-        "name": "SW-CHI-Access-02",
-        "site": "CHI-Dist",
-        "region": "North America",
-        "ip": "10.7.2.4",
-        "model": "Mist EX2300",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 115,
-        "portCount": 24
-      },
-      {
-        "id": "sw-chi-access-03",
-        "name": "SW-CHI-Access-03",
-        "site": "CHI-Dist",
-        "region": "North America",
-        "ip": "10.7.2.5",
-        "model": "Mist EX2300",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 95,
-        "portCount": 24
-      },
-      {
-        "id": "sw-ber-core-01",
-        "name": "SW-BER-Core-01",
-        "site": "BER-R&D",
-        "region": "EMEA",
-        "ip": "10.8.2.1",
-        "model": "Mist EX4400",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 320,
-        "portCount": 48
-      },
-      {
-        "id": "sw-ber-dist-01",
-        "name": "SW-BER-Dist-01",
-        "site": "BER-R&D",
-        "region": "EMEA",
-        "ip": "10.8.2.2",
-        "model": "Mist EX4400",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 210,
-        "portCount": 48
-      },
-      {
-        "id": "sw-ber-access-01",
-        "name": "SW-BER-Access-01",
-        "site": "BER-R&D",
-        "region": "EMEA",
-        "ip": "10.8.2.3",
-        "model": "Mist EX2300",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 105,
-        "portCount": 24
-      },
-      {
-        "id": "sw-ber-access-02",
-        "name": "SW-BER-Access-02",
-        "site": "BER-R&D",
-        "region": "EMEA",
-        "ip": "10.8.2.4",
-        "model": "Mist EX2300",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 95,
-        "portCount": 24
-      },
-      {
-        "id": "sw-ber-access-03",
-        "name": "SW-BER-Access-03",
-        "site": "BER-R&D",
-        "region": "EMEA",
-        "ip": "10.8.2.5",
-        "model": "Mist EX2300",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 85,
-        "portCount": 24
-      },
-      {
-        "id": "sw-par-core-01",
-        "name": "SW-PAR-Core-01",
-        "site": "PAR-Office",
-        "region": "EMEA",
-        "ip": "10.9.2.1",
-        "model": "Meraki MS425-32",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 265,
-        "portCount": 48
-      },
-      {
-        "id": "sw-par-dist-01",
-        "name": "SW-PAR-Dist-01",
-        "site": "PAR-Office",
-        "region": "EMEA",
-        "ip": "10.9.2.2",
-        "model": "Meraki MS225-48",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 175,
-        "portCount": 48
-      },
-      {
-        "id": "sw-par-access-01",
-        "name": "SW-PAR-Access-01",
-        "site": "PAR-Office",
-        "region": "EMEA",
-        "ip": "10.9.2.3",
-        "model": "Meraki MS120-24",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 95,
-        "portCount": 24
-      },
-      {
-        "id": "sw-par-access-02",
-        "name": "SW-PAR-Access-02",
-        "site": "PAR-Office",
-        "region": "EMEA",
-        "ip": "10.9.2.4",
-        "model": "Meraki MS120-24",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 85,
-        "portCount": 24
-      },
-      {
-        "id": "sw-syd-core-01",
-        "name": "SW-SYD-Core-01",
-        "site": "SYD-Office",
-        "region": "APAC",
-        "ip": "10.10.2.1",
-        "model": "Mist EX4400",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 235,
-        "portCount": 48
-      },
-      {
-        "id": "sw-syd-dist-01",
-        "name": "SW-SYD-Dist-01",
-        "site": "SYD-Office",
-        "region": "APAC",
-        "ip": "10.10.2.2",
-        "model": "Mist EX2300",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 145,
-        "portCount": 24
-      },
-      {
-        "id": "sw-syd-access-01",
-        "name": "SW-SYD-Access-01",
-        "site": "SYD-Office",
-        "region": "APAC",
-        "ip": "10.10.2.3",
-        "model": "Mist EX2300",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 85,
-        "portCount": 24
-      },
-      {
-        "id": "sw-syd-access-02",
-        "name": "SW-SYD-Access-02",
-        "site": "SYD-Office",
-        "region": "APAC",
-        "ip": "10.10.2.4",
-        "model": "Mist EX2300",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 75,
-        "portCount": 24
-      },
-      {
-        "id": "sw-bra-core-01",
-        "name": "SW-BRA-Core-01",
-        "site": "BRA-Remote",
-        "region": "North America",
-        "ip": "10.11.2.1",
-        "model": "Meraki MS225-48",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 125,
-        "portCount": 48
-      },
-      {
-        "id": "sw-bra-access-01",
-        "name": "SW-BRA-Access-01",
-        "site": "BRA-Remote",
-        "region": "North America",
-        "ip": "10.11.2.2",
-        "model": "Meraki MS120-24",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 65,
-        "portCount": 24
-      },
-      {
-        "id": "sw-bra-access-02",
-        "name": "SW-BRA-Access-02",
-        "site": "BRA-Remote",
-        "region": "North America",
-        "ip": "10.11.2.3",
-        "model": "Meraki MS120-24",
-        "vendor": "meraki",
-        "status": "warning",
-        "clients": 55,
-        "portCount": 24
-      }
-    ],
-    "accessPoints": [
-      {
-        "id": "ap-nyc-f1-01",
-        "name": "AP-NYC-Floor1-01",
-        "site": "NYC-HQ",
-        "region": "North America",
-        "ip": "10.1.3.1",
-        "model": "Mist AP43",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 45,
-        "timeToConnect": 1418
-      },
-      {
-        "id": "ap-nyc-f1-02",
-        "name": "AP-NYC-Floor1-02",
-        "site": "NYC-HQ",
-        "region": "North America",
-        "ip": "10.1.3.2",
-        "model": "Mist AP43",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 42,
-        "timeToConnect": 1543
-      },
-      {
-        "id": "ap-nyc-f1-03",
-        "name": "AP-NYC-Floor1-03",
-        "site": "NYC-HQ",
-        "region": "North America",
-        "ip": "10.1.3.3",
-        "model": "Mist AP43",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 38,
-        "timeToConnect": 1304
-      },
-      {
-        "id": "ap-nyc-f1-04",
-        "name": "AP-NYC-Floor1-04",
-        "site": "NYC-HQ",
-        "region": "North America",
-        "ip": "10.1.3.4",
-        "model": "Mist AP43",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 41,
-        "timeToConnect": 1321
-      },
-      {
-        "id": "ap-nyc-f1-05",
-        "name": "AP-NYC-Floor1-05",
-        "site": "NYC-HQ",
-        "region": "North America",
-        "ip": "10.1.3.5",
-        "model": "Mist AP43",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 35,
-        "timeToConnect": 1571
-      },
-      {
-        "id": "ap-nyc-f2-01",
-        "name": "AP-NYC-Floor2-01",
-        "site": "NYC-HQ",
-        "region": "North America",
-        "ip": "10.1.3.11",
-        "model": "Meraki MR56",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 48,
-        "timeToConnect": 1315
-      },
-      {
-        "id": "ap-nyc-f2-02",
-        "name": "AP-NYC-Floor2-02",
-        "site": "NYC-HQ",
-        "region": "North America",
-        "ip": "10.1.3.12",
-        "model": "Meraki MR56",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 44,
-        "timeToConnect": 1570
-      },
-      {
-        "id": "ap-nyc-f2-03",
-        "name": "AP-NYC-Floor2-03",
-        "site": "NYC-HQ",
-        "region": "North America",
-        "ip": "10.1.3.13",
-        "model": "Meraki MR56",
-        "vendor": "meraki",
-        "status": "warning",
-        "clients": 32,
-        "timeToConnect": 2213
-      },
-      {
-        "id": "ap-nyc-f2-04",
-        "name": "AP-NYC-Floor2-04",
-        "site": "NYC-HQ",
-        "region": "North America",
-        "ip": "10.1.3.14",
-        "model": "Meraki MR56",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 39,
-        "timeToConnect": 1214
-      },
-      {
-        "id": "ap-nyc-f2-05",
-        "name": "AP-NYC-Floor2-05",
-        "site": "NYC-HQ",
-        "region": "North America",
-        "ip": "10.1.3.15",
-        "model": "Meraki MR56",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 36,
-        "timeToConnect": 1522
-      },
-      {
-        "id": "ap-nyc-f3-01",
-        "name": "AP-NYC-Floor3-01",
-        "site": "NYC-HQ",
-        "region": "North America",
-        "ip": "10.1.3.21",
-        "model": "Mist AP45",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 52,
-        "timeToConnect": 1521
-      },
-      {
-        "id": "ap-nyc-f3-02",
-        "name": "AP-NYC-Floor3-02",
-        "site": "NYC-HQ",
-        "region": "North America",
-        "ip": "10.1.3.22",
-        "model": "Mist AP45",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 48,
-        "timeToConnect": 1577
-      },
-      {
-        "id": "ap-nyc-f3-03",
-        "name": "AP-NYC-Floor3-03",
-        "site": "NYC-HQ",
-        "region": "North America",
-        "ip": "10.1.3.23",
-        "model": "Mist AP45",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 45,
-        "timeToConnect": 1321
-      },
-      {
-        "id": "ap-nyc-f3-04",
-        "name": "AP-NYC-Floor3-04",
-        "site": "NYC-HQ",
-        "region": "North America",
-        "ip": "10.1.3.24",
-        "model": "Mist AP45",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 41,
-        "timeToConnect": 1330
-      },
-      {
-        "id": "ap-nyc-f3-05",
-        "name": "AP-NYC-Floor3-05",
-        "site": "NYC-HQ",
-        "region": "North America",
-        "ip": "10.1.3.25",
-        "model": "Mist AP45",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 38,
-        "timeToConnect": 1330
-      },
-      {
-        "id": "ap-nyc-f4-01",
-        "name": "AP-NYC-Floor4-01",
-        "site": "NYC-HQ",
-        "region": "North America",
-        "ip": "10.1.3.31",
-        "model": "Meraki MR46",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 42,
-        "timeToConnect": 1529
-      },
-      {
-        "id": "ap-nyc-f4-02",
-        "name": "AP-NYC-Floor4-02",
-        "site": "NYC-HQ",
-        "region": "North America",
-        "ip": "10.1.3.32",
-        "model": "Meraki MR46",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 38,
-        "timeToConnect": 1297
-      },
-      {
-        "id": "ap-nyc-f4-03",
-        "name": "AP-NYC-Floor4-03",
-        "site": "NYC-HQ",
-        "region": "North America",
-        "ip": "10.1.3.33",
-        "model": "Meraki MR46",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 35,
-        "timeToConnect": 1271
-      },
-      {
-        "id": "ap-nyc-f4-04",
-        "name": "AP-NYC-Floor4-04",
-        "site": "NYC-HQ",
-        "region": "North America",
-        "ip": "10.1.3.34",
-        "model": "Meraki MR46",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 33,
-        "timeToConnect": 1388
-      },
-      {
-        "id": "ap-nyc-f4-05",
-        "name": "AP-NYC-Floor4-05",
-        "site": "NYC-HQ",
-        "region": "North America",
-        "ip": "10.1.3.35",
-        "model": "Meraki MR46",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 31,
-        "timeToConnect": 1335
-      },
-      {
-        "id": "ap-lon-wh-01",
-        "name": "AP-LON-WH-01",
-        "site": "NJ-Warehouse",
-        "region": "EMEA",
-        "ip": "10.2.3.1",
-        "model": "Meraki MR46",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 28,
-        "timeToConnect": 2151
-      },
-      {
-        "id": "ap-lon-wh-02",
-        "name": "AP-LON-WH-02",
-        "site": "NJ-Warehouse",
-        "region": "EMEA",
-        "ip": "10.2.3.2",
-        "model": "Meraki MR46",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 32,
-        "timeToConnect": 2056
-      },
-      {
-        "id": "ap-lon-wh-03",
-        "name": "AP-LON-WH-03",
-        "site": "NJ-Warehouse",
-        "region": "EMEA",
-        "ip": "10.2.3.3",
-        "model": "Meraki MR46",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 25,
-        "timeToConnect": 2237
-      },
-      {
-        "id": "ap-lon-wh-04",
-        "name": "AP-LON-WH-04",
-        "site": "NJ-Warehouse",
-        "region": "EMEA",
-        "ip": "10.2.3.4",
-        "model": "Meraki MR46",
-        "vendor": "meraki",
-        "status": "critical",
-        "clients": 0,
-        "timeToConnect": 0
-      },
-      {
-        "id": "ap-lon-wh-05",
-        "name": "AP-LON-WH-05",
-        "site": "NJ-Warehouse",
-        "region": "EMEA",
-        "ip": "10.2.3.5",
-        "model": "Meraki MR46",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 22,
-        "timeToConnect": 2074
-      },
-      {
-        "id": "ap-lon-off-01",
-        "name": "AP-LON-Office-01",
-        "site": "NJ-Warehouse",
-        "region": "EMEA",
-        "ip": "10.2.3.11",
-        "model": "Meraki MR56",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 38,
-        "timeToConnect": 2262
-      },
-      {
-        "id": "ap-lon-off-02",
-        "name": "AP-LON-Office-02",
-        "site": "NJ-Warehouse",
-        "region": "EMEA",
-        "ip": "10.2.3.12",
-        "model": "Meraki MR56",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 35,
-        "timeToConnect": 2072
-      },
-      {
-        "id": "ap-lon-off-03",
-        "name": "AP-LON-Office-03",
-        "site": "NJ-Warehouse",
-        "region": "EMEA",
-        "ip": "10.2.3.13",
-        "model": "Meraki MR56",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 32,
-        "timeToConnect": 2222
-      },
-      {
-        "id": "ap-lon-off-04",
-        "name": "AP-LON-Office-04",
-        "site": "NJ-Warehouse",
-        "region": "EMEA",
-        "ip": "10.2.3.14",
-        "model": "Meraki MR56",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 29,
-        "timeToConnect": 2109
-      },
-      {
-        "id": "ap-lon-off-05",
-        "name": "AP-LON-Office-05",
-        "site": "NJ-Warehouse",
-        "region": "EMEA",
-        "ip": "10.2.3.15",
-        "model": "Meraki MR56",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 27,
-        "timeToConnect": 2249
-      },
-      {
-        "id": "ap-sfo-f1-01",
-        "name": "AP-SFO-Floor1-01",
-        "site": "SFO-Branch",
-        "region": "North America",
-        "ip": "10.3.3.1",
-        "model": "Mist AP43",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 32,
-        "timeToConnect": 882
-      },
-      {
-        "id": "ap-sfo-f1-02",
-        "name": "AP-SFO-Floor1-02",
-        "site": "SFO-Branch",
-        "region": "North America",
-        "ip": "10.3.3.2",
-        "model": "Mist AP43",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 28,
-        "timeToConnect": 870
-      },
-      {
-        "id": "ap-sfo-f1-03",
-        "name": "AP-SFO-Floor1-03",
-        "site": "SFO-Branch",
-        "region": "North America",
-        "ip": "10.3.3.3",
-        "model": "Mist AP43",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 25,
-        "timeToConnect": 1126
-      },
-      {
-        "id": "ap-sfo-f1-04",
-        "name": "AP-SFO-Floor1-04",
-        "site": "SFO-Branch",
-        "region": "North America",
-        "ip": "10.3.3.4",
-        "model": "Mist AP43",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 22,
-        "timeToConnect": 843
-      },
-      {
-        "id": "ap-sfo-f2-01",
-        "name": "AP-SFO-Floor2-01",
-        "site": "SFO-Branch",
-        "region": "North America",
-        "ip": "10.3.3.11",
-        "model": "Mist AP45",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 35,
-        "timeToConnect": 907
-      },
-      {
-        "id": "ap-sfo-f2-02",
-        "name": "AP-SFO-Floor2-02",
-        "site": "SFO-Branch",
-        "region": "North America",
-        "ip": "10.3.3.12",
-        "model": "Mist AP45",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 31,
-        "timeToConnect": 1181
-      },
-      {
-        "id": "ap-sfo-f2-03",
-        "name": "AP-SFO-Floor2-03",
-        "site": "SFO-Branch",
-        "region": "North America",
-        "ip": "10.3.3.13",
-        "model": "Mist AP45",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 28,
-        "timeToConnect": 823
-      },
-      {
-        "id": "ap-sfo-f2-04",
-        "name": "AP-SFO-Floor2-04",
-        "site": "SFO-Branch",
-        "region": "North America",
-        "ip": "10.3.3.14",
-        "model": "Mist AP45",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 24,
-        "timeToConnect": 1075
-      },
-      {
-        "id": "ap-tok-f1-01",
-        "name": "AP-TOK-Floor1-01",
-        "site": "TOK-Sales",
-        "region": "APAC",
-        "ip": "10.4.3.1",
-        "model": "Meraki MR56",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 38,
-        "timeToConnect": 1039
-      },
-      {
-        "id": "ap-tok-f1-02",
-        "name": "AP-TOK-Floor1-02",
-        "site": "TOK-Sales",
-        "region": "APAC",
-        "ip": "10.4.3.2",
-        "model": "Meraki MR56",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 35,
-        "timeToConnect": 1135
-      },
-      {
-        "id": "ap-tok-f1-03",
-        "name": "AP-TOK-Floor1-03",
-        "site": "TOK-Sales",
-        "region": "APAC",
-        "ip": "10.4.3.3",
-        "model": "Meraki MR56",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 32,
-        "timeToConnect": 1192
-      },
-      {
-        "id": "ap-tok-f1-04",
-        "name": "AP-TOK-Floor1-04",
-        "site": "TOK-Sales",
-        "region": "APAC",
-        "ip": "10.4.3.4",
-        "model": "Meraki MR56",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 28,
-        "timeToConnect": 1211
-      },
-      {
-        "id": "ap-tok-f1-05",
-        "name": "AP-TOK-Floor1-05",
-        "site": "TOK-Sales",
-        "region": "APAC",
-        "ip": "10.4.3.5",
-        "model": "Meraki MR56",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 25,
-        "timeToConnect": 1088
-      },
-      {
-        "id": "ap-tok-f2-01",
-        "name": "AP-TOK-Floor2-01",
-        "site": "TOK-Sales",
-        "region": "APAC",
-        "ip": "10.4.3.11",
-        "model": "Meraki MR46",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 30,
-        "timeToConnect": 1365
-      },
-      {
-        "id": "ap-tok-f2-02",
-        "name": "AP-TOK-Floor2-02",
-        "site": "TOK-Sales",
-        "region": "APAC",
-        "ip": "10.4.3.12",
-        "model": "Meraki MR46",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 27,
-        "timeToConnect": 1071
-      },
-      {
-        "id": "ap-mum-f1-01",
-        "name": "AP-MUM-Floor1-01",
-        "site": "MUM-Hub",
-        "region": "APAC",
-        "ip": "10.5.3.1",
-        "model": "Meraki MR56",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 45,
-        "timeToConnect": 1985
-      },
-      {
-        "id": "ap-mum-f1-02",
-        "name": "AP-MUM-Floor1-02",
-        "site": "MUM-Hub",
-        "region": "APAC",
-        "ip": "10.5.3.2",
-        "model": "Meraki MR56",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 42,
-        "timeToConnect": 1837
-      },
-      {
-        "id": "ap-mum-f1-03",
-        "name": "AP-MUM-Floor1-03",
-        "site": "MUM-Hub",
-        "region": "APAC",
-        "ip": "10.5.3.3",
-        "model": "Meraki MR56",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 38,
-        "timeToConnect": 1996
-      },
-      {
-        "id": "ap-mum-f1-04",
-        "name": "AP-MUM-Floor1-04",
-        "site": "MUM-Hub",
-        "region": "APAC",
-        "ip": "10.5.3.4",
-        "model": "Meraki MR56",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 35,
-        "timeToConnect": 1901
-      },
-      {
-        "id": "ap-mum-f1-05",
-        "name": "AP-MUM-Floor1-05",
-        "site": "MUM-Hub",
-        "region": "APAC",
-        "ip": "10.5.3.5",
-        "model": "Meraki MR56",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 32,
-        "timeToConnect": 1826
-      },
-      {
-        "id": "ap-mum-f2-01",
-        "name": "AP-MUM-Floor2-01",
-        "site": "MUM-Hub",
-        "region": "APAC",
-        "ip": "10.5.3.11",
-        "model": "Mist AP45",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 48,
-        "timeToConnect": 1772
-      },
-      {
-        "id": "ap-mum-f2-02",
-        "name": "AP-MUM-Floor2-02",
-        "site": "MUM-Hub",
-        "region": "APAC",
-        "ip": "10.5.3.12",
-        "model": "Mist AP45",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 44,
-        "timeToConnect": 1891
-      },
-      {
-        "id": "ap-mum-f2-03",
-        "name": "AP-MUM-Floor2-03",
-        "site": "MUM-Hub",
-        "region": "APAC",
-        "ip": "10.5.3.13",
-        "model": "Mist AP45",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 40,
-        "timeToConnect": 1834
-      },
-      {
-        "id": "ap-mum-f2-04",
-        "name": "AP-MUM-Floor2-04",
-        "site": "MUM-Hub",
-        "region": "APAC",
-        "ip": "10.5.3.14",
-        "model": "Mist AP45",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 36,
-        "timeToConnect": 1917
-      },
-      {
-        "id": "ap-mum-f2-05",
-        "name": "AP-MUM-Floor2-05",
-        "site": "MUM-Hub",
-        "region": "APAC",
-        "ip": "10.5.3.15",
-        "model": "Mist AP45",
-        "vendor": "mist",
-        "status": "warning",
-        "clients": 28,
-        "timeToConnect": 2677
-      },
-      {
-        "id": "ap-mum-f3-01",
-        "name": "AP-MUM-Floor3-01",
-        "site": "MUM-Hub",
-        "region": "APAC",
-        "ip": "10.5.3.21",
-        "model": "Mist AP43",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 38,
-        "timeToConnect": 2039
-      },
-      {
-        "id": "ap-mum-f3-02",
-        "name": "AP-MUM-Floor3-02",
-        "site": "MUM-Hub",
-        "region": "APAC",
-        "ip": "10.5.3.22",
-        "model": "Mist AP43",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 35,
-        "timeToConnect": 1772
-      },
-      {
-        "id": "ap-mum-f3-03",
-        "name": "AP-MUM-Floor3-03",
-        "site": "MUM-Hub",
-        "region": "APAC",
-        "ip": "10.5.3.23",
-        "model": "Mist AP43",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 32,
-        "timeToConnect": 1869
-      },
-      {
-        "id": "ap-mum-f3-04",
-        "name": "AP-MUM-Floor3-04",
-        "site": "MUM-Hub",
-        "region": "APAC",
-        "ip": "10.5.3.24",
-        "model": "Mist AP43",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 28,
-        "timeToConnect": 1926
-      },
-      {
-        "id": "ap-mum-f3-05",
-        "name": "AP-MUM-Floor3-05",
-        "site": "MUM-Hub",
-        "region": "APAC",
-        "ip": "10.5.3.25",
-        "model": "Mist AP43",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 25,
-        "timeToConnect": 1860
-      },
-      {
-        "id": "ap-atl-01",
-        "name": "AP-ATL-Store-01",
-        "site": "ATL-Retail",
-        "region": "North America",
-        "ip": "10.6.3.1",
-        "model": "Meraki MR36",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 18,
-        "timeToConnect": 1638
-      },
-      {
-        "id": "ap-atl-02",
-        "name": "AP-ATL-Store-02",
-        "site": "ATL-Retail",
-        "region": "North America",
-        "ip": "10.6.3.2",
-        "model": "Meraki MR36",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 22,
-        "timeToConnect": 1773
-      },
-      {
-        "id": "ap-atl-03",
-        "name": "AP-ATL-Store-03",
-        "site": "ATL-Retail",
-        "region": "North America",
-        "ip": "10.6.3.3",
-        "model": "Meraki MR36",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 15,
-        "timeToConnect": 1983
-      },
-      {
-        "id": "ap-atl-04",
-        "name": "AP-ATL-Store-04",
-        "site": "ATL-Retail",
-        "region": "North America",
-        "ip": "10.6.3.4",
-        "model": "Meraki MR36",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 20,
-        "timeToConnect": 1908
-      },
-      {
-        "id": "ap-atl-05",
-        "name": "AP-ATL-Store-05",
-        "site": "ATL-Retail",
-        "region": "North America",
-        "ip": "10.6.3.5",
-        "model": "Meraki MR36",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 17,
-        "timeToConnect": 1741
-      },
-      {
-        "id": "ap-atl-06",
-        "name": "AP-ATL-Back-01",
-        "site": "ATL-Retail",
-        "region": "North America",
-        "ip": "10.6.3.11",
-        "model": "Meraki MR46",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 12,
-        "timeToConnect": 1924
-      },
-      {
-        "id": "ap-chi-f1-01",
-        "name": "AP-CHI-Floor1-01",
-        "site": "CHI-Dist",
-        "region": "North America",
-        "ip": "10.7.3.1",
-        "model": "Mist AP43",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 35,
-        "timeToConnect": 1248
-      },
-      {
-        "id": "ap-chi-f1-02",
-        "name": "AP-CHI-Floor1-02",
-        "site": "CHI-Dist",
-        "region": "North America",
-        "ip": "10.7.3.2",
-        "model": "Mist AP43",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 32,
-        "timeToConnect": 1269
-      },
-      {
-        "id": "ap-chi-f1-03",
-        "name": "AP-CHI-Floor1-03",
-        "site": "CHI-Dist",
-        "region": "North America",
-        "ip": "10.7.3.3",
-        "model": "Mist AP43",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 28,
-        "timeToConnect": 1163
-      },
-      {
-        "id": "ap-chi-f1-04",
-        "name": "AP-CHI-Floor1-04",
-        "site": "CHI-Dist",
-        "region": "North America",
-        "ip": "10.7.3.4",
-        "model": "Mist AP43",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 25,
-        "timeToConnect": 1103
-      },
-      {
-        "id": "ap-chi-f1-05",
-        "name": "AP-CHI-Floor1-05",
-        "site": "CHI-Dist",
-        "region": "North America",
-        "ip": "10.7.3.5",
-        "model": "Mist AP43",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 22,
-        "timeToConnect": 1145
-      },
-      {
-        "id": "ap-chi-f2-01",
-        "name": "AP-CHI-Floor2-01",
-        "site": "CHI-Dist",
-        "region": "North America",
-        "ip": "10.7.3.11",
-        "model": "Mist AP45",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 38,
-        "timeToConnect": 1157
-      },
-      {
-        "id": "ap-chi-f2-02",
-        "name": "AP-CHI-Floor2-02",
-        "site": "CHI-Dist",
-        "region": "North America",
-        "ip": "10.7.3.12",
-        "model": "Mist AP45",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 35,
-        "timeToConnect": 1471
-      },
-      {
-        "id": "ap-chi-f2-03",
-        "name": "AP-CHI-Floor2-03",
-        "site": "CHI-Dist",
-        "region": "North America",
-        "ip": "10.7.3.13",
-        "model": "Mist AP45",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 30,
-        "timeToConnect": 1281
-      },
-      {
-        "id": "ap-chi-f2-04",
-        "name": "AP-CHI-Floor2-04",
-        "site": "CHI-Dist",
-        "region": "North America",
-        "ip": "10.7.3.14",
-        "model": "Mist AP45",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 27,
-        "timeToConnect": 1170
-      },
-      {
-        "id": "ap-chi-f2-05",
-        "name": "AP-CHI-Floor2-05",
-        "site": "CHI-Dist",
-        "region": "North America",
-        "ip": "10.7.3.15",
-        "model": "Mist AP45",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 24,
-        "timeToConnect": 1248
-      },
-      {
-        "id": "ap-ber-f1-01",
-        "name": "AP-BER-Floor1-01",
-        "site": "BER-R&D",
-        "region": "EMEA",
-        "ip": "10.8.3.1",
-        "model": "Mist AP45",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 42,
-        "timeToConnect": 1128
-      },
-      {
-        "id": "ap-ber-f1-02",
-        "name": "AP-BER-Floor1-02",
-        "site": "BER-R&D",
-        "region": "EMEA",
-        "ip": "10.8.3.2",
-        "model": "Mist AP45",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 38,
-        "timeToConnect": 1133
-      },
-      {
-        "id": "ap-ber-f1-03",
-        "name": "AP-BER-Floor1-03",
-        "site": "BER-R&D",
-        "region": "EMEA",
-        "ip": "10.8.3.3",
-        "model": "Mist AP45",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 35,
-        "timeToConnect": 1100
-      },
-      {
-        "id": "ap-ber-f1-04",
-        "name": "AP-BER-Floor1-04",
-        "site": "BER-R&D",
-        "region": "EMEA",
-        "ip": "10.8.3.4",
-        "model": "Mist AP45",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 32,
-        "timeToConnect": 1220
-      },
-      {
-        "id": "ap-ber-f1-05",
-        "name": "AP-BER-Floor1-05",
-        "site": "BER-R&D",
-        "region": "EMEA",
-        "ip": "10.8.3.5",
-        "model": "Mist AP45",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 28,
-        "timeToConnect": 1294
-      },
-      {
-        "id": "ap-ber-f2-01",
-        "name": "AP-BER-Floor2-01",
-        "site": "BER-R&D",
-        "region": "EMEA",
-        "ip": "10.8.3.11",
-        "model": "Mist AP43",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 35,
-        "timeToConnect": 911
-      },
-      {
-        "id": "ap-ber-f2-02",
-        "name": "AP-BER-Floor2-02",
-        "site": "BER-R&D",
-        "region": "EMEA",
-        "ip": "10.8.3.12",
-        "model": "Mist AP43",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 32,
-        "timeToConnect": 1088
-      },
-      {
-        "id": "ap-ber-f2-03",
-        "name": "AP-BER-Floor2-03",
-        "site": "BER-R&D",
-        "region": "EMEA",
-        "ip": "10.8.3.13",
-        "model": "Mist AP43",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 28,
-        "timeToConnect": 930
-      },
-      {
-        "id": "ap-ber-f2-04",
-        "name": "AP-BER-Floor2-04",
-        "site": "BER-R&D",
-        "region": "EMEA",
-        "ip": "10.8.3.14",
-        "model": "Mist AP43",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 25,
-        "timeToConnect": 1113
-      },
-      {
-        "id": "ap-ber-f2-05",
-        "name": "AP-BER-Floor2-05",
-        "site": "BER-R&D",
-        "region": "EMEA",
-        "ip": "10.8.3.15",
-        "model": "Mist AP43",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 22,
-        "timeToConnect": 1194
-      },
-      {
-        "id": "ap-par-f1-01",
-        "name": "AP-PAR-Floor1-01",
-        "site": "PAR-Office",
-        "region": "EMEA",
-        "ip": "10.9.3.1",
-        "model": "Meraki MR56",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 38,
-        "timeToConnect": 1713
-      },
-      {
-        "id": "ap-par-f1-02",
-        "name": "AP-PAR-Floor1-02",
-        "site": "PAR-Office",
-        "region": "EMEA",
-        "ip": "10.9.3.2",
-        "model": "Meraki MR56",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 35,
-        "timeToConnect": 1704
-      },
-      {
-        "id": "ap-par-f1-03",
-        "name": "AP-PAR-Floor1-03",
-        "site": "PAR-Office",
-        "region": "EMEA",
-        "ip": "10.9.3.3",
-        "model": "Meraki MR56",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 32,
-        "timeToConnect": 1461
-      },
-      {
-        "id": "ap-par-f1-04",
-        "name": "AP-PAR-Floor1-04",
-        "site": "PAR-Office",
-        "region": "EMEA",
-        "ip": "10.9.3.4",
-        "model": "Meraki MR56",
-        "vendor": "meraki",
-        "status": "warning",
-        "clients": 22,
-        "timeToConnect": 2582
-      },
-      {
-        "id": "ap-par-f1-05",
-        "name": "AP-PAR-Floor1-05",
-        "site": "PAR-Office",
-        "region": "EMEA",
-        "ip": "10.9.3.5",
-        "model": "Meraki MR56",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 28,
-        "timeToConnect": 1626
-      },
-      {
-        "id": "ap-par-f2-01",
-        "name": "AP-PAR-Floor2-01",
-        "site": "PAR-Office",
-        "region": "EMEA",
-        "ip": "10.9.3.11",
-        "model": "Meraki MR46",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 32,
-        "timeToConnect": 1516
-      },
-      {
-        "id": "ap-par-f2-02",
-        "name": "AP-PAR-Floor2-02",
-        "site": "PAR-Office",
-        "region": "EMEA",
-        "ip": "10.9.3.12",
-        "model": "Meraki MR46",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 28,
-        "timeToConnect": 1692
-      },
-      {
-        "id": "ap-par-f2-03",
-        "name": "AP-PAR-Floor2-03",
-        "site": "PAR-Office",
-        "region": "EMEA",
-        "ip": "10.9.3.13",
-        "model": "Meraki MR46",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 25,
-        "timeToConnect": 1759
-      },
-      {
-        "id": "ap-syd-f1-01",
-        "name": "AP-SYD-Floor1-01",
-        "site": "SYD-Office",
-        "region": "APAC",
-        "ip": "10.10.3.1",
-        "model": "Mist AP45",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 35,
-        "timeToConnect": 946
-      },
-      {
-        "id": "ap-syd-f1-02",
-        "name": "AP-SYD-Floor1-02",
-        "site": "SYD-Office",
-        "region": "APAC",
-        "ip": "10.10.3.2",
-        "model": "Mist AP45",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 32,
-        "timeToConnect": 767
-      },
-      {
-        "id": "ap-syd-f1-03",
-        "name": "AP-SYD-Floor1-03",
-        "site": "SYD-Office",
-        "region": "APAC",
-        "ip": "10.10.3.3",
-        "model": "Mist AP45",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 28,
-        "timeToConnect": 728
-      },
-      {
-        "id": "ap-syd-f1-04",
-        "name": "AP-SYD-Floor1-04",
-        "site": "SYD-Office",
-        "region": "APAC",
-        "ip": "10.10.3.4",
-        "model": "Mist AP45",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 25,
-        "timeToConnect": 719
-      },
-      {
-        "id": "ap-syd-f2-01",
-        "name": "AP-SYD-Floor2-01",
-        "site": "SYD-Office",
-        "region": "APAC",
-        "ip": "10.10.3.11",
-        "model": "Mist AP43",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 30,
-        "timeToConnect": 704
-      },
-      {
-        "id": "ap-syd-f2-02",
-        "name": "AP-SYD-Floor2-02",
-        "site": "SYD-Office",
-        "region": "APAC",
-        "ip": "10.10.3.12",
-        "model": "Mist AP43",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 27,
-        "timeToConnect": 1098
-      },
-      {
-        "id": "ap-syd-f2-03",
-        "name": "AP-SYD-Floor2-03",
-        "site": "SYD-Office",
-        "region": "APAC",
-        "ip": "10.10.3.13",
-        "model": "Mist AP43",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 24,
-        "timeToConnect": 787
-      },
-      {
-        "id": "ap-syd-f2-04",
-        "name": "AP-SYD-Floor2-04",
-        "site": "SYD-Office",
-        "region": "APAC",
-        "ip": "10.10.3.14",
-        "model": "Mist AP43",
-        "vendor": "mist",
-        "status": "online",
-        "clients": 21,
-        "timeToConnect": 908
-      },
-      {
-        "id": "ap-bra-01",
-        "name": "AP-BRA-Main-01",
-        "site": "BRA-Remote",
-        "region": "North America",
-        "ip": "10.11.3.1",
-        "model": "Meraki MR36",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 15,
-        "timeToConnect": 2785
-      },
-      {
-        "id": "ap-bra-02",
-        "name": "AP-BRA-Main-02",
-        "site": "BRA-Remote",
-        "region": "North America",
-        "ip": "10.11.3.2",
-        "model": "Meraki MR36",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 12,
-        "timeToConnect": 2871
-      },
-      {
-        "id": "ap-bra-03",
-        "name": "AP-BRA-Main-03",
-        "site": "BRA-Remote",
-        "region": "North America",
-        "ip": "10.11.3.3",
-        "model": "Meraki MR36",
-        "vendor": "meraki",
-        "status": "warning",
-        "clients": 8,
-        "timeToConnect": 3586
-      },
-      {
-        "id": "ap-bra-04",
-        "name": "AP-BRA-Main-04",
-        "site": "BRA-Remote",
-        "region": "North America",
-        "ip": "10.11.3.4",
-        "model": "Meraki MR36",
-        "vendor": "meraki",
-        "status": "online",
-        "clients": 10,
-        "timeToConnect": 2705
-      }
-    ]
-  },
   "alerts": [
     {
       "id": "alert-001",
@@ -2676,6 +518,837 @@
         "min": 4,
         "max": 100
       }
+    }
+  },
+  "deviceStatus": {
+    "gw-nyc-core-01": {
+      "status": "online",
+      "clients": 450
+    },
+    "gw-nyc-edge-02": {
+      "status": "online",
+      "clients": 320
+    },
+    "gw-nj-primary": {
+      "status": "warning",
+      "clients": 280
+    },
+    "gw-nj-backup": {
+      "status": "warning",
+      "clients": 180
+    },
+    "gw-sfo-primary": {
+      "status": "warning",
+      "clients": 210
+    },
+    "gw-sfo-backup": {
+      "status": "online",
+      "clients": 190
+    },
+    "gw-tok-core-01": {
+      "status": "online",
+      "clients": 195
+    },
+    "gw-tok-edge-02": {
+      "status": "online",
+      "clients": 165
+    },
+    "gw-mum-core-01": {
+      "status": "online",
+      "clients": 420
+    },
+    "gw-mum-edge-02": {
+      "status": "online",
+      "clients": 380
+    },
+    "gw-atl-core-01": {
+      "status": "online",
+      "clients": 145
+    },
+    "gw-atl-edge-02": {
+      "status": "critical",
+      "clients": 0
+    },
+    "gw-chi-core-01": {
+      "status": "online",
+      "clients": 275
+    },
+    "gw-chi-edge-02": {
+      "status": "online",
+      "clients": 245
+    },
+    "gw-ber-core-01": {
+      "status": "online",
+      "clients": 240
+    },
+    "gw-ber-edge-02": {
+      "status": "online",
+      "clients": 220
+    },
+    "gw-par-core-01": {
+      "status": "online",
+      "clients": 195
+    },
+    "gw-par-edge-02": {
+      "status": "warning",
+      "clients": 175
+    },
+    "gw-syd-core-01": {
+      "status": "online",
+      "clients": 175
+    },
+    "gw-syd-edge-02": {
+      "status": "online",
+      "clients": 160
+    },
+    "gw-bra-core-01": {
+      "status": "online",
+      "clients": 95
+    },
+    "gw-bra-edge-02": {
+      "status": "warning",
+      "clients": 75
+    },
+    "sw-nyc-core-01": {
+      "status": "online",
+      "clients": 890
+    },
+    "sw-nyc-core-02": {
+      "status": "online",
+      "clients": 780
+    },
+    "sw-nyc-dist-01": {
+      "status": "online",
+      "clients": 445
+    },
+    "sw-nyc-dist-02": {
+      "status": "online",
+      "clients": 420
+    },
+    "sw-nyc-access-01": {
+      "status": "online",
+      "clients": 180
+    },
+    "sw-nyc-access-02": {
+      "status": "warning",
+      "clients": 165
+    },
+    "sw-nyc-access-03": {
+      "status": "online",
+      "clients": 145
+    },
+    "sw-nyc-access-04": {
+      "status": "online",
+      "clients": 130
+    },
+    "sw-lon-core-01": {
+      "status": "online",
+      "clients": 520
+    },
+    "sw-lon-dist-01": {
+      "status": "online",
+      "clients": 340
+    },
+    "sw-lon-dist-02": {
+      "status": "online",
+      "clients": 290
+    },
+    "sw-lon-access-01": {
+      "status": "online",
+      "clients": 120
+    },
+    "sw-lon-access-02": {
+      "status": "critical",
+      "clients": 0
+    },
+    "sw-lon-access-03": {
+      "status": "online",
+      "clients": 95
+    },
+    "sw-sfo-core-01": {
+      "status": "online",
+      "clients": 280
+    },
+    "sw-sfo-dist-01": {
+      "status": "online",
+      "clients": 165
+    },
+    "sw-sfo-access-01": {
+      "status": "online",
+      "clients": 95
+    },
+    "sw-sfo-access-02": {
+      "status": "online",
+      "clients": 85
+    },
+    "sw-tok-core-01": {
+      "status": "online",
+      "clients": 245
+    },
+    "sw-tok-dist-01": {
+      "status": "online",
+      "clients": 180
+    },
+    "sw-tok-access-01": {
+      "status": "online",
+      "clients": 85
+    },
+    "sw-tok-access-02": {
+      "status": "online",
+      "clients": 75
+    },
+    "sw-mum-core-01": {
+      "status": "online",
+      "clients": 620
+    },
+    "sw-mum-core-02": {
+      "status": "online",
+      "clients": 580
+    },
+    "sw-mum-dist-01": {
+      "status": "online",
+      "clients": 340
+    },
+    "sw-mum-dist-02": {
+      "status": "online",
+      "clients": 290
+    },
+    "sw-mum-access-01": {
+      "status": "online",
+      "clients": 145
+    },
+    "sw-mum-access-02": {
+      "status": "online",
+      "clients": 125
+    },
+    "sw-mum-access-03": {
+      "status": "warning",
+      "clients": 110
+    },
+    "sw-atl-core-01": {
+      "status": "online",
+      "clients": 185
+    },
+    "sw-atl-access-01": {
+      "status": "online",
+      "clients": 95
+    },
+    "sw-atl-access-02": {
+      "status": "online",
+      "clients": 85
+    },
+    "sw-chi-core-01": {
+      "status": "online",
+      "clients": 380
+    },
+    "sw-chi-dist-01": {
+      "status": "online",
+      "clients": 245
+    },
+    "sw-chi-access-01": {
+      "status": "online",
+      "clients": 125
+    },
+    "sw-chi-access-02": {
+      "status": "online",
+      "clients": 115
+    },
+    "sw-chi-access-03": {
+      "status": "online",
+      "clients": 95
+    },
+    "sw-ber-core-01": {
+      "status": "online",
+      "clients": 320
+    },
+    "sw-ber-dist-01": {
+      "status": "online",
+      "clients": 210
+    },
+    "sw-ber-access-01": {
+      "status": "online",
+      "clients": 105
+    },
+    "sw-ber-access-02": {
+      "status": "online",
+      "clients": 95
+    },
+    "sw-ber-access-03": {
+      "status": "online",
+      "clients": 85
+    },
+    "sw-par-core-01": {
+      "status": "online",
+      "clients": 265
+    },
+    "sw-par-dist-01": {
+      "status": "online",
+      "clients": 175
+    },
+    "sw-par-access-01": {
+      "status": "online",
+      "clients": 95
+    },
+    "sw-par-access-02": {
+      "status": "online",
+      "clients": 85
+    },
+    "sw-syd-core-01": {
+      "status": "online",
+      "clients": 235
+    },
+    "sw-syd-dist-01": {
+      "status": "online",
+      "clients": 145
+    },
+    "sw-syd-access-01": {
+      "status": "online",
+      "clients": 85
+    },
+    "sw-syd-access-02": {
+      "status": "online",
+      "clients": 75
+    },
+    "sw-bra-core-01": {
+      "status": "online",
+      "clients": 125
+    },
+    "sw-bra-access-01": {
+      "status": "online",
+      "clients": 65
+    },
+    "sw-bra-access-02": {
+      "status": "warning",
+      "clients": 55
+    },
+    "ap-nyc-f1-01": {
+      "status": "online",
+      "clients": 45,
+      "timeToConnect": 1418
+    },
+    "ap-nyc-f1-02": {
+      "status": "online",
+      "clients": 42,
+      "timeToConnect": 1543
+    },
+    "ap-nyc-f1-03": {
+      "status": "online",
+      "clients": 38,
+      "timeToConnect": 1304
+    },
+    "ap-nyc-f1-04": {
+      "status": "online",
+      "clients": 41,
+      "timeToConnect": 1321
+    },
+    "ap-nyc-f1-05": {
+      "status": "online",
+      "clients": 35,
+      "timeToConnect": 1571
+    },
+    "ap-nyc-f2-01": {
+      "status": "online",
+      "clients": 48,
+      "timeToConnect": 1315
+    },
+    "ap-nyc-f2-02": {
+      "status": "online",
+      "clients": 44,
+      "timeToConnect": 1570
+    },
+    "ap-nyc-f2-03": {
+      "status": "warning",
+      "clients": 32,
+      "timeToConnect": 2213
+    },
+    "ap-nyc-f2-04": {
+      "status": "online",
+      "clients": 39,
+      "timeToConnect": 1214
+    },
+    "ap-nyc-f2-05": {
+      "status": "online",
+      "clients": 36,
+      "timeToConnect": 1522
+    },
+    "ap-nyc-f3-01": {
+      "status": "online",
+      "clients": 52,
+      "timeToConnect": 1521
+    },
+    "ap-nyc-f3-02": {
+      "status": "online",
+      "clients": 48,
+      "timeToConnect": 1577
+    },
+    "ap-nyc-f3-03": {
+      "status": "online",
+      "clients": 45,
+      "timeToConnect": 1321
+    },
+    "ap-nyc-f3-04": {
+      "status": "online",
+      "clients": 41,
+      "timeToConnect": 1330
+    },
+    "ap-nyc-f3-05": {
+      "status": "online",
+      "clients": 38,
+      "timeToConnect": 1330
+    },
+    "ap-nyc-f4-01": {
+      "status": "online",
+      "clients": 42,
+      "timeToConnect": 1529
+    },
+    "ap-nyc-f4-02": {
+      "status": "online",
+      "clients": 38,
+      "timeToConnect": 1297
+    },
+    "ap-nyc-f4-03": {
+      "status": "online",
+      "clients": 35,
+      "timeToConnect": 1271
+    },
+    "ap-nyc-f4-04": {
+      "status": "online",
+      "clients": 33,
+      "timeToConnect": 1388
+    },
+    "ap-nyc-f4-05": {
+      "status": "online",
+      "clients": 31,
+      "timeToConnect": 1335
+    },
+    "ap-lon-wh-01": {
+      "status": "online",
+      "clients": 28,
+      "timeToConnect": 2151
+    },
+    "ap-lon-wh-02": {
+      "status": "online",
+      "clients": 32,
+      "timeToConnect": 2056
+    },
+    "ap-lon-wh-03": {
+      "status": "online",
+      "clients": 25,
+      "timeToConnect": 2237
+    },
+    "ap-lon-wh-04": {
+      "status": "critical",
+      "clients": 0
+    },
+    "ap-lon-wh-05": {
+      "status": "online",
+      "clients": 22,
+      "timeToConnect": 2074
+    },
+    "ap-lon-off-01": {
+      "status": "online",
+      "clients": 38,
+      "timeToConnect": 2262
+    },
+    "ap-lon-off-02": {
+      "status": "online",
+      "clients": 35,
+      "timeToConnect": 2072
+    },
+    "ap-lon-off-03": {
+      "status": "online",
+      "clients": 32,
+      "timeToConnect": 2222
+    },
+    "ap-lon-off-04": {
+      "status": "online",
+      "clients": 29,
+      "timeToConnect": 2109
+    },
+    "ap-lon-off-05": {
+      "status": "online",
+      "clients": 27,
+      "timeToConnect": 2249
+    },
+    "ap-sfo-f1-01": {
+      "status": "online",
+      "clients": 32,
+      "timeToConnect": 882
+    },
+    "ap-sfo-f1-02": {
+      "status": "online",
+      "clients": 28,
+      "timeToConnect": 870
+    },
+    "ap-sfo-f1-03": {
+      "status": "online",
+      "clients": 25,
+      "timeToConnect": 1126
+    },
+    "ap-sfo-f1-04": {
+      "status": "online",
+      "clients": 22,
+      "timeToConnect": 843
+    },
+    "ap-sfo-f2-01": {
+      "status": "online",
+      "clients": 35,
+      "timeToConnect": 907
+    },
+    "ap-sfo-f2-02": {
+      "status": "online",
+      "clients": 31,
+      "timeToConnect": 1181
+    },
+    "ap-sfo-f2-03": {
+      "status": "online",
+      "clients": 28,
+      "timeToConnect": 823
+    },
+    "ap-sfo-f2-04": {
+      "status": "online",
+      "clients": 24,
+      "timeToConnect": 1075
+    },
+    "ap-tok-f1-01": {
+      "status": "online",
+      "clients": 38,
+      "timeToConnect": 1039
+    },
+    "ap-tok-f1-02": {
+      "status": "online",
+      "clients": 35,
+      "timeToConnect": 1135
+    },
+    "ap-tok-f1-03": {
+      "status": "online",
+      "clients": 32,
+      "timeToConnect": 1192
+    },
+    "ap-tok-f1-04": {
+      "status": "online",
+      "clients": 28,
+      "timeToConnect": 1211
+    },
+    "ap-tok-f1-05": {
+      "status": "online",
+      "clients": 25,
+      "timeToConnect": 1088
+    },
+    "ap-tok-f2-01": {
+      "status": "online",
+      "clients": 30,
+      "timeToConnect": 1365
+    },
+    "ap-tok-f2-02": {
+      "status": "online",
+      "clients": 27,
+      "timeToConnect": 1071
+    },
+    "ap-mum-f1-01": {
+      "status": "online",
+      "clients": 45,
+      "timeToConnect": 1985
+    },
+    "ap-mum-f1-02": {
+      "status": "online",
+      "clients": 42,
+      "timeToConnect": 1837
+    },
+    "ap-mum-f1-03": {
+      "status": "online",
+      "clients": 38,
+      "timeToConnect": 1996
+    },
+    "ap-mum-f1-04": {
+      "status": "online",
+      "clients": 35,
+      "timeToConnect": 1901
+    },
+    "ap-mum-f1-05": {
+      "status": "online",
+      "clients": 32,
+      "timeToConnect": 1826
+    },
+    "ap-mum-f2-01": {
+      "status": "online",
+      "clients": 48,
+      "timeToConnect": 1772
+    },
+    "ap-mum-f2-02": {
+      "status": "online",
+      "clients": 44,
+      "timeToConnect": 1891
+    },
+    "ap-mum-f2-03": {
+      "status": "online",
+      "clients": 40,
+      "timeToConnect": 1834
+    },
+    "ap-mum-f2-04": {
+      "status": "online",
+      "clients": 36,
+      "timeToConnect": 1917
+    },
+    "ap-mum-f2-05": {
+      "status": "warning",
+      "clients": 28,
+      "timeToConnect": 2677
+    },
+    "ap-mum-f3-01": {
+      "status": "online",
+      "clients": 38,
+      "timeToConnect": 2039
+    },
+    "ap-mum-f3-02": {
+      "status": "online",
+      "clients": 35,
+      "timeToConnect": 1772
+    },
+    "ap-mum-f3-03": {
+      "status": "online",
+      "clients": 32,
+      "timeToConnect": 1869
+    },
+    "ap-mum-f3-04": {
+      "status": "online",
+      "clients": 28,
+      "timeToConnect": 1926
+    },
+    "ap-mum-f3-05": {
+      "status": "online",
+      "clients": 25,
+      "timeToConnect": 1860
+    },
+    "ap-atl-01": {
+      "status": "online",
+      "clients": 18,
+      "timeToConnect": 1638
+    },
+    "ap-atl-02": {
+      "status": "online",
+      "clients": 22,
+      "timeToConnect": 1773
+    },
+    "ap-atl-03": {
+      "status": "online",
+      "clients": 15,
+      "timeToConnect": 1983
+    },
+    "ap-atl-04": {
+      "status": "online",
+      "clients": 20,
+      "timeToConnect": 1908
+    },
+    "ap-atl-05": {
+      "status": "online",
+      "clients": 17,
+      "timeToConnect": 1741
+    },
+    "ap-atl-06": {
+      "status": "online",
+      "clients": 12,
+      "timeToConnect": 1924
+    },
+    "ap-chi-f1-01": {
+      "status": "online",
+      "clients": 35,
+      "timeToConnect": 1248
+    },
+    "ap-chi-f1-02": {
+      "status": "online",
+      "clients": 32,
+      "timeToConnect": 1269
+    },
+    "ap-chi-f1-03": {
+      "status": "online",
+      "clients": 28,
+      "timeToConnect": 1163
+    },
+    "ap-chi-f1-04": {
+      "status": "online",
+      "clients": 25,
+      "timeToConnect": 1103
+    },
+    "ap-chi-f1-05": {
+      "status": "online",
+      "clients": 22,
+      "timeToConnect": 1145
+    },
+    "ap-chi-f2-01": {
+      "status": "online",
+      "clients": 38,
+      "timeToConnect": 1157
+    },
+    "ap-chi-f2-02": {
+      "status": "online",
+      "clients": 35,
+      "timeToConnect": 1471
+    },
+    "ap-chi-f2-03": {
+      "status": "online",
+      "clients": 30,
+      "timeToConnect": 1281
+    },
+    "ap-chi-f2-04": {
+      "status": "online",
+      "clients": 27,
+      "timeToConnect": 1170
+    },
+    "ap-chi-f2-05": {
+      "status": "online",
+      "clients": 24,
+      "timeToConnect": 1248
+    },
+    "ap-ber-f1-01": {
+      "status": "online",
+      "clients": 42,
+      "timeToConnect": 1128
+    },
+    "ap-ber-f1-02": {
+      "status": "online",
+      "clients": 38,
+      "timeToConnect": 1133
+    },
+    "ap-ber-f1-03": {
+      "status": "online",
+      "clients": 35,
+      "timeToConnect": 1100
+    },
+    "ap-ber-f1-04": {
+      "status": "online",
+      "clients": 32,
+      "timeToConnect": 1220
+    },
+    "ap-ber-f1-05": {
+      "status": "online",
+      "clients": 28,
+      "timeToConnect": 1294
+    },
+    "ap-ber-f2-01": {
+      "status": "online",
+      "clients": 35,
+      "timeToConnect": 911
+    },
+    "ap-ber-f2-02": {
+      "status": "online",
+      "clients": 32,
+      "timeToConnect": 1088
+    },
+    "ap-ber-f2-03": {
+      "status": "online",
+      "clients": 28,
+      "timeToConnect": 930
+    },
+    "ap-ber-f2-04": {
+      "status": "online",
+      "clients": 25,
+      "timeToConnect": 1113
+    },
+    "ap-ber-f2-05": {
+      "status": "online",
+      "clients": 22,
+      "timeToConnect": 1194
+    },
+    "ap-par-f1-01": {
+      "status": "online",
+      "clients": 38,
+      "timeToConnect": 1713
+    },
+    "ap-par-f1-02": {
+      "status": "online",
+      "clients": 35,
+      "timeToConnect": 1704
+    },
+    "ap-par-f1-03": {
+      "status": "online",
+      "clients": 32,
+      "timeToConnect": 1461
+    },
+    "ap-par-f1-04": {
+      "status": "warning",
+      "clients": 22,
+      "timeToConnect": 2582
+    },
+    "ap-par-f1-05": {
+      "status": "online",
+      "clients": 28,
+      "timeToConnect": 1626
+    },
+    "ap-par-f2-01": {
+      "status": "online",
+      "clients": 32,
+      "timeToConnect": 1516
+    },
+    "ap-par-f2-02": {
+      "status": "online",
+      "clients": 28,
+      "timeToConnect": 1692
+    },
+    "ap-par-f2-03": {
+      "status": "online",
+      "clients": 25,
+      "timeToConnect": 1759
+    },
+    "ap-syd-f1-01": {
+      "status": "online",
+      "clients": 35,
+      "timeToConnect": 946
+    },
+    "ap-syd-f1-02": {
+      "status": "online",
+      "clients": 32,
+      "timeToConnect": 767
+    },
+    "ap-syd-f1-03": {
+      "status": "online",
+      "clients": 28,
+      "timeToConnect": 728
+    },
+    "ap-syd-f1-04": {
+      "status": "online",
+      "clients": 25,
+      "timeToConnect": 719
+    },
+    "ap-syd-f2-01": {
+      "status": "online",
+      "clients": 30,
+      "timeToConnect": 704
+    },
+    "ap-syd-f2-02": {
+      "status": "online",
+      "clients": 27,
+      "timeToConnect": 1098
+    },
+    "ap-syd-f2-03": {
+      "status": "online",
+      "clients": 24,
+      "timeToConnect": 787
+    },
+    "ap-syd-f2-04": {
+      "status": "online",
+      "clients": 21,
+      "timeToConnect": 908
+    },
+    "ap-bra-01": {
+      "status": "online",
+      "clients": 15,
+      "timeToConnect": 2785
+    },
+    "ap-bra-02": {
+      "status": "online",
+      "clients": 12,
+      "timeToConnect": 2871
+    },
+    "ap-bra-03": {
+      "status": "warning",
+      "clients": 8,
+      "timeToConnect": 3586
+    },
+    "ap-bra-04": {
+      "status": "online",
+      "clients": 10,
+      "timeToConnect": 2705
     }
   }
 }
