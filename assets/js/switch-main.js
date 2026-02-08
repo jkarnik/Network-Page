@@ -70,6 +70,7 @@
                 // Update display
                 if (currentDevice) {
                     updateDeviceInfo();
+                    updateDeviceAlertFeed(currentDevice.id);
                 }
             } catch (error) {
                 console.error('Switch initDeviceSelector failed:', error);
@@ -95,6 +96,9 @@
 
             // Update device info header
             updateDeviceInfo();
+
+            // Update device alert feed
+            updateDeviceAlertFeed(deviceId);
         }
 
         /**
@@ -123,6 +127,66 @@
                     ipSpans[0].textContent = currentDevice.ip;
                 }
             }
+        }
+
+        /**
+         * Update the device alert feed with alerts for the current device
+         */
+        function updateDeviceAlertFeed(deviceId) {
+            const tableBody = document.getElementById('deviceAlertTableBody');
+            const alertCount = document.getElementById('deviceAlertCount');
+            if (!tableBody) return;
+
+            const alerts = DataLoader.getAlertsByDeviceId(deviceId);
+
+            // Update alert count badge
+            if (alertCount) {
+                alertCount.textContent = `${alerts.length} alert${alerts.length !== 1 ? 's' : ''}`;
+                if (alerts.some(a => a.severity === 'crit')) {
+                    alertCount.className = 'ml-2 px-2 py-0.5 rounded text-xs font-normal bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300';
+                } else if (alerts.some(a => a.severity === 'warn')) {
+                    alertCount.className = 'ml-2 px-2 py-0.5 rounded text-xs font-normal bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300';
+                } else {
+                    alertCount.className = 'ml-2 px-2 py-0.5 rounded text-xs font-normal bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
+                }
+            }
+
+            // Severity styles and icons
+            const sevStyles = {
+                crit: 'px-2 py-0.5 rounded text-xs font-bold bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
+                warn: 'px-2 py-0.5 rounded text-xs font-bold bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300',
+                info: 'px-2 py-0.5 rounded text-xs font-bold bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
+            };
+            const sevIcons = {
+                crit: '<i class="fa-solid fa-circle-exclamation"></i>',
+                warn: '<i class="fa-solid fa-triangle-exclamation"></i>',
+                info: '<i class="fa-solid fa-circle-info"></i>'
+            };
+
+            tableBody.innerHTML = '';
+
+            if (alerts.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td colspan="4" class="px-6 py-4 text-center text-sm text-gray-400">No alerts for this device.</td>`;
+                tableBody.appendChild(row);
+                return;
+            }
+
+            alerts.forEach(alert => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors';
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="${sevStyles[alert.severity]} flex items-center gap-1 w-fit">
+                            ${sevIcons[alert.severity]} ${alert.severity.toUpperCase()}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-xs text-dark-muted">${alert.timeAgo}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-xs text-dark-muted capitalize">${alert.type}</td>
+                    <td class="px-6 py-4 text-sm text-dark-text">${alert.message}</td>
+                `;
+                tableBody.appendChild(row);
+            });
         }
 
         // --- MOCK DATA GENERATION ---

@@ -5,6 +5,7 @@
 const DataLoader = {
     _data: null,
     _deviceManifest: null,
+    _alertsData: null,
     _loading: false,
     _loaded: false,
     _callbacks: [],
@@ -38,6 +39,31 @@ const DataLoader = {
             return this._deviceManifest;
         } catch (error) {
             console.error('Failed to load device manifest:', error);
+            throw error;
+        }
+    },
+
+    /**
+     * Load alerts from JSON file
+     * @returns {Promise<Object>} The loaded alerts data
+     */
+    async loadAlerts() {
+        if (this._alertsData) return this._alertsData;
+
+        const alertsPath = this._basePath
+            ? `${this._basePath}/data/alerts.json`
+            : 'data/alerts.json';
+
+        try {
+            const response = await fetch(alertsPath);
+            if (!response.ok) {
+                throw new Error(`Failed to load alerts: HTTP ${response.status}`);
+            }
+            this._alertsData = await response.json();
+            console.log('Alerts loaded:', this._alertsData.stats);
+            return this._alertsData;
+        } catch (error) {
+            console.error('Failed to load alerts:', error);
             throw error;
         }
     },
@@ -106,8 +132,11 @@ const DataLoader = {
 
         this._loading = true;
         try {
-            // Load device manifest first
-            await this.loadDeviceManifest();
+            // Load device manifest and alerts in parallel
+            await Promise.all([
+                this.loadDeviceManifest(),
+                this.loadAlerts()
+            ]);
 
             const dataPath = this._basePath ? `${this._basePath}/data/network-data.json` : 'data/network-data.json';
             console.log('Attempting to load data from:', dataPath);
@@ -337,10 +366,10 @@ const DataLoader = {
     // ==================== ALERT ACCESSORS ====================
 
     /**
-     * Get all alerts
+     * Get all alerts (from separate alerts.json file)
      */
     getAlerts() {
-        return this._data?.alerts || [];
+        return this._alertsData?.alerts || [];
     },
 
     /**
@@ -385,6 +414,13 @@ const DataLoader = {
         const alerts = this.getAlertsByScope(scope);
         if (type === 'all') return alerts;
         return alerts.filter(a => a.type === type);
+    },
+
+    /**
+     * Get alerts filtered by device ID
+     */
+    getAlertsByDeviceId(deviceId) {
+        return this.getAlerts().filter(a => a.deviceId === deviceId);
     },
 
     /**
