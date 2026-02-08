@@ -248,23 +248,56 @@
                 updateAppsLegend(topApps);
             }
 
-            // Update DHCP
-            if (charts.dhcpCapacity && currentDeviceData.dhcp) {
+            // Update DHCP (supports new VLAN-based structure)
+            if (charts.dhcpGlobal && currentDeviceData.dhcp) {
                 const dhcp = currentDeviceData.dhcp;
-                const dhcpAvailable = dhcp.total - dhcp.used;
-                const dhcpPercentage = ((dhcp.used / dhcp.total) * 100).toFixed(1);
 
-                charts.dhcpCapacity.data.datasets[0].data = [dhcp.used];
-                charts.dhcpCapacity.data.datasets[1].data = [dhcpAvailable];
-                charts.dhcpCapacity.options.scales.x.max = dhcp.total;
-                charts.dhcpCapacity.update();
+                // Check if device data has VLAN breakdown, otherwise use defaults
+                const vlanData = dhcp.vlans || {
+                    corp: { used: Math.floor(dhcp.used * 0.47), total: Math.floor(dhcp.total * 0.50) },
+                    secure: { used: Math.floor(dhcp.used * 0.23), total: Math.floor(dhcp.total * 0.24) },
+                    guest: { used: Math.floor(dhcp.used * 0.15), total: Math.floor(dhcp.total * 0.12) },
+                    prod: { used: Math.floor(dhcp.used * 0.15), total: Math.floor(dhcp.total * 0.14) }
+                };
 
+                const globalUsed = vlanData.corp.used + vlanData.secure.used + vlanData.guest.used + vlanData.prod.used;
+                const globalTotal = vlanData.corp.total + vlanData.secure.total + vlanData.guest.total + vlanData.prod.total;
+                const globalPercentage = ((globalUsed / globalTotal) * 100).toFixed(1);
+
+                // Update global stacked bar
+                charts.dhcpGlobal.data.datasets[0].data = [vlanData.corp.used];
+                charts.dhcpGlobal.data.datasets[1].data = [vlanData.secure.used];
+                charts.dhcpGlobal.data.datasets[2].data = [vlanData.guest.used];
+                charts.dhcpGlobal.data.datasets[3].data = [vlanData.prod.used];
+                charts.dhcpGlobal.data.datasets[4].data = [globalTotal - globalUsed];
+                charts.dhcpGlobal.options.scales.x.max = globalTotal;
+                charts.dhcpGlobal.update();
+
+                // Update individual VLAN bars
+                const updateVlanBar = (chart, vlan) => {
+                    chart.data.datasets[0].data = [vlan.used];
+                    chart.data.datasets[1].data = [vlan.total - vlan.used];
+                    chart.options.scales.x.max = vlan.total;
+                    chart.update();
+                };
+
+                if (charts.dhcpCorp) updateVlanBar(charts.dhcpCorp, vlanData.corp);
+                if (charts.dhcpSecure) updateVlanBar(charts.dhcpSecure, vlanData.secure);
+                if (charts.dhcpGuest) updateVlanBar(charts.dhcpGuest, vlanData.guest);
+                if (charts.dhcpProd) updateVlanBar(charts.dhcpProd, vlanData.prod);
+
+                // Update display values
                 const dhcpUsedValue = document.getElementById('dhcpUsedValue');
-                const dhcpAvailableValue = document.getElementById('dhcpAvailableValue');
+                const dhcpTotalValue = document.getElementById('dhcpTotalValue');
                 const dhcpPercentageValue = document.getElementById('dhcpPercentageValue');
-                if (dhcpUsedValue) dhcpUsedValue.textContent = dhcp.used;
-                if (dhcpAvailableValue) dhcpAvailableValue.textContent = dhcpAvailable;
-                if (dhcpPercentageValue) dhcpPercentageValue.textContent = dhcpPercentage + '%';
+                if (dhcpUsedValue) dhcpUsedValue.textContent = globalUsed;
+                if (dhcpTotalValue) dhcpTotalValue.textContent = globalTotal;
+                if (dhcpPercentageValue) dhcpPercentageValue.textContent = globalPercentage + '%';
+
+                document.getElementById('dhcpCorpValue').textContent = vlanData.corp.used + '/' + vlanData.corp.total;
+                document.getElementById('dhcpSecureValue').textContent = vlanData.secure.used + '/' + vlanData.secure.total;
+                document.getElementById('dhcpGuestValue').textContent = vlanData.guest.used + '/' + vlanData.guest.total;
+                document.getElementById('dhcpProdValue').textContent = vlanData.prod.used + '/' + vlanData.prod.total;
             }
         }
 
@@ -836,67 +869,85 @@
             }).join('');
             legendContainer.innerHTML = legendHTML;
 
-            // 7. DHCP Utilization - Horizontal Stacked Bar
-            const dhcpUsed = 182;
-            const dhcpTotal = 254;
-            const dhcpAvailable = dhcpTotal - dhcpUsed;
-            const dhcpPercentage = (dhcpUsed / dhcpTotal * 100).toFixed(1);
+            // 7. DHCP Utilization - Global Stacked Bar + VLAN Bars
+            const dhcpData = {
+                corp: { used: 85, total: 126 },
+                secure: { used: 42, total: 62 },
+                guest: { used: 28, total: 30 },
+                prod: { used: 27, total: 36 }
+            };
+            const dhcpGlobalUsed = dhcpData.corp.used + dhcpData.secure.used + dhcpData.guest.used + dhcpData.prod.used;
+            const dhcpGlobalTotal = dhcpData.corp.total + dhcpData.secure.total + dhcpData.guest.total + dhcpData.prod.total;
+            const dhcpGlobalPercentage = ((dhcpGlobalUsed / dhcpGlobalTotal) * 100).toFixed(1);
 
-            charts.dhcpCapacity = new Chart(document.getElementById('dhcpCapacityBar'), {
-                type: 'bar',
-                data: {
-                    labels: ['DHCP Pool'],
-                    datasets: [
-                        {
-                            label: 'Used',
-                            data: [dhcpUsed],
-                            backgroundColor: '#3b82f6',
-                            borderRadius: 4
-                        },
-                        {
-                            label: 'Available',
-                            data: [dhcpAvailable],
-                            backgroundColor: '#e5e7eb',
-                            borderRadius: 4
-                        }
-                    ]
-                },
-                options: {
-                    indexAxis: 'y',
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const label = context.dataset.label || '';
-                                    const value = context.parsed.x;
-                                    const percentage = ((value / dhcpTotal) * 100).toFixed(1);
-                                    return label + ': ' + value + ' (' + percentage + '%)';
+            // VLAN Colors
+            const vlanColors = {
+                corp: '#3b82f6',    // Blue
+                secure: '#8b5cf6', // Purple
+                guest: '#f59e0b',  // Amber
+                prod: '#10b981'    // Green
+            };
+
+            // Helper function to create DHCP bar chart
+            function createDhcpBarChart(canvasId, used, total, color, isGlobal = false) {
+                const available = total - used;
+                return new Chart(document.getElementById(canvasId), {
+                    type: 'bar',
+                    data: {
+                        labels: [''],
+                        datasets: isGlobal ? [
+                            { label: 'Corp', data: [dhcpData.corp.used], backgroundColor: vlanColors.corp, borderRadius: 0 },
+                            { label: 'Secure', data: [dhcpData.secure.used], backgroundColor: vlanColors.secure, borderRadius: 0 },
+                            { label: 'Guest', data: [dhcpData.guest.used], backgroundColor: vlanColors.guest, borderRadius: 0 },
+                            { label: 'Prod', data: [dhcpData.prod.used], backgroundColor: vlanColors.prod, borderRadius: 0 },
+                            { label: 'Available', data: [dhcpGlobalTotal - dhcpGlobalUsed], backgroundColor: '#e5e7eb', borderRadius: 4 }
+                        ] : [
+                            { label: 'Used', data: [used], backgroundColor: color, borderRadius: 0 },
+                            { label: 'Available', data: [available], backgroundColor: '#e5e7eb', borderRadius: 4 }
+                        ]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.dataset.label || '';
+                                        const value = context.parsed.x;
+                                        const pct = ((value / total) * 100).toFixed(1);
+                                        return label + ': ' + value + ' (' + pct + '%)';
+                                    }
                                 }
                             }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            stacked: true,
-                            max: dhcpTotal,
-                            grid: { display: false },
-                            ticks: { display: false }
                         },
-                        y: {
-                            stacked: true,
-                            grid: { display: false },
-                            ticks: { display: false }
+                        scales: {
+                            x: { stacked: true, max: total, grid: { display: false }, ticks: { display: false } },
+                            y: { stacked: true, grid: { display: false }, ticks: { display: false } }
                         }
                     }
-                }
-            });
+                });
+            }
 
-            document.getElementById('dhcpUsedValue').textContent = dhcpUsed;
-            document.getElementById('dhcpAvailableValue').textContent = dhcpAvailable;
-            document.getElementById('dhcpPercentageValue').textContent = dhcpPercentage + '%';
+            // Create Global Stacked Bar
+            charts.dhcpGlobal = createDhcpBarChart('dhcpGlobalBar', dhcpGlobalUsed, dhcpGlobalTotal, '#3b82f6', true);
+
+            // Create VLAN Bars
+            charts.dhcpCorp = createDhcpBarChart('dhcpCorpBar', dhcpData.corp.used, dhcpData.corp.total, vlanColors.corp);
+            charts.dhcpSecure = createDhcpBarChart('dhcpSecureBar', dhcpData.secure.used, dhcpData.secure.total, vlanColors.secure);
+            charts.dhcpGuest = createDhcpBarChart('dhcpGuestBar', dhcpData.guest.used, dhcpData.guest.total, vlanColors.guest);
+            charts.dhcpProd = createDhcpBarChart('dhcpProdBar', dhcpData.prod.used, dhcpData.prod.total, vlanColors.prod);
+
+            // Update display values
+            document.getElementById('dhcpUsedValue').textContent = dhcpGlobalUsed;
+            document.getElementById('dhcpTotalValue').textContent = dhcpGlobalTotal;
+            document.getElementById('dhcpPercentageValue').textContent = dhcpGlobalPercentage + '%';
+            document.getElementById('dhcpCorpValue').textContent = dhcpData.corp.used + '/' + dhcpData.corp.total;
+            document.getElementById('dhcpSecureValue').textContent = dhcpData.secure.used + '/' + dhcpData.secure.total;
+            document.getElementById('dhcpGuestValue').textContent = dhcpData.guest.used + '/' + dhcpData.guest.total;
+            document.getElementById('dhcpProdValue').textContent = dhcpData.prod.used + '/' + dhcpData.prod.total;
         }
 
         // Initialize Everything

@@ -313,36 +313,67 @@
                 </div>
             </div>
 
-            <div class="col-span-12 lg:col-span-3 card p-4 h-80 bg-dark-card cursor-pointer hover:shadow-lg transition-shadow" onclick="openDHCPTrends()">
-                <div class="flex justify-between items-center mb-3">
-                    <div class="flex items-center gap-2">
-                        <h3 class="text-sm font-bold text-dark-text">DHCP Utilization</h3>
-                        <i class="fa-solid fa-up-right-and-down-left-from-center text-xs text-gray-400 dark:text-gray-500"></i>
+            <div class="col-span-12 lg:col-span-3 card p-0 h-80 bg-dark-card cursor-pointer hover:shadow-lg transition-shadow overflow-hidden" onclick="openDHCPTrends()">
+                <div class="p-4 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-sm font-bold text-dark-text">DHCP Utilization</h3>
+                            <i class="fa-solid fa-up-right-and-down-left-from-center text-xs text-gray-400 dark:text-gray-500"></i>
+                        </div>
+                        <span class="text-xs font-bold text-dark-text" id="dhcpPercentageValue">--</span>
                     </div>
-                    <span class="text-xs text-gray-400">Pool Status</span>
                 </div>
-                <div class="flex flex-col justify-center" style="height: calc(100% - 2.5rem);">
-                    <div class="relative w-full" style="height: 80px; margin-bottom: 1rem;">
-                        <canvas id="dhcpCapacityBar"></canvas>
-                    </div>
-                    <div class="flex justify-around">
-                        <div class="text-center">
-                            <div class="flex items-center justify-center gap-1.5">
-                                <span class="w-2.5 h-2.5 bg-blue-500 rounded-sm"></span>
-                                <p class="text-xl font-bold text-gray-800 dark:text-white" id="dhcpUsedValue">--</p>
+                <div class="overflow-auto custom-scrollbar" style="height: calc(100% - 56px);">
+                    <div class="p-4 space-y-3">
+                        <!-- Global Capacity Bar -->
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-xs text-dark-text font-bold">Global Pool</span>
+                                <span class="text-xs text-dark-muted"><span id="dhcpUsedValue">--</span> / <span id="dhcpTotalValue">--</span></span>
                             </div>
-                            <p class="text-xs text-dark-muted mt-1">Used</p>
-                        </div>
-                        <div class="text-center">
-                            <div class="flex items-center justify-center gap-1.5">
-                                <span class="w-2.5 h-2.5 bg-gray-200 dark:bg-gray-600 rounded-sm"></span>
-                                <p class="text-xl font-bold text-gray-800 dark:text-white" id="dhcpAvailableValue">--</p>
+                            <div class="relative w-full" style="height: 48px;">
+                                <canvas id="dhcpGlobalBar"></canvas>
                             </div>
-                            <p class="text-xs text-dark-muted mt-1">Available</p>
                         </div>
-                        <div class="text-center">
-                            <p class="text-xl font-bold text-gray-800 dark:text-white" id="dhcpPercentageValue">--</p>
-                            <p class="text-xs text-dark-muted mt-1">Utilization</p>
+                        <!-- Corp VLAN -->
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-xs text-dark-text font-medium">Corp VLAN</span>
+                                <span class="text-xs text-dark-muted" id="dhcpCorpValue">--</span>
+                            </div>
+                            <div class="relative w-full" style="height: 30px;">
+                                <canvas id="dhcpCorpBar"></canvas>
+                            </div>
+                        </div>
+                        <!-- Secure VLAN -->
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-xs text-dark-text font-medium">Secure VLAN</span>
+                                <span class="text-xs text-dark-muted" id="dhcpSecureValue">--</span>
+                            </div>
+                            <div class="relative w-full" style="height: 30px;">
+                                <canvas id="dhcpSecureBar"></canvas>
+                            </div>
+                        </div>
+                        <!-- Guest VLAN -->
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-xs text-dark-text font-medium">Guest VLAN</span>
+                                <span class="text-xs text-dark-muted" id="dhcpGuestValue">--</span>
+                            </div>
+                            <div class="relative w-full" style="height: 30px;">
+                                <canvas id="dhcpGuestBar"></canvas>
+                            </div>
+                        </div>
+                        <!-- Prod VLAN -->
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-xs text-dark-text font-medium">Prod VLAN</span>
+                                <span class="text-xs text-dark-muted" id="dhcpProdValue">--</span>
+                            </div>
+                            <div class="relative w-full" style="height: 30px;">
+                                <canvas id="dhcpProdBar"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
