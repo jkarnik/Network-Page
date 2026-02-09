@@ -99,7 +99,7 @@
                 </div>
                 <div class="flex items-center gap-4">
                     <div class="relative">
-                        <select id="deviceSelector" onchange="updateAccessPointView(this.value)" class="block w-full pl-3 pr-10 py-2 text-sm border-dark-border focus:outline-none focus:ring-newrelic-cyan focus:border-newrelic-cyan sm:text-sm rounded-md bg-dark-bg border text-dark-text transition-all">
+                        <select id="deviceSelector" class="block w-full pl-3 pr-10 py-2 text-sm border-dark-border focus:outline-none focus:ring-newrelic-cyan focus:border-newrelic-cyan sm:text-sm rounded-md bg-dark-bg border text-dark-text transition-all">
                             <!-- Options populated dynamically by JavaScript -->
                         </select>
                     </div>
@@ -121,14 +121,14 @@
     <main class="flex-1 overflow-y-auto p-6 bg-dark-bg">
         <div class="max-w-[1920px] mx-auto">
 
-            <div class="card p-4 bg-dark-card border-l-4 border-newrelic-success mb-0 shadow-lg">
+            <div class="card p-4 bg-dark-card border-l-4 border-newrelic-success mb-0 shadow-lg" data-device-info>
                 <div class="flex items-center justify-between">
                     <!-- Left: Device Name -->
                     <div class="flex items-center gap-2">
                         <i class="fa-solid fa-wifi text-newrelic-cyan text-lg"></i>
                         <div>
-                            <h2 class="text-lg font-bold text-dark-text">NYC-Lobby-AP-01</h2>
-                            <p class="text-xs text-dark-muted">Cisco Meraki MR56-HW</p>
+                            <h2 class="text-lg font-bold text-dark-text" data-device-name>NYC-Lobby-AP-01</h2>
+                            <p class="text-xs text-dark-muted" data-device-model>Cisco Meraki MR56-HW</p>
                         </div>
                     </div>
 
@@ -136,7 +136,7 @@
                     <div class="flex items-center gap-8 text-sm">
                         <div class="flex items-center gap-2">
                             <span class="text-xs text-dark-muted">IP:</span>
-                            <span class="font-mono text-dark-text">10.128.20.15</span>
+                            <span class="font-mono text-dark-text" data-device-ip>10.128.20.15</span>
                         </div>
                         <div class="flex items-center gap-2">
                             <span class="text-xs text-dark-muted">MAC:</span>
@@ -159,13 +159,13 @@
             <div class="mb-4 mt-0">
                 <div class="border-b border-dark-border">
                     <nav class="-mb-px flex space-x-8" aria-label="Tabs">
-                        <button onclick="switchTab('overview')" id="tab-overview" class="tab-button border-newrelic-cyan text-newrelic-cyan whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors">
+                        <button data-tab="overview" id="tab-overview" class="tab-button border-newrelic-cyan text-newrelic-cyan whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors">
                             Overview
                         </button>
-                        <button onclick="switchTab('advanced')" id="tab-advanced" class="tab-button border-transparent text-dark-muted hover:text-newrelic-cyan hover:border-newrelic-cyan whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors">
+                        <button data-tab="advanced" id="tab-advanced" class="tab-button border-transparent text-dark-muted hover:text-newrelic-cyan hover:border-newrelic-cyan whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors">
                             Advanced
                         </button>
-                        <button onclick="switchTab('diagnostics')" id="tab-diagnostics" class="tab-button border-transparent text-dark-muted hover:text-newrelic-cyan hover:border-newrelic-cyan whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors">
+                        <button data-tab="diagnostics" id="tab-diagnostics" class="tab-button border-transparent text-dark-muted hover:text-newrelic-cyan hover:border-newrelic-cyan whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors">
                             Diagnostics
                         </button>
                     </nav>
@@ -560,6 +560,7 @@
     <script src="assets/js/chart-config.js" defer></script>
     <script src="assets/js/navigation.js" defer></script>
     <script src="assets/js/diagnostics-manager.js" defer></script>
+    <script src="assets/js/shared-ui.js" defer></script>
     <script src="assets/js/data-loader.js" defer></script>
 
     <!-- Main Application Script - Deferred for Performance -->

@@ -6,95 +6,27 @@
         let currentDeviceData = null;
 
         /**
-         * Initialize the device selector dropdown
+         * Initialize the device selector dropdown via SharedUI
          */
         async function initDeviceSelector() {
-            try {
-                console.log('initDeviceSelector: Starting...');
-                await DataLoader.load();
-                console.log('initDeviceSelector: DataLoader loaded');
-                const gateways = DataLoader.getDevices('gateways');
-                console.log('initDeviceSelector: Found', gateways.length, 'gateways');
-                const selector = document.getElementById('deviceSelector');
-                console.log('initDeviceSelector: Selector element:', selector);
-
-                if (!selector) {
-                    console.warn('Device selector element not found');
-                    return;
-                }
-                if (gateways.length === 0) {
-                    console.warn('No gateways found in data');
-                    return;
-                }
-
-            // Group gateways by site
-            const siteGroups = {};
-            gateways.forEach(gw => {
-                if (!siteGroups[gw.site]) {
-                    siteGroups[gw.site] = [];
-                }
-                siteGroups[gw.site].push(gw);
-            });
-
-            // Build the dropdown options
-            let optionsHtml = '';
-            Object.keys(siteGroups).sort().forEach(site => {
-                optionsHtml += `<optgroup label="${site}">`;
-                siteGroups[site].forEach(gw => {
-                    optionsHtml += `<option value="${gw.id}">${gw.name}</option>`;
-                });
-                optionsHtml += '</optgroup>';
-            });
-
-            selector.innerHTML = optionsHtml;
-
-            // Check for URL parameter to pre-select device
-            const urlParams = new URLSearchParams(window.location.search);
-            const deviceParam = urlParams.get('device');
-
-            if (deviceParam) {
-                // Try to find the device by ID or name
-                const device = gateways.find(g => g.id === deviceParam || g.name === deviceParam);
-                if (device) {
-                    selector.value = device.id;
+            const device = await SharedUI.initDeviceSelector('gateways', {
+                onDeviceSelected: async (device) => {
                     currentDevice = device;
-                }
-            }
-
-            // If no device selected, use the first one
-            if (!currentDevice && gateways.length > 0) {
-                currentDevice = gateways[0];
-                selector.value = currentDevice.id;
-            }
-
-            // Load device data and update display
-            if (currentDevice) {
-                await loadDeviceData(currentDevice.id);
-            }
-            } catch (error) {
-                console.error('initDeviceSelector failed:', error);
-            }
+                    await loadDeviceData(device.id);
+                },
+                onDeviceChanged: (deviceId) => updateGatewayView(deviceId)
+            });
+            if (device) currentDevice = device;
         }
 
         /**
-         * Handle gateway selection change
+         * Handle gateway selection change via SharedUI
          */
         async function updateGatewayView(deviceId) {
-            const device = DataLoader.getDeviceById(deviceId);
-            if (!device) {
-                console.warn('Device not found:', deviceId);
-                return;
-            }
-
-            currentDevice = device;
-
-            // Update URL without reloading
-            const url = new URL(window.location);
-            url.searchParams.set('device', deviceId);
-            window.history.replaceState({}, '', url);
-
-            // Load and apply device data
-            await loadDeviceData(deviceId);
+            const device = SharedUI.changeDevice(deviceId, async (dev) => {
+                currentDevice = dev;
+                await loadDeviceData(dev.id);
+            });
         }
 
         /**
@@ -116,91 +48,17 @@
         }
 
         /**
-         * Update the device alert feed with alerts for the current device
+         * Update the device alert feed (delegates to SharedUI)
          */
         function updateDeviceAlertFeed(deviceId) {
-            const tableBody = document.getElementById('deviceAlertTableBody');
-            const alertCount = document.getElementById('deviceAlertCount');
-            if (!tableBody) return;
-
-            const alerts = DataLoader.getAlertsByDeviceId(deviceId);
-
-            // Update alert count badge
-            if (alertCount) {
-                alertCount.textContent = `${alerts.length} alert${alerts.length !== 1 ? 's' : ''}`;
-                if (alerts.some(a => a.severity === 'crit')) {
-                    alertCount.className = 'ml-2 px-2 py-0.5 rounded text-xs font-normal bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300';
-                } else if (alerts.some(a => a.severity === 'warn')) {
-                    alertCount.className = 'ml-2 px-2 py-0.5 rounded text-xs font-normal bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300';
-                } else {
-                    alertCount.className = 'ml-2 px-2 py-0.5 rounded text-xs font-normal bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
-                }
-            }
-
-            // Severity styles and icons
-            const sevStyles = {
-                crit: 'px-2 py-0.5 rounded text-xs font-bold bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
-                warn: 'px-2 py-0.5 rounded text-xs font-bold bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300',
-                info: 'px-2 py-0.5 rounded text-xs font-bold bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
-            };
-            const sevIcons = {
-                crit: '<i class="fa-solid fa-circle-exclamation"></i>',
-                warn: '<i class="fa-solid fa-triangle-exclamation"></i>',
-                info: '<i class="fa-solid fa-circle-info"></i>'
-            };
-
-            tableBody.innerHTML = '';
-
-            if (alerts.length === 0) {
-                const row = document.createElement('tr');
-                row.innerHTML = `<td colspan="4" class="px-6 py-4 text-center text-sm text-gray-400">No alerts for this device.</td>`;
-                tableBody.appendChild(row);
-                return;
-            }
-
-            alerts.forEach(alert => {
-                const row = document.createElement('tr');
-                row.className = 'hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors';
-                row.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="${sevStyles[alert.severity]} flex items-center gap-1 w-fit">
-                            ${sevIcons[alert.severity]} ${alert.severity.toUpperCase()}
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-xs text-dark-muted">${alert.timeAgo}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-xs text-dark-muted capitalize">${alert.type}</td>
-                    <td class="px-6 py-4 text-sm text-dark-text">${alert.message}</td>
-                `;
-                tableBody.appendChild(row);
-            });
+            SharedUI.updateDeviceAlertFeed(deviceId);
         }
 
         /**
-         * Update the device info header
+         * Update the device info header (delegates to SharedUI)
          */
         function updateDeviceInfo() {
-            if (!currentDevice) return;
-
-            // Update device name in the device info card
-            const deviceInfoCard = document.querySelector('.border-l-4.border-green-500');
-            if (deviceInfoCard) {
-                const deviceNameEl = deviceInfoCard.querySelector('h2.text-lg.font-bold');
-                if (deviceNameEl) {
-                    deviceNameEl.textContent = currentDevice.name;
-                }
-
-                // Update model text
-                const modelEl = deviceInfoCard.querySelector('p.text-xs.text-gray-500');
-                if (modelEl && currentDevice.model) {
-                    modelEl.textContent = currentDevice.model;
-                }
-
-                // Update IP address
-                const ipSpans = deviceInfoCard.querySelectorAll('.font-mono');
-                if (ipSpans[0] && currentDevice.ip) {
-                    ipSpans[0].textContent = currentDevice.ip;
-                }
-            }
+            SharedUI.updateDeviceInfo(currentDevice);
         }
 
         /**
@@ -390,31 +248,10 @@
 
         // --- TAB SWITCHING LOGIC ---
         function switchTab(tabName) {
-            // Hide all tab contents
-            const tabContents = document.querySelectorAll('.tab-content');
-            tabContents.forEach(content => {
-                content.classList.add('hidden');
+            SharedUI.switchTab(tabName, {
+                activeClasses: 'border-newrelic-cyan text-blue-600 dark:text-blue-400',
+                inactiveClasses: 'border-transparent text-gray-500 dark:text-gray-400'
             });
-
-            // Remove active state from all tab buttons
-            const tabButtons = document.querySelectorAll('.tab-button');
-            tabButtons.forEach(button => {
-                button.classList.remove('border-newrelic-cyan', 'text-blue-600', 'dark:text-blue-400');
-                button.classList.add('border-transparent', 'text-gray-500', 'dark:text-gray-400');
-            });
-
-            // Show selected tab content
-            const selectedContent = document.getElementById(`content-${tabName}`);
-            if (selectedContent) {
-                selectedContent.classList.remove('hidden');
-            }
-
-            // Set active state for selected tab button
-            const selectedButton = document.getElementById(`tab-${tabName}`);
-            if (selectedButton) {
-                selectedButton.classList.remove('border-transparent', 'text-gray-500', 'dark:text-gray-400');
-                selectedButton.classList.add('border-newrelic-cyan', 'text-blue-600', 'dark:text-blue-400');
-            }
         }
 
         // --- Time Helper Functions ---
@@ -1018,6 +855,9 @@
 
         // Initialize device selector and load device data
         initDeviceSelector();
+
+        // Bind tab button click listeners (replaces inline onclick)
+        SharedUI.initTabListeners(switchTab);
 
         // Register charts with theme manager for automatic theme updates
         themeManager.registerCharts(charts);

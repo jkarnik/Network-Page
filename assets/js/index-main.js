@@ -322,17 +322,8 @@
 
         // --- 4. ALERT TABLE LOGIC ---
 
-        const sevStyles = {
-            crit: 'text-newrelic-error bg-red-50 dark:bg-red-900/20 dark:text-red-400 rounded-full px-2 py-0.5 text-xs font-bold border border-red-100 dark:border-red-900',
-            warn: 'text-newrelic-warning bg-amber-50 dark:bg-amber-900/20 dark:text-amber-400 rounded-full px-2 py-0.5 text-xs font-bold border border-amber-100 dark:border-amber-900',
-            info: 'text-blue-600 bg-blue-50 dark:bg-blue-900/20 dark:text-blue-400 rounded-full px-2 py-0.5 text-xs font-bold border border-blue-100 dark:border-blue-900'
-        };
-
-        const sevIcons = {
-            crit: '<i class="fa-solid fa-circle-exclamation"></i>',
-            warn: '<i class="fa-solid fa-triangle-exclamation"></i>',
-            info: '<i class="fa-solid fa-circle-info"></i>'
-        };
+        const sevStyles = SharedUI.SEV_STYLES_SUMMARY;
+        const sevIcons = SharedUI.SEV_ICONS;
 
         function renderTable(filter, alertsOverride = null) {
             const tableBody = document.getElementById('alertTableBody');
@@ -1020,18 +1011,6 @@
                 tableBody.appendChild(row);
                 return;
             }
-
-            const sevStyles = {
-                crit: 'text-newrelic-error bg-red-50 dark:bg-red-900/20 dark:text-red-400 rounded-full px-2 py-0.5 text-xs font-bold border border-red-100 dark:border-red-900',
-                warn: 'text-newrelic-warning bg-amber-50 dark:bg-amber-900/20 dark:text-amber-400 rounded-full px-2 py-0.5 text-xs font-bold border border-amber-100 dark:border-amber-900',
-                info: 'text-blue-600 bg-blue-50 dark:bg-blue-900/20 dark:text-blue-400 rounded-full px-2 py-0.5 text-xs font-bold border border-blue-100 dark:border-blue-900'
-            };
-
-            const sevIcons = {
-                crit: '<i class="fa-solid fa-circle-exclamation"></i>',
-                warn: '<i class="fa-solid fa-triangle-exclamation"></i>',
-                info: '<i class="fa-solid fa-circle-info"></i>'
-            };
 
             alerts.forEach(alert => {
                 const row = document.createElement('tr');
@@ -1777,6 +1756,26 @@
             initCharts();
             updateDashboardScope('Global'); // Load Global Data initially
             console.log('Dashboard initialized with Global scope');
+
+            // Bind scope selector change listener (replaces inline onchange)
+            const scopeSelector = document.getElementById('scopeSelector');
+            if (scopeSelector) {
+                scopeSelector.addEventListener('change', (e) => updateDashboardScope(e.target.value));
+            }
+
+            // Bind debounced search listeners (replaces inline oninput)
+            const searchBindings = [
+                { id: 'clientsSearchInput', handler: searchDeviceList },
+                { id: 'statusSearchInput', handler: searchStatusDevices },
+                { id: 'issuesSearchInput', handler: searchIssuesAlerts },
+                { id: 'securitySearchInput', handler: searchSecurityAlerts }
+            ];
+            searchBindings.forEach(({ id, handler }) => {
+                const input = document.getElementById(id);
+                if (input) {
+                    input.addEventListener('input', SharedUI.debounce(handler, 200));
+                }
+            });
 
             // Register charts with theme manager for automatic theme updates
             themeManager.registerCharts(charts);

@@ -100,7 +100,7 @@
                 <div class="flex items-center gap-4">
                     <!-- Scope Selector -->
                     <div class="relative">
-                        <select id="scopeSelector" onchange="updateDashboardScope(this.value)" class="block w-full pl-3 pr-10 py-2 text-sm border-dark-border focus:outline-none focus:ring-newrelic-cyan focus:border-newrelic-cyan sm:text-sm rounded-md bg-dark-bg border text-dark-text transition-all">
+                        <select id="scopeSelector" class="block w-full pl-3 pr-10 py-2 text-sm border-dark-border focus:outline-none focus:ring-newrelic-cyan focus:border-newrelic-cyan sm:text-sm rounded-md bg-dark-bg border text-dark-text transition-all">
                             <option value="Global">Global Organization</option>
                             <optgroup label="Regions">
                                 <option value="North America">North America</option>
@@ -213,7 +213,7 @@
                         </div>
                         <!-- Search Input -->
                         <div class="mb-3">
-                            <input type="text" id="issuesSearchInput" placeholder="Search alerts by site, device, or message..." class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500" oninput="searchIssuesAlerts()">
+                            <input type="text" id="issuesSearchInput" placeholder="Search alerts by site, device, or message..." class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <!-- Alert Table -->
                         <div class="flex-1 overflow-auto custom-scrollbar">
@@ -278,7 +278,7 @@
                         </div>
                         <!-- Search Input -->
                         <div class="mb-3">
-                            <input type="text" id="securitySearchInput" placeholder="Search security alerts by site, device, or message..." class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500" oninput="searchSecurityAlerts()">
+                            <input type="text" id="securitySearchInput" placeholder="Search security alerts by site, device, or message..." class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <!-- Alert Table -->
                         <div class="flex-1 overflow-auto custom-scrollbar">
@@ -388,7 +388,7 @@
                     </div>
                     <!-- Search Input -->
                     <div class="mb-3">
-                        <input type="text" id="clientsSearchInput" placeholder="Search devices by name, site, or IP address..." class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500" oninput="searchDeviceList()">
+                        <input type="text" id="clientsSearchInput" placeholder="Search devices by name, site, or IP address..." class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     <!-- Device List -->
                     <div class="flex-1 overflow-y-auto custom-scrollbar">
@@ -459,7 +459,7 @@
                     </div>
                     <!-- Search Input -->
                     <div class="mb-3">
-                        <input type="text" id="statusSearchInput" placeholder="Search devices by name, site, or IP address..." class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500" oninput="searchStatusDevices()">
+                        <input type="text" id="statusSearchInput" placeholder="Search devices by name, site, or IP address..." class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     <!-- Device List -->
                     <div class="flex-1 overflow-y-auto custom-scrollbar">
@@ -695,6 +695,7 @@
     <script src="assets/js/theme-manager.js" defer></script>
     <script src="assets/js/chart-config.js" defer></script>
     <script src="assets/js/navigation.js" defer></script>
+    <script src="assets/js/shared-ui.js" defer></script>
     <script src="assets/js/data-loader.js" defer></script>
 
     <!-- Main Application Script - Deferred for Performance -->

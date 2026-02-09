@@ -1,14 +1,24 @@
 /**
- * DataLoader - Centralized data loading and caching module
- * Loads network data from JSON file and provides accessor methods
+ * DataLoader - Centralized data loading and caching module.
+ * Loads network data, device manifests, and alerts from JSON files.
+ * Provides accessor methods for filtered data by scope, device type, etc.
+ *
+ * @namespace DataLoader
  */
 const DataLoader = {
+    /** @type {Object|null} Loaded network-data.json */
     _data: null,
+    /** @type {Object|null} Loaded devices.json manifest */
     _deviceManifest: null,
+    /** @type {Object|null} Loaded alerts.json */
     _alertsData: null,
+    /** @type {boolean} True while a load is in progress */
     _loading: false,
+    /** @type {boolean} True after data has been loaded successfully */
     _loaded: false,
+    /** @type {Array<Function>} Pending callbacks waiting for data load */
     _callbacks: [],
+    /** @type {string} Base path prefix for data files */
     _basePath: '',
 
     /**

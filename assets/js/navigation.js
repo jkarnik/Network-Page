@@ -1,41 +1,51 @@
 /**
  * Navigation Manager
- * Handles navigation state and active page highlighting
+ * Handles navigation state and active page highlighting.
+ *
+ * @namespace NavigationManager
  */
-
 const NavigationManager = {
     /**
-     * Initialize navigation with the current active page
+     * Page-to-href matching rules.
+     * @type {Object.<string, function(string): boolean>}
+     * @private
+     */
+    _pageMatchers: {
+        summary: (href) => href === 'index.html',
+        sdwan: (href) => href === 'sdwan.html',
+        switch: (href) => href.includes('switch'),
+        ap: (href) => href.includes('access')
+    },
+
+    /**
+     * Initialize navigation with the current active page.
      * @param {string} activePage - The current page identifier ('summary', 'sdwan', 'switch', 'ap')
      */
     init(activePage) {
         this.setActivePage(activePage);
-        this.initScopeSelector();
         this.initMobileMenu();
     },
 
     /**
-     * Set the active page in navigation
+     * Check if a link href matches the active page.
+     * @param {string} activePage - The page identifier
+     * @param {string} href - The link href attribute
+     * @returns {boolean}
+     * @private
+     */
+    _isActiveLink(activePage, href) {
+        const matcher = this._pageMatchers[activePage];
+        return matcher ? matcher(href) : false;
+    },
+
+    /**
+     * Set the active page in all navigation systems (desktop, mobile drawer, mobile tabs).
+     * @param {string} activePage - The page identifier
      */
     setActivePage(activePage) {
-        const navLinks = document.querySelectorAll('nav a[href]');
-
-        navLinks.forEach(link => {
-            const href = link.getAttribute('href');
-            let isActive = false;
-
-            // Determine if this link should be active
-            if (activePage === 'summary' && href === 'index.html') {
-                isActive = true;
-            } else if (activePage === 'sdwan' && href === 'sdwan.html') {
-                isActive = true;
-            } else if (activePage === 'switch' && href.includes('switch')) {
-                isActive = true;
-            } else if (activePage === 'ap' && href.includes('access')) {
-                isActive = true;
-            }
-
-            // Apply active styles
+        // Desktop nav links
+        document.querySelectorAll('nav a[href]').forEach(link => {
+            const isActive = this._isActiveLink(activePage, link.getAttribute('href'));
             if (isActive) {
                 link.classList.remove('border-transparent', 'text-gray-500', 'dark:text-gray-400');
                 link.classList.add('border-blue-500', 'text-gray-900', 'dark:text-white');
@@ -45,66 +55,18 @@ const NavigationManager = {
             }
         });
 
-        // Set active state for mobile nav links
-        const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
-        mobileNavLinks.forEach(link => {
-            const href = link.getAttribute('href');
-            let isActive = false;
-
-            if (activePage === 'summary' && href === 'index.html') {
-                isActive = true;
-            } else if (activePage === 'sdwan' && href === 'sdwan.html') {
-                isActive = true;
-            } else if (activePage === 'switch' && href.includes('switch')) {
-                isActive = true;
-            } else if (activePage === 'ap' && href.includes('access')) {
-                isActive = true;
-            }
-
-            if (isActive) {
-                link.classList.add('active');
-            } else {
-                link.classList.remove('active');
-            }
-        });
-
-        // Set active state for mobile tab links
-        const mobileTabLinks = document.querySelectorAll('.mobile-tab-link');
-        mobileTabLinks.forEach(link => {
-            const href = link.getAttribute('href');
-            let isActive = false;
-
-            if (activePage === 'summary' && href === 'index.html') {
-                isActive = true;
-            } else if (activePage === 'sdwan' && href === 'sdwan.html') {
-                isActive = true;
-            } else if (activePage === 'switch' && href.includes('switch')) {
-                isActive = true;
-            } else if (activePage === 'ap' && href.includes('access')) {
-                isActive = true;
-            }
-
-            if (isActive) {
-                link.classList.add('active');
-            } else {
-                link.classList.remove('active');
-            }
+        // Mobile nav links + mobile tab links
+        ['.mobile-nav-link', '.mobile-tab-link'].forEach(selector => {
+            document.querySelectorAll(selector).forEach(link => {
+                const isActive = this._isActiveLink(activePage, link.getAttribute('href'));
+                link.classList.toggle('active', isActive);
+            });
         });
     },
 
     /**
-     * Initialize scope selector functionality
-     */
-    initScopeSelector() {
-        const scopeSelector = document.getElementById('scopeSelector');
-        if (scopeSelector && !scopeSelector.hasAttribute('data-initialized')) {
-            scopeSelector.setAttribute('data-initialized', 'true');
-            // Event listener is already on the element via onchange attribute
-        }
-    },
-
-    /**
-     * Get current scope from selector
+     * Get current scope from the scope selector dropdown.
+     * @returns {string} The current scope value, defaults to 'Global'
      */
     getCurrentScope() {
         const scopeSelector = document.getElementById('scopeSelector');
@@ -112,7 +74,7 @@ const NavigationManager = {
     },
 
     /**
-     * Initialize mobile menu functionality
+     * Initialize mobile menu open/close functionality.
      */
     initMobileMenu() {
         const menuButton = document.getElementById('mobileMenuButton');
@@ -122,19 +84,17 @@ const NavigationManager = {
 
         if (!menuButton || !navDrawer || !navOverlay) return;
 
-        // Open menu
-        menuButton.addEventListener('click', () => {
-            navDrawer.classList.add('active');
-            navOverlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        });
-
-        // Close menu
         const closeMenu = () => {
             navDrawer.classList.remove('active');
             navOverlay.classList.remove('active');
             document.body.style.overflow = '';
         };
+
+        menuButton.addEventListener('click', () => {
+            navDrawer.classList.add('active');
+            navOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
 
         if (closeButton) {
             closeButton.addEventListener('click', closeMenu);
@@ -142,9 +102,7 @@ const NavigationManager = {
 
         navOverlay.addEventListener('click', closeMenu);
 
-        // Close menu when a link is clicked
-        const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
-        mobileNavLinks.forEach(link => {
+        document.querySelectorAll('.mobile-nav-link').forEach(link => {
             link.addEventListener('click', closeMenu);
         });
     }

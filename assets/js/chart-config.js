@@ -1,6 +1,9 @@
 /**
  * Chart Configuration
- * Centralized Chart.js configuration and defaults
+ * Centralized Chart.js configuration and defaults.
+ * Provides color palettes, dataset factories, and common scale/tooltip configs.
+ *
+ * @namespace ChartConfig
  */
 
 const ChartConfig = {

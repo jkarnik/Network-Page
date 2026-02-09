@@ -6,204 +6,34 @@
         let currentDeviceData = null;
 
         /**
-         * Initialize the device selector dropdown
+         * Initialize the device selector dropdown via SharedUI
          */
         async function initDeviceSelector() {
-            try {
-                console.log('AP initDeviceSelector: Starting...');
-                await DataLoader.load();
-                console.log('AP initDeviceSelector: DataLoader loaded');
-                const accessPoints = DataLoader.getDevices('accessPoints');
-                console.log('AP initDeviceSelector: Found', accessPoints.length, 'access points');
-                const selector = document.getElementById('deviceSelector');
-
-                if (!selector) {
-                    console.warn('Device selector element not found');
-                    return;
-                }
-                if (accessPoints.length === 0) {
-                    console.warn('No access points found in data');
-                    return;
-                }
-
-                // Group access points by site
-                const siteGroups = {};
-                accessPoints.forEach(ap => {
-                    if (!siteGroups[ap.site]) {
-                        siteGroups[ap.site] = [];
-                    }
-                    siteGroups[ap.site].push(ap);
-                });
-
-                // Build the dropdown options
-                let optionsHtml = '';
-                Object.keys(siteGroups).sort().forEach(site => {
-                    optionsHtml += `<optgroup label="${site}">`;
-                    siteGroups[site].forEach(ap => {
-                        optionsHtml += `<option value="${ap.id}">${ap.name}</option>`;
-                    });
-                    optionsHtml += '</optgroup>';
-                });
-
-                selector.innerHTML = optionsHtml;
-                console.log('AP initDeviceSelector: Populated dropdown with', accessPoints.length, 'options');
-
-                // Check for URL parameter to pre-select device
-                const urlParams = new URLSearchParams(window.location.search);
-                const deviceParam = urlParams.get('device');
-
-                if (deviceParam) {
-                    // Try to find the device by ID or name
-                    const device = accessPoints.find(ap => ap.id === deviceParam || ap.name === deviceParam);
-                    if (device) {
-                        selector.value = device.id;
-                        currentDevice = device;
-                    }
-                }
-
-                // If no device selected, use the first one
-                if (!currentDevice && accessPoints.length > 0) {
-                    currentDevice = accessPoints[0];
-                    selector.value = currentDevice.id;
-                }
-
-                // Update display
-                if (currentDevice) {
-                    updateDeviceInfo();
-                    updateDeviceAlertFeed(currentDevice.id);
-                }
-            } catch (error) {
-                console.error('AP initDeviceSelector failed:', error);
-            }
+            const device = await SharedUI.initDeviceSelector('accessPoints', {
+                onDeviceSelected: (device) => {
+                    currentDevice = device;
+                    SharedUI.updateDeviceInfo(currentDevice);
+                    SharedUI.updateDeviceAlertFeed(currentDevice.id);
+                },
+                onDeviceChanged: (deviceId) => updateAccessPointView(deviceId)
+            });
+            if (device) currentDevice = device;
         }
 
         /**
-         * Handle access point selection change
+         * Handle access point selection change via SharedUI
          */
         async function updateAccessPointView(deviceId) {
-            const device = DataLoader.getDeviceById(deviceId);
-            if (!device) {
-                console.warn('Device not found:', deviceId);
-                return;
-            }
-
-            currentDevice = device;
-
-            // Update URL without reloading
-            const url = new URL(window.location);
-            url.searchParams.set('device', deviceId);
-            window.history.replaceState({}, '', url);
-
-            // Update device info header
-            updateDeviceInfo();
-
-            // Update device alert feed
-            updateDeviceAlertFeed(deviceId);
-        }
-
-        /**
-         * Update the device info header
-         */
-        function updateDeviceInfo() {
-            if (!currentDevice) return;
-
-            // Update device name in the device info card
-            const deviceInfoCard = document.querySelector('.border-l-4.border-newrelic-success');
-            if (deviceInfoCard) {
-                const deviceNameEl = deviceInfoCard.querySelector('h2.text-lg.font-bold');
-                if (deviceNameEl) {
-                    deviceNameEl.textContent = currentDevice.name;
-                }
-
-                // Update model text
-                const modelEl = deviceInfoCard.querySelector('p.text-xs.text-dark-muted');
-                if (modelEl && currentDevice.model) {
-                    modelEl.textContent = currentDevice.model;
-                }
-
-                // Update IP address
-                const ipSpans = deviceInfoCard.querySelectorAll('.font-mono');
-                if (ipSpans[0] && currentDevice.ip) {
-                    ipSpans[0].textContent = currentDevice.ip;
-                }
-            }
-        }
-
-        /**
-         * Update the device alert feed with alerts for the current device
-         */
-        function updateDeviceAlertFeed(deviceId) {
-            const tableBody = document.getElementById('deviceAlertTableBody');
-            const alertCount = document.getElementById('deviceAlertCount');
-            if (!tableBody) return;
-
-            const alerts = DataLoader.getAlertsByDeviceId(deviceId);
-
-            // Update alert count badge
-            if (alertCount) {
-                alertCount.textContent = `${alerts.length} alert${alerts.length !== 1 ? 's' : ''}`;
-                if (alerts.some(a => a.severity === 'crit')) {
-                    alertCount.className = 'ml-2 px-2 py-0.5 rounded text-xs font-normal bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300';
-                } else if (alerts.some(a => a.severity === 'warn')) {
-                    alertCount.className = 'ml-2 px-2 py-0.5 rounded text-xs font-normal bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300';
-                } else {
-                    alertCount.className = 'ml-2 px-2 py-0.5 rounded text-xs font-normal bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
-                }
-            }
-
-            // Severity styles and icons
-            const sevStyles = {
-                crit: 'px-2 py-0.5 rounded text-xs font-bold bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
-                warn: 'px-2 py-0.5 rounded text-xs font-bold bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300',
-                info: 'px-2 py-0.5 rounded text-xs font-bold bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
-            };
-            const sevIcons = {
-                crit: '<i class="fa-solid fa-circle-exclamation"></i>',
-                warn: '<i class="fa-solid fa-triangle-exclamation"></i>',
-                info: '<i class="fa-solid fa-circle-info"></i>'
-            };
-
-            tableBody.innerHTML = '';
-
-            if (alerts.length === 0) {
-                const row = document.createElement('tr');
-                row.innerHTML = `<td colspan="4" class="px-6 py-4 text-center text-sm text-gray-400">No alerts for this device.</td>`;
-                tableBody.appendChild(row);
-                return;
-            }
-
-            alerts.forEach(alert => {
-                const row = document.createElement('tr');
-                row.className = 'hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors';
-                row.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="${sevStyles[alert.severity]} flex items-center gap-1 w-fit">
-                            ${sevIcons[alert.severity]} ${alert.severity.toUpperCase()}
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-xs text-dark-muted">${alert.timeAgo}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-xs text-dark-muted capitalize">${alert.type}</td>
-                    <td class="px-6 py-4 text-sm text-dark-text">${alert.message}</td>
-                `;
-                tableBody.appendChild(row);
+            SharedUI.changeDevice(deviceId, (dev) => {
+                currentDevice = dev;
+                SharedUI.updateDeviceInfo(currentDevice);
+                SharedUI.updateDeviceAlertFeed(currentDevice.id);
             });
         }
 
         // --- TAB SWITCHING LOGIC ---
         function switchTab(tabName) {
-            const tabContents = document.querySelectorAll('.tab-content');
-            tabContents.forEach(content => content.classList.add('hidden'));
-
-            const tabButtons = document.querySelectorAll('.tab-button');
-            tabButtons.forEach(button => {
-                button.classList.remove('border-newrelic-cyan', 'text-newrelic-cyan');
-                button.classList.add('border-transparent', 'text-dark-muted');
-            });
-
-            document.getElementById(`content-${tabName}`).classList.remove('hidden');
-            const selectedButton = document.getElementById(`tab-${tabName}`);
-            selectedButton.classList.remove('border-transparent', 'text-dark-muted');
-            selectedButton.classList.add('border-newrelic-cyan', 'text-newrelic-cyan');
+            SharedUI.switchTab(tabName);
         }
 
         // --- CHART INITIALIZATION ---
@@ -496,6 +326,9 @@
 
         // Initialize device selector and load device data
         initDeviceSelector();
+
+        // Bind tab button click listeners (replaces inline onclick)
+        SharedUI.initTabListeners(switchTab);
 
         // Register charts for theme switching
         themeManager.registerCharts(charts);
