@@ -128,10 +128,16 @@
                 const poeClass = port.poe > 0 ? 'poe-active' : '';
 
                 const slotHtml = `
-                    <div class="port-slot ${portColor} flex flex-col items-center ${poeClass}" title="Port ${port.id}: ${port.desc}">
+                    <div class="port-slot ${portColor} ${poeClass}" title="Port ${port.id}: ${port.desc}">
                         <div class="port-led ${ledColor}"></div>
-                        <div class="rj45-shape"></div>
-                        <div class="text-[8px] text-gray-800 dark:text-gray-300 font-mono font-bold mt-auto mb-0.5">${port.id}</div>
+                        <div class="rj45-jack">
+                            <div class="rj45-tab"></div>
+                            <div class="rj45-pins">
+                                <div class="rj45-pin"></div><div class="rj45-pin"></div><div class="rj45-pin"></div><div class="rj45-pin"></div>
+                                <div class="rj45-pin"></div><div class="rj45-pin"></div><div class="rj45-pin"></div><div class="rj45-pin"></div>
+                            </div>
+                        </div>
+                        <div class="port-label text-gray-800 dark:text-gray-300">${port.id}</div>
                         <i class="fa-solid fa-bolt poe-indicator"></i>
                     </div>
                 `;

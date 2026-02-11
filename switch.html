@@ -41,41 +41,106 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js" defer></script>
 
     <style>
-        /* Specific styles for the digital faceplate */
+        /* Digital faceplate — RJ45 jack styling */
         .port-grid {
             display: grid;
             grid-template-columns: repeat(24, 1fr);
-            gap: 2px;
+            gap: 3px;
             max-width: 100%;
         }
         .port-slot {
-            aspect-ratio: 1/0.8;
-            border-radius: 2px;
             position: relative;
+            border-radius: 3px;
             transition: all 0.2s;
             min-width: 0;
+            padding: 3px 2px 2px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
+        .port-slot:hover {
+            filter: brightness(1.15);
+            transform: scale(1.08);
+            z-index: 1;
+        }
+
+        /* LED indicator above the jack */
         .port-led {
-            width: 12px;
-            height: 8px;
-            margin: 3px auto;
-            border-radius: 2px;
+            width: 10px;
+            height: 4px;
+            border-radius: 1px;
+            margin-bottom: 2px;
+            flex-shrink: 0;
         }
-        .rj45-shape {
+
+        /* RJ45 jack body */
+        .rj45-jack {
+            width: 80%;
+            aspect-ratio: 1 / 0.65;
+            border: 1.5px solid rgba(0,0,0,0.3);
+            border-radius: 2px 2px 3px 3px;
+            background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.25) 100%);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: visible;
+        }
+        .dark .rj45-jack {
+            border-color: rgba(255,255,255,0.12);
+            background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.35) 100%);
+        }
+
+        /* Clip/release tab at top of jack */
+        .rj45-tab {
+            width: 50%;
+            height: 3px;
+            background: rgba(255,255,255,0.25);
+            border-radius: 0 0 2px 2px;
+            margin-top: -1px;
+        }
+        .dark .rj45-tab {
+            background: rgba(255,255,255,0.12);
+        }
+
+        /* Contact pin area inside the jack opening */
+        .rj45-pins {
             width: 70%;
-            height: 40%;
-            background: rgba(0,0,0,0.2);
-            margin: 1px auto 0;
-            border-radius: 1px 1px 2px 2px;
+            margin-top: auto;
+            margin-bottom: 2px;
+            display: flex;
+            justify-content: space-between;
+            gap: 1px;
+            padding: 0 1px;
         }
+        .rj45-pin {
+            flex: 1;
+            height: 3px;
+            background: rgba(180, 160, 80, 0.6);
+            border-radius: 0 0 1px 1px;
+        }
+        .dark .rj45-pin {
+            background: rgba(210, 190, 100, 0.45);
+        }
+
+        /* Port label */
+        .port-label {
+            font-size: 11px;
+            font-family: 'Inconsolata', monospace;
+            font-weight: 700;
+            margin-top: 2px;
+            line-height: 1;
+        }
+
+        /* PoE indicator */
         .poe-indicator {
             position: absolute;
-            bottom: 3px;
-            right: 3px;
-            font-size: 12px;
+            bottom: 12px;
+            right: 1px;
+            font-size: 8px;
             color: #fbbf24;
             display: none;
-            filter: drop-shadow(0 0 3px rgba(251, 191, 36, 0.8));
+            filter: drop-shadow(0 0 2px rgba(251, 191, 36, 0.8));
         }
         .poe-active .poe-indicator {
             display: block;
@@ -286,7 +351,7 @@
                 <div class="col-span-12 lg:col-span-3 card p-4 h-80 bg-dark-card cursor-pointer hover:shadow-lg transition-shadow" onclick="openTrafficTrends()">
                     <div class="flex justify-between items-center mb-4">
                         <div class="flex items-center gap-2">
-                            <h3 class="text-sm font-bold text-dark-text">Traffic (24h)</h3>
+                            <h3 class="text-sm font-bold text-dark-text">Uplink Traffic</h3>
                             <i class="fa-solid fa-up-right-and-down-left-from-center text-xs text-gray-400 dark:text-gray-500"></i>
                         </div>
                         <span class="text-xs text-gray-400" data-timeline-label>Last 24 hours</span>

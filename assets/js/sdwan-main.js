@@ -35,6 +35,12 @@
         async function loadDeviceData(deviceId) {
             currentDeviceData = await DataLoader.getDeviceData(deviceId, 'gateway');
 
+            // Reset VLAN/VPN filters on device change
+            const appsVlan = document.getElementById('appsVlanFilter');
+            if (appsVlan) appsVlan.value = '';
+            const appsVpn = document.getElementById('appsVpnFilter');
+            if (appsVpn) appsVpn.value = '';
+
             // Update device info header
             updateDeviceInfo();
 
@@ -122,17 +128,31 @@
             // Update Uplink Health chart
             if (charts.uplink && currentDeviceData.uplinkHealth) {
                 const uplink = currentDeviceData.uplinkHealth;
-                const uplinkSliced = TimelineManager.sliceData(uplink.labels, uplink.latency, uplink.jitter, uplink.loss);
-                // Convert string labels to Date objects for time-based X-axis
-                charts.uplink.data.labels = convertLabelsToTimestamps(uplinkSliced.labels);
-                charts.uplink.data.datasets[0].data = uplinkSliced.datasets[0];
-                charts.uplink.data.datasets[1].data = uplinkSliced.datasets[1];
-                charts.uplink.data.datasets[2].data = uplinkSliced.datasets[2];
+                const isEventData = uplink.spanGaps === false;
 
-                // Handle spanGaps for ISP failure scenario
-                if (uplink.spanGaps === false) {
+                if (isEventData) {
+                    // Event/override data: use actual timestamps from labels
+                    charts.uplink.data.labels = convertLabelsToTimestamps(uplink.labels);
+                    charts.uplink.data.datasets[0].data = uplink.latency;
+                    charts.uplink.data.datasets[1].data = uplink.jitter;
+                    charts.uplink.data.datasets[2].data = uplink.loss;
                     charts.uplink.data.datasets[0].spanGaps = false;
                     charts.uplink.data.datasets[1].spanGaps = false;
+                    // Keep minute-level axis for event detail
+                    charts.uplink.options.scales.x.time.unit = 'minute';
+                    charts.uplink.options.scales.x.time.displayFormats = { minute: 'HH:mm' };
+                    charts.uplink.options.scales.x.time.tooltipFormat = 'HH:mm:ss';
+                } else {
+                    // Standard hourly data: spread across timeline range
+                    const uplinkSliced = TimelineManager.sliceData(uplink.labels, uplink.latency, uplink.jitter, uplink.loss);
+                    charts.uplink.data.labels = generateTimestampsForRange(uplinkSliced.datasets[0].length);
+                    charts.uplink.data.datasets[0].data = uplinkSliced.datasets[0];
+                    charts.uplink.data.datasets[1].data = uplinkSliced.datasets[1];
+                    charts.uplink.data.datasets[2].data = uplinkSliced.datasets[2];
+                    const timeConfig = getTimeAxisConfig();
+                    charts.uplink.options.scales.x.time.unit = timeConfig.unit;
+                    charts.uplink.options.scales.x.time.displayFormats = timeConfig.displayFormats;
+                    charts.uplink.options.scales.x.time.tooltipFormat = timeConfig.tooltipFormat;
                 }
 
                 // Dynamic Y-axis adjustment based on data
@@ -150,14 +170,19 @@
                 charts.uplink.update();
             }
 
-            // Update Throughput chart
-            if (charts.throughput && currentDeviceData.throughput) {
-                const throughput = currentDeviceData.throughput;
-                const tpSliced = TimelineManager.sliceData(throughput.labels, throughput.upload, throughput.download);
-                charts.throughput.data.labels = tpSliced.labels;
-                charts.throughput.data.datasets[0].data = tpSliced.datasets[0];
-                charts.throughput.data.datasets[1].data = tpSliced.datasets[1];
-                charts.throughput.update();
+            // Update ISP Traffic chart (single chart, 4 lines)
+            if (charts.ispTraffic && currentDeviceData.ispTraffic) {
+                const ispSource = currentDeviceData.ispTrafficExpanded || currentDeviceData.ispTraffic;
+                const ispKeys = Object.keys(ispSource);
+                const isp1 = ispSource[ispKeys[0]];
+                const isp2 = ispKeys[1] ? ispSource[ispKeys[1]] : { labels: isp1.labels, upload: isp1.labels.map(() => 0), download: isp1.labels.map(() => 0) };
+                const sliced = TimelineManager.sliceData(isp1.labels, isp1.upload, isp1.download, isp2.upload, isp2.download);
+                charts.ispTraffic.data.labels = sliced.labels;
+                charts.ispTraffic.data.datasets[0].data = sliced.datasets[0]; // ISP1 Upload
+                charts.ispTraffic.data.datasets[1].data = sliced.datasets[1]; // ISP1 Download
+                charts.ispTraffic.data.datasets[2].data = sliced.datasets[2]; // ISP2 Upload
+                charts.ispTraffic.data.datasets[3].data = sliced.datasets[3]; // ISP2 Download
+                charts.ispTraffic.update();
             }
 
             // Update Top Apps chart
@@ -182,13 +207,12 @@
                 const vlanData = dhcp.vlans || {
                     corp: { used: Math.floor(dhcp.used * 0.47), total: Math.floor(dhcp.total * 0.50) },
                     secure: { used: Math.floor(dhcp.used * 0.23), total: Math.floor(dhcp.total * 0.24) },
-                    guest: { used: Math.floor(dhcp.used * 0.15), total: Math.floor(dhcp.total * 0.12) },
-                    prod: { used: Math.floor(dhcp.used * 0.15), total: Math.floor(dhcp.total * 0.14) }
+                    guest: { used: Math.floor(dhcp.used * 0.16), total: Math.floor(dhcp.total * 0.12) },
+                    prod: { used: Math.floor(dhcp.used * 0.14), total: Math.floor(dhcp.total * 0.14) }
                 };
 
                 const globalUsed = vlanData.corp.used + vlanData.secure.used + vlanData.guest.used + vlanData.prod.used;
                 const globalTotal = vlanData.corp.total + vlanData.secure.total + vlanData.guest.total + vlanData.prod.total;
-                const globalPercentage = ((globalUsed / globalTotal) * 100).toFixed(1);
 
                 // Update global stacked bar
                 charts.dhcpGlobal.data.datasets[0].data = [vlanData.corp.used];
@@ -212,17 +236,16 @@
                 if (charts.dhcpGuest) updateVlanBar(charts.dhcpGuest, vlanData.guest);
                 if (charts.dhcpProd) updateVlanBar(charts.dhcpProd, vlanData.prod);
 
-                // Update display values
-                const dhcpUsedValue = document.getElementById('dhcpUsedValue');
-                const dhcpTotalValue = document.getElementById('dhcpTotalValue');
-                const dhcpPercentageValue = document.getElementById('dhcpPercentageValue');
-                if (dhcpUsedValue) dhcpUsedValue.textContent = globalUsed;
-                if (dhcpTotalValue) dhcpTotalValue.textContent = globalTotal;
-                if (dhcpPercentageValue) dhcpPercentageValue.textContent = globalPercentage + '%';
-
+                // Update display values: percentage next to label, count on right
+                document.getElementById('dhcpGlobalPct').textContent = '(' + ((globalUsed / globalTotal) * 100).toFixed(0) + '%)';
+                document.getElementById('dhcpGlobalCount').textContent = globalUsed + ' / ' + globalTotal;
+                document.getElementById('dhcpCorpPct').textContent = '(' + ((vlanData.corp.used / vlanData.corp.total) * 100).toFixed(0) + '%)';
                 document.getElementById('dhcpCorpValue').textContent = vlanData.corp.used + '/' + vlanData.corp.total;
+                document.getElementById('dhcpSecurePct').textContent = '(' + ((vlanData.secure.used / vlanData.secure.total) * 100).toFixed(0) + '%)';
                 document.getElementById('dhcpSecureValue').textContent = vlanData.secure.used + '/' + vlanData.secure.total;
+                document.getElementById('dhcpGuestPct').textContent = '(' + ((vlanData.guest.used / vlanData.guest.total) * 100).toFixed(0) + '%)';
                 document.getElementById('dhcpGuestValue').textContent = vlanData.guest.used + '/' + vlanData.guest.total;
+                document.getElementById('dhcpProdPct').textContent = '(' + ((vlanData.prod.used / vlanData.prod.total) * 100).toFixed(0) + '%)';
                 document.getElementById('dhcpProdValue').textContent = vlanData.prod.used + '/' + vlanData.prod.total;
             }
         }
@@ -282,6 +305,7 @@
         }
         window.filterTopApps = filterTopApps;
 
+
         // --- TAB SWITCHING LOGIC ---
         function switchTab(tabName) {
             SharedUI.switchTab(tabName, {
@@ -310,6 +334,33 @@
                 const parts = label.split(':');
                 return new Date(today.getFullYear(), today.getMonth(), today.getDate(), parseInt(parts[0], 10) || 0, parseInt(parts[1], 10) || 0, parts[2] ? parseInt(parts[2], 10) : 0);
             });
+        }
+
+        /**
+         * Generate evenly-spaced timestamps across the current timeline range.
+         * Used for type:'time' X-axis charts instead of text-label conversion.
+         */
+        function generateTimestampsForRange(count) {
+            const range = TimelineManager.getRange();
+            const now = new Date();
+            const endMs = now.getTime();
+            const startMs = endMs - range.minutes * 60000;
+            const interval = count > 1 ? (endMs - startMs) / (count - 1) : 0;
+            return Array.from({length: count}, (_, i) => new Date(startMs + i * interval));
+        }
+
+        /**
+         * Get the appropriate Chart.js time axis config for the current range.
+         */
+        function getTimeAxisConfig() {
+            const range = TimelineManager.getRange();
+            if (range.minutes <= 1440) {
+                return { unit: 'hour', displayFormats: { hour: 'HH:mm', minute: 'HH:mm' }, tooltipFormat: 'HH:mm:ss' };
+            }
+            if (range.minutes <= 4320) {
+                return { unit: 'hour', displayFormats: { hour: 'MM/dd HH:mm', minute: 'MM/dd HH:mm' }, tooltipFormat: 'MM/dd HH:mm' };
+            }
+            return { unit: 'day', displayFormats: { day: 'EEE MM/dd', hour: 'MM/dd HH:mm' }, tooltipFormat: 'EEE MM/dd HH:mm' };
         }
 
         // --- Chart Initialization ---
@@ -653,9 +704,11 @@
                         x: {
                             type: 'time',
                             time: {
-                                unit: 'minute',
+                                unit: 'hour',
                                 displayFormats: {
-                                    minute: 'HH:mm'
+                                    hour: 'HH:mm',
+                                    minute: 'HH:mm',
+                                    day: 'EEE MM/dd'
                                 },
                                 tooltipFormat: 'HH:mm:ss'
                             },
@@ -674,86 +727,92 @@
                 }
             });
 
-            // 5. Throughput (Stacked Area) [cite: 18]
-            charts.throughput = new Chart(document.getElementById('throughputChart'), {
+            // 5. ISP Traffic Chart (single chart with 4 lines: 2 ISPs x upload/download)
+            charts.ispTraffic = new Chart(document.getElementById('ispTrafficChart'), {
                 type: 'line',
                 data: {
-                    labels: ['6h','5h','4h','3h','2h','1h'],
+                    labels: [],
                     datasets: [
                         {
-                            label: 'Tx (Upload)',
-                            data: [12, 15, 45, 30, 20, 18],
+                            label: 'Comcast Upload',
+                            data: [],
                             borderColor: '#6366f1',
-                            backgroundColor: 'rgba(99, 102, 241, 0.2)',
-                            pointRadius: 3,
-                            pointHoverRadius: 6,
+                            backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                            pointRadius: 2,
+                            pointHoverRadius: 5,
                             pointBackgroundColor: '#6366f1',
-                            pointHoverBackgroundColor: '#6366f1',
                             pointBorderColor: '#fff',
-                            pointHoverBorderColor: '#fff',
-                            pointBorderWidth: 2,
+                            pointBorderWidth: 1,
                             fill: true,
-                            tension: 0.4
+                            tension: 0.4,
+                            borderWidth: 2
                         },
                         {
-                            label: 'Rx (Download)',
-                            data: [40, 55, 120, 85, 60, 50],
+                            label: 'Comcast Download',
+                            data: [],
                             borderColor: '#10b981',
-                            backgroundColor: 'rgba(16, 185, 129, 0.2)',
-                            pointRadius: 3,
-                            pointHoverRadius: 6,
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            pointRadius: 2,
+                            pointHoverRadius: 5,
                             pointBackgroundColor: '#10b981',
-                            pointHoverBackgroundColor: '#10b981',
                             pointBorderColor: '#fff',
-                            pointHoverBorderColor: '#fff',
-                            pointBorderWidth: 2,
+                            pointBorderWidth: 1,
                             fill: true,
-                            tension: 0.4
+                            tension: 0.4,
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'AT&T Upload',
+                            data: [],
+                            borderColor: '#f59e0b',
+                            backgroundColor: 'rgba(245, 158, 11, 0.08)',
+                            pointRadius: 2,
+                            pointHoverRadius: 5,
+                            pointBackgroundColor: '#f59e0b',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 1,
+                            fill: true,
+                            tension: 0.4,
+                            borderWidth: 2,
+                            borderDash: [4, 2]
+                        },
+                        {
+                            label: 'AT&T Download',
+                            data: [],
+                            borderColor: '#06b6d4',
+                            backgroundColor: 'rgba(6, 182, 212, 0.08)',
+                            pointRadius: 2,
+                            pointHoverRadius: 5,
+                            pointBackgroundColor: '#06b6d4',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 1,
+                            fill: true,
+                            tension: 0.4,
+                            borderWidth: 2,
+                            borderDash: [4, 2]
                         }
                     ]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false
-                    },
+                    interaction: { mode: 'index', intersect: false },
                     plugins: {
-                        legend: { position: 'bottom' },
+                        legend: { display: false },
                         tooltip: {
-                            enabled: true,
                             backgroundColor: 'rgba(0, 0, 0, 0.8)',
                             titleColor: '#fff',
                             bodyColor: '#fff',
-                            borderColor: '#6366f1',
-                            borderWidth: 1,
                             callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    label += context.parsed.y + ' Mbps';
-                                    return label;
+                                label: function(ctx) {
+                                    return (ctx.dataset.label || '') + ': ' + ctx.parsed.y + ' Mbps';
                                 }
                             }
                         }
                     },
                     scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Mbps',
-                                font: { size: 11 }
-                            },
-                            ticks: {
-                                callback: function(value) {
-                                    return value;
-                                }
-                            }
-                        }
+                        x: { display: true, grid: { display: false }, ticks: { font: { size: 9 }, maxRotation: 0, autoSkipPadding: 10 } },
+                        y: { beginAtZero: true, ticks: { font: { size: 9 }, callback: v => v + '' }, title: { display: true, text: 'Mbps', font: { size: 9 } } }
                     }
                 }
             });
@@ -820,7 +879,6 @@
             };
             const dhcpGlobalUsed = dhcpData.corp.used + dhcpData.secure.used + dhcpData.guest.used + dhcpData.prod.used;
             const dhcpGlobalTotal = dhcpData.corp.total + dhcpData.secure.total + dhcpData.guest.total + dhcpData.prod.total;
-            const dhcpGlobalPercentage = ((dhcpGlobalUsed / dhcpGlobalTotal) * 100).toFixed(1);
 
             // VLAN Colors
             const vlanColors = {
@@ -882,13 +940,16 @@
             charts.dhcpGuest = createDhcpBarChart('dhcpGuestBar', dhcpData.guest.used, dhcpData.guest.total, vlanColors.guest);
             charts.dhcpProd = createDhcpBarChart('dhcpProdBar', dhcpData.prod.used, dhcpData.prod.total, vlanColors.prod);
 
-            // Update display values
-            document.getElementById('dhcpUsedValue').textContent = dhcpGlobalUsed;
-            document.getElementById('dhcpTotalValue').textContent = dhcpGlobalTotal;
-            document.getElementById('dhcpPercentageValue').textContent = dhcpGlobalPercentage + '%';
+            // Update display values: percentage next to label, count on right
+            document.getElementById('dhcpGlobalPct').textContent = '(' + ((dhcpGlobalUsed / dhcpGlobalTotal) * 100).toFixed(0) + '%)';
+            document.getElementById('dhcpGlobalCount').textContent = dhcpGlobalUsed + ' / ' + dhcpGlobalTotal;
+            document.getElementById('dhcpCorpPct').textContent = '(' + ((dhcpData.corp.used / dhcpData.corp.total) * 100).toFixed(0) + '%)';
             document.getElementById('dhcpCorpValue').textContent = dhcpData.corp.used + '/' + dhcpData.corp.total;
+            document.getElementById('dhcpSecurePct').textContent = '(' + ((dhcpData.secure.used / dhcpData.secure.total) * 100).toFixed(0) + '%)';
             document.getElementById('dhcpSecureValue').textContent = dhcpData.secure.used + '/' + dhcpData.secure.total;
+            document.getElementById('dhcpGuestPct').textContent = '(' + ((dhcpData.guest.used / dhcpData.guest.total) * 100).toFixed(0) + '%)';
             document.getElementById('dhcpGuestValue').textContent = dhcpData.guest.used + '/' + dhcpData.guest.total;
+            document.getElementById('dhcpProdPct').textContent = '(' + ((dhcpData.prod.used / dhcpData.prod.total) * 100).toFixed(0) + '%)';
             document.getElementById('dhcpProdValue').textContent = dhcpData.prod.used + '/' + dhcpData.prod.total;
         }
 
@@ -1306,39 +1367,129 @@
             // Time labels for 24 hours
             const baseTimeLabels = ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'];
 
-            // Hardcoded DHCP utilization data - ends at current value of 182
-            const baseDhcpUsedData = [162, 160, 158, 156, 155, 158, 165, 172, 180, 186, 190, 192, 194, 193, 191, 189, 187, 185, 184, 183, 182, 181, 181, 182];
-            const dhcpTotal = 254;
-            const baseDhcpCapacityLine = new Array(24).fill(dhcpTotal);
+            // Get VLAN proportions from current device data
+            let vlanRatios = { corp: 0.47, secure: 0.23, guest: 0.16, prod: 0.14 };
+            let dhcpTotal = 254;
+            if (currentDeviceData && currentDeviceData.dhcp) {
+                const dhcp = currentDeviceData.dhcp;
+                const vlans = dhcp.vlans || {
+                    corp: { used: Math.floor(dhcp.used * 0.47), total: Math.floor(dhcp.total * 0.50) },
+                    secure: { used: Math.floor(dhcp.used * 0.23), total: Math.floor(dhcp.total * 0.24) },
+                    guest: { used: Math.floor(dhcp.used * 0.16), total: Math.floor(dhcp.total * 0.12) },
+                    prod: { used: Math.floor(dhcp.used * 0.14), total: Math.floor(dhcp.total * 0.14) }
+                };
+                const globalTotal = vlans.corp.total + vlans.secure.total + vlans.guest.total + vlans.prod.total;
+                dhcpTotal = globalTotal;
+                const globalUsed = vlans.corp.used + vlans.secure.used + vlans.guest.used + vlans.prod.used;
+                if (globalUsed > 0) {
+                    vlanRatios = {
+                        corp: vlans.corp.used / globalUsed,
+                        secure: vlans.secure.used / globalUsed,
+                        guest: vlans.guest.used / globalUsed,
+                        prod: vlans.prod.used / globalUsed
+                    };
+                }
+            }
+
+            // Use device trend data or hardcoded fallback
+            let baseDhcpUsedData;
+            if (currentDeviceData && currentDeviceData.dhcpTrend) {
+                baseDhcpUsedData = currentDeviceData.dhcpTrend.used;
+            } else {
+                baseDhcpUsedData = [162, 160, 158, 156, 155, 158, 165, 172, 180, 186, 190, 192, 194, 193, 191, 189, 187, 185, 184, 183, 182, 181, 181, 182];
+            }
+
+            // Derive per-VLAN trend data from global using proportions
+            const corpData = baseDhcpUsedData.map(v => Math.round(v * vlanRatios.corp));
+            const secureData = baseDhcpUsedData.map(v => Math.round(v * vlanRatios.secure));
+            const guestData = baseDhcpUsedData.map(v => Math.round(v * vlanRatios.guest));
+            const prodData = baseDhcpUsedData.map(v => Math.round(v * vlanRatios.prod));
+            const totalUsedData = [...baseDhcpUsedData];
+            const capacityLine = new Array(baseDhcpUsedData.length).fill(dhcpTotal);
 
             // Slice data according to timeline
-            const dhcpSliced = TimelineManager.sliceData(baseTimeLabels, baseDhcpUsedData, baseDhcpCapacityLine);
+            const dhcpSliced = TimelineManager.sliceData(baseTimeLabels, corpData, secureData, guestData, prodData, totalUsedData, capacityLine);
 
-            // Create the DHCP trend chart
+            // Create the DHCP trend chart with per-VLAN lines
             dhcpTrendsChart = new Chart(document.getElementById('dhcpTrendsChart'), {
                 type: 'line',
                 data: {
                     labels: dhcpSliced.labels,
                     datasets: [
                         {
-                            label: 'Used IPs',
+                            label: 'Corp VLAN',
                             data: dhcpSliced.datasets[0],
                             borderColor: '#3b82f6',
-                            backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
                             borderWidth: 2,
-                            pointRadius: 3,
-                            pointHoverRadius: 6,
-                            pointBackgroundColor: '#3b82f6',
+                            pointRadius: 0,
+                            pointHoverRadius: 4,
                             pointHoverBackgroundColor: '#3b82f6',
-                            pointBorderColor: '#fff',
                             pointHoverBorderColor: '#fff',
-                            pointBorderWidth: 2,
+                            pointHoverBorderWidth: 2,
                             tension: 0.4,
                             fill: true
                         },
                         {
-                            label: 'Max Capacity',
+                            label: 'Secure VLAN',
                             data: dhcpSliced.datasets[1],
+                            borderColor: '#8b5cf6',
+                            backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                            borderWidth: 2,
+                            pointRadius: 0,
+                            pointHoverRadius: 4,
+                            pointHoverBackgroundColor: '#8b5cf6',
+                            pointHoverBorderColor: '#fff',
+                            pointHoverBorderWidth: 2,
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Guest VLAN',
+                            data: dhcpSliced.datasets[2],
+                            borderColor: '#f59e0b',
+                            backgroundColor: 'rgba(245, 158, 11, 0.08)',
+                            borderWidth: 2,
+                            pointRadius: 0,
+                            pointHoverRadius: 4,
+                            pointHoverBackgroundColor: '#f59e0b',
+                            pointHoverBorderColor: '#fff',
+                            pointHoverBorderWidth: 2,
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Prod VLAN',
+                            data: dhcpSliced.datasets[3],
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.08)',
+                            borderWidth: 2,
+                            pointRadius: 0,
+                            pointHoverRadius: 4,
+                            pointHoverBackgroundColor: '#10b981',
+                            pointHoverBorderColor: '#fff',
+                            pointHoverBorderWidth: 2,
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Total Used',
+                            data: dhcpSliced.datasets[4],
+                            borderColor: '#6b7280',
+                            backgroundColor: 'transparent',
+                            borderWidth: 2.5,
+                            borderDash: [4, 3],
+                            pointRadius: 0,
+                            pointHoverRadius: 4,
+                            pointHoverBackgroundColor: '#6b7280',
+                            pointHoverBorderColor: '#fff',
+                            pointHoverBorderWidth: 2,
+                            tension: 0.4,
+                            fill: false
+                        },
+                        {
+                            label: 'Max Capacity',
+                            data: dhcpSliced.datasets[5],
                             borderColor: '#ef4444',
                             backgroundColor: 'transparent',
                             borderWidth: 2,
@@ -1405,7 +1556,6 @@
                             type: 'linear',
                             display: true,
                             beginAtZero: true,
-                            max: dhcpTotal,
                             title: {
                                 display: true,
                                 text: 'IP Addresses',
@@ -1449,6 +1599,9 @@
                 uplinkHealthTrendsChart.destroy();
             }
 
+            // Check if this device has event/override data (ISP failure scenario)
+            const isEventData = currentDeviceData && currentDeviceData.uplinkHealth && currentDeviceData.uplinkHealth.spanGaps === false;
+
             // Use device-specific expanded uplink health data if available
             let baseTimeLabels, uplinkData;
 
@@ -1469,10 +1622,20 @@
                 };
             }
 
-            // Slice according to timeline
-            const uplinkSliced = TimelineManager.sliceData(baseTimeLabels, uplinkData.latency, uplinkData.jitter, uplinkData.loss);
-            uplinkData = { latency: uplinkSliced.datasets[0], jitter: uplinkSliced.datasets[1], loss: uplinkSliced.datasets[2] };
-            const timeStamps = convertLabelsToTimestamps(uplinkSliced.labels);
+            let timeStamps, timeConfig;
+
+            if (isEventData) {
+                // Event data: use actual timestamps, no slicing (show full event)
+                timeStamps = convertLabelsToTimestamps(baseTimeLabels);
+                uplinkData = { latency: uplinkData.latency, jitter: uplinkData.jitter, loss: uplinkData.loss };
+                timeConfig = { unit: 'minute', displayFormats: { minute: 'HH:mm' }, tooltipFormat: 'HH:mm:ss' };
+            } else {
+                // Standard data: slice and spread across timeline range
+                const uplinkSliced = TimelineManager.sliceData(baseTimeLabels, uplinkData.latency, uplinkData.jitter, uplinkData.loss);
+                uplinkData = { latency: uplinkSliced.datasets[0], jitter: uplinkSliced.datasets[1], loss: uplinkSliced.datasets[2] };
+                timeStamps = generateTimestampsForRange(uplinkSliced.datasets[0].length);
+                timeConfig = getTimeAxisConfig();
+            }
 
             // Determine if data contains ISP failure (null values or 100% loss)
             const hasIspFailure = uplinkData.latency.some(v => v === null) || uplinkData.loss.some(v => v >= 100);
@@ -1597,11 +1760,9 @@
                         x: {
                             type: 'time',
                             time: {
-                                unit: 'minute',
-                                displayFormats: {
-                                    minute: 'HH:mm'
-                                },
-                                tooltipFormat: 'HH:mm:ss'
+                                unit: timeConfig.unit,
+                                displayFormats: timeConfig.displayFormats,
+                                tooltipFormat: timeConfig.tooltipFormat
                             },
                             display: true,
                             grid: {
@@ -1686,29 +1847,59 @@
                 wanThroughputTrendsChart.destroy();
             }
 
-            // Time labels for 24 hours
-            const baseTimeLabels = ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'];
+            // Use device-specific ISP traffic data if available (matches the 4-line minimized card)
+            let baseTimeLabels, isp1Upload, isp1Download, isp2Upload, isp2Download, isp1Name, isp2Name;
 
-            // Hardcoded WAN throughput data - consistent with minimized view pattern
-            const baseThroughputData = {
-                upload: [10, 9, 8, 8, 9, 10, 12, 15, 25, 35, 45, 42, 38, 35, 32, 30, 28, 25, 20, 18, 16, 15, 14, 18],
-                download: [35, 32, 30, 28, 30, 35, 40, 55, 75, 100, 120, 115, 105, 95, 90, 85, 80, 70, 60, 50, 48, 45, 48, 50]
-            };
+            if (currentDeviceData && currentDeviceData.ispTraffic) {
+                const ispSource = currentDeviceData.ispTrafficExpanded || currentDeviceData.ispTraffic;
+                const ispKeys = Object.keys(ispSource);
+                const isp1 = ispSource[ispKeys[0]];
+                const isp2 = ispKeys[1] ? ispSource[ispKeys[1]] : { labels: isp1.labels, upload: isp1.labels.map(() => 0), download: isp1.labels.map(() => 0) };
+                isp1Name = ispKeys[0] || 'Comcast';
+                isp2Name = ispKeys[1] || 'AT&T';
+                baseTimeLabels = isp1.labels;
+                isp1Upload = isp1.upload;
+                isp1Download = isp1.download;
+                isp2Upload = isp2.upload;
+                isp2Download = isp2.download;
+            } else {
+                isp1Name = 'Comcast';
+                isp2Name = 'AT&T';
+                baseTimeLabels = ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'];
+                isp1Upload = [10, 9, 8, 8, 9, 10, 12, 15, 25, 35, 45, 42, 38, 35, 32, 30, 28, 25, 20, 18, 16, 15, 14, 18];
+                isp1Download = [35, 32, 30, 28, 30, 35, 40, 55, 75, 100, 120, 115, 105, 95, 90, 85, 80, 70, 60, 50, 48, 45, 48, 50];
+                isp2Upload = [5, 4, 4, 3, 4, 5, 6, 8, 12, 18, 22, 20, 18, 16, 15, 14, 13, 12, 10, 8, 7, 6, 6, 8];
+                isp2Download = [15, 14, 12, 10, 12, 15, 18, 25, 35, 48, 55, 52, 48, 42, 38, 35, 32, 28, 24, 20, 18, 16, 18, 20];
+            }
 
-            // Slice data according to timeline
-            const tpSliced = TimelineManager.sliceData(baseTimeLabels, baseThroughputData.upload, baseThroughputData.download);
+            // Slice all 4 datasets according to timeline
+            const tpSliced = TimelineManager.sliceData(baseTimeLabels, isp1Upload, isp1Download, isp2Upload, isp2Download);
 
-            // Create the WAN Throughput trend chart
+            // Build 2x2 HTML legend
+            const legendItems = [
+                { label: isp1Name + ' Up', color: '#6366f1' },
+                { label: isp1Name + ' Down', color: '#10b981' },
+                { label: isp2Name + ' Up', color: '#f59e0b' },
+                { label: isp2Name + ' Down', color: '#06b6d4' }
+            ];
+            const legendEl = document.getElementById('wanThroughputLegend');
+            if (legendEl) {
+                legendEl.innerHTML = legendItems.map(item =>
+                    `<span class="flex items-center gap-1 text-xs text-gray-500"><span class="w-2 h-2 rounded-full" style="background:${item.color}"></span> ${item.label}</span>`
+                ).join('');
+            }
+
+            // Create the WAN Throughput trend chart with 4 ISP-specific lines
             wanThroughputTrendsChart = new Chart(document.getElementById('wanThroughputTrendsChart'), {
                 type: 'line',
                 data: {
                     labels: tpSliced.labels,
                     datasets: [
                         {
-                            label: 'Upload (Tx)',
+                            label: isp1Name + ' Upload',
                             data: tpSliced.datasets[0],
                             borderColor: '#6366f1',
-                            backgroundColor: 'rgba(99, 102, 241, 0.2)',
+                            backgroundColor: 'rgba(99, 102, 241, 0.1)',
                             borderWidth: 2,
                             pointRadius: 3,
                             pointHoverRadius: 6,
@@ -1721,10 +1912,10 @@
                             fill: true
                         },
                         {
-                            label: 'Download (Rx)',
+                            label: isp1Name + ' Download',
                             data: tpSliced.datasets[1],
                             borderColor: '#10b981',
-                            backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
                             borderWidth: 2,
                             pointRadius: 3,
                             pointHoverRadius: 6,
@@ -1735,6 +1926,40 @@
                             pointBorderWidth: 2,
                             tension: 0.4,
                             fill: true
+                        },
+                        {
+                            label: isp2Name + ' Upload',
+                            data: tpSliced.datasets[2],
+                            borderColor: '#f59e0b',
+                            backgroundColor: 'rgba(245, 158, 11, 0.08)',
+                            borderWidth: 2,
+                            pointRadius: 3,
+                            pointHoverRadius: 6,
+                            pointBackgroundColor: '#f59e0b',
+                            pointHoverBackgroundColor: '#f59e0b',
+                            pointBorderColor: '#fff',
+                            pointHoverBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            tension: 0.4,
+                            fill: true,
+                            borderDash: [4, 2]
+                        },
+                        {
+                            label: isp2Name + ' Download',
+                            data: tpSliced.datasets[3],
+                            borderColor: '#06b6d4',
+                            backgroundColor: 'rgba(6, 182, 212, 0.08)',
+                            borderWidth: 2,
+                            pointRadius: 3,
+                            pointHoverRadius: 6,
+                            pointBackgroundColor: '#06b6d4',
+                            pointHoverBackgroundColor: '#06b6d4',
+                            pointBorderColor: '#fff',
+                            pointHoverBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            tension: 0.4,
+                            fill: true,
+                            borderDash: [4, 2]
                         }
                     ]
                 },
@@ -1746,16 +1971,7 @@
                         intersect: false
                     },
                     plugins: {
-                        legend: {
-                            display: true,
-                            position: 'top',
-                            labels: {
-                                boxWidth: 12,
-                                font: { size: 12 },
-                                padding: 15,
-                                usePointStyle: true
-                            }
-                        },
+                        legend: { display: false },
                         tooltip: {
                             enabled: true,
                             backgroundColor: 'rgba(0, 0, 0, 0.8)',

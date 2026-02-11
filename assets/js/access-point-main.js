@@ -35,6 +35,12 @@
         async function loadDeviceData(deviceId) {
             currentDeviceData = await DataLoader.getDeviceData(deviceId, 'accesspoint');
 
+            // Reset all VLAN filters on device change
+            ['funnelVlanFilter', 'clientCountVlanFilter', 'ssidVlanFilter', 'channelVlanFilter', 'snrVlanFilter'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.value = '';
+            });
+
             SharedUI.updateDeviceInfo(currentDevice);
 
             if (charts.associationGauge && currentDeviceData) {
@@ -329,14 +335,69 @@
         }
 
         /**
+         * Get the active VLAN filter value from a specific filter dropdown.
+         */
+        function getVlanFilter(filterId) {
+            const el = document.getElementById(filterId);
+            return el ? el.value : '';
+        }
+
+        /**
+         * Handle VLAN filter change — update the specific widget that changed.
+         */
+        function filterApVlan() {
+            if (!currentDeviceData) return;
+            updateChartsWithDeviceData();
+        }
+
+        /**
+         * Render the SSID-to-VLAN mapping table from device data.
+         */
+        function renderSsidVlanMapping() {
+            const tbody = document.getElementById('ssidVlanMappingBody');
+            const countEl = document.getElementById('ssidVlanMappingCount');
+            if (!tbody) return;
+
+            const mapping = currentDeviceData && currentDeviceData.ssidVlanMapping;
+            if (!mapping || !mapping.length) {
+                tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-4 text-center text-dark-muted text-sm">No SSID mappings available</td></tr>';
+                if (countEl) countEl.textContent = '0 SSIDs';
+                return;
+            }
+
+            if (countEl) countEl.textContent = mapping.length + ' SSID' + (mapping.length !== 1 ? 's' : '');
+
+            tbody.innerHTML = mapping.map(m => {
+                const statusClass = m.status === 'Active'
+                    ? 'bg-newrelic-success/20 text-newrelic-success'
+                    : 'bg-newrelic-error/20 text-newrelic-error';
+                return `<tr class="hover:bg-newrelic-cyan/10 transition-colors">
+                    <td class="px-6 py-2.5 font-bold text-dark-text">${m.ssid}</td>
+                    <td class="px-6 py-2.5 text-dark-text">${m.vlan}</td>
+                    <td class="px-6 py-2.5 text-dark-muted">${m.vlanId}</td>
+                    <td class="px-6 py-2.5"><span class="text-xs bg-newrelic-info/20 text-newrelic-info px-2 py-0.5 rounded font-medium">${m.security}</span></td>
+                    <td class="px-6 py-2.5 text-dark-muted">${m.band}</td>
+                    <td class="px-6 py-2.5 text-right text-dark-text font-bold">${m.clients}</td>
+                    <td class="px-6 py-2.5"><span class="text-xs ${statusClass} px-2 py-0.5 rounded font-medium">${m.status}</span></td>
+                </tr>`;
+            }).join('');
+        }
+
+        /**
          * Update all charts with data from DataLoader
          */
         function updateChartsWithDeviceData() {
             if (!currentDeviceData) return;
 
-            // Update Funnel Gauges
+            // Update Funnel Gauges (respecting VLAN filter)
             if (currentDeviceData.funnelData) {
-                const fd = currentDeviceData.funnelData;
+                const funnelVlan = getVlanFilter('funnelVlanFilter');
+                let fd;
+                if (funnelVlan && currentDeviceData.funnelDataByVlan && currentDeviceData.funnelDataByVlan[funnelVlan]) {
+                    fd = currentDeviceData.funnelDataByVlan[funnelVlan];
+                } else {
+                    fd = currentDeviceData.funnelData;
+                }
                 const success = (fd.association / 100) * (fd.authentication / 100) * (fd.dhcp / 100) * (fd.dns / 100) * 100;
 
                 if (charts.associationGauge) {
@@ -366,9 +427,15 @@
                 }
             }
 
-            // Update Client Count chart
+            // Update Client Count chart (respecting VLAN filter)
             if (charts.clientCount && currentDeviceData.clientCount) {
-                const cc = currentDeviceData.clientCount;
+                const ccVlan = getVlanFilter('clientCountVlanFilter');
+                let cc;
+                if (ccVlan && currentDeviceData.clientCountByVlan && currentDeviceData.clientCountByVlan[ccVlan]) {
+                    cc = currentDeviceData.clientCountByVlan[ccVlan];
+                } else {
+                    cc = currentDeviceData.clientCount;
+                }
                 const totalData = cc.labels.map((_, idx) =>
                     (cc.wired[idx] || 0) + (cc.wifi24[idx] || 0) + (cc.wifi5[idx] || 0) + (cc.wifi6[idx] || 0)
                 );
@@ -382,9 +449,15 @@
                 charts.clientCount.update();
             }
 
-            // Update Channel Utilization
+            // Update Channel Utilization (respecting VLAN filter)
             if (charts.channel && currentDeviceData.channelUtilization) {
-                const cu = currentDeviceData.channelUtilization;
+                const chVlan = getVlanFilter('channelVlanFilter');
+                let cu;
+                if (chVlan && currentDeviceData.channelUtilizationByVlan && currentDeviceData.channelUtilizationByVlan[chVlan]) {
+                    cu = currentDeviceData.channelUtilizationByVlan[chVlan];
+                } else {
+                    cu = currentDeviceData.channelUtilization;
+                }
                 charts.channel.data.labels = cu.labels;
                 charts.channel.data.datasets[0].data = cu.wifi;
                 charts.channel.data.datasets[1].data = cu.interference;
@@ -392,22 +465,37 @@
                 charts.channel.update();
             }
 
-            // Update SNR Distribution
+            // Update SNR Distribution (respecting VLAN filter)
             if (charts.snr && currentDeviceData.snrDistribution) {
-                const snr = currentDeviceData.snrDistribution;
+                const snrVlan = getVlanFilter('snrVlanFilter');
+                let snr;
+                if (snrVlan && currentDeviceData.snrDistributionByVlan && currentDeviceData.snrDistributionByVlan[snrVlan]) {
+                    snr = currentDeviceData.snrDistributionByVlan[snrVlan];
+                } else {
+                    snr = currentDeviceData.snrDistribution;
+                }
                 charts.snr.data.labels = snr.labels;
                 charts.snr.data.datasets[0].data = snr.data;
                 charts.snr.data.datasets[0].backgroundColor = snr.colors;
                 charts.snr.update();
             }
 
-            // Update Top SSIDs
+            // Update Top SSIDs (respecting VLAN filter)
             if (charts.ssids && currentDeviceData.topSSIDs) {
-                const ssids = currentDeviceData.topSSIDs;
+                const ssidVlan = getVlanFilter('ssidVlanFilter');
+                let ssids;
+                if (ssidVlan && currentDeviceData.topSSIDsByVlan && currentDeviceData.topSSIDsByVlan[ssidVlan]) {
+                    ssids = currentDeviceData.topSSIDsByVlan[ssidVlan];
+                } else {
+                    ssids = currentDeviceData.topSSIDs;
+                }
                 charts.ssids.data.labels = ssids.labels;
                 charts.ssids.data.datasets[0].data = ssids.data;
                 charts.ssids.update();
             }
+
+            // Render SSID-to-VLAN mapping table
+            renderSsidVlanMapping();
         }
 
         // Re-render charts when timeline range changes
@@ -1077,4 +1165,5 @@
         window.closeFunnelTimeSeries = closeFunnelTimeSeries;
         window.openChannelUtilTrends = openChannelUtilTrends;
         window.closeChannelUtilTrends = closeChannelUtilTrends;
+        window.filterApVlan = filterApVlan;
 

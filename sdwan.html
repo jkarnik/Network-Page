@@ -186,7 +186,7 @@
                 </div>
             </div>
 
-            <!-- ROW 2: Uplink Health, WAN Throughput, Top Applications, DHCP Utilization -->
+            <!-- ROW 2: Uplink Health, Uplink Traffic, Top Applications, DHCP Utilization -->
             <div class="col-span-12 lg:col-span-3 card p-4 h-80 bg-dark-card cursor-pointer hover:shadow-lg transition-shadow" onclick="openUplinkHealthTrends()">
                 <div class="flex justify-between items-center mb-4">
                     <div class="flex items-center gap-2">
@@ -205,15 +205,20 @@
             </div>
 
             <div class="col-span-12 lg:col-span-3 card p-4 h-80 bg-dark-card cursor-pointer hover:shadow-lg transition-shadow" onclick="openWanThroughputTrends()">
-                <div class="flex justify-between items-center mb-4">
+                <div class="flex justify-between items-center mb-2">
                     <div class="flex items-center gap-2">
-                        <h3 class="text-sm font-bold text-dark-text">WAN Throughput</h3>
+                        <h3 class="text-sm font-bold text-dark-text">Uplink Traffic</h3>
                         <i class="fa-solid fa-up-right-and-down-left-from-center text-xs text-gray-400 dark:text-gray-500"></i>
                     </div>
-                    <span class="text-xs text-gray-400" data-timeline-label>Last 24 hours</span>
+                    <div class="grid grid-cols-2 gap-x-3 gap-y-0.5 text-[10px]">
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 bg-indigo-500 rounded-sm"></span> Comcast Up</span>
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 bg-emerald-500 rounded-sm"></span> Comcast Down</span>
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 bg-amber-500 rounded-sm"></span> AT&T Up</span>
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 bg-cyan-500 rounded-sm"></span> AT&T Down</span>
+                    </div>
                 </div>
                 <div class="relative h-full w-full pb-4">
-                    <canvas id="throughputChart"></canvas>
+                    <canvas id="ispTrafficChart"></canvas>
                 </div>
             </div>
 
@@ -224,14 +229,14 @@
                         <i class="fa-solid fa-up-right-and-down-left-from-center text-xs text-gray-400 dark:text-gray-500"></i>
                     </div>
                     <div class="flex items-center gap-2" onclick="event.stopPropagation()">
-                        <select id="appsVlanFilter" class="text-[10px] px-1.5 py-0.5 rounded border border-dark-border bg-dark-bg text-dark-text focus:outline-none focus:border-newrelic-cyan cursor-pointer" onchange="filterTopApps('vlan')">
+                        <select id="appsVlanFilter" class="text-xs px-2 py-1 rounded border border-dark-border bg-dark-bg text-dark-text focus:outline-none focus:border-newrelic-cyan cursor-pointer" onchange="filterTopApps('vlan')">
                             <option value="">All VLANs</option>
                             <option value="Corp">Corp</option>
                             <option value="Secure">Secure</option>
                             <option value="Guest">Guest</option>
                             <option value="Prod">Prod</option>
                         </select>
-                        <select id="appsVpnFilter" class="text-[10px] px-1.5 py-0.5 rounded border border-dark-border bg-dark-bg text-dark-text focus:outline-none focus:border-newrelic-cyan cursor-pointer" onchange="filterTopApps('vpn')">
+                        <select id="appsVpnFilter" class="text-xs px-2 py-1 rounded border border-dark-border bg-dark-bg text-dark-text focus:outline-none focus:border-newrelic-cyan cursor-pointer" onchange="filterTopApps('vpn')">
                             <option value="">All Tunnels</option>
                             <option value="DC-Primary">DC-Primary</option>
                             <option value="DC-Backup">DC-Backup</option>
@@ -253,22 +258,19 @@
             </div>
 
             <div class="col-span-12 lg:col-span-3 card p-0 h-80 bg-dark-card cursor-pointer hover:shadow-lg transition-shadow overflow-hidden" onclick="openDHCPTrends()">
-                <div class="p-4 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
-                    <div class="flex justify-between items-center">
-                        <div class="flex items-center gap-2">
-                            <h3 class="text-sm font-bold text-dark-text">DHCP Utilization</h3>
-                            <i class="fa-solid fa-up-right-and-down-left-from-center text-xs text-gray-400 dark:text-gray-500"></i>
-                        </div>
-                        <span class="text-xs font-bold text-dark-text" id="dhcpPercentageValue">--</span>
+                <div class="flex justify-between items-center mb-4 p-4 pb-0">
+                    <div class="flex items-center gap-2">
+                        <h3 class="text-sm font-bold text-dark-text">DHCP Utilization</h3>
+                        <i class="fa-solid fa-up-right-and-down-left-from-center text-xs text-gray-400 dark:text-gray-500"></i>
                     </div>
                 </div>
-                <div class="overflow-auto custom-scrollbar" style="height: calc(100% - 56px);">
-                    <div class="p-4 space-y-3">
+                <div class="overflow-auto custom-scrollbar" style="height: calc(100% - 48px);">
+                    <div class="px-4 pb-4 space-y-3">
                         <!-- Global Capacity Bar -->
                         <div>
                             <div class="flex justify-between items-center mb-1">
-                                <span class="text-xs text-dark-text font-bold">Global Pool</span>
-                                <span class="text-xs text-dark-muted"><span id="dhcpUsedValue">--</span> / <span id="dhcpTotalValue">--</span></span>
+                                <span class="text-xs text-dark-text font-bold">Global Pool <span class="text-dark-muted font-normal" id="dhcpGlobalPct"></span></span>
+                                <span class="text-xs text-dark-muted" id="dhcpGlobalCount"></span>
                             </div>
                             <div class="relative w-full" style="height: 48px;">
                                 <canvas id="dhcpGlobalBar"></canvas>
@@ -277,8 +279,8 @@
                         <!-- Corp VLAN -->
                         <div>
                             <div class="flex justify-between items-center mb-1">
-                                <span class="text-xs text-dark-text font-medium">Corp VLAN</span>
-                                <span class="text-xs text-dark-muted" id="dhcpCorpValue">--</span>
+                                <span class="text-xs text-dark-text font-medium">Corp VLAN <span class="text-dark-muted font-normal" id="dhcpCorpPct"></span></span>
+                                <span class="text-xs text-dark-muted" id="dhcpCorpValue"></span>
                             </div>
                             <div class="relative w-full" style="height: 30px;">
                                 <canvas id="dhcpCorpBar"></canvas>
@@ -287,8 +289,8 @@
                         <!-- Secure VLAN -->
                         <div>
                             <div class="flex justify-between items-center mb-1">
-                                <span class="text-xs text-dark-text font-medium">Secure VLAN</span>
-                                <span class="text-xs text-dark-muted" id="dhcpSecureValue">--</span>
+                                <span class="text-xs text-dark-text font-medium">Secure VLAN <span class="text-dark-muted font-normal" id="dhcpSecurePct"></span></span>
+                                <span class="text-xs text-dark-muted" id="dhcpSecureValue"></span>
                             </div>
                             <div class="relative w-full" style="height: 30px;">
                                 <canvas id="dhcpSecureBar"></canvas>
@@ -297,8 +299,8 @@
                         <!-- Guest VLAN -->
                         <div>
                             <div class="flex justify-between items-center mb-1">
-                                <span class="text-xs text-dark-text font-medium">Guest VLAN</span>
-                                <span class="text-xs text-dark-muted" id="dhcpGuestValue">--</span>
+                                <span class="text-xs text-dark-text font-medium">Guest VLAN <span class="text-dark-muted font-normal" id="dhcpGuestPct"></span></span>
+                                <span class="text-xs text-dark-muted" id="dhcpGuestValue"></span>
                             </div>
                             <div class="relative w-full" style="height: 30px;">
                                 <canvas id="dhcpGuestBar"></canvas>
@@ -307,8 +309,8 @@
                         <!-- Prod VLAN -->
                         <div>
                             <div class="flex justify-between items-center mb-1">
-                                <span class="text-xs text-dark-text font-medium">Prod VLAN</span>
-                                <span class="text-xs text-dark-muted" id="dhcpProdValue">--</span>
+                                <span class="text-xs text-dark-text font-medium">Prod VLAN <span class="text-dark-muted font-normal" id="dhcpProdPct"></span></span>
+                                <span class="text-xs text-dark-muted" id="dhcpProdValue"></span>
                             </div>
                             <div class="relative w-full" style="height: 30px;">
                                 <canvas id="dhcpProdBar"></canvas>
@@ -664,7 +666,7 @@
                 </div>
                 <div class="p-6">
                     <div class="card p-4 bg-gray-50 dark:bg-gray-800">
-                        <h3 class="text-sm font-bold text-dark-text mb-3">DHCP Pool Utilization Over Time</h3>
+                        <h3 class="text-sm font-bold text-dark-text mb-3">DHCP Utilization by VLAN Over Time</h3>
                         <div style="height: 400px;">
                             <canvas id="dhcpTrendsChart"></canvas>
                         </div>
@@ -696,12 +698,12 @@
             </div>
         </div>
 
-        <!-- WAN Throughput Trends Overlay -->
+        <!-- Uplink Traffic Trends Overlay -->
         <div id="wanThroughputTrendsOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-6">
             <div class="bg-dark-card rounded-lg shadow-2xl w-full max-w-6xl overflow-hidden">
                 <div class="p-6 border-b border-dark-border flex justify-between items-center">
                     <div class="flex items-center gap-3">
-                        <h2 class="text-xl font-bold text-dark-text">WAN Throughput Trends</h2>
+                        <h2 class="text-xl font-bold text-dark-text">Uplink Traffic Trends</h2>
                         <span class="text-xs text-dark-muted" data-timeline-label>Last 24 hours</span>
                     </div>
                     <button onclick="closeWanThroughputTrends()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
@@ -710,7 +712,10 @@
                 </div>
                 <div class="p-6">
                     <div class="card p-4 bg-gray-50 dark:bg-gray-800">
-                        <h3 class="text-sm font-bold text-dark-text mb-3">Upload & Download Throughput Over Time</h3>
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="text-sm font-bold text-dark-text">Upload & Download Throughput by ISP Over Time</h3>
+                            <div id="wanThroughputLegend" class="grid grid-cols-2 gap-x-4 gap-y-1"></div>
+                        </div>
                         <div style="height: 400px;">
                             <canvas id="wanThroughputTrendsChart"></canvas>
                         </div>
