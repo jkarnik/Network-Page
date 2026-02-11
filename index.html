@@ -102,18 +102,18 @@
                     <div id="issuesExpandedView" class="hidden h-full flex flex-col">
                         <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
                             <div class="flex items-center gap-3">
-                                <button onclick="hideIssuesAlerts()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
-                                    <i class="fa-solid fa-arrow-left text-sm"></i>
-                                </button>
                                 <h4 class="text-base font-bold text-dark-text" id="issuesAlertTitle">Network Alerts</h4>
                                 <span class="text-xs text-gray-400 dark:text-gray-500" id="issuesAlertCount"></span>
                             </div>
                             <!-- Severity Filter -->
-                            <div class="flex gap-2">
+                            <div class="flex items-center gap-2">
                                 <button onclick="filterIssuesAlerts('all')" id="issuesFilterAll" class="px-3 py-1.5 text-xs rounded-lg bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors">All</button>
                                 <button onclick="filterIssuesAlerts('crit')" id="issuesFilterCrit" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Critical</button>
                                 <button onclick="filterIssuesAlerts('warn')" id="issuesFilterWarn" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Warning</button>
                                 <button onclick="filterIssuesAlerts('info')" id="issuesFilterInfo" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Info</button>
+                                <button onclick="hideIssuesAlerts()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-2">
+                                    <i class="fa-solid fa-times text-lg"></i>
+                                </button>
                             </div>
                         </div>
                         <!-- Search Input -->
@@ -168,18 +168,18 @@
                     <div id="securityExpandedView" class="hidden h-full flex flex-col">
                         <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
                             <div class="flex items-center gap-3">
-                                <button onclick="hideSecurityAlerts()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
-                                    <i class="fa-solid fa-arrow-left text-sm"></i>
-                                </button>
                                 <h4 class="text-base font-bold text-dark-text" id="securityAlertTitle">Security Alerts</h4>
                                 <span class="text-xs text-gray-400 dark:text-gray-500" id="securityAlertCount"></span>
                             </div>
                             <!-- Security Severity Filter -->
-                            <div class="flex gap-2">
+                            <div class="flex items-center gap-2">
                                 <button onclick="filterSecurityAlerts('all')" id="securityFilterAll" class="px-3 py-1.5 text-xs rounded-lg bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors">All</button>
                                 <button onclick="filterSecurityAlerts('crit')" id="securityFilterCrit" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Critical</button>
                                 <button onclick="filterSecurityAlerts('warn')" id="securityFilterWarn" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Warning</button>
                                 <button onclick="filterSecurityAlerts('info')" id="securityFilterInfo" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Info</button>
+                                <button onclick="hideSecurityAlerts()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-2">
+                                    <i class="fa-solid fa-times text-lg"></i>
+                                </button>
                             </div>
                         </div>
                         <!-- Search Input -->
@@ -278,18 +278,18 @@
                 <div id="expandedView" class="hidden h-[calc(100%-2rem)] flex flex-col">
                     <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
                         <div class="flex items-center gap-3">
-                            <button onclick="hideDeviceList()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
-                                <i class="fa-solid fa-arrow-left text-sm"></i>
-                            </button>
                             <h4 class="text-base font-bold text-dark-text" id="deviceListTitle">Devices</h4>
                             <span class="text-xs text-gray-400 dark:text-gray-500" id="deviceCount"></span>
                         </div>
                         <!-- Device Type Filter -->
-                        <div class="flex gap-2">
+                        <div class="flex items-center gap-2">
                             <button onclick="filterDevices('all')" id="filterAll" class="px-3 py-1.5 text-xs rounded-lg bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors">All</button>
                             <button onclick="filterDevices('gateway')" id="filterGateway" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Gateways</button>
                             <button onclick="filterDevices('switch')" id="filterSwitch" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Switches</button>
                             <button onclick="filterDevices('ap')" id="filterAp" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Access Points</button>
+                            <button onclick="hideDeviceList()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-2">
+                                <i class="fa-solid fa-times text-lg"></i>
+                            </button>
                         </div>
                     </div>
                     <!-- Search Input -->
@@ -349,18 +349,18 @@
                 <div id="statusExpandedView" class="hidden h-full flex flex-col">
                     <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
                         <div class="flex items-center gap-3">
-                            <button onclick="hideStatusDevices()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
-                                <i class="fa-solid fa-arrow-left text-sm"></i>
-                            </button>
                             <h4 class="text-base font-bold text-dark-text" id="statusDeviceListTitle">Devices</h4>
                             <span class="text-xs text-gray-400 dark:text-gray-500" id="statusDeviceCount"></span>
                         </div>
                         <!-- Status Filter -->
-                        <div class="flex gap-2">
+                        <div class="flex items-center gap-2">
                             <button onclick="filterStatusDevices('all')" id="statusFilterAll" class="px-3 py-1.5 text-xs rounded-lg bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors">All</button>
                             <button onclick="filterStatusDevices('online')" id="statusFilterOnline" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Online</button>
                             <button onclick="filterStatusDevices('warning')" id="statusFilterWarning" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Warning</button>
                             <button onclick="filterStatusDevices('critical')" id="statusFilterCritical" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Critical</button>
+                            <button onclick="hideStatusDevices()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-2">
+                                <i class="fa-solid fa-times text-lg"></i>
+                            </button>
                         </div>
                     </div>
                     <!-- Search Input -->
@@ -485,7 +485,7 @@
         </div>
 
         <!-- Latency Trends Overlay -->
-        <div id="latencyTrendsOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-6">
+        <div id="latencyTrendsOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-6" onclick="if(event.target===this)closeLatencyTrends()">
             <div class="bg-dark-card rounded-lg shadow-2xl w-full max-w-6xl overflow-hidden">
                 <div class="p-6 border-b border-dark-border flex justify-between items-center">
                     <div class="flex items-center gap-3">
@@ -508,7 +508,7 @@
         </div>
 
         <!-- User Frustration Trends Overlay -->
-        <div id="frustrationTrendsOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-6">
+        <div id="frustrationTrendsOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-6" onclick="if(event.target===this)closeFrustrationTrends()">
             <div class="bg-dark-card rounded-lg shadow-2xl w-full max-w-6xl overflow-hidden">
                 <div class="p-6 border-b border-dark-border flex justify-between items-center">
                     <div class="flex items-center gap-3">
@@ -539,7 +539,7 @@
         </div>
 
         <!-- WAN Resilience Trends Overlay -->
-        <div id="wanResilienceTrendsOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-6">
+        <div id="wanResilienceTrendsOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-6" onclick="if(event.target===this)closeWanResilienceTrends()">
             <div class="bg-dark-card rounded-lg shadow-2xl w-full max-w-6xl overflow-hidden">
                 <div class="p-6 border-b border-dark-border flex justify-between items-center">
                     <div class="flex items-center gap-3">

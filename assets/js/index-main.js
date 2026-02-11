@@ -1748,6 +1748,26 @@
         window.openWanResilienceTrends = openWanResilienceTrends;
         window.closeWanResilienceTrends = closeWanResilienceTrends;
 
+        // Global Escape key and click-outside handler for all overlays
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                // Close modal overlays first (higher z-index)
+                const latency = document.getElementById('latencyTrendsOverlay');
+                const frustration = document.getElementById('frustrationTrendsOverlay');
+                const wan = document.getElementById('wanResilienceTrendsOverlay');
+
+                if (!latency.classList.contains('hidden')) { closeLatencyTrends(); return; }
+                if (!frustration.classList.contains('hidden')) { closeFrustrationTrends(); return; }
+                if (!wan.classList.contains('hidden')) { closeWanResilienceTrends(); return; }
+
+                // Then close card overlays
+                if (isIssuesExpanded) { hideIssuesAlerts(); return; }
+                if (isSecurityExpanded) { hideSecurityAlerts(); return; }
+                if (isExpanded) { toggleExpand(); return; }
+                if (isStatusExpanded) { hideStatusDevices(); return; }
+            }
+        });
+
         // Initialize - Load data first, then initialize charts
         console.log('Starting data load...');
         DataLoader.load().then(() => {
