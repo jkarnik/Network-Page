@@ -60,19 +60,19 @@
         <div class="mobile-nav-links">
             <a href="index.html" class="mobile-nav-link">
                 <i class="fa-solid fa-chart-line"></i>
-                <span>Summary Page</span>
+                <span>Summary</span>
             </a>
             <a href="sdwan.html" class="mobile-nav-link">
                 <i class="fa-solid fa-network-wired"></i>
-                <span>SD-WAN Page</span>
+                <span>SD-WAN</span>
             </a>
             <a href="switch.html" class="mobile-nav-link">
                 <i class="fa-solid fa-server"></i>
-                <span>Switch Page</span>
+                <span>Switch</span>
             </a>
             <a href="access-point.html" class="mobile-nav-link">
                 <i class="fa-solid fa-wifi"></i>
-                <span>Access Point Page</span>
+                <span>Access Point</span>
             </a>
         </div>
     </div>
@@ -93,10 +93,10 @@
                         <span class="font-bold text-xl tracking-tight text-dark-text">Network Performance Monitoring</span>
                     </div>
                     <div class="hidden sm:ml-8 sm:flex sm:space-x-8">
-                        <a href="index.html" class="border-transparent text-dark-muted hover:border-newrelic-cyan hover:text-newrelic-cyan transition-colors inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Summary Page</a>
-                        <a href="sdwan.html" class="border-newrelic-cyan text-dark-text inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">SD-WAN Page</a>
-                        <a href="switch.html" class="border-transparent text-dark-muted hover:border-newrelic-cyan hover:text-newrelic-cyan transition-colors inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Switch Page</a>
-                        <a href="access-point.html" class="border-transparent text-dark-muted hover:border-newrelic-cyan hover:text-newrelic-cyan transition-colors inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Access Point Page</a>
+                        <a href="index.html" class="border-transparent text-dark-muted hover:border-newrelic-cyan hover:text-newrelic-cyan transition-colors inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Summary</a>
+                        <a href="sdwan.html" class="border-newrelic-cyan text-dark-text inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">SD-WAN</a>
+                        <a href="switch.html" class="border-transparent text-dark-muted hover:border-newrelic-cyan hover:text-newrelic-cyan transition-colors inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Switch</a>
+                        <a href="access-point.html" class="border-transparent text-dark-muted hover:border-newrelic-cyan hover:text-newrelic-cyan transition-colors inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Access Point</a>
                     </div>
                 </div>
                 <div class="flex items-center gap-4">
@@ -106,6 +106,9 @@
                             <!-- Options populated dynamically by JavaScript -->
                         </select>
                     </div>
+
+                    <!-- Timeline Selector -->
+                    <div id="timelineSelector" class="relative"></div>
 
                     <div class="flex items-center gap-3 border-l pl-4 border-dark-border">
                         <div class="text-right hidden md:block">
@@ -287,7 +290,7 @@
                         <h3 class="text-sm font-bold text-dark-text">WAN Throughput</h3>
                         <i class="fa-solid fa-up-right-and-down-left-from-center text-xs text-gray-400 dark:text-gray-500"></i>
                     </div>
-                    <span class="text-xs text-gray-400">Last 6 Hours</span>
+                    <span class="text-xs text-gray-400" data-timeline-label>Last 24 hours</span>
                 </div>
                 <div class="relative h-full w-full pb-4">
                     <canvas id="throughputChart"></canvas>
@@ -299,6 +302,22 @@
                     <div class="flex items-center gap-2">
                         <h3 class="text-sm font-bold text-dark-text">Top Applications</h3>
                         <i class="fa-solid fa-up-right-and-down-left-from-center text-xs text-gray-400 dark:text-gray-500"></i>
+                    </div>
+                    <div class="flex items-center gap-2" onclick="event.stopPropagation()">
+                        <select id="appsVlanFilter" class="text-[10px] px-1.5 py-0.5 rounded border border-dark-border bg-dark-bg text-dark-text focus:outline-none focus:border-newrelic-cyan cursor-pointer" onchange="filterTopApps('vlan')">
+                            <option value="">All VLANs</option>
+                            <option value="Corp">Corp</option>
+                            <option value="Secure">Secure</option>
+                            <option value="Guest">Guest</option>
+                            <option value="Prod">Prod</option>
+                        </select>
+                        <select id="appsVpnFilter" class="text-[10px] px-1.5 py-0.5 rounded border border-dark-border bg-dark-bg text-dark-text focus:outline-none focus:border-newrelic-cyan cursor-pointer" onchange="filterTopApps('vpn')">
+                            <option value="">All Tunnels</option>
+                            <option value="DC-Primary">DC-Primary</option>
+                            <option value="DC-Backup">DC-Backup</option>
+                            <option value="Branch-SFO">Branch-SFO</option>
+                            <option value="Branch-LON">Branch-LON</option>
+                        </select>
                     </div>
                 </div>
                 <div class="flex items-center justify-center gap-4" style="height: calc(100% - 2rem);">
@@ -383,7 +402,7 @@
             <div class="col-span-12 lg:col-span-4 card p-4 bg-dark-card overflow-hidden flex flex-col" style="height: 240px;">
                 <div class="flex justify-between items-center mb-4 flex-none">
                     <h3 class="text-sm font-bold text-dark-text">Sequential Event Timeline</h3>
-                    <span class="text-[10px] text-gray-400">Last 24 Hours</span>
+                    <span class="text-[10px] text-gray-400" data-timeline-label>Last 24 hours</span>
                 </div>
 
                 <div class="pl-2 space-y-0 overflow-y-auto custom-scrollbar flex-1 pr-2">
@@ -673,15 +692,36 @@
                 <div class="p-6 border-b border-dark-border flex justify-between items-center">
                     <div class="flex items-center gap-3">
                         <h2 class="text-xl font-bold text-dark-text">Application Traffic Trends</h2>
-                        <span class="text-xs text-dark-muted">Last 24 Hours</span>
+                        <span class="text-xs text-dark-muted" data-timeline-label>Last 24 hours</span>
                     </div>
-                    <button onclick="closeApplicationTrends()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-                        <i class="fa-solid fa-times text-2xl"></i>
-                    </button>
+                    <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-2">
+                            <select id="appTrendsVlanFilter" class="text-xs px-2 py-1 rounded border border-dark-border bg-dark-bg text-dark-text focus:outline-none focus:border-newrelic-cyan cursor-pointer" onchange="filterAppTrendsOverlay('vlan')">
+                                <option value="">All VLANs</option>
+                                <option value="Corp">Corp</option>
+                                <option value="Secure">Secure</option>
+                                <option value="Guest">Guest</option>
+                                <option value="Prod">Prod</option>
+                            </select>
+                            <select id="appTrendsVpnFilter" class="text-xs px-2 py-1 rounded border border-dark-border bg-dark-bg text-dark-text focus:outline-none focus:border-newrelic-cyan cursor-pointer" onchange="filterAppTrendsOverlay('vpn')">
+                                <option value="">All Tunnels</option>
+                                <option value="DC-Primary">DC-Primary</option>
+                                <option value="DC-Backup">DC-Backup</option>
+                                <option value="Branch-SFO">Branch-SFO</option>
+                                <option value="Branch-LON">Branch-LON</option>
+                            </select>
+                        </div>
+                        <button onclick="closeApplicationTrends()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                            <i class="fa-solid fa-times text-2xl"></i>
+                        </button>
+                    </div>
                 </div>
                 <div class="p-6">
                     <div class="card p-4 bg-gray-50 dark:bg-gray-800">
-                        <h3 class="text-sm font-bold text-dark-text mb-3">Traffic Volume by Application</h3>
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="text-sm font-bold text-dark-text">Traffic Volume by Application</h3>
+                            <span id="appTrendsFilterLabel" class="text-xs text-dark-muted"></span>
+                        </div>
                         <div style="height: 400px;">
                             <canvas id="appTrendsChart"></canvas>
                         </div>
@@ -696,7 +736,7 @@
                 <div class="p-6 border-b border-dark-border flex justify-between items-center">
                     <div class="flex items-center gap-3">
                         <h2 class="text-xl font-bold text-dark-text">DHCP Utilization Trends</h2>
-                        <span class="text-xs text-dark-muted">Last 24 Hours</span>
+                        <span class="text-xs text-dark-muted" data-timeline-label>Last 24 hours</span>
                     </div>
                     <button onclick="closeDHCPTrends()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
                         <i class="fa-solid fa-times text-2xl"></i>
@@ -719,7 +759,7 @@
                 <div class="p-6 border-b border-dark-border flex justify-between items-center">
                     <div class="flex items-center gap-3">
                         <h2 class="text-xl font-bold text-dark-text">Uplink Health Trends</h2>
-                        <span class="text-xs text-dark-muted">Last 24 Hours</span>
+                        <span class="text-xs text-dark-muted" data-timeline-label>Last 24 hours</span>
                     </div>
                     <button onclick="closeUplinkHealthTrends()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
                         <i class="fa-solid fa-times text-2xl"></i>
@@ -742,7 +782,7 @@
                 <div class="p-6 border-b border-dark-border flex justify-between items-center">
                     <div class="flex items-center gap-3">
                         <h2 class="text-xl font-bold text-dark-text">WAN Throughput Trends</h2>
-                        <span class="text-xs text-dark-muted">Last 24 Hours</span>
+                        <span class="text-xs text-dark-muted" data-timeline-label>Last 24 hours</span>
                     </div>
                     <button onclick="closeWanThroughputTrends()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
                         <i class="fa-solid fa-times text-2xl"></i>
@@ -792,6 +832,7 @@
     <script src="assets/js/navigation.js" defer></script>
     <script src="assets/js/diagnostics-manager.js" defer></script>
     <script src="assets/js/shared-ui.js" defer></script>
+    <script src="assets/js/timeline-manager.js" defer></script>
     <script src="assets/js/data-loader.js" defer></script>
 
     <!-- Main Application Script - Deferred for Performance -->

@@ -97,33 +97,37 @@
 
             // Update CPU Sparkline
             if (charts.cpuSparkline && currentDeviceData.cpuTrend) {
-                charts.cpuSparkline.data.labels = currentDeviceData.cpuTrend.labels;
-                charts.cpuSparkline.data.datasets[0].data = currentDeviceData.cpuTrend.data;
+                const cpuSliced = TimelineManager.sliceData(currentDeviceData.cpuTrend.labels, currentDeviceData.cpuTrend.data);
+                charts.cpuSparkline.data.labels = cpuSliced.labels;
+                charts.cpuSparkline.data.datasets[0].data = cpuSliced.datasets[0];
                 charts.cpuSparkline.update();
             }
 
             // Update Memory Sparkline
             if (charts.memSparkline && currentDeviceData.memoryTrend) {
-                charts.memSparkline.data.labels = currentDeviceData.memoryTrend.labels;
-                charts.memSparkline.data.datasets[0].data = currentDeviceData.memoryTrend.data;
+                const memSliced = TimelineManager.sliceData(currentDeviceData.memoryTrend.labels, currentDeviceData.memoryTrend.data);
+                charts.memSparkline.data.labels = memSliced.labels;
+                charts.memSparkline.data.datasets[0].data = memSliced.datasets[0];
                 charts.memSparkline.update();
             }
 
             // Update Signal Sparkline
             if (charts.signal && currentDeviceData.signalTrend) {
-                charts.signal.data.labels = currentDeviceData.signalTrend.labels;
-                charts.signal.data.datasets[0].data = currentDeviceData.signalTrend.data;
+                const sigSliced = TimelineManager.sliceData(currentDeviceData.signalTrend.labels, currentDeviceData.signalTrend.data);
+                charts.signal.data.labels = sigSliced.labels;
+                charts.signal.data.datasets[0].data = sigSliced.datasets[0];
                 charts.signal.update();
             }
 
             // Update Uplink Health chart
             if (charts.uplink && currentDeviceData.uplinkHealth) {
                 const uplink = currentDeviceData.uplinkHealth;
+                const uplinkSliced = TimelineManager.sliceData(uplink.labels, uplink.latency, uplink.jitter, uplink.loss);
                 // Convert string labels to Date objects for time-based X-axis
-                charts.uplink.data.labels = convertLabelsToTimestamps(uplink.labels);
-                charts.uplink.data.datasets[0].data = uplink.latency;
-                charts.uplink.data.datasets[1].data = uplink.jitter;
-                charts.uplink.data.datasets[2].data = uplink.loss;
+                charts.uplink.data.labels = convertLabelsToTimestamps(uplinkSliced.labels);
+                charts.uplink.data.datasets[0].data = uplinkSliced.datasets[0];
+                charts.uplink.data.datasets[1].data = uplinkSliced.datasets[1];
+                charts.uplink.data.datasets[2].data = uplinkSliced.datasets[2];
 
                 // Handle spanGaps for ISP failure scenario
                 if (uplink.spanGaps === false) {
@@ -149,9 +153,10 @@
             // Update Throughput chart
             if (charts.throughput && currentDeviceData.throughput) {
                 const throughput = currentDeviceData.throughput;
-                charts.throughput.data.labels = throughput.labels;
-                charts.throughput.data.datasets[0].data = throughput.upload;
-                charts.throughput.data.datasets[1].data = throughput.download;
+                const tpSliced = TimelineManager.sliceData(throughput.labels, throughput.upload, throughput.download);
+                charts.throughput.data.labels = tpSliced.labels;
+                charts.throughput.data.datasets[0].data = tpSliced.datasets[0];
+                charts.throughput.data.datasets[1].data = tpSliced.datasets[1];
                 charts.throughput.update();
             }
 
@@ -246,6 +251,37 @@
             legendContainer.innerHTML = legendHTML;
         }
 
+        /**
+         * Filter Top Applications by VLAN or VPN tunnel
+         * @param {string} source - 'vlan' or 'vpn' to indicate which filter changed
+         */
+        function filterTopApps(source) {
+            const vlanFilter = document.getElementById('appsVlanFilter');
+            const vpnFilter = document.getElementById('appsVpnFilter');
+
+            // Mutual exclusion: reset the other filter when one is set
+            if (source === 'vlan' && vlanFilter && vlanFilter.value && vpnFilter) {
+                vpnFilter.value = '';
+            } else if (source === 'vpn' && vpnFilter && vpnFilter.value && vlanFilter) {
+                vlanFilter.value = '';
+            }
+
+            const vlanVal = vlanFilter ? vlanFilter.value : '';
+            const vpnVal = vpnFilter ? vpnFilter.value : '';
+            const { appData } = getFilteredAppData(vlanVal, vpnVal);
+
+            if (!appData || !charts.apps) return;
+
+            charts.apps.data.labels = appData.labels;
+            charts.apps.data.datasets[0].data = appData.data;
+            if (appData.colors) {
+                charts.apps.data.datasets[0].backgroundColor = appData.colors;
+            }
+            charts.apps.update();
+            updateAppsLegend(appData);
+        }
+        window.filterTopApps = filterTopApps;
+
         // --- TAB SWITCHING LOGIC ---
         function switchTab(tabName) {
             SharedUI.switchTab(tabName, {
@@ -255,19 +291,25 @@
         }
 
         // --- Time Helper Functions ---
-        // Helper function to convert time string to Date object for today
-        function timeStringToDate(timeStr) {
-            const today = new Date();
-            const parts = timeStr.split(':');
-            const hours = parseInt(parts[0], 10);
-            const minutes = parseInt(parts[1], 10);
-            const seconds = parts[2] ? parseInt(parts[2], 10) : 0;
-            return new Date(today.getFullYear(), today.getMonth(), today.getDate(), hours, minutes, seconds);
-        }
-
-        // Convert time labels to Date objects for time-based X-axis
+        // Convert time labels to Date timestamps
+        // Handles: "HH:MM" (≤24h), "MM/DD HH:00" (3d), "Day MM/DD" (7d)
         function convertLabelsToTimestamps(labels) {
-            return labels.map(label => timeStringToDate(label));
+            const today = new Date();
+            return labels.map(label => {
+                // "Tue 02/05" — 7d range
+                const dayMatch = label.match(/^[A-Za-z]{3}\s+(\d{2})\/(\d{2})$/);
+                if (dayMatch) {
+                    return new Date(today.getFullYear(), parseInt(dayMatch[1], 10) - 1, parseInt(dayMatch[2], 10));
+                }
+                // "02/09 08:00" — 3d range
+                const dateTimeMatch = label.match(/^(\d{2})\/(\d{2})\s+(\d{2}):(\d{2})$/);
+                if (dateTimeMatch) {
+                    return new Date(today.getFullYear(), parseInt(dateTimeMatch[1], 10) - 1, parseInt(dateTimeMatch[2], 10), parseInt(dateTimeMatch[3], 10), parseInt(dateTimeMatch[4], 10));
+                }
+                // "HH:MM" or "HH:MM:SS" — ≤24h range
+                const parts = label.split(':');
+                return new Date(today.getFullYear(), today.getMonth(), today.getDate(), parseInt(parts[0], 10) || 0, parseInt(parts[1], 10) || 0, parts[2] ? parseInt(parts[2], 10) : 0);
+            });
         }
 
         // --- Chart Initialization ---
@@ -867,6 +909,13 @@
             themeManager.updateChartColors();
         }
 
+        // Re-render charts when timeline range changes
+        TimelineManager.onChange(() => {
+            if (currentDeviceData) {
+                updateChartsWithDeviceData();
+            }
+        });
+
         // --- PEER DETAILS OVERLAY ---
         let peerCharts = {};
 
@@ -1052,90 +1101,96 @@
         // --- APPLICATION TRENDS OVERLAY ---
         let appTrendsChart = null;
 
-        function openApplicationTrends() {
-            const overlay = document.getElementById('appTrendsOverlay');
-            overlay.classList.remove('hidden');
+        /**
+         * Get the active app data based on current filter state (card or overlay)
+         * Returns { appData, filterLabel } for the active filter
+         */
+        function getFilteredAppData(vlanVal, vpnVal) {
+            let appData = null;
+            let filterLabel = '';
 
-            // Destroy existing chart if it exists
+            if (vlanVal && currentDeviceData && currentDeviceData.topAppsByVlan) {
+                appData = currentDeviceData.topAppsByVlan[vlanVal];
+                filterLabel = 'VLAN: ' + vlanVal;
+            } else if (vpnVal && currentDeviceData && currentDeviceData.topAppsByVpn) {
+                appData = currentDeviceData.topAppsByVpn[vpnVal];
+                filterLabel = 'Tunnel: ' + vpnVal;
+            } else if (currentDeviceData && currentDeviceData.topApps) {
+                appData = currentDeviceData.topApps;
+            }
+
+            return { appData, filterLabel };
+        }
+
+        /**
+         * Build the trend chart using the given app data and colors
+         */
+        function buildAppTrendsChart(appData) {
+            // Destroy existing chart
             if (appTrendsChart) {
                 appTrendsChart.destroy();
             }
 
-            // Time labels for 24 hours
-            const timeLabels = ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'];
+            const baseTimeLabels = ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'];
 
-            // Hardcoded application trend data (in Mbps) - ends at current donut values (M365:45, Teams:25, Salesforce:15, YouTube:5, Other:10)
-            const appTrendsData = {
-                'M365': [38, 36, 35, 34, 35, 37, 40, 44, 48, 50, 52, 51, 49, 48, 50, 52, 51, 49, 47, 46, 45, 44, 44, 45],
-                'Teams': [18, 16, 15, 14, 15, 18, 22, 26, 30, 32, 33, 32, 30, 28, 29, 30, 29, 28, 27, 26, 25, 24, 24, 25],
-                'Salesforce': [12, 11, 10, 10, 10, 11, 13, 15, 17, 18, 19, 18, 17, 16, 17, 18, 17, 16, 16, 15, 15, 15, 15, 15],
-                'YouTube': [3, 2, 2, 2, 2, 2, 3, 4, 5, 6, 7, 8, 8, 7, 6, 5, 5, 5, 5, 5, 5, 5, 5, 5],
-                'Other': [8, 7, 7, 7, 7, 8, 9, 10, 11, 12, 12, 11, 11, 10, 10, 11, 11, 10, 10, 10, 10, 10, 10, 10]
-            };
+            // Use device trend data if available, else generate synthetic from donut percentages
+            let trendSource = (currentDeviceData && currentDeviceData.topAppsTrend) ? currentDeviceData.topAppsTrend : null;
 
-            // Colors matching the donut chart
-            const colors = {
-                'M365': '#3b82f6',
-                'Teams': '#6366f1',
-                'Salesforce': '#0ea5e9',
-                'YouTube': '#ef4444',
-                'Other': '#9ca3af'
-            };
+            // Build datasets from the app labels/data
+            const labels = appData.labels;
+            const colors = appData.colors || ['#3b82f6', '#6366f1', '#0ea5e9', '#ef4444', '#9ca3af'];
 
-            // Create datasets for the trend chart
-            const datasets = Object.keys(appTrendsData).map(app => ({
-                label: app,
-                data: appTrendsData[app],
-                borderColor: colors[app],
-                backgroundColor: colors[app] + '20',
+            // Collect all raw trend data arrays for slicing
+            const rawTrends = labels.map((label, i) => {
+                if (trendSource && trendSource[label]) {
+                    return trendSource[label];
+                }
+                const base = appData.data[i];
+                return baseTimeLabels.map((_, j) => {
+                    const variation = Math.sin((j / 24) * Math.PI * 2) * (base * 0.15);
+                    return Math.max(0, +(base + variation).toFixed(1));
+                });
+            });
+
+            // Slice all datasets according to the current timeline
+            const sliced = TimelineManager.sliceData(baseTimeLabels, ...rawTrends);
+
+            const datasets = labels.map((label, i) => ({
+                label: label,
+                data: sliced.datasets[i],
+                borderColor: colors[i],
+                backgroundColor: colors[i] + '20',
                 borderWidth: 2,
                 pointRadius: 0,
                 pointHoverRadius: 4,
-                pointHoverBackgroundColor: colors[app],
+                pointHoverBackgroundColor: colors[i],
                 pointHoverBorderColor: '#fff',
                 pointHoverBorderWidth: 2,
                 tension: 0.4,
                 fill: true
             }));
 
-            // Create the trend chart
             appTrendsChart = new Chart(document.getElementById('appTrendsChart'), {
                 type: 'line',
-                data: {
-                    labels: timeLabels,
-                    datasets: datasets
-                },
+                data: { labels: sliced.labels, datasets: datasets },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false
-                    },
+                    interaction: { mode: 'index', intersect: false },
                     plugins: {
                         legend: {
-                            display: true,
-                            position: 'top',
-                            labels: {
-                                boxWidth: 12,
-                                font: { size: 12 },
-                                padding: 15,
-                                usePointStyle: true
-                            }
+                            display: true, position: 'top',
+                            labels: { boxWidth: 12, font: { size: 12 }, padding: 15, usePointStyle: true }
                         },
                         tooltip: {
                             enabled: true,
                             backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                            titleColor: '#fff',
-                            bodyColor: '#fff',
-                            borderColor: '#3b82f6',
-                            borderWidth: 1,
+                            titleColor: '#fff', bodyColor: '#fff',
+                            borderColor: '#3b82f6', borderWidth: 1,
                             callbacks: {
                                 label: function(context) {
                                     let label = context.dataset.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
+                                    if (label) label += ': ';
                                     label += context.parsed.y.toFixed(1) + ' Mbps';
                                     return label;
                                 }
@@ -1145,39 +1200,85 @@
                     scales: {
                         x: {
                             display: true,
-                            grid: {
-                                display: true,
-                                color: 'rgba(0, 0, 0, 0.05)'
-                            },
-                            ticks: {
-                                maxRotation: 45,
-                                minRotation: 45,
-                                autoSkipPadding: 10,
-                                font: { size: 10 }
-                            }
+                            grid: { display: true, color: 'rgba(0, 0, 0, 0.05)' },
+                            ticks: { maxRotation: 45, minRotation: 45, autoSkipPadding: 10, font: { size: 10 } }
                         },
                         y: {
-                            display: true,
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Traffic (Mbps)',
-                                font: { size: 12 }
-                            },
-                            ticks: {
-                                callback: function(value) {
-                                    return value.toFixed(0) + ' Mbps';
-                                },
-                                font: { size: 10 }
-                            },
-                            grid: {
-                                color: 'rgba(0, 0, 0, 0.05)'
-                            }
+                            display: true, beginAtZero: true,
+                            title: { display: true, text: 'Traffic (Mbps)', font: { size: 12 } },
+                            ticks: { callback: function(value) { return value.toFixed(0) + ' Mbps'; }, font: { size: 10 } },
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' }
                         }
                     }
                 }
             });
         }
+
+        function openApplicationTrends() {
+            const overlay = document.getElementById('appTrendsOverlay');
+            overlay.classList.remove('hidden');
+
+            // Sync overlay filters with card filters
+            const cardVlan = document.getElementById('appsVlanFilter');
+            const cardVpn = document.getElementById('appsVpnFilter');
+            const overlayVlan = document.getElementById('appTrendsVlanFilter');
+            const overlayVpn = document.getElementById('appTrendsVpnFilter');
+            if (cardVlan && overlayVlan) overlayVlan.value = cardVlan.value;
+            if (cardVpn && overlayVpn) overlayVpn.value = cardVpn.value;
+
+            const vlanVal = overlayVlan ? overlayVlan.value : '';
+            const vpnVal = overlayVpn ? overlayVpn.value : '';
+            const { appData, filterLabel } = getFilteredAppData(vlanVal, vpnVal);
+
+            // Update filter label
+            const labelEl = document.getElementById('appTrendsFilterLabel');
+            if (labelEl) labelEl.textContent = filterLabel;
+
+            if (appData) {
+                buildAppTrendsChart(appData);
+            }
+        }
+
+        /**
+         * Handle filter change inside the overlay
+         * @param {string} source - 'vlan' or 'vpn' to indicate which filter changed
+         */
+        function filterAppTrendsOverlay(source) {
+            const overlayVlan = document.getElementById('appTrendsVlanFilter');
+            const overlayVpn = document.getElementById('appTrendsVpnFilter');
+
+            // Mutual exclusion: reset the other filter when one is set
+            if (source === 'vlan' && overlayVlan && overlayVlan.value && overlayVpn) {
+                overlayVpn.value = '';
+            } else if (source === 'vpn' && overlayVpn && overlayVpn.value && overlayVlan) {
+                overlayVlan.value = '';
+            }
+
+            const vlanVal = overlayVlan ? overlayVlan.value : '';
+            const vpnVal = overlayVpn ? overlayVpn.value : '';
+            const { appData, filterLabel } = getFilteredAppData(vlanVal, vpnVal);
+
+            // Update filter label
+            const labelEl = document.getElementById('appTrendsFilterLabel');
+            if (labelEl) labelEl.textContent = filterLabel;
+
+            // Also sync card filters
+            const cardVlan = document.getElementById('appsVlanFilter');
+            const cardVpn = document.getElementById('appsVpnFilter');
+            if (cardVlan) cardVlan.value = vlanVal;
+            if (cardVpn) cardVpn.value = vpnVal;
+
+            if (appData) {
+                buildAppTrendsChart(appData);
+                // Also update the donut chart on the card
+                charts.apps.data.labels = appData.labels;
+                charts.apps.data.datasets[0].data = appData.data;
+                if (appData.colors) charts.apps.data.datasets[0].backgroundColor = appData.colors;
+                charts.apps.update();
+                updateAppsLegend(appData);
+            }
+        }
+        window.filterAppTrendsOverlay = filterAppTrendsOverlay;
 
         function closeApplicationTrends() {
             const overlay = document.getElementById('appTrendsOverlay');
@@ -1203,22 +1304,25 @@
             }
 
             // Time labels for 24 hours
-            const timeLabels = ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'];
+            const baseTimeLabels = ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'];
 
             // Hardcoded DHCP utilization data - ends at current value of 182
-            const dhcpUsedData = [162, 160, 158, 156, 155, 158, 165, 172, 180, 186, 190, 192, 194, 193, 191, 189, 187, 185, 184, 183, 182, 181, 181, 182];
+            const baseDhcpUsedData = [162, 160, 158, 156, 155, 158, 165, 172, 180, 186, 190, 192, 194, 193, 191, 189, 187, 185, 184, 183, 182, 181, 181, 182];
             const dhcpTotal = 254;
-            const dhcpCapacityLine = new Array(24).fill(dhcpTotal);
+            const baseDhcpCapacityLine = new Array(24).fill(dhcpTotal);
+
+            // Slice data according to timeline
+            const dhcpSliced = TimelineManager.sliceData(baseTimeLabels, baseDhcpUsedData, baseDhcpCapacityLine);
 
             // Create the DHCP trend chart
             dhcpTrendsChart = new Chart(document.getElementById('dhcpTrendsChart'), {
                 type: 'line',
                 data: {
-                    labels: timeLabels,
+                    labels: dhcpSliced.labels,
                     datasets: [
                         {
                             label: 'Used IPs',
-                            data: dhcpUsedData,
+                            data: dhcpSliced.datasets[0],
                             borderColor: '#3b82f6',
                             backgroundColor: 'rgba(59, 130, 246, 0.2)',
                             borderWidth: 2,
@@ -1234,7 +1338,7 @@
                         },
                         {
                             label: 'Max Capacity',
-                            data: dhcpCapacityLine,
+                            data: dhcpSliced.datasets[1],
                             borderColor: '#ef4444',
                             backgroundColor: 'transparent',
                             borderWidth: 2,
@@ -1346,28 +1450,29 @@
             }
 
             // Use device-specific expanded uplink health data if available
-            let timeLabels, uplinkData, timeStamps;
+            let baseTimeLabels, uplinkData;
 
             if (currentDeviceData && currentDeviceData.uplinkHealthExpanded) {
-                // Use data from loaded device data
                 const expanded = currentDeviceData.uplinkHealthExpanded;
-                timeLabels = expanded.labels;
-                timeStamps = convertLabelsToTimestamps(expanded.labels);
+                baseTimeLabels = expanded.labels;
                 uplinkData = {
                     latency: expanded.latency,
                     jitter: expanded.jitter,
                     loss: expanded.loss
                 };
             } else {
-                // Fallback to default 24-hour pattern
-                timeLabels = ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'];
-                timeStamps = convertLabelsToTimestamps(timeLabels);
+                baseTimeLabels = ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'];
                 uplinkData = {
                     latency: [24, 25, 26, 27, 28, 30, 35, 40, 45, 55, 80, 120, 95, 60, 45, 40, 35, 32, 30, 28, 26, 25, 25, 26],
                     jitter: [2, 2.2, 2.5, 2.8, 3, 3.5, 4, 4.5, 5, 7, 12, 15, 10, 6, 5, 4.5, 4, 3.5, 3, 2.8, 2.5, 2.2, 2, 2],
                     loss: [0, 0, 0, 0, 0, 0.1, 0.2, 0.3, 0.5, 1.0, 1.8, 2.1, 1.5, 0.8, 0.4, 0.3, 0.2, 0.1, 0.1, 0, 0, 0, 0, 0]
                 };
             }
+
+            // Slice according to timeline
+            const uplinkSliced = TimelineManager.sliceData(baseTimeLabels, uplinkData.latency, uplinkData.jitter, uplinkData.loss);
+            uplinkData = { latency: uplinkSliced.datasets[0], jitter: uplinkSliced.datasets[1], loss: uplinkSliced.datasets[2] };
+            const timeStamps = convertLabelsToTimestamps(uplinkSliced.labels);
 
             // Determine if data contains ISP failure (null values or 100% loss)
             const hasIspFailure = uplinkData.latency.some(v => v === null) || uplinkData.loss.some(v => v >= 100);
@@ -1582,24 +1687,26 @@
             }
 
             // Time labels for 24 hours
-            const timeLabels = ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'];
+            const baseTimeLabels = ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'];
 
             // Hardcoded WAN throughput data - consistent with minimized view pattern
-            // Minimized shows last 6h: Upload [12, 15, 45, 30, 20, 18], Download [40, 55, 120, 85, 60, 50]
-            const throughputData = {
+            const baseThroughputData = {
                 upload: [10, 9, 8, 8, 9, 10, 12, 15, 25, 35, 45, 42, 38, 35, 32, 30, 28, 25, 20, 18, 16, 15, 14, 18],
                 download: [35, 32, 30, 28, 30, 35, 40, 55, 75, 100, 120, 115, 105, 95, 90, 85, 80, 70, 60, 50, 48, 45, 48, 50]
             };
+
+            // Slice data according to timeline
+            const tpSliced = TimelineManager.sliceData(baseTimeLabels, baseThroughputData.upload, baseThroughputData.download);
 
             // Create the WAN Throughput trend chart
             wanThroughputTrendsChart = new Chart(document.getElementById('wanThroughputTrendsChart'), {
                 type: 'line',
                 data: {
-                    labels: timeLabels,
+                    labels: tpSliced.labels,
                     datasets: [
                         {
                             label: 'Upload (Tx)',
-                            data: throughputData.upload,
+                            data: tpSliced.datasets[0],
                             borderColor: '#6366f1',
                             backgroundColor: 'rgba(99, 102, 241, 0.2)',
                             borderWidth: 2,
@@ -1615,7 +1722,7 @@
                         },
                         {
                             label: 'Download (Rx)',
-                            data: throughputData.download,
+                            data: tpSliced.datasets[1],
                             borderColor: '#10b981',
                             backgroundColor: 'rgba(16, 185, 129, 0.2)',
                             borderWidth: 2,

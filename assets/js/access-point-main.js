@@ -10,10 +10,9 @@
          */
         async function initDeviceSelector() {
             const device = await SharedUI.initDeviceSelector('accessPoints', {
-                onDeviceSelected: (device) => {
+                onDeviceSelected: async (device) => {
                     currentDevice = device;
-                    SharedUI.updateDeviceInfo(currentDevice);
-                    SharedUI.updateDeviceAlertFeed(currentDevice.id);
+                    await loadDeviceData(device.id);
                 },
                 onDeviceChanged: (deviceId) => updateAccessPointView(deviceId)
             });
@@ -24,11 +23,25 @@
          * Handle access point selection change via SharedUI
          */
         async function updateAccessPointView(deviceId) {
-            SharedUI.changeDevice(deviceId, (dev) => {
+            SharedUI.changeDevice(deviceId, async (dev) => {
                 currentDevice = dev;
-                SharedUI.updateDeviceInfo(currentDevice);
-                SharedUI.updateDeviceAlertFeed(currentDevice.id);
+                await loadDeviceData(dev.id);
             });
+        }
+
+        /**
+         * Load device data and update all charts
+         */
+        async function loadDeviceData(deviceId) {
+            currentDeviceData = await DataLoader.getDeviceData(deviceId, 'accesspoint');
+
+            SharedUI.updateDeviceInfo(currentDevice);
+
+            if (charts.associationGauge && currentDeviceData) {
+                updateChartsWithDeviceData();
+            }
+
+            SharedUI.updateDeviceAlertFeed(deviceId);
         }
 
         // --- TAB SWITCHING LOGIC ---
@@ -46,21 +59,8 @@
             // Unregister datalabels plugin globally (we'll enable it per chart)
             Chart.unregister(ChartDataLabels);
 
-            // 1. Client Journey Funnel - Dial Gauges
-            // Hardcoded percentages for each stage
-            const funnelData = {
-                association: 96.2,
-                authentication: 94.8,
-                dhcp: 95.5,
-                dns: 97.1,
-                success: 0 // Will be calculated as product
-            };
-
-            // Success is the product of all stages
-            funnelData.success = (funnelData.association / 100) *
-                                  (funnelData.authentication / 100) *
-                                  (funnelData.dhcp / 100) *
-                                  (funnelData.dns / 100) * 100;
+            // 1. Client Journey Funnel - Dial Gauges (placeholder data, updated by loadDeviceData)
+            const funnelData = { association: 0, authentication: 0, dhcp: 0, dns: 0, success: 0 };
 
             // Helper function to create gauge chart (full circle like DHCP Capacity)
             function createGauge(canvasId, value, color) {
@@ -105,28 +105,19 @@
             charts.successGauge = createGauge('successGauge', funnelData.success, '#11A768');
             document.getElementById('successValue').textContent = funnelData.success.toFixed(1);
 
-            // 2. Active Client Count - Time Series
-            const timeLabels = ['00:00', '02:00', '04:00', '06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00', 'Now'];
-
-            // Generate realistic data for each client type
-            const wiredData = [12, 12, 12, 13, 14, 15, 15, 15, 15, 14, 14, 13, 13];
-            const wifi24Data = [3, 2, 2, 4, 6, 8, 10, 11, 10, 8, 6, 4, 5];
-            const wifi5Data = [5, 4, 3, 6, 8, 12, 15, 16, 15, 13, 10, 8, 9];
-            const wifi6Data = [2, 1, 1, 2, 3, 5, 7, 8, 8, 6, 5, 4, 5];
-
-            // Calculate total for each time point
-            const totalData = timeLabels.map((_, idx) =>
-                wiredData[idx] + wifi24Data[idx] + wifi5Data[idx] + wifi6Data[idx]
-            );
+            // 2. Active Client Count - Time Series (placeholder, updated by loadDeviceData)
+            const placeholderLabels = [''];
+            const placeholderData = [0];
+            const clientSliced = { labels: placeholderLabels, datasets: [placeholderData, placeholderData, placeholderData, placeholderData, placeholderData] };
 
             charts.clientCount = new Chart(document.getElementById('clientCountTimeSeries'), {
                 type: 'line',
                 data: {
-                    labels: timeLabels,
+                    labels: clientSliced.labels,
                     datasets: [
                         {
                             label: 'Total',
-                            data: totalData,
+                            data: clientSliced.datasets[0],
                             borderColor: '#F5A623',
                             backgroundColor: 'rgba(245, 166, 35, 0)',
                             fill: false,
@@ -141,7 +132,7 @@
                         },
                         {
                             label: 'Wired',
-                            data: wiredData,
+                            data: clientSliced.datasets[1],
                             borderColor: '#6b7280',
                             backgroundColor: 'rgba(107, 114, 128, 0.1)',
                             fill: true,
@@ -155,7 +146,7 @@
                         },
                         {
                             label: '2.4GHz',
-                            data: wifi24Data,
+                            data: clientSliced.datasets[2],
                             borderColor: '#0B7EBF',
                             backgroundColor: 'rgba(11, 126, 191, 0.1)',
                             fill: true,
@@ -169,7 +160,7 @@
                         },
                         {
                             label: '5GHz',
-                            data: wifi5Data,
+                            data: clientSliced.datasets[3],
                             borderColor: '#11A768',
                             backgroundColor: 'rgba(17, 167, 104, 0.1)',
                             fill: true,
@@ -183,7 +174,7 @@
                         },
                         {
                             label: '6GHz',
-                            data: wifi6Data,
+                            data: clientSliced.datasets[4],
                             borderColor: '#00CED1',
                             backgroundColor: 'rgba(0, 206, 209, 0.1)',
                             fill: true,
@@ -251,16 +242,15 @@
                 }
             });
 
-            // 3. Channel Utilization [cite: 157]
-            // Stacked Bar for 2.4/5/6 GHz
+            // 3. Channel Utilization (placeholder, updated by loadDeviceData)
             charts.channel = new Chart(document.getElementById('channelUtilChart'), {
                 type: 'bar',
                 data: {
                     labels: ['2.4 GHz', '5 GHz', '6 GHz'],
                     datasets: [
-                        { label: 'WiFi Traffic', data: [45, 20, 5], backgroundColor: '#3b82f6' },
-                        { label: 'Interference', data: [15, 5, 0], backgroundColor: '#f87171' },
-                        { label: 'Free Airtime', data: [40, 75, 95], backgroundColor: '#e5e7eb' }
+                        { label: 'WiFi Traffic', data: [0, 0, 0], backgroundColor: '#3b82f6' },
+                        { label: 'Interference', data: [0, 0, 0], backgroundColor: '#f87171' },
+                        { label: 'Free Airtime', data: [100, 100, 100], backgroundColor: '#e5e7eb' }
                     ]
                 },
                 options: {
@@ -272,14 +262,14 @@
                 }
             });
 
-            // 4. SNR Distribution
+            // 4. SNR Distribution (placeholder, updated by loadDeviceData)
             charts.snr = new Chart(document.getElementById('snrChart'), {
                 type: 'bar',
                 data: {
                     labels: ['Poor (<15dB)', 'Fair (15-25dB)', 'Good (25-35dB)', 'Excellent (>35dB)'],
                     datasets: [{
                         label: 'Client Count',
-                        data: [2, 5, 18, 17],
+                        data: [0, 0, 0, 0],
                         backgroundColor: ['#ef4444', '#f59e0b', '#3b82f6', '#10b981'],
                         borderRadius: 4
                     }]
@@ -293,14 +283,14 @@
                 }
             });
 
-             // 5. Top SSIDs
+             // 5. Top SSIDs (placeholder, updated by loadDeviceData)
              charts.ssids = new Chart(document.getElementById('ssidChart'), {
                 type: 'bar',
                 data: {
-                    labels: ['Corp-Secure', 'Guest-WiFi', 'IoT-Devices', 'Legacy-App'],
+                    labels: ['', '', '', ''],
                     datasets: [{
                         label: 'Clients',
-                        data: [28, 8, 4, 2],
+                        data: [0, 0, 0, 0],
                         backgroundColor: '#6366f1',
                         borderRadius: 4,
                         barThickness: 20
@@ -338,6 +328,91 @@
             themeManager.updateChartColors();
         }
 
+        /**
+         * Update all charts with data from DataLoader
+         */
+        function updateChartsWithDeviceData() {
+            if (!currentDeviceData) return;
+
+            // Update Funnel Gauges
+            if (currentDeviceData.funnelData) {
+                const fd = currentDeviceData.funnelData;
+                const success = (fd.association / 100) * (fd.authentication / 100) * (fd.dhcp / 100) * (fd.dns / 100) * 100;
+
+                if (charts.associationGauge) {
+                    charts.associationGauge.data.datasets[0].data = [fd.association, 100 - fd.association];
+                    charts.associationGauge.update();
+                    document.getElementById('associationValue').textContent = fd.association.toFixed(1);
+                }
+                if (charts.authenticationGauge) {
+                    charts.authenticationGauge.data.datasets[0].data = [fd.authentication, 100 - fd.authentication];
+                    charts.authenticationGauge.update();
+                    document.getElementById('authenticationValue').textContent = fd.authentication.toFixed(1);
+                }
+                if (charts.dhcpFunnelGauge) {
+                    charts.dhcpFunnelGauge.data.datasets[0].data = [fd.dhcp, 100 - fd.dhcp];
+                    charts.dhcpFunnelGauge.update();
+                    document.getElementById('dhcpFunnelValue').textContent = fd.dhcp.toFixed(1);
+                }
+                if (charts.dnsGauge) {
+                    charts.dnsGauge.data.datasets[0].data = [fd.dns, 100 - fd.dns];
+                    charts.dnsGauge.update();
+                    document.getElementById('dnsValue').textContent = fd.dns.toFixed(1);
+                }
+                if (charts.successGauge) {
+                    charts.successGauge.data.datasets[0].data = [success, 100 - success];
+                    charts.successGauge.update();
+                    document.getElementById('successValue').textContent = success.toFixed(1);
+                }
+            }
+
+            // Update Client Count chart
+            if (charts.clientCount && currentDeviceData.clientCount) {
+                const cc = currentDeviceData.clientCount;
+                const totalData = cc.labels.map((_, idx) =>
+                    (cc.wired[idx] || 0) + (cc.wifi24[idx] || 0) + (cc.wifi5[idx] || 0) + (cc.wifi6[idx] || 0)
+                );
+                const sliced = TimelineManager.sliceData(cc.labels, totalData, cc.wired, cc.wifi24, cc.wifi5, cc.wifi6);
+                charts.clientCount.data.labels = sliced.labels;
+                charts.clientCount.data.datasets[0].data = sliced.datasets[0];
+                charts.clientCount.data.datasets[1].data = sliced.datasets[1];
+                charts.clientCount.data.datasets[2].data = sliced.datasets[2];
+                charts.clientCount.data.datasets[3].data = sliced.datasets[3];
+                charts.clientCount.data.datasets[4].data = sliced.datasets[4];
+                charts.clientCount.update();
+            }
+
+            // Update Channel Utilization
+            if (charts.channel && currentDeviceData.channelUtilization) {
+                const cu = currentDeviceData.channelUtilization;
+                charts.channel.data.labels = cu.labels;
+                charts.channel.data.datasets[0].data = cu.wifi;
+                charts.channel.data.datasets[1].data = cu.interference;
+                charts.channel.data.datasets[2].data = cu.free;
+                charts.channel.update();
+            }
+
+            // Update SNR Distribution
+            if (charts.snr && currentDeviceData.snrDistribution) {
+                const snr = currentDeviceData.snrDistribution;
+                charts.snr.data.labels = snr.labels;
+                charts.snr.data.datasets[0].data = snr.data;
+                charts.snr.data.datasets[0].backgroundColor = snr.colors;
+                charts.snr.update();
+            }
+
+            // Update Top SSIDs
+            if (charts.ssids && currentDeviceData.topSSIDs) {
+                const ssids = currentDeviceData.topSSIDs;
+                charts.ssids.data.labels = ssids.labels;
+                charts.ssids.data.datasets[0].data = ssids.data;
+                charts.ssids.update();
+            }
+        }
+
+        // Re-render charts when timeline range changes
+        TimelineManager.onChange(() => { if (currentDeviceData) updateChartsWithDeviceData(); });
+
         // --- FUNNEL TIME SERIES OVERLAY ---
         let funnelTimeSeriesChart = null;
 
@@ -350,26 +425,31 @@
                 funnelTimeSeriesChart.destroy();
             }
 
-            // Time series data - hardcoded to end at current gauge values
-            const timeLabels = ['00:00', '02:00', '04:00', '06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00', 'Now'];
-
-            // Hardcoded percentages for time series - ends at gauge values (association: 96.2, authentication: 94.8, dhcp: 95.5, dns: 97.1)
-            const percentageData = {
-                association: [95.8, 95.5, 95.2, 95.0, 95.3, 95.8, 96.0, 96.3, 96.5, 96.4, 96.3, 96.1, 96.2],
-                authentication: [94.2, 94.0, 93.8, 93.5, 93.8, 94.2, 94.5, 94.8, 95.0, 95.1, 95.0, 94.9, 94.8],
-                dhcp: [95.0, 94.8, 94.5, 94.2, 94.5, 95.0, 95.2, 95.5, 95.8, 95.7, 95.6, 95.5, 95.5],
-                dns: [96.8, 96.5, 96.2, 96.0, 96.3, 96.8, 97.0, 97.2, 97.4, 97.3, 97.2, 97.1, 97.1],
-                success: [] // Will be calculated as product
-            };
+            // Use funnel time series data from DataLoader
+            const fts = currentDeviceData && currentDeviceData.funnelTimeSeries;
+            if (!fts) return;
 
             // Calculate success as product of all stages
-            percentageData.success = timeLabels.map((_, idx) => {
-                const product = (percentageData.association[idx] / 100) *
-                               (percentageData.authentication[idx] / 100) *
-                               (percentageData.dhcp[idx] / 100) *
-                               (percentageData.dns[idx] / 100) * 100;
+            const baseSuccessData = fts.labels.map((_, idx) => {
+                const product = (fts.association[idx] / 100) *
+                               (fts.authentication[idx] / 100) *
+                               (fts.dhcp[idx] / 100) *
+                               (fts.dns[idx] / 100) * 100;
                 return parseFloat(product.toFixed(2));
             });
+
+            // Slice according to timeline
+            const fSliced = TimelineManager.sliceData(fts.labels,
+                fts.association, fts.authentication,
+                fts.dhcp, fts.dns, baseSuccessData);
+
+            const percentageData = {
+                association: fSliced.datasets[0],
+                authentication: fSliced.datasets[1],
+                dhcp: fSliced.datasets[2],
+                dns: fSliced.datasets[3],
+                success: fSliced.datasets[4]
+            };
 
             // Generate corresponding raw client counts for tooltips
             const baseClients = 1200;
@@ -390,13 +470,13 @@
                 ...percentageData.success
             ];
             const minValue = Math.min(...allValues);
-            const yAxisMin = Math.max(0, minValue - 5); // 5% below the lowest value, but not below 0
+            const yAxisMin = Math.max(0, minValue - 5);
 
             // Create time series chart
             funnelTimeSeriesChart = new Chart(document.getElementById('funnelTimeSeriesChart'), {
                 type: 'line',
                 data: {
-                    labels: timeLabels,
+                    labels: fSliced.labels,
                     datasets: [
                         {
                             label: 'Association',
@@ -556,32 +636,11 @@
             });
             clientCharts = {};
 
-            // Sample data - in a real app, this would come from an API
+            // Use client details data from DataLoader
             const timeLabels = ['00:00', '02:00', '04:00', '06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00'];
-
-            // Generate different data based on client MAC
-            const clientData = {
-                'a4:b1:c2:d3:e4:f5': {
-                    upload: [8, 8.5, 9, 9.5, 10, 9.8, 9.2, 9, 8.8, 8.5, 8.3, 8.5],
-                    download: [40, 42, 43, 45, 46, 44, 42, 43, 42.5, 42.3, 42, 42.3],
-                    packetLoss: [0, 0, 0, 0.1, 0, 0, 0, 0, 0, 0, 0, 0],
-                    snr: [42, 42, 41, 41, 40, 41, 42, 42, 42, 42, 42, 42]
-                },
-                'b2:c3:d4:e5:f6:a1': {
-                    upload: [3, 3.2, 3.3, 3.5, 3.4, 3.3, 3.2, 3.3, 3.2, 3.2, 3.1, 3.2],
-                    download: [18, 18.5, 18.7, 19, 19.2, 19, 18.8, 18.7, 18.7, 18.7, 18.5, 18.7],
-                    packetLoss: [0.1, 0.1, 0, 0.2, 0.1, 0.1, 0.1, 0, 0.1, 0.1, 0.1, 0.1],
-                    snr: [38, 38, 38, 37, 37, 38, 38, 38, 38, 38, 38, 38]
-                },
-                'c3:d4:e5:f6:a1:b2': {
-                    upload: [1.5, 1.6, 1.8, 1.9, 1.8, 1.7, 1.8, 1.8, 1.8, 1.8, 1.7, 1.8],
-                    download: [6, 6.2, 6.4, 6.5, 6.6, 6.5, 6.4, 6.4, 6.4, 6.4, 6.3, 6.4],
-                    packetLoss: [0.8, 0.9, 0.8, 1.0, 0.9, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8],
-                    snr: [18, 18, 18, 17, 17, 18, 18, 18, 18, 18, 18, 18]
-                }
-            };
-
-            const data = clientData[clientMAC] || clientData['a4:b1:c2:d3:e4:f5'];
+            const clientDetails = currentDeviceData && currentDeviceData.clientDetails;
+            const fallbackData = { upload: [0], download: [0], packetLoss: [0], snr: [0] };
+            const data = (clientDetails && clientDetails[clientMAC]) || fallbackData;
 
             // Create Bandwidth Chart
             clientCharts.bandwidth = new Chart(document.getElementById('clientBandwidthChart'), {
@@ -827,23 +886,14 @@
                 channelUtilTrendsChart.destroy();
             }
 
-            // Time labels for 24 hours
-            const timeLabels = ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'];
+            // Use channel utilization trends data from DataLoader
+            const cut = currentDeviceData && currentDeviceData.channelUtilTrends;
+            if (!cut) return;
 
-            // Hardcoded channel utilization data - ends at current bar chart values
-            // Minimized shows: 2.4GHz [45, 15], 5GHz [20, 5], 6GHz [5, 0]
-            const band24Data = {
-                wifi: [32, 30, 28, 26, 28, 32, 38, 42, 48, 52, 55, 54, 52, 50, 51, 52, 50, 48, 46, 45, 44, 43, 44, 45],
-                interference: [12, 11, 10, 9, 10, 12, 13, 14, 15, 16, 17, 17, 16, 15, 15, 16, 16, 15, 15, 15, 14, 14, 14, 15]
-            };
-            const band5Data = {
-                wifi: [14, 13, 12, 11, 12, 14, 16, 18, 22, 25, 28, 27, 25, 23, 24, 25, 24, 22, 21, 20, 19, 19, 19, 20],
-                interference: [4, 4, 3, 3, 3, 4, 4, 5, 5, 6, 6, 6, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
-            };
-            const band6Data = {
-                wifi: [3, 3, 2, 2, 2, 3, 4, 4, 5, 6, 7, 7, 6, 6, 6, 6, 6, 5, 5, 5, 5, 5, 5, 5],
-                interference: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-            };
+            const timeLabels = cut.labels;
+            const band24Data = cut.band24;
+            const band5Data = cut.band5;
+            const band6Data = cut.band6;
 
             // Create the Channel Utilization trend chart
             channelUtilTrendsChart = new Chart(document.getElementById('channelUtilTrendsChart'), {

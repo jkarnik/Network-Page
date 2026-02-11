@@ -10,10 +10,9 @@
          */
         async function initDeviceSelector() {
             const device = await SharedUI.initDeviceSelector('switches', {
-                onDeviceSelected: (device) => {
+                onDeviceSelected: async (device) => {
                     currentDevice = device;
-                    SharedUI.updateDeviceInfo(currentDevice);
-                    SharedUI.updateDeviceAlertFeed(currentDevice.id);
+                    await loadDeviceData(device.id);
                 },
                 onDeviceChanged: (deviceId) => updateSwitchView(deviceId)
             });
@@ -24,11 +23,28 @@
          * Handle switch selection change via SharedUI
          */
         async function updateSwitchView(deviceId) {
-            SharedUI.changeDevice(deviceId, (dev) => {
+            const device = SharedUI.changeDevice(deviceId, async (dev) => {
                 currentDevice = dev;
-                SharedUI.updateDeviceInfo(currentDevice);
-                SharedUI.updateDeviceAlertFeed(currentDevice.id);
+                await loadDeviceData(dev.id);
             });
+        }
+
+        /**
+         * Load device data and update all charts
+         */
+        async function loadDeviceData(deviceId) {
+            currentDeviceData = await DataLoader.getDeviceData(deviceId, 'switch');
+
+            // Update device info header
+            SharedUI.updateDeviceInfo(currentDevice);
+
+            // Update all charts with new data
+            if (charts.cpuGauge && currentDeviceData) {
+                updateChartsWithDeviceData();
+            }
+
+            // Update device alert feed
+            SharedUI.updateDeviceAlertFeed(deviceId);
         }
 
         // --- MOCK DATA GENERATION ---
@@ -772,7 +788,172 @@
                 }
             });
 
-            // 8. Error Monitor - Horizontal Bar Chart
+            // 8. Uplink Health (Dual Axis)
+            const uplinkTimeLabels = ['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00'];
+            const uplinkTimestamps = uplinkTimeLabels.map(label => {
+                const today = new Date();
+                const parts = label.split(':');
+                return new Date(today.getFullYear(), today.getMonth(), today.getDate(), parseInt(parts[0]), parseInt(parts[1]));
+            });
+
+            charts.uplink = new Chart(document.getElementById('uplinkChart'), {
+                type: 'line',
+                data: {
+                    labels: uplinkTimestamps,
+                    datasets: [
+                        {
+                            label: 'Latency (ms)',
+                            data: [1.2, 1.5, 2.0, 1.8, 1.6, 1.4, 1.3, 1.5, 1.7, 1.4],
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            pointRadius: 3,
+                            pointHoverRadius: 6,
+                            pointBackgroundColor: '#3b82f6',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            yAxisID: 'y',
+                            tension: 0.3
+                        },
+                        {
+                            label: 'Jitter (ms)',
+                            data: [0.3, 0.5, 0.8, 0.6, 0.4, 0.3, 0.4, 0.5, 0.6, 0.4],
+                            borderColor: '#a855f7',
+                            backgroundColor: 'rgba(168, 85, 247, 0.1)',
+                            pointRadius: 3,
+                            pointHoverRadius: 6,
+                            pointBackgroundColor: '#a855f7',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            yAxisID: 'y',
+                            tension: 0.3
+                        },
+                        {
+                            label: 'Loss (%)',
+                            data: [0.0, 0.0, 0.1, 0.05, 0.0, 0.0, 0.0, 0.02, 0.0, 0.0],
+                            borderColor: '#f87171',
+                            backgroundColor: 'rgba(248, 113, 113, 0.1)',
+                            pointRadius: 3,
+                            pointHoverRadius: 6,
+                            pointBackgroundColor: '#f87171',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            borderDash: [5, 5],
+                            yAxisID: 'y1',
+                            tension: 0.3
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            enabled: true,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: '#3b82f6',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) label += ': ';
+                                    label += context.parsed.y;
+                                    if (context.datasetIndex === 2) {
+                                        label += '%';
+                                    } else {
+                                        label += ' ms';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'hour',
+                                displayFormats: { hour: 'HH:mm' },
+                                tooltipFormat: 'HH:mm'
+                            },
+                            ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 6 }
+                        },
+                        y: { type: 'linear', display: true, position: 'left', title: { display: true, text: 'ms' }, suggestedMax: 3 },
+                        y1: { type: 'linear', display: true, position: 'right', grid: { drawOnChartArea: false }, title: { display: true, text: '%' }, max: 1 }
+                    }
+                }
+            });
+
+            // 9. Traffic by Port (MB) - Top 5 Ports - Horizontal Bar
+            charts.trafficByPort = new Chart(document.getElementById('trafficByPortChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Ge48', 'Ge24', 'Ge12', 'Ge36', 'Ge8'],
+                    datasets: [
+                        {
+                            label: 'Upload',
+                            data: [18000, 2400, 2100, 1980, 1860],
+                            backgroundColor: '#6366f1',
+                            borderRadius: 2
+                        },
+                        {
+                            label: 'Download',
+                            data: [48000, 5400, 4800, 4500, 4200],
+                            backgroundColor: '#10b981',
+                            borderRadius: 2
+                        }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } },
+                        tooltip: {
+                            enabled: true,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: '#6366f1',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) label += ': ';
+                                    label += context.parsed.x.toLocaleString() + ' MB';
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    if (value >= 1000) return (value / 1000).toFixed(0) + 'K';
+                                    return value;
+                                },
+                                font: { size: 10 }
+                            },
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' }
+                        },
+                        y: {
+                            ticks: { font: { size: 11, family: 'monospace', weight: 'bold' } },
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+
+            // 10. Error Monitor - Horizontal Bar Chart
             charts.errorMonitor = new Chart(document.getElementById('errorMonitorChart'), {
                 type: 'bar',
                 data: {
@@ -849,6 +1030,121 @@
             themeManager.updateChartColors();
         }
 
+        // Helper to convert time labels to Date timestamps
+        // Handles: "HH:MM" (≤24h), "MM/DD HH:00" (3d), "Day MM/DD" (7d)
+        function convertLabelsToTimestamps(labels) {
+            const today = new Date();
+            return labels.map(label => {
+                // "Tue 02/05" — 7d range
+                const dayMatch = label.match(/^[A-Za-z]{3}\s+(\d{2})\/(\d{2})$/);
+                if (dayMatch) {
+                    return new Date(today.getFullYear(), parseInt(dayMatch[1], 10) - 1, parseInt(dayMatch[2], 10));
+                }
+                // "02/09 08:00" — 3d range
+                const dateTimeMatch = label.match(/^(\d{2})\/(\d{2})\s+(\d{2}):(\d{2})$/);
+                if (dateTimeMatch) {
+                    return new Date(today.getFullYear(), parseInt(dateTimeMatch[1], 10) - 1, parseInt(dateTimeMatch[2], 10), parseInt(dateTimeMatch[3], 10), parseInt(dateTimeMatch[4], 10));
+                }
+                // "HH:MM" or "HH:MM:SS" — ≤24h range
+                const parts = label.split(':');
+                return new Date(today.getFullYear(), today.getMonth(), today.getDate(), parseInt(parts[0], 10) || 0, parseInt(parts[1], 10) || 0, parts[2] ? parseInt(parts[2], 10) : 0);
+            });
+        }
+
+        function updateChartsWithDeviceData() {
+            if (!currentDeviceData) return;
+
+            // Update CPU gauge + value label
+            if (charts.cpuGauge && currentDeviceData.cpuUsage !== undefined) {
+                charts.cpuGauge.data.datasets[0].data = [currentDeviceData.cpuUsage, 100 - currentDeviceData.cpuUsage];
+                charts.cpuGauge.update();
+                const cpuValue = document.getElementById('cpuValue');
+                if (cpuValue) cpuValue.textContent = currentDeviceData.cpuUsage + '%';
+            }
+
+            // Update Memory gauge + value label
+            if (charts.memGauge && currentDeviceData.memoryUsage !== undefined) {
+                charts.memGauge.data.datasets[0].data = [currentDeviceData.memoryUsage, 100 - currentDeviceData.memoryUsage];
+                charts.memGauge.update();
+                const memValue = document.getElementById('memValue');
+                if (memValue) memValue.textContent = currentDeviceData.memoryUsage + '%';
+            }
+
+            // Update PoE gauge + value label
+            if (charts.poeGauge && currentDeviceData.poeUsage !== undefined) {
+                charts.poeGauge.data.datasets[0].data = [currentDeviceData.poeUsage, 100 - currentDeviceData.poeUsage];
+                charts.poeGauge.update();
+                const poeValue = document.getElementById('poeValue');
+                if (poeValue) poeValue.textContent = currentDeviceData.poeUsage + '%';
+            }
+
+            // Update CPU Sparkline
+            if (charts.cpuSparkline && currentDeviceData.cpuTrend) {
+                const sliced = TimelineManager.sliceData(currentDeviceData.cpuTrend.labels, currentDeviceData.cpuTrend.data);
+                charts.cpuSparkline.data.labels = sliced.labels;
+                charts.cpuSparkline.data.datasets[0].data = sliced.datasets[0];
+                charts.cpuSparkline.update();
+            }
+
+            // Update Memory Sparkline
+            if (charts.memSparkline && currentDeviceData.memoryTrend) {
+                const sliced = TimelineManager.sliceData(currentDeviceData.memoryTrend.labels, currentDeviceData.memoryTrend.data);
+                charts.memSparkline.data.labels = sliced.labels;
+                charts.memSparkline.data.datasets[0].data = sliced.datasets[0];
+                charts.memSparkline.update();
+            }
+
+            // Update PoE Sparkline
+            if (charts.poeSparkline && currentDeviceData.poeTrend) {
+                const sliced = TimelineManager.sliceData(currentDeviceData.poeTrend.labels, currentDeviceData.poeTrend.data);
+                charts.poeSparkline.data.labels = sliced.labels;
+                charts.poeSparkline.data.datasets[0].data = sliced.datasets[0];
+                charts.poeSparkline.update();
+            }
+
+            // Update Traffic Trend
+            if (charts.traffic && currentDeviceData.traffic) {
+                const t = currentDeviceData.traffic;
+                const sliced = TimelineManager.sliceData(t.labels, t.upload, t.download);
+                charts.traffic.data.labels = sliced.labels;
+                charts.traffic.data.datasets[0].data = sliced.datasets[0];
+                charts.traffic.data.datasets[1].data = sliced.datasets[1];
+                charts.traffic.update();
+            }
+
+            // Update Uplink Health
+            if (charts.uplink && currentDeviceData.uplink) {
+                const u = currentDeviceData.uplink;
+                const sliced = TimelineManager.sliceData(u.labels, u.latency, u.jitter, u.loss);
+                charts.uplink.data.labels = convertLabelsToTimestamps(sliced.labels);
+                charts.uplink.data.datasets[0].data = sliced.datasets[0];
+                charts.uplink.data.datasets[1].data = sliced.datasets[1];
+                charts.uplink.data.datasets[2].data = sliced.datasets[2];
+                charts.uplink.update();
+            }
+
+            // Update Traffic by Port (top 5)
+            if (charts.trafficByPort && currentDeviceData.trafficByPort) {
+                const tbp = currentDeviceData.trafficByPort;
+                charts.trafficByPort.data.labels = tbp.labels;
+                charts.trafficByPort.data.datasets[0].data = tbp.upload;
+                charts.trafficByPort.data.datasets[1].data = tbp.download;
+                charts.trafficByPort.update();
+            }
+
+            // Update Error Monitor
+            if (charts.errorMonitor && currentDeviceData.errorMonitor) {
+                const em = currentDeviceData.errorMonitor;
+                charts.errorMonitor.data.labels = em.labels;
+                charts.errorMonitor.data.datasets[0].data = em.data;
+                charts.errorMonitor.data.datasets[0].backgroundColor = em.colors;
+                charts.errorMonitor.update();
+            }
+        }
+
+        // Re-render charts when timeline range changes
+        TimelineManager.onChange(() => { if (currentDeviceData) updateChartsWithDeviceData(); });
+
         // --- TRAFFIC TRENDS OVERLAY ---
         let trafficTrendsChart = null;
 
@@ -861,25 +1157,22 @@
                 trafficTrendsChart.destroy();
             }
 
-            // Time labels for 24 hours
-            const timeLabels = ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'];
+            // Use expanded traffic data from DataLoader
+            const te = currentDeviceData && currentDeviceData.trafficExpanded;
+            if (!te) return;
 
-            // Hardcoded traffic data - consistent with minimized view pattern
-            // Minimized shows last 6h: Tx [25, 30, 55, 45, 35, 40], Rx [120, 150, 450, 320, 250, 210]
-            const trafficData = {
-                upload: [18, 16, 15, 14, 15, 18, 22, 25, 35, 48, 55, 52, 48, 45, 50, 52, 48, 45, 40, 35, 32, 30, 35, 40],
-                download: [140, 130, 120, 115, 118, 125, 140, 165, 250, 380, 450, 420, 380, 350, 360, 370, 340, 320, 280, 250, 230, 210, 200, 210]
-            };
+            // Slice according to timeline
+            const tSliced = TimelineManager.sliceData(te.labels, te.upload, te.download);
 
             // Create the Traffic trend chart
             trafficTrendsChart = new Chart(document.getElementById('trafficTrendsChart'), {
                 type: 'line',
                 data: {
-                    labels: timeLabels,
+                    labels: tSliced.labels,
                     datasets: [
                         {
                             label: 'Upload (Tx)',
-                            data: trafficData.upload,
+                            data: tSliced.datasets[0],
                             borderColor: '#6366f1',
                             backgroundColor: 'rgba(99, 102, 241, 0.2)',
                             borderWidth: 2,
@@ -895,7 +1188,7 @@
                         },
                         {
                             label: 'Download (Rx)',
-                            data: trafficData.download,
+                            data: tSliced.datasets[1],
                             borderColor: '#10b981',
                             backgroundColor: 'rgba(16, 185, 129, 0.2)',
                             borderWidth: 2,
@@ -998,26 +1291,23 @@
 
         // --- ERROR MONITOR EXPANDED OVERLAY ---
         let errorMonitorExpandedChart = null;
-        let allPortsTrafficChart = null;
 
         function openErrorMonitorExpanded() {
             const overlay = document.getElementById('errorMonitorExpandedOverlay');
             overlay.classList.remove('hidden');
 
-            // Destroy existing charts if they exist
             if (errorMonitorExpandedChart) {
                 errorMonitorExpandedChart.destroy();
             }
-            if (allPortsTrafficChart) {
-                allPortsTrafficChart.destroy();
-            }
 
-            // Hardcoded error data for all ports with errors (expanded from top 5 summary)
-            const errorLabels = ['Ge48', 'Ge3', 'Ge12', 'Ge27', 'Ge42', 'Ge15', 'Ge31', 'Ge8', 'Ge22', 'Ge36', 'Ge44', 'Ge19', 'Ge7', 'Ge33', 'Ge46'];
-            const errorData = [487, 342, 156, 89, 52, 45, 38, 32, 28, 24, 19, 15, 12, 8, 5];
-            const errorColors = ['#ef4444', '#ef4444', '#f97316', '#f97316', '#f59e0b', '#f59e0b', '#eab308', '#eab308', '#eab308', '#84cc16', '#84cc16', '#84cc16', '#22c55e', '#22c55e', '#22c55e'];
+            // Use expanded error data from DataLoader
+            const eme = currentDeviceData && currentDeviceData.errorMonitorExpanded;
+            if (!eme) return;
 
-            // Create the expanded Error Monitor chart
+            const errorLabels = eme.labels;
+            const errorData = eme.data;
+            const errorColors = eme.colors;
+
             errorMonitorExpandedChart = new Chart(document.getElementById('errorMonitorExpandedChart'), {
                 type: 'bar',
                 data: {
@@ -1052,33 +1342,48 @@
                     scales: {
                         x: {
                             beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Error Count',
-                                font: { size: 12 }
-                            },
-                            ticks: {
-                                font: { size: 10 }
-                            },
+                            title: { display: true, text: 'Error Count', font: { size: 12 } },
+                            ticks: { font: { size: 10 } },
                             grid: { color: 'rgba(0, 0, 0, 0.05)' }
                         },
                         y: {
-                            ticks: {
-                                font: { size: 11, family: 'monospace', weight: 'bold' }
-                            },
+                            ticks: { font: { size: 11, family: 'monospace', weight: 'bold' } },
                             grid: { display: false }
                         }
                     }
                 }
             });
+        }
 
-            // Hardcoded port traffic data (top 15 ports by download traffic)
-            const trafficLabels = ['Ge48', 'Ge24', 'Ge12', 'Ge36', 'Ge8', 'Ge16', 'Ge32', 'Ge4', 'Ge20', 'Ge28', 'Ge40', 'Ge44', 'Ge6', 'Ge18', 'Ge30'];
-            // Cumulative traffic in MB
-            const uploadData = [18000, 2400, 2100, 1980, 1860, 1740, 1620, 1500, 1380, 1260, 1140, 1020, 900, 780, 660];
-            const downloadData = [48000, 5400, 4800, 4500, 4200, 3900, 3600, 3300, 3000, 2700, 2400, 2100, 1800, 1500, 1200];
+        function closeErrorMonitorExpanded() {
+            const overlay = document.getElementById('errorMonitorExpandedOverlay');
+            overlay.classList.add('hidden');
 
-            // Create the all ports traffic chart
+            if (errorMonitorExpandedChart) {
+                errorMonitorExpandedChart.destroy();
+                errorMonitorExpandedChart = null;
+            }
+        }
+
+        // --- TRAFFIC BY PORT EXPANDED OVERLAY ---
+        let allPortsTrafficChart = null;
+
+        function openTrafficByPortExpanded() {
+            const overlay = document.getElementById('trafficByPortExpandedOverlay');
+            overlay.classList.remove('hidden');
+
+            if (allPortsTrafficChart) {
+                allPortsTrafficChart.destroy();
+            }
+
+            // Use all ports traffic data from DataLoader
+            const apt = currentDeviceData && currentDeviceData.allPortsTraffic;
+            if (!apt) return;
+
+            const trafficLabels = apt.labels;
+            const uploadData = apt.upload;
+            const downloadData = apt.download;
+
             allPortsTrafficChart = new Chart(document.getElementById('allPortsTrafficChart'), {
                 type: 'bar',
                 data: {
@@ -1106,10 +1411,7 @@
                         legend: {
                             display: true,
                             position: 'top',
-                            labels: {
-                                boxWidth: 12,
-                                font: { size: 11 }
-                            }
+                            labels: { boxWidth: 12, font: { size: 11 } }
                         },
                         tooltip: {
                             enabled: true,
@@ -1121,9 +1423,7 @@
                             callbacks: {
                                 label: function(context) {
                                     let label = context.dataset.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
+                                    if (label) label += ': ';
                                     label += context.parsed.x.toLocaleString() + ' MB';
                                     return label;
                                 }
@@ -1133,25 +1433,15 @@
                     scales: {
                         x: {
                             beginAtZero: true,
-                            stacked: false,
-                            title: {
-                                display: true,
-                                text: 'Traffic (MB)',
-                                font: { size: 12 }
-                            },
+                            title: { display: true, text: 'Traffic (MB)', font: { size: 12 } },
                             ticks: {
-                                callback: function(value) {
-                                    return value.toLocaleString() + ' MB';
-                                },
+                                callback: function(value) { return value.toLocaleString() + ' MB'; },
                                 font: { size: 10 }
                             },
                             grid: { color: 'rgba(0, 0, 0, 0.05)' }
                         },
                         y: {
-                            stacked: false,
-                            ticks: {
-                                font: { size: 11, family: 'monospace', weight: 'bold' }
-                            },
+                            ticks: { font: { size: 11, family: 'monospace', weight: 'bold' } },
                             grid: { display: false }
                         }
                     }
@@ -1159,26 +1449,163 @@
             });
         }
 
-        function closeErrorMonitorExpanded() {
-            const overlay = document.getElementById('errorMonitorExpandedOverlay');
+        function closeTrafficByPortExpanded() {
+            const overlay = document.getElementById('trafficByPortExpandedOverlay');
             overlay.classList.add('hidden');
 
-            // Destroy charts to prevent memory leaks
-            if (errorMonitorExpandedChart) {
-                errorMonitorExpandedChart.destroy();
-                errorMonitorExpandedChart = null;
-            }
             if (allPortsTrafficChart) {
                 allPortsTrafficChart.destroy();
                 allPortsTrafficChart = null;
             }
         }
 
-        // Expose new overlay functions to global scope for onclick handlers
+        // --- UPLINK HEALTH TRENDS OVERLAY ---
+        let uplinkHealthTrendsChart = null;
+
+        function openUplinkHealthTrends() {
+            const overlay = document.getElementById('uplinkHealthTrendsOverlay');
+            overlay.classList.remove('hidden');
+
+            if (uplinkHealthTrendsChart) {
+                uplinkHealthTrendsChart.destroy();
+            }
+
+            // Use expanded uplink data from DataLoader
+            const ue = currentDeviceData && currentDeviceData.uplinkExpanded;
+            if (!ue) return;
+
+            // Slice according to timeline
+            const uSliced = TimelineManager.sliceData(ue.labels, ue.latency, ue.jitter, ue.loss);
+            const timeStamps = convertLabelsToTimestamps(uSliced.labels);
+
+            uplinkHealthTrendsChart = new Chart(document.getElementById('uplinkHealthTrendsChart'), {
+                type: 'line',
+                data: {
+                    labels: timeStamps,
+                    datasets: [
+                        {
+                            label: 'Latency (ms)',
+                            data: uSliced.datasets[0],
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                            borderWidth: 2,
+                            pointRadius: 3,
+                            pointHoverRadius: 6,
+                            pointBackgroundColor: '#3b82f6',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            tension: 0.4,
+                            fill: true,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Jitter (ms)',
+                            data: uSliced.datasets[1],
+                            borderColor: '#a855f7',
+                            backgroundColor: 'rgba(168, 85, 247, 0.2)',
+                            borderWidth: 2,
+                            pointRadius: 3,
+                            pointHoverRadius: 6,
+                            pointBackgroundColor: '#a855f7',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            tension: 0.4,
+                            fill: true,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Packet Loss (%)',
+                            data: uSliced.datasets[2],
+                            borderColor: '#f87171',
+                            backgroundColor: 'rgba(248, 113, 113, 0.2)',
+                            borderWidth: 2,
+                            pointRadius: 3,
+                            pointHoverRadius: 6,
+                            pointBackgroundColor: '#f87171',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            borderDash: [5, 5],
+                            tension: 0.3,
+                            fill: true,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: { boxWidth: 12, font: { size: 12 }, padding: 15, usePointStyle: true }
+                        },
+                        tooltip: {
+                            enabled: true,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: '#3b82f6',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) label += ': ';
+                                    if (context.dataset.yAxisID === 'y1') {
+                                        label += context.parsed.y.toFixed(2) + '%';
+                                    } else {
+                                        label += context.parsed.y.toFixed(1) + ' ms';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: { unit: 'hour', displayFormats: { hour: 'HH:mm' }, tooltipFormat: 'HH:mm' },
+                            display: true,
+                            grid: { display: true, color: 'rgba(0, 0, 0, 0.05)' },
+                            ticks: { maxRotation: 45, minRotation: 45, autoSkip: true, maxTicksLimit: 12, font: { size: 10 } }
+                        },
+                        y: {
+                            type: 'linear', display: true, position: 'left', beginAtZero: true, suggestedMax: 3,
+                            title: { display: true, text: 'Latency & Jitter (ms)', font: { size: 12 } },
+                            ticks: { callback: function(value) { return value.toFixed(1) + ' ms'; }, font: { size: 10 } },
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' }
+                        },
+                        y1: {
+                            type: 'linear', display: true, position: 'right', beginAtZero: true, max: 1,
+                            title: { display: true, text: 'Packet Loss (%)', font: { size: 12 } },
+                            ticks: { callback: function(value) { return value.toFixed(1) + '%'; }, font: { size: 10 } },
+                            grid: { drawOnChartArea: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        function closeUplinkHealthTrends() {
+            const overlay = document.getElementById('uplinkHealthTrendsOverlay');
+            overlay.classList.add('hidden');
+
+            if (uplinkHealthTrendsChart) {
+                uplinkHealthTrendsChart.destroy();
+                uplinkHealthTrendsChart = null;
+            }
+        }
+
+        // Expose overlay functions to global scope for onclick handlers
         window.openTrafficTrends = openTrafficTrends;
         window.closeTrafficTrends = closeTrafficTrends;
         window.openErrorMonitorExpanded = openErrorMonitorExpanded;
         window.closeErrorMonitorExpanded = closeErrorMonitorExpanded;
+        window.openTrafficByPortExpanded = openTrafficByPortExpanded;
+        window.closeTrafficByPortExpanded = closeTrafficByPortExpanded;
+        window.openUplinkHealthTrends = openUplinkHealthTrends;
+        window.closeUplinkHealthTrends = closeUplinkHealthTrends;
 
         // Expose device management function for dropdown
         window.updateSwitchView = updateSwitchView;

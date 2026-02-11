@@ -58,19 +58,19 @@
         <div class="mobile-nav-links">
             <a href="index.html" class="mobile-nav-link">
                 <i class="fa-solid fa-chart-line"></i>
-                <span>Summary Page</span>
+                <span>Summary</span>
             </a>
             <a href="sdwan.html" class="mobile-nav-link">
                 <i class="fa-solid fa-network-wired"></i>
-                <span>SD-WAN Page</span>
+                <span>SD-WAN</span>
             </a>
             <a href="switch.html" class="mobile-nav-link">
                 <i class="fa-solid fa-server"></i>
-                <span>Switch Page</span>
+                <span>Switch</span>
             </a>
             <a href="access-point.html" class="mobile-nav-link">
                 <i class="fa-solid fa-wifi"></i>
-                <span>Access Point Page</span>
+                <span>Access Point</span>
             </a>
         </div>
     </div>
@@ -91,10 +91,10 @@
                         <span class="font-bold text-xl tracking-tight text-dark-text">Network Performance Monitoring</span>
                     </div>
                     <div class="hidden sm:ml-8 sm:flex sm:space-x-8">
-                        <a href="index.html" class="border-newrelic-cyan text-dark-text inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Summary Page</a>
-                        <a href="sdwan.html" class="border-transparent text-dark-muted hover:border-newrelic-cyan hover:text-newrelic-cyan inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors">SD-WAN Page</a>
-                        <a href="switch.html" class="border-transparent text-dark-muted hover:border-newrelic-cyan hover:text-newrelic-cyan inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors">Switch Page</a>
-                        <a href="access-point.html" class="border-transparent text-dark-muted hover:border-newrelic-cyan hover:text-newrelic-cyan inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors">Access Point Page</a>
+                        <a href="index.html" class="border-newrelic-cyan text-dark-text inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Summary</a>
+                        <a href="sdwan.html" class="border-transparent text-dark-muted hover:border-newrelic-cyan hover:text-newrelic-cyan inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors">SD-WAN</a>
+                        <a href="switch.html" class="border-transparent text-dark-muted hover:border-newrelic-cyan hover:text-newrelic-cyan inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors">Switch</a>
+                        <a href="access-point.html" class="border-transparent text-dark-muted hover:border-newrelic-cyan hover:text-newrelic-cyan inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors">Access Point</a>
                     </div>
                 </div>
                 <div class="flex items-center gap-4">
@@ -122,6 +122,9 @@
                             </optgroup>
                         </select>
                     </div>
+
+                    <!-- Timeline Selector -->
+                    <div id="timelineSelector" class="relative"></div>
 
                     <div class="flex items-center gap-3 border-l pl-4 border-dark-border">
                         <div class="text-right hidden md:block">
@@ -584,7 +587,7 @@
                 <div class="p-6 border-b border-dark-border flex justify-between items-center">
                     <div class="flex items-center gap-3">
                         <h2 class="text-xl font-bold text-dark-text">SD-WAN Latency Trends</h2>
-                        <span class="text-xs text-dark-muted">Last 24 Hours</span>
+                        <span class="text-xs text-dark-muted" data-timeline-label>Last 24 hours</span>
                     </div>
                     <button onclick="closeLatencyTrends()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
                         <i class="fa-solid fa-times text-2xl"></i>
@@ -607,7 +610,7 @@
                 <div class="p-6 border-b border-dark-border flex justify-between items-center">
                     <div class="flex items-center gap-3">
                         <h2 class="text-xl font-bold text-dark-text">User Frustration Trends</h2>
-                        <span class="text-xs text-dark-muted">Last 24 Hours</span>
+                        <span class="text-xs text-dark-muted" data-timeline-label>Last 24 hours</span>
                     </div>
                     <button onclick="closeFrustrationTrends()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
                         <i class="fa-solid fa-times text-2xl"></i>
@@ -638,7 +641,7 @@
                 <div class="p-6 border-b border-dark-border flex justify-between items-center">
                     <div class="flex items-center gap-3">
                         <h2 class="text-xl font-bold text-dark-text">WAN Resilience Trends</h2>
-                        <span class="text-xs text-dark-muted">Last 24 Hours</span>
+                        <span class="text-xs text-dark-muted" data-timeline-label>Last 24 hours</span>
                     </div>
                     <button onclick="closeWanResilienceTrends()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
                         <i class="fa-solid fa-times text-2xl"></i>
@@ -696,6 +699,7 @@
     <script src="assets/js/chart-config.js" defer></script>
     <script src="assets/js/navigation.js" defer></script>
     <script src="assets/js/shared-ui.js" defer></script>
+    <script src="assets/js/timeline-manager.js" defer></script>
     <script src="assets/js/data-loader.js" defer></script>
 
     <!-- Main Application Script - Deferred for Performance -->

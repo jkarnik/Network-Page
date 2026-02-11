@@ -1230,11 +1230,9 @@
                 latencyTrendsChart.destroy();
             }
 
-            // Generate time labels for 24 hours
-            const timeLabels = [];
-            for (let i = 0; i < 24; i++) {
-                timeLabels.push(i.toString().padStart(2, '0') + ':00');
-            }
+            // Generate time labels based on timeline selection
+            const timeLabels = TimelineManager.generateLabels(24);
+            const pointCount = timeLabels.length;
 
             // Get top 5 SD-WANs from current data
             const latencyData = DataLoader.getLatencyData(currentSiteFilter || currentScope, 5);
@@ -1245,9 +1243,8 @@
             const datasets = siteNames.map((site, idx) => {
                 const baseLatency = latencyData[idx].latency;
                 const data = [];
-                for (let i = 0; i < 24; i++) {
-                    // Business hours have higher latency
-                    const isBusinessHours = i >= 8 && i < 18;
+                for (let i = 0; i < pointCount; i++) {
+                    const isBusinessHours = (i / pointCount) >= 0.33 && (i / pointCount) < 0.75;
                     const hourMultiplier = isBusinessHours ? 1.2 : 0.8;
                     data.push(Math.max(5, baseLatency * hourMultiplier + (Math.random() - 0.5) * 20));
                 }
@@ -1433,11 +1430,9 @@
                 }
             });
 
-            // Generate time labels for 24 hours
-            const timeLabels = [];
-            for (let i = 0; i < 24; i++) {
-                timeLabels.push(i.toString().padStart(2, '0') + ':00');
-            }
+            // Generate time labels based on timeline selection
+            const timeLabels = TimelineManager.generateLabels(24);
+            const pointCount = timeLabels.length;
 
             // Generate trends data for top 5 sites
             const top5Sites = frustrationData.slice(0, 5);
@@ -1446,8 +1441,8 @@
             const trendDatasets = top5Sites.map((site, idx) => {
                 const baseTime = site.totalTime;
                 const data = [];
-                for (let i = 0; i < 24; i++) {
-                    const isBusinessHours = i >= 8 && i < 18;
+                for (let i = 0; i < pointCount; i++) {
+                    const isBusinessHours = (i / pointCount) >= 0.33 && (i / pointCount) < 0.75;
                     const hourMultiplier = isBusinessHours ? 1.3 : 0.7;
                     data.push(Math.max(50, baseTime * hourMultiplier + (Math.random() - 0.5) * 100));
                 }
@@ -1552,21 +1547,20 @@
                 failoverEventsChart.destroy();
             }
 
-            // Generate time labels for 24 hours
-            const timeLabels = [];
-            for (let i = 0; i < 24; i++) {
-                timeLabels.push(i.toString().padStart(2, '0') + ':00');
-            }
+            // Generate time labels based on timeline selection
+            const timeLabels = TimelineManager.generateLabels(24);
+            const pointCount = timeLabels.length;
 
             // Generate WAN status trends data
             const primaryData = [];
             const failoverData = [];
             const downData = [];
 
-            for (let i = 0; i < 24; i++) {
+            for (let i = 0; i < pointCount; i++) {
                 // Simulate some variation in WAN status
-                const baseDown = i >= 2 && i <= 4 ? 3 : 1; // Higher down during maintenance window
-                const basePrimary = 91 - (i >= 2 && i <= 4 ? 5 : 0);
+                const fraction = i / pointCount;
+                const baseDown = fraction >= 0.08 && fraction <= 0.17 ? 3 : 1;
+                const basePrimary = 91 - (fraction >= 0.08 && fraction <= 0.17 ? 5 : 0);
                 const baseFailover = 100 - basePrimary - baseDown;
 
                 primaryData.push(basePrimary + (Math.random() - 0.5) * 2);

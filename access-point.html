@@ -59,19 +59,19 @@
         <div class="mobile-nav-links">
             <a href="index.html" class="mobile-nav-link">
                 <i class="fa-solid fa-chart-line"></i>
-                <span>Summary Page</span>
+                <span>Summary</span>
             </a>
             <a href="sdwan.html" class="mobile-nav-link">
                 <i class="fa-solid fa-network-wired"></i>
-                <span>SD-WAN Page</span>
+                <span>SD-WAN</span>
             </a>
             <a href="switch.html" class="mobile-nav-link">
                 <i class="fa-solid fa-server"></i>
-                <span>Switch Page</span>
+                <span>Switch</span>
             </a>
             <a href="access-point.html" class="mobile-nav-link">
                 <i class="fa-solid fa-wifi"></i>
-                <span>Access Point Page</span>
+                <span>Access Point</span>
             </a>
         </div>
     </div>
@@ -91,10 +91,10 @@
                         <span class="font-bold text-xl tracking-tight text-dark-text">Network Performance Monitoring</span>
                     </div>
                     <div class="hidden sm:ml-8 sm:flex sm:space-x-8">
-                        <a href="index.html" class="border-transparent text-dark-muted hover:border-newrelic-cyan hover:text-newrelic-cyan inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors">Summary Page</a>
-                        <a href="sdwan.html" class="border-transparent text-dark-muted hover:border-newrelic-cyan hover:text-newrelic-cyan inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors">SD-WAN Page</a>
-                        <a href="switch.html" class="border-transparent text-dark-muted hover:border-newrelic-cyan hover:text-newrelic-cyan inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors">Switch Page</a>
-                        <a href="access-point.html" class="border-newrelic-cyan text-dark-text inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Access Point Page</a>
+                        <a href="index.html" class="border-transparent text-dark-muted hover:border-newrelic-cyan hover:text-newrelic-cyan inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors">Summary</a>
+                        <a href="sdwan.html" class="border-transparent text-dark-muted hover:border-newrelic-cyan hover:text-newrelic-cyan inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors">SD-WAN</a>
+                        <a href="switch.html" class="border-transparent text-dark-muted hover:border-newrelic-cyan hover:text-newrelic-cyan inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors">Switch</a>
+                        <a href="access-point.html" class="border-newrelic-cyan text-dark-text inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Access Point</a>
                     </div>
                 </div>
                 <div class="flex items-center gap-4">
@@ -103,6 +103,9 @@
                             <!-- Options populated dynamically by JavaScript -->
                         </select>
                     </div>
+
+                    <!-- Timeline Selector -->
+                    <div id="timelineSelector" class="relative"></div>
 
                     <div class="flex items-center gap-3 border-l pl-4 border-dark-border">
                         <div class="text-right hidden md:block">
@@ -464,7 +467,7 @@
                 </div>
                 <div class="p-6">
                     <div class="card p-4 bg-gray-50 dark:bg-gray-800">
-                        <h3 class="text-sm font-bold text-gray-700 dark:text-white mb-3">Funnel Stage Completion Over Time (Last 24 Hours)</h3>
+                        <h3 class="text-sm font-bold text-gray-700 dark:text-white mb-3">Funnel Stage Completion Over Time (<span data-timeline-label>Last 24 hours</span>)</h3>
                         <div style="height: 400px;">
                             <canvas id="funnelTimeSeriesChart"></canvas>
                         </div>
@@ -512,7 +515,7 @@
                 <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
                     <div class="flex items-center gap-3">
                         <h2 class="text-xl font-bold text-gray-900 dark:text-white">Channel Utilization Trends</h2>
-                        <span class="text-xs text-gray-500 dark:text-gray-400">Last 24 Hours</span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400" data-timeline-label>Last 24 hours</span>
                     </div>
                     <button onclick="closeChannelUtilTrends()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
                         <i class="fa-solid fa-times text-2xl"></i>
@@ -561,6 +564,7 @@
     <script src="assets/js/navigation.js" defer></script>
     <script src="assets/js/diagnostics-manager.js" defer></script>
     <script src="assets/js/shared-ui.js" defer></script>
+    <script src="assets/js/timeline-manager.js" defer></script>
     <script src="assets/js/data-loader.js" defer></script>
 
     <!-- Main Application Script - Deferred for Performance -->

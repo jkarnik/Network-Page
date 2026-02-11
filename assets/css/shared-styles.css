@@ -839,4 +839,232 @@ body {
         font-size: 0.625rem;
         padding: 0.25rem 0.5rem;
     }
+
+    /* Timeline dropdown responsive */
+    .timeline-dropdown {
+        right: 0;
+        min-width: 200px;
+    }
+}
+
+/* ========================================
+   Timeline Selector
+   ======================================== */
+
+.timeline-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: #F7F8F9;
+    background: #0B1620;
+    border: 1px solid #2A3036;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.timeline-btn:hover,
+.timeline-btn.active {
+    border-color: #00CED1;
+    color: #00CED1;
+}
+
+.timeline-btn .timeline-chevron {
+    font-size: 0.625rem;
+    transition: transform 0.2s ease;
+}
+
+.timeline-btn.active .timeline-chevron {
+    transform: rotate(180deg);
+}
+
+.timeline-dropdown {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    min-width: 240px;
+    background: #1A1F2E;
+    border: 1px solid #2A3036;
+    border-radius: 0.5rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    z-index: 50;
+    overflow: hidden;
+}
+
+.timeline-presets {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.25rem;
+    padding: 0.75rem;
+}
+
+.timeline-preset {
+    padding: 0.4rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #8E9494;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-align: center;
+}
+
+.timeline-preset:hover {
+    background: rgba(0, 206, 209, 0.1);
+    color: #F7F8F9;
+    border-color: rgba(0, 206, 209, 0.2);
+}
+
+.timeline-preset.active {
+    background: rgba(0, 206, 209, 0.15);
+    color: #00CED1;
+    border-color: #00CED1;
+}
+
+.timeline-divider {
+    height: 1px;
+    background: #2A3036;
+    margin: 0 0.75rem;
+}
+
+.timeline-custom {
+    padding: 0.75rem;
+}
+
+.timeline-custom-title {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: #8E9494;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+}
+
+.timeline-custom-fields {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.timeline-custom-field {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.timeline-custom-field label {
+    font-size: 0.625rem;
+    font-weight: 500;
+    color: #8E9494;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.timeline-custom-field input[type="datetime-local"] {
+    width: 100%;
+    padding: 0.35rem 0.5rem;
+    font-size: 0.75rem;
+    font-family: 'Inter', sans-serif;
+    color: #F7F8F9;
+    background: #0B1620;
+    border: 1px solid #2A3036;
+    border-radius: 0.25rem;
+    outline: none;
+    transition: border-color 0.2s ease;
+    color-scheme: dark;
+}
+
+.timeline-custom-field input[type="datetime-local"]:focus {
+    border-color: #00CED1;
+}
+
+.timeline-custom-field input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+}
+
+.timeline-apply-btn {
+    width: 100%;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #0B1620;
+    background: #00CED1;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+}
+
+.timeline-apply-btn:hover {
+    background: #00B5B8;
+}
+
+/* Light theme overrides */
+html:not(.dark) .timeline-btn {
+    color: #374151;
+    background: #ffffff;
+    border-color: #d1d5db;
+}
+
+html:not(.dark) .timeline-btn:hover,
+html:not(.dark) .timeline-btn.active {
+    border-color: #008C99;
+    color: #008C99;
+}
+
+html:not(.dark) .timeline-dropdown {
+    background: #ffffff;
+    border-color: #e5e7eb;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+html:not(.dark) .timeline-preset {
+    color: #6b7280;
+}
+
+html:not(.dark) .timeline-preset:hover {
+    background: rgba(0, 140, 153, 0.08);
+    color: #374151;
+    border-color: rgba(0, 140, 153, 0.2);
+}
+
+html:not(.dark) .timeline-preset.active {
+    background: rgba(0, 140, 153, 0.1);
+    color: #008C99;
+    border-color: #008C99;
+}
+
+html:not(.dark) .timeline-divider {
+    background: #e5e7eb;
+}
+
+html:not(.dark) .timeline-custom-title,
+html:not(.dark) .timeline-custom-field label {
+    color: #6b7280;
+}
+
+html:not(.dark) .timeline-custom-field input[type="datetime-local"] {
+    color: #374151;
+    background: #f9fafb;
+    border-color: #d1d5db;
+    color-scheme: light;
+}
+
+html:not(.dark) .timeline-custom-field input[type="datetime-local"]:focus {
+    border-color: #008C99;
+}
+
+html:not(.dark) .timeline-custom-field input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
 }
