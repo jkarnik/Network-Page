@@ -18,7 +18,7 @@
         let isIssuesExpanded = false; // Track if Network Issues widget is expanded
         let currentIssuesSeverity = 'all'; // Track severity filter for issues view
         let isSecurityExpanded = false; // Track if Security widget is expanded
-        let currentSecurityType = 'all'; // Track security type filter (threat/rogue)
+        let currentSecurityType = 'all'; // Track security severity filter (crit/warn/info)
         let issuesSearchTerm = ''; // Search term for issues
         let securitySearchTerm = ''; // Search term for security alerts
         let clientsSearchTerm = ''; // Search term for client devices
@@ -77,7 +77,7 @@
             // Get security stats from DataLoader
             const securityCounts = DataLoader.getSecurityCounts(effectiveScope);
 
-            return { fData, lData, aData, stats, totalCrit, totalWarn, threats: securityCounts.threats, rogues: securityCounts.rogues };
+            return { fData, lData, aData, stats, totalCrit, totalWarn, securityCrit: securityCounts.crit, securityWarn: securityCounts.warn };
         }
 
         function updateDashboardScope(scope) {
@@ -109,8 +109,8 @@
             // 2. Update Big Numbers
             document.getElementById('criticalCount').innerText = data.totalCrit;
             document.getElementById('warningCount').innerText = data.totalWarn;
-            document.getElementById('threatsCount').innerText = data.threats;
-            document.getElementById('roguesCount').innerText = data.rogues;
+            document.getElementById('securityCritCount').innerText = data.securityCrit;
+            document.getElementById('securityWarnCount').innerText = data.securityWarn;
 
             // 3. Update Active Device Counts by Type (from actual device data)
             const effectiveScopeForDevices = isSiteScope ? siteName : currentScope;
@@ -1086,8 +1086,9 @@
 
             // Update title
             const typeNames = {
-                'threat': 'Threat',
-                'rogue': 'Rogue Device',
+                'crit': 'Critical Security',
+                'warn': 'Warning Security',
+                'info': 'Info Security',
                 'all': 'Security'
             };
 
@@ -1122,7 +1123,7 @@
 
         function updateSecurityFilterButtons(activeFilter) {
             // Reset all buttons
-            const buttons = ['securityFilterAll', 'securityFilterThreat', 'securityFilterRogue'];
+            const buttons = ['securityFilterAll', 'securityFilterCrit', 'securityFilterWarn', 'securityFilterInfo'];
             buttons.forEach(btnId => {
                 const btn = document.getElementById(btnId);
                 btn.className = 'px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors';
@@ -1131,8 +1132,9 @@
             // Activate selected button
             const activeMap = {
                 'all': 'securityFilterAll',
-                'threat': 'securityFilterThreat',
-                'rogue': 'securityFilterRogue'
+                'crit': 'securityFilterCrit',
+                'warn': 'securityFilterWarn',
+                'info': 'securityFilterInfo'
             };
 
             const activeBtn = document.getElementById(activeMap[activeFilter]);
@@ -1150,12 +1152,12 @@
             const data = getFilteredData(currentScope, currentSiteFilter);
             let alerts = data.aData;
 
-            // Apply security type filter
+            // Show only security-type alerts
+            alerts = alerts.filter(a => a.type === 'security');
+
+            // Apply severity filter
             if (currentSecurityType !== 'all') {
-                alerts = alerts.filter(a => a.type === currentSecurityType);
-            } else {
-                // Show only security-related alerts (threats and rogues)
-                alerts = alerts.filter(a => a.type === 'threat' || a.type === 'rogue');
+                alerts = alerts.filter(a => a.sev === currentSecurityType);
             }
 
             // Apply search filter
@@ -1178,19 +1180,22 @@
                 return;
             }
 
-            const typeStyles = {
-                threat: 'text-indigo-600 bg-indigo-50 dark:bg-indigo-900/20 dark:text-indigo-400 rounded-full px-2 py-0.5 text-xs font-bold border border-indigo-100 dark:border-indigo-900',
-                rogue: 'text-newrelic-error bg-red-50 dark:bg-red-900/20 dark:text-red-400 rounded-full px-2 py-0.5 text-xs font-bold border border-red-100 dark:border-red-900'
+            const sevStyles = {
+                crit: 'text-red-600 bg-red-50 dark:bg-red-900/20 dark:text-red-400 rounded-full px-2 py-0.5 text-xs font-bold border border-red-100 dark:border-red-900',
+                warn: 'text-amber-600 bg-amber-50 dark:bg-amber-900/20 dark:text-amber-400 rounded-full px-2 py-0.5 text-xs font-bold border border-amber-100 dark:border-amber-900',
+                info: 'text-blue-600 bg-blue-50 dark:bg-blue-900/20 dark:text-blue-400 rounded-full px-2 py-0.5 text-xs font-bold border border-blue-100 dark:border-blue-900'
             };
 
-            const typeIcons = {
-                threat: '<i class="fa-solid fa-shield-halved"></i>',
-                rogue: '<i class="fa-solid fa-wifi"></i>'
+            const sevIcons = {
+                crit: '<i class="fa-solid fa-circle-exclamation"></i>',
+                warn: '<i class="fa-solid fa-triangle-exclamation"></i>',
+                info: '<i class="fa-solid fa-circle-info"></i>'
             };
 
-            const typeLabels = {
-                threat: 'THREAT',
-                rogue: 'ROGUE'
+            const sevLabels = {
+                crit: 'CRITICAL',
+                warn: 'WARNING',
+                info: 'INFO'
             };
 
             alerts.forEach(alert => {
@@ -1198,8 +1203,8 @@
                 row.className = "hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors";
                 row.innerHTML = `
                     <td class="px-4 py-3 whitespace-nowrap">
-                        <span class="${typeStyles[alert.type]} flex items-center gap-1 w-fit">
-                            ${typeIcons[alert.type]} ${typeLabels[alert.type]}
+                        <span class="${sevStyles[alert.sev]} flex items-center gap-1 w-fit">
+                            ${sevIcons[alert.sev]} ${sevLabels[alert.sev]}
                         </span>
                     </td>
                     <td class="px-4 py-3 whitespace-nowrap text-xs text-dark-muted">${alert.time}</td>

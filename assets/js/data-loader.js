@@ -447,13 +447,15 @@ const DataLoader = {
     },
 
     /**
-     * Get security-related alert counts (threats and rogues)
+     * Get security-related alert counts by severity
      */
     getSecurityCounts(scope = 'Global') {
-        const alerts = this.getAlertsByScope(scope);
+        const alerts = this.getAlertsByScope(scope).filter(a => a.type === 'security');
         return {
-            threats: alerts.filter(a => a.type === 'threat').length,
-            rogues: alerts.filter(a => a.type === 'rogue').length
+            crit: alerts.filter(a => a.severity === 'crit').length,
+            warn: alerts.filter(a => a.severity === 'warn').length,
+            info: alerts.filter(a => a.severity === 'info').length,
+            total: alerts.length
         };
     },
 
