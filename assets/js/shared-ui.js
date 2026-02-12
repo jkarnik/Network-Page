@@ -38,6 +38,19 @@ const SharedUI = {
         info: '<i class="fa-solid fa-circle-info"></i>'
     },
 
+    // ==================== DEVICE STATUS STYLES ====================
+
+    /**
+     * Status-based styles for the device info header card.
+     * Used by updateDeviceInfo() to set border color, badge classes, and label text.
+     * @type {Object.<string, {border: string, badge: string, label: string}>}
+     */
+    STATUS_STYLES: {
+        online:   { border: 'border-green-500',  badge: 'px-2 py-1 text-xs font-bold rounded text-green-700 bg-green-100 dark:bg-green-900 dark:text-green-300', label: 'HEALTHY' },
+        warning:  { border: 'border-amber-500',  badge: 'px-2 py-1 text-xs font-bold rounded text-amber-700 bg-amber-100 dark:bg-amber-900/30 dark:text-amber-300', label: 'WARNING' },
+        critical: { border: 'border-red-500',     badge: 'px-2 py-1 text-xs font-bold rounded text-red-700 bg-red-100 dark:bg-red-900/30 dark:text-red-300', label: 'CRITICAL' },
+    },
+
     // ==================== DEVICE SELECTOR ====================
 
     /**
@@ -179,6 +192,22 @@ const SharedUI = {
         const ipEl = deviceInfoCard.querySelector('[data-device-ip]');
         if (ipEl && device.ip) {
             ipEl.textContent = device.ip;
+        }
+
+        // Update border color and status badge based on device status
+        if (device.status) {
+            const style = this.STATUS_STYLES[device.status] || this.STATUS_STYLES.online;
+
+            // Swap border color class on the card
+            deviceInfoCard.classList.remove('border-green-500', 'border-amber-500', 'border-red-500', 'border-newrelic-success');
+            deviceInfoCard.classList.add(style.border);
+
+            // Update the status badge
+            const badgeEl = deviceInfoCard.querySelector('[data-device-status]');
+            if (badgeEl) {
+                badgeEl.className = style.badge;
+                badgeEl.textContent = style.label;
+            }
         }
     },
 

@@ -10,7 +10,7 @@
         let currentFilter = 'all'; // Alert filter (active fires, threats, etc)
         let currentScope = 'Global'; // Region Scope
         let currentSiteFilter = null; // Site-specific filter
-        let isExpanded = false; // Track if Active Devices widget is expanded
+        let isDevicesExpanded = false; // Track if Active Devices widget is expanded
         let currentDeviceFilter = 'all'; // Track current device type filter
         let isStatusExpanded = false; // Track if Status widget is expanded
         let currentStatusDeviceType = 'all'; // Track device type for status view
@@ -20,9 +20,43 @@
         let isSecurityExpanded = false; // Track if Security widget is expanded
         let currentSecurityType = 'all'; // Track security severity filter (crit/warn/info)
         let issuesSearchTerm = ''; // Search term for issues
+        let issuesSortField = null; // Current sort field for issues
+        let issuesSortAsc = true; // Sort direction for issues
+        let issuesSiteFilterValue = 'all'; // Site filter for issues
         let securitySearchTerm = ''; // Search term for security alerts
+        let securitySortField = null; // Current sort field for security
+        let securitySortAsc = true; // Sort direction for security
+        let securitySiteFilterValue = 'all'; // Site filter for security
         let clientsSearchTerm = ''; // Search term for client devices
         let statusSearchTerm = ''; // Search term for status devices
+
+        // Severity sort order for consistent ranking
+        const sevOrder = { crit: 0, warn: 1, info: 2 };
+
+        function sortAlerts(alerts, field, asc) {
+            if (!field) return alerts;
+            return [...alerts].sort((a, b) => {
+                let valA, valB;
+                if (field === 'sev') {
+                    valA = sevOrder[a.sev] ?? 3;
+                    valB = sevOrder[b.sev] ?? 3;
+                } else if (field === 'time') {
+                    valA = a.time;
+                    valB = b.time;
+                } else if (field === 'site') {
+                    valA = a.site.toLowerCase();
+                    valB = b.site.toLowerCase();
+                } else if (field === 'device') {
+                    valA = a.device.toLowerCase();
+                    valB = b.device.toLowerCase();
+                } else {
+                    return 0;
+                }
+                if (valA < valB) return asc ? -1 : 1;
+                if (valA > valB) return asc ? 1 : -1;
+                return 0;
+            });
+        }
 
         // --- 2. LOGIC FUNCTIONS ---
 
@@ -71,8 +105,8 @@
                 ap: { online: apStats.online, warn: apStats.warn, crit: apStats.crit }
             };
 
-            const totalCrit = stats.gateway.crit + stats.switch.crit + stats.ap.crit;
-            const totalWarn = stats.gateway.warn + stats.switch.warn + stats.ap.warn;
+            const totalCrit = aData.filter(a => a.sev === 'crit').length;
+            const totalWarn = aData.filter(a => a.sev === 'warn').length;
 
             // Get security stats from DataLoader
             const securityCounts = DataLoader.getSecurityCounts(effectiveScope);
@@ -98,15 +132,7 @@
             const data = getFilteredData(currentScope, siteName);
             const scopeInfo = DataLoader.getMetrics(isSiteScope ? siteName : currentScope);
 
-            // 1. Update Gauge
-            charts.health.data.datasets[0].data = [scopeInfo.health, 100 - scopeInfo.health];
-            charts.health.data.datasets[0].backgroundColor[0] = scopeInfo.health > 90 ? '#10b981' : (scopeInfo.health > 75 ? '#f59e0b' : '#ef4444');
-            charts.health.update();
-            const valEl = document.getElementById('healthScoreValue');
-            valEl.innerText = scopeInfo.health;
-            valEl.style.color = scopeInfo.health > 90 ? '#059669' : (scopeInfo.health > 75 ? '#d97706' : '#dc2626');
-
-            // 2. Update Big Numbers
+            // 1. Update Big Numbers
             document.getElementById('criticalCount').innerText = data.totalCrit;
             document.getElementById('warningCount').innerText = data.totalWarn;
             document.getElementById('securityCritCount').innerText = data.securityCrit;
@@ -180,17 +206,7 @@
             // Initialize Chart.js defaults using shared config
             ChartConfig.initDefaults();
 
-            // A. Health
-            charts.health = new Chart(document.getElementById('healthGauge').getContext('2d'), {
-                type: 'doughnut',
-                data: {
-                    labels: ['Health', 'Loss'],
-                    datasets: [{ data: [0, 100], backgroundColor: ['#10b981', '#e5e7eb'], borderWidth: 0, circumference: 180, rotation: 270, cutout: '85%', borderRadius: 5 }]
-                },
-                options: { plugins: { legend: { display: false }, tooltip: { enabled: false } } }
-            });
-
-            // B. Frustration
+            // A. Frustration
             const frustrationCanvas = document.getElementById('frustrationChart');
             charts.frustration = new Chart(frustrationCanvas.getContext('2d'), {
                 type: 'bar',
@@ -446,8 +462,8 @@
         }
 
         function closeExpandedWidgets() {
-            if (isExpanded) {
-                toggleExpand();
+            if (isDevicesExpanded) {
+                hideDeviceList();
             }
             if (isStatusExpanded) {
                 hideStatusDevices();
@@ -460,57 +476,29 @@
             }
         }
 
-        function toggleExpand() {
-            const card = document.getElementById('activeDevicesCard');
-            const icon = document.querySelector('#expandToggle i');
-            const backdrop = document.getElementById('expandedBackdrop');
-            const mainContent = document.querySelector('main');
-
-            if (!isExpanded) {
-                // Close status widget if it's open
-                if (isStatusExpanded) {
-                    hideStatusDevices();
-                }
-
-                // Expand to overlay mode
-                card.classList.add('expanded');
-                backdrop.classList.add('active');
-                mainContent.style.overflow = 'hidden';
-                icon.classList.remove('fa-expand');
-                icon.classList.add('fa-compress');
-                isExpanded = true;
-
-                // Show all devices by default when expanding
-                showDeviceList('all');
-            } else {
-                // Collapse back to normal
-                card.classList.remove('expanded');
-                backdrop.classList.remove('active');
-                mainContent.style.overflow = '';
-                icon.classList.remove('fa-compress');
-                icon.classList.add('fa-expand');
-                isExpanded = false;
-                hideDeviceList();
-            }
-        }
-
         function showDeviceList(deviceType) {
+            // Close other widgets if open
+            if (isStatusExpanded) {
+                hideStatusDevices();
+            }
+            if (isIssuesExpanded) {
+                hideIssuesAlerts();
+            }
+            if (isSecurityExpanded) {
+                hideSecurityAlerts();
+            }
+
             const summaryView = document.getElementById('summaryView');
             const expandedView = document.getElementById('expandedView');
             const card = document.getElementById('activeDevicesCard');
             const backdrop = document.getElementById('expandedBackdrop');
             const mainContent = document.querySelector('main');
 
-            // If not already expanded, expand the card first
-            if (!isExpanded) {
-                card.classList.add('expanded');
-                backdrop.classList.add('active');
-                mainContent.style.overflow = 'hidden';
-                const icon = document.querySelector('#expandToggle i');
-                icon.classList.remove('fa-expand');
-                icon.classList.add('fa-compress');
-                isExpanded = true;
-            }
+            // Expand the card to overlay mode
+            card.classList.add('expanded');
+            backdrop.classList.add('active');
+            mainContent.style.overflow = 'hidden';
+            isDevicesExpanded = true;
 
             summaryView.classList.add('hidden');
             expandedView.classList.remove('hidden');
@@ -533,6 +521,15 @@
         function hideDeviceList() {
             const summaryView = document.getElementById('summaryView');
             const expandedView = document.getElementById('expandedView');
+            const card = document.getElementById('activeDevicesCard');
+            const backdrop = document.getElementById('expandedBackdrop');
+            const mainContent = document.querySelector('main');
+
+            // Collapse back
+            card.classList.remove('expanded');
+            backdrop.classList.remove('active');
+            mainContent.style.overflow = '';
+            isDevicesExpanded = false;
 
             summaryView.classList.remove('hidden');
             expandedView.classList.add('hidden');
@@ -674,16 +671,15 @@
         // --- STATUS WIDGET FUNCTIONS ---
 
         function showStatusDevices(deviceType, status) {
-            // Close Active Devices widget if it's open
-            if (isExpanded) {
-                const clientsCard = document.getElementById('activeDevicesCard');
-                const clientsIcon = document.querySelector('#expandToggle i');
-                clientsCard.classList.remove('expanded');
-                clientsIcon.classList.remove('fa-compress');
-                clientsIcon.classList.add('fa-expand');
-                isExpanded = false;
-                document.getElementById('summaryView').classList.remove('hidden');
-                document.getElementById('expandedView').classList.add('hidden');
+            // Close other widgets if open
+            if (isDevicesExpanded) {
+                hideDeviceList();
+            }
+            if (isIssuesExpanded) {
+                hideIssuesAlerts();
+            }
+            if (isSecurityExpanded) {
+                hideSecurityAlerts();
             }
 
             const statusSummaryView = document.getElementById('statusSummaryView');
@@ -883,22 +879,11 @@
 
         function showIssuesAlerts(severity) {
             // Close other widgets if open
-            if (isExpanded) {
-                const clientsCard = document.getElementById('activeDevicesCard');
-                const clientsIcon = document.querySelector('#expandToggle i');
-                clientsCard.classList.remove('expanded');
-                clientsIcon.classList.remove('fa-compress');
-                clientsIcon.classList.add('fa-expand');
-                isExpanded = false;
-                document.getElementById('summaryView').classList.remove('hidden');
-                document.getElementById('expandedView').classList.add('hidden');
+            if (isDevicesExpanded) {
+                hideDeviceList();
             }
             if (isStatusExpanded) {
-                const statusCard = document.getElementById('deviceStatusCard');
-                statusCard.classList.remove('expanded');
-                isStatusExpanded = false;
-                document.getElementById('statusSummaryView').classList.remove('hidden');
-                document.getElementById('statusExpandedView').classList.add('hidden');
+                hideStatusDevices();
             }
 
             const issuesSummaryView = document.getElementById('issuesSummaryView');
@@ -919,15 +904,12 @@
             // Set the filter
             currentIssuesSeverity = severity;
 
-            // Update title
-            const severityNames = {
-                'crit': 'Critical',
-                'warn': 'Warning',
-                'info': 'Info',
-                'all': 'All'
-            };
+            document.getElementById('issuesAlertTitle').innerText = 'Network Alerts';
 
-            document.getElementById('issuesAlertTitle').innerText = `${severityNames[severity]} Network Alerts`;
+            // Reset sort/filter state
+            issuesSortField = null;
+            issuesSortAsc = true;
+            issuesSiteFilterValue = 'all';
 
             updateIssuesFilterButtons(severity);
             renderIssuesAlertTable();
@@ -987,9 +969,17 @@
             const data = getFilteredData(currentScope, currentSiteFilter);
             let alerts = data.aData;
 
+            // Populate site filter dropdown (before filtering by site)
+            populateIssuesSiteFilter(alerts);
+
             // Apply severity filter
             if (currentIssuesSeverity !== 'all') {
                 alerts = alerts.filter(a => a.sev === currentIssuesSeverity);
+            }
+
+            // Apply site filter
+            if (issuesSiteFilterValue !== 'all') {
+                alerts = alerts.filter(a => a.site === issuesSiteFilterValue);
             }
 
             // Apply search filter
@@ -1001,6 +991,9 @@
                     a.msg.toLowerCase().includes(searchLower)
                 );
             }
+
+            // Apply sorting
+            alerts = sortAlerts(alerts, issuesSortField, issuesSortAsc);
 
             // Update alert count
             alertCountEl.innerText = `${alerts.length} alert${alerts.length !== 1 ? 's' : ''}`;
@@ -1037,33 +1030,44 @@
             renderIssuesAlertTable();
         }
 
+        function sortIssuesAlerts(field) {
+            if (issuesSortField === field) {
+                issuesSortAsc = !issuesSortAsc;
+            } else {
+                issuesSortField = field;
+                issuesSortAsc = true;
+            }
+            renderIssuesAlertTable();
+        }
+
+        function filterIssuesBySite(site) {
+            issuesSiteFilterValue = site;
+            renderIssuesAlertTable();
+        }
+
+        function populateIssuesSiteFilter(alerts) {
+            const select = document.getElementById('issuesSiteFilter');
+            const currentValue = select.value;
+            const sites = [...new Set(alerts.map(a => a.site))].sort();
+            select.innerHTML = '<option value="all">All Sites</option>';
+            sites.forEach(site => {
+                select.innerHTML += `<option value="${site}"${site === currentValue ? ' selected' : ''}>${site}</option>`;
+            });
+            select.value = issuesSiteFilterValue === 'all' || sites.includes(issuesSiteFilterValue) ? issuesSiteFilterValue : 'all';
+        }
+
         // --- SECURITY POSTURE WIDGET FUNCTIONS ---
 
         function showSecurityAlerts(securityType) {
             // Close other widgets if open
-            if (isExpanded) {
-                const clientsCard = document.getElementById('activeDevicesCard');
-                const clientsIcon = document.querySelector('#expandToggle i');
-                clientsCard.classList.remove('expanded');
-                clientsIcon.classList.remove('fa-compress');
-                clientsIcon.classList.add('fa-expand');
-                isExpanded = false;
-                document.getElementById('summaryView').classList.remove('hidden');
-                document.getElementById('expandedView').classList.add('hidden');
+            if (isDevicesExpanded) {
+                hideDeviceList();
             }
             if (isStatusExpanded) {
-                const statusCard = document.getElementById('deviceStatusCard');
-                statusCard.classList.remove('expanded');
-                isStatusExpanded = false;
-                document.getElementById('statusSummaryView').classList.remove('hidden');
-                document.getElementById('statusExpandedView').classList.add('hidden');
+                hideStatusDevices();
             }
             if (isIssuesExpanded) {
-                const issuesCard = document.getElementById('networkIssuesCard');
-                issuesCard.classList.remove('expanded');
-                isIssuesExpanded = false;
-                document.getElementById('issuesSummaryView').classList.remove('hidden');
-                document.getElementById('issuesExpandedView').classList.add('hidden');
+                hideIssuesAlerts();
             }
 
             const securitySummaryView = document.getElementById('securitySummaryView');
@@ -1085,14 +1089,12 @@
             currentSecurityType = securityType;
 
             // Update title
-            const typeNames = {
-                'crit': 'Critical Security',
-                'warn': 'Warning Security',
-                'info': 'Info Security',
-                'all': 'Security'
-            };
+            document.getElementById('securityAlertTitle').innerText = 'Security Alerts';
 
-            document.getElementById('securityAlertTitle').innerText = `${typeNames[securityType]} Alerts`;
+            // Reset sort/filter state
+            securitySortField = null;
+            securitySortAsc = true;
+            securitySiteFilterValue = 'all';
 
             updateSecurityFilterButtons(securityType);
             renderSecurityAlertTable();
@@ -1155,9 +1157,17 @@
             // Show only security-type alerts
             alerts = alerts.filter(a => a.type === 'security');
 
+            // Populate site filter dropdown (before filtering by site)
+            populateSecuritySiteFilter(alerts);
+
             // Apply severity filter
             if (currentSecurityType !== 'all') {
                 alerts = alerts.filter(a => a.sev === currentSecurityType);
+            }
+
+            // Apply site filter
+            if (securitySiteFilterValue !== 'all') {
+                alerts = alerts.filter(a => a.site === securitySiteFilterValue);
             }
 
             // Apply search filter
@@ -1169,6 +1179,9 @@
                     a.msg.toLowerCase().includes(searchLower)
                 );
             }
+
+            // Apply sorting
+            alerts = sortAlerts(alerts, securitySortField, securitySortAsc);
 
             // Update alert count
             alertCountEl.innerText = `${alerts.length} alert${alerts.length !== 1 ? 's' : ''}`;
@@ -1221,6 +1234,32 @@
         function searchSecurityAlerts() {
             securitySearchTerm = document.getElementById('securitySearchInput').value;
             renderSecurityAlertTable();
+        }
+
+        function sortSecurityAlerts(field) {
+            if (securitySortField === field) {
+                securitySortAsc = !securitySortAsc;
+            } else {
+                securitySortField = field;
+                securitySortAsc = true;
+            }
+            renderSecurityAlertTable();
+        }
+
+        function filterSecurityBySite(site) {
+            securitySiteFilterValue = site;
+            renderSecurityAlertTable();
+        }
+
+        function populateSecuritySiteFilter(alerts) {
+            const select = document.getElementById('securitySiteFilter');
+            const currentValue = select.value;
+            const sites = [...new Set(alerts.map(a => a.site))].sort();
+            select.innerHTML = '<option value="all">All Sites</option>';
+            sites.forEach(site => {
+                select.innerHTML += `<option value="${site}"${site === currentValue ? ' selected' : ''}>${site}</option>`;
+            });
+            select.value = securitySiteFilterValue === 'all' || sites.includes(securitySiteFilterValue) ? securitySiteFilterValue : 'all';
         }
 
         // --- LATENCY TRENDS OVERLAY ---
@@ -1763,7 +1802,7 @@
                 // Then close card overlays
                 if (isIssuesExpanded) { hideIssuesAlerts(); return; }
                 if (isSecurityExpanded) { hideSecurityAlerts(); return; }
-                if (isExpanded) { toggleExpand(); return; }
+                if (isDevicesExpanded) { hideDeviceList(); return; }
                 if (isStatusExpanded) { hideStatusDevices(); return; }
             }
         });

@@ -51,172 +51,84 @@
         <!-- Dashboard Grid -->
         <div class="grid grid-cols-12 gap-3 max-w-[1920px] mx-auto">
 
-            <!-- 1. Executive Summary / Global Health (Top Left) -->
-            <div class="col-span-12 lg:col-span-3 card p-4 relative h-64 bg-dark-card">
-                <div class="flex justify-between items-start mb-2">
-                    <h3 class="text-sm font-bold text-dark-text">Network Health</h3>
-                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-newrelic-success/20 text-newrelic-success">
-                        Live
-                    </span>
-                </div>
-                <div class="relative flex flex-col items-center justify-center" style="height: calc(100% - 2rem);">
-                    <div class="relative w-full flex items-center justify-center" style="max-width: 340px; height: 180px;">
-                        <canvas id="healthGauge"></canvas>
-                        <div class="gauge-value text-dark-text" id="healthScoreValue">--</div>
-                        <div class="gauge-label text-dark-muted">Weighted Score</div>
-                    </div>
-                    <div class="flex justify-between text-xs text-gray-400 w-full px-8 mt-2">
-                        <span>Critical</span>
-                        <span>Healthy</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 2. Network Issues & Security Posture -->
-            <div class="col-span-12 sm:col-span-6 lg:col-span-3 flex flex-col gap-3 h-64">
-                <!-- Network Issues -->
-                <div id="networkIssuesCard" class="card p-4 flex-1 flex flex-col justify-center bg-dark-card overflow-hidden">
-                    <div id="issuesSummaryView">
-                        <div class="flex items-center justify-center gap-2 mb-3">
-                            <h3 class="text-sm font-bold text-dark-text">Network Issues</h3>
-                            <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-1.5 py-0.5 rounded flex items-center gap-1">
-                                <i class="fa-solid fa-hand-pointer text-[7px]"></i> Click
+             <!-- 1. Fleet Status (Status Matrix) -->
+             <div id="deviceStatusCard" class="col-span-12 sm:col-span-6 lg:col-span-4 card p-4 h-64 bg-dark-card overflow-hidden">
+                <div id="statusSummaryView" class="h-full flex flex-col">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="text-sm font-bold text-dark-text">Fleet Status</h3>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-2 py-0.5 rounded flex items-center gap-1">
+                                <i class="fa-solid fa-hand-pointer text-[8px]"></i> Click cells
                             </span>
                         </div>
-                        <div class="flex items-center justify-between gap-2">
-                            <div class="cursor-pointer group flex-1 text-center" onclick="showIssuesAlerts('crit')">
-                                <span class="block text-2xl font-bold text-newrelic-error group-hover:text-red-500 transition-colors" id="criticalCount">--</span>
-                                <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-red-500 inline-block">Critical</span>
-                            </div>
-                            <div class="flex items-center justify-center flex-shrink-0">
-                                <i class="fa-solid fa-triangle-exclamation text-4xl text-newrelic-error opacity-30 dark:opacity-90"></i>
-                            </div>
-                            <div class="cursor-pointer group flex-1 text-center" onclick="showIssuesAlerts('warn')">
-                                <span class="block text-2xl font-bold text-amber-500 group-hover:text-amber-400 transition-colors" id="warningCount">--</span>
-                                <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-amber-500 inline-block">Warning</span>
-                            </div>
-                        </div>
                     </div>
+                    <div class="flex-1 flex items-center justify-center overflow-hidden">
+                        <div class="status-grid border border-gray-200 dark:border-gray-700 w-full h-full max-h-[180px]">
+                            <!-- Header Row -->
+                            <div class="status-cell status-header">Type</div>
+                            <div class="status-cell status-header text-newrelic-success dark:text-green-400">Healthy</div>
+                            <div class="status-cell status-header text-amber-500">Warning</div>
+                            <div class="status-cell status-header text-red-500">Critical</div>
 
-                    <!-- Expanded Alert Feed View (Initially Hidden) -->
-                    <div id="issuesExpandedView" class="hidden h-full flex flex-col">
-                        <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
-                            <div class="flex items-center gap-3">
-                                <h4 class="text-base font-bold text-dark-text" id="issuesAlertTitle">Network Alerts</h4>
-                                <span class="text-xs text-gray-400 dark:text-gray-500" id="issuesAlertCount"></span>
-                            </div>
-                            <!-- Severity Filter -->
-                            <div class="flex items-center gap-2">
-                                <button onclick="filterIssuesAlerts('all')" id="issuesFilterAll" class="px-3 py-1.5 text-xs rounded-lg bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors">All</button>
-                                <button onclick="filterIssuesAlerts('crit')" id="issuesFilterCrit" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Critical</button>
-                                <button onclick="filterIssuesAlerts('warn')" id="issuesFilterWarn" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Warning</button>
-                                <button onclick="filterIssuesAlerts('info')" id="issuesFilterInfo" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Info</button>
-                                <button onclick="hideIssuesAlerts()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-2">
-                                    <i class="fa-solid fa-times text-lg"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <!-- Search Input -->
-                        <div class="mb-3">
-                            <input type="text" id="issuesSearchInput" placeholder="Search alerts by site, device, or message..." class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-                        <!-- Alert Table -->
-                        <div class="flex-1 overflow-auto custom-scrollbar">
-                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                                <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0 z-10">
-                                    <tr>
-                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Severity</th>
-                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Time</th>
-                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Site</th>
-                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Device</th>
-                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Message</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="bg-dark-card divide-y divide-gray-200 dark:divide-gray-700" id="issuesAlertTableBody">
-                                    <!-- Rows populated by JS -->
-                                </tbody>
-                            </table>
+                            <!-- Gateways -->
+                            <div class="status-cell font-medium text-xs text-dark-muted bg-gray-50 dark:bg-gray-800">Gateways</div>
+                            <div class="status-cell clickable" id="gw-online" onclick="showStatusDevices('gateway', 'online')">--</div>
+                            <div class="status-cell clickable bg-amber-50 dark:bg-amber-900/10 text-amber-700 dark:text-amber-400" id="gw-warn" onclick="showStatusDevices('gateway', 'warning')">--</div>
+                            <div class="status-cell clickable bg-red-50 dark:bg-red-900/10 text-red-700 dark:text-red-400 font-bold" id="gw-crit" onclick="showStatusDevices('gateway', 'critical')">--</div>
+
+                            <!-- Switches -->
+                            <div class="status-cell font-medium text-xs text-dark-muted bg-gray-50 dark:bg-gray-800">Switches</div>
+                            <div class="status-cell clickable" id="sw-online" onclick="showStatusDevices('switch', 'online')">--</div>
+                            <div class="status-cell clickable bg-amber-50 dark:bg-amber-900/10 text-amber-700 dark:text-amber-400" id="sw-warn" onclick="showStatusDevices('switch', 'warning')">--</div>
+                            <div class="status-cell clickable bg-red-50 dark:bg-red-900/10 text-red-700 dark:text-red-400 font-bold" id="sw-crit" onclick="showStatusDevices('switch', 'critical')">--</div>
+
+                            <!-- APs -->
+                            <div class="status-cell font-medium text-xs text-dark-muted bg-gray-50 dark:bg-gray-800">Access Points</div>
+                            <div class="status-cell clickable" id="ap-online" onclick="showStatusDevices('ap', 'online')">--</div>
+                            <div class="status-cell clickable bg-amber-50 dark:bg-amber-900/10 text-amber-700 dark:text-amber-400" id="ap-warn" onclick="showStatusDevices('ap', 'warning')">--</div>
+                            <div class="status-cell clickable bg-red-50 dark:bg-red-900/10 text-red-700 dark:text-red-400 font-bold" id="ap-crit" onclick="showStatusDevices('ap', 'critical')">--</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Security -->
-                <div id="securityCard" class="card p-4 flex-1 flex flex-col justify-center bg-dark-card overflow-hidden">
-                    <div id="securitySummaryView">
-                        <div class="flex items-center justify-center gap-2 mb-3">
-                            <h3 class="text-sm font-bold text-dark-text">Security Issues (24h)</h3>
-                            <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-1.5 py-0.5 rounded flex items-center gap-1">
-                                <i class="fa-solid fa-hand-pointer text-[7px]"></i> Click
-                            </span>
+                <!-- Expanded Status Device List View (Initially Hidden) -->
+                <div id="statusExpandedView" class="hidden h-full flex flex-col">
+                    <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                        <div class="flex items-center gap-3">
+                            <h4 class="text-base font-bold text-dark-text" id="statusDeviceListTitle">Devices</h4>
+                            <span class="text-xs text-gray-400 dark:text-gray-500" id="statusDeviceCount"></span>
                         </div>
-                        <div class="flex items-center justify-between gap-2">
-                            <div class="cursor-pointer group flex-1 text-center" onclick="showSecurityAlerts('crit')">
-                                <span class="block text-2xl font-bold text-newrelic-error group-hover:text-red-500 transition-colors" id="securityCritCount">--</span>
-                                <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-red-500 inline-block">Critical</span>
-                            </div>
-                            <div class="flex items-center justify-center flex-shrink-0">
-                                <i class="fa-solid fa-shield-halved text-4xl text-indigo-600 dark:text-indigo-400 opacity-30 dark:opacity-90"></i>
-                            </div>
-                            <div class="cursor-pointer group flex-1 text-center" onclick="showSecurityAlerts('warn')">
-                                <span class="block text-2xl font-bold text-amber-500 group-hover:text-amber-400 transition-colors" id="securityWarnCount">--</span>
-                                <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-amber-500 inline-block">Warning</span>
-                            </div>
+                        <!-- Status Filter -->
+                        <div class="flex items-center gap-2">
+                            <button onclick="filterStatusDevices('all')" id="statusFilterAll" class="px-3 py-1.5 text-xs rounded-lg bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors">All</button>
+                            <button onclick="filterStatusDevices('online')" id="statusFilterOnline" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Healthy</button>
+                            <button onclick="filterStatusDevices('warning')" id="statusFilterWarning" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Warning</button>
+                            <button onclick="filterStatusDevices('critical')" id="statusFilterCritical" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Critical</button>
+                            <button onclick="hideStatusDevices()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-2">
+                                <i class="fa-solid fa-times text-lg"></i>
+                            </button>
                         </div>
                     </div>
-
-                    <!-- Expanded Security Alert Feed View (Initially Hidden) -->
-                    <div id="securityExpandedView" class="hidden h-full flex flex-col">
-                        <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
-                            <div class="flex items-center gap-3">
-                                <h4 class="text-base font-bold text-dark-text" id="securityAlertTitle">Security Alerts</h4>
-                                <span class="text-xs text-gray-400 dark:text-gray-500" id="securityAlertCount"></span>
-                            </div>
-                            <!-- Security Severity Filter -->
-                            <div class="flex items-center gap-2">
-                                <button onclick="filterSecurityAlerts('all')" id="securityFilterAll" class="px-3 py-1.5 text-xs rounded-lg bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors">All</button>
-                                <button onclick="filterSecurityAlerts('crit')" id="securityFilterCrit" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Critical</button>
-                                <button onclick="filterSecurityAlerts('warn')" id="securityFilterWarn" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Warning</button>
-                                <button onclick="filterSecurityAlerts('info')" id="securityFilterInfo" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Info</button>
-                                <button onclick="hideSecurityAlerts()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-2">
-                                    <i class="fa-solid fa-times text-lg"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <!-- Search Input -->
-                        <div class="mb-3">
-                            <input type="text" id="securitySearchInput" placeholder="Search security alerts by site, device, or message..." class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-                        <!-- Alert Table -->
-                        <div class="flex-1 overflow-auto custom-scrollbar">
-                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                                <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0 z-10">
-                                    <tr>
-                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Severity</th>
-                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Time</th>
-                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Site</th>
-                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Device</th>
-                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Message</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="bg-dark-card divide-y divide-gray-200 dark:divide-gray-700" id="securityAlertTableBody">
-                                    <!-- Rows populated by JS -->
-                                </tbody>
-                            </table>
+                    <!-- Search Input -->
+                    <div class="mb-3">
+                        <input type="text" id="statusSearchInput" placeholder="Search devices by name, site, or IP address..." class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <!-- Device List -->
+                    <div class="flex-1 overflow-y-auto custom-scrollbar">
+                        <div id="statusDeviceListContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                            <!-- Device items will be populated here -->
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 3. Active Devices by Device Type -->
-            <div id="activeDevicesCard" class="col-span-12 sm:col-span-6 lg:col-span-2 card p-3 h-64 bg-dark-card overflow-hidden">
+            <!-- 2. Active Devices by Device Type -->
+            <div id="activeDevicesCard" class="col-span-12 sm:col-span-6 lg:col-span-4 card p-3 h-64 bg-dark-card overflow-hidden">
                 <div class="flex items-baseline gap-2 mb-3">
                     <h3 class="text-sm font-bold text-dark-text">Active Devices</h3>
                     <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-1.5 py-0.5 rounded flex items-center gap-1">
                         <i class="fa-solid fa-hand-pointer text-[7px]"></i> Click rows
                     </span>
-                    <button id="expandToggle" class="ml-auto text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors" onclick="toggleExpand()">
-                        <i class="fa-solid fa-expand text-xs"></i>
-                    </button>
                 </div>
                 <div id="summaryView" class="flex flex-col justify-between h-[calc(100%-2rem)]">
                     <!-- Gateways -->
@@ -305,72 +217,142 @@
                 </div>
             </div>
 
-             <!-- 4. Device Status Distribution (Status Matrix) -->
-             <div id="deviceStatusCard" class="col-span-12 sm:col-span-6 lg:col-span-4 card p-4 h-64 bg-dark-card overflow-hidden">
-                <div id="statusSummaryView" class="h-full flex flex-col">
-                    <div class="flex justify-between items-center mb-2">
-                        <h3 class="text-sm font-bold text-dark-text">Device Status Distribution</h3>
-                        <div class="flex items-center gap-2">
-                            <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-2 py-0.5 rounded flex items-center gap-1">
-                                <i class="fa-solid fa-hand-pointer text-[8px]"></i> Click cells
+            <!-- 3. Network Issues & Security Posture -->
+            <div class="col-span-12 sm:col-span-6 lg:col-span-4 flex flex-col gap-3 h-64">
+                <!-- Network Issues -->
+                <div id="networkIssuesCard" class="card p-4 flex-1 flex flex-col justify-center bg-dark-card overflow-hidden">
+                    <div id="issuesSummaryView">
+                        <div class="flex items-center justify-center gap-2 mb-3">
+                            <h3 class="text-sm font-bold text-dark-text">Network Issues</h3>
+                            <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-1.5 py-0.5 rounded flex items-center gap-1">
+                                <i class="fa-solid fa-hand-pointer text-[7px]"></i> Click
                             </span>
                         </div>
+                        <div class="flex items-center justify-between gap-2">
+                            <div class="cursor-pointer group flex-1 text-center" onclick="showIssuesAlerts('crit')">
+                                <span class="block text-2xl font-bold text-newrelic-error group-hover:text-red-500 transition-colors" id="criticalCount">--</span>
+                                <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-red-500 inline-block">Critical</span>
+                            </div>
+                            <div class="flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-triangle-exclamation text-4xl text-newrelic-error opacity-30 dark:opacity-90"></i>
+                            </div>
+                            <div class="cursor-pointer group flex-1 text-center" onclick="showIssuesAlerts('warn')">
+                                <span class="block text-2xl font-bold text-amber-500 group-hover:text-amber-400 transition-colors" id="warningCount">--</span>
+                                <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-amber-500 inline-block">Warning</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="flex-1 flex items-center justify-center overflow-hidden">
-                        <div class="status-grid border border-gray-200 dark:border-gray-700 w-full h-full max-h-[180px]">
-                            <!-- Header Row -->
-                            <div class="status-cell status-header">Type</div>
-                            <div class="status-cell status-header text-newrelic-success dark:text-green-400">Online</div>
-                            <div class="status-cell status-header text-amber-500">Warning</div>
-                            <div class="status-cell status-header text-red-500">Critical</div>
 
-                            <!-- Gateways -->
-                            <div class="status-cell font-medium text-xs text-dark-muted bg-gray-50 dark:bg-gray-800">Gateways</div>
-                            <div class="status-cell clickable" id="gw-online" onclick="showStatusDevices('gateway', 'online')">--</div>
-                            <div class="status-cell clickable bg-amber-50 dark:bg-amber-900/10 text-amber-700 dark:text-amber-400" id="gw-warn" onclick="showStatusDevices('gateway', 'warning')">--</div>
-                            <div class="status-cell clickable bg-red-50 dark:bg-red-900/10 text-red-700 dark:text-red-400 font-bold" id="gw-crit" onclick="showStatusDevices('gateway', 'critical')">--</div>
-
-                            <!-- Switches -->
-                            <div class="status-cell font-medium text-xs text-dark-muted bg-gray-50 dark:bg-gray-800">Switches</div>
-                            <div class="status-cell clickable" id="sw-online" onclick="showStatusDevices('switch', 'online')">--</div>
-                            <div class="status-cell clickable bg-amber-50 dark:bg-amber-900/10 text-amber-700 dark:text-amber-400" id="sw-warn" onclick="showStatusDevices('switch', 'warning')">--</div>
-                            <div class="status-cell clickable bg-red-50 dark:bg-red-900/10 text-red-700 dark:text-red-400 font-bold" id="sw-crit" onclick="showStatusDevices('switch', 'critical')">--</div>
-
-                            <!-- APs -->
-                            <div class="status-cell font-medium text-xs text-dark-muted bg-gray-50 dark:bg-gray-800">Access Points</div>
-                            <div class="status-cell clickable" id="ap-online" onclick="showStatusDevices('ap', 'online')">--</div>
-                            <div class="status-cell clickable bg-amber-50 dark:bg-amber-900/10 text-amber-700 dark:text-amber-400" id="ap-warn" onclick="showStatusDevices('ap', 'warning')">--</div>
-                            <div class="status-cell clickable bg-red-50 dark:bg-red-900/10 text-red-700 dark:text-red-400 font-bold" id="ap-crit" onclick="showStatusDevices('ap', 'critical')">--</div>
+                    <!-- Expanded Alert Feed View (Initially Hidden) -->
+                    <div id="issuesExpandedView" class="hidden h-full flex flex-col">
+                        <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                            <div class="flex items-center gap-3">
+                                <h4 class="text-base font-bold text-dark-text" id="issuesAlertTitle">Network Alerts</h4>
+                                <span class="text-xs text-gray-400 dark:text-gray-500" id="issuesAlertCount"></span>
+                            </div>
+                            <!-- Severity Filter -->
+                            <div class="flex items-center gap-2">
+                                <button onclick="filterIssuesAlerts('all')" id="issuesFilterAll" class="px-3 py-1.5 text-xs rounded-lg bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors">All</button>
+                                <button onclick="filterIssuesAlerts('crit')" id="issuesFilterCrit" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Critical</button>
+                                <button onclick="filterIssuesAlerts('warn')" id="issuesFilterWarn" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Warning</button>
+                                <button onclick="filterIssuesAlerts('info')" id="issuesFilterInfo" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Info</button>
+                                <button onclick="hideIssuesAlerts()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-2">
+                                    <i class="fa-solid fa-times text-lg"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Search & Site Filter -->
+                        <div class="flex gap-2 mb-3">
+                            <input type="text" id="issuesSearchInput" placeholder="Search alerts by site, device, or message..." class="flex-1 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <select id="issuesSiteFilter" onchange="filterIssuesBySite(this.value)" class="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="all">All Sites</option>
+                            </select>
+                        </div>
+                        <!-- Alert Table -->
+                        <div class="flex-1 overflow-auto custom-scrollbar">
+                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0 z-10">
+                                    <tr>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" onclick="sortIssuesAlerts('sev')">Severity <i class="fa-solid fa-sort text-gray-400"></i></th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" onclick="sortIssuesAlerts('time')">Time <i class="fa-solid fa-sort text-gray-400"></i></th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" onclick="sortIssuesAlerts('site')">Site <i class="fa-solid fa-sort text-gray-400"></i></th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" onclick="sortIssuesAlerts('device')">Device <i class="fa-solid fa-sort text-gray-400"></i></th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Message</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-dark-card divide-y divide-gray-200 dark:divide-gray-700" id="issuesAlertTableBody">
+                                    <!-- Rows populated by JS -->
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
 
-                <!-- Expanded Status Device List View (Initially Hidden) -->
-                <div id="statusExpandedView" class="hidden h-full flex flex-col">
-                    <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
-                        <div class="flex items-center gap-3">
-                            <h4 class="text-base font-bold text-dark-text" id="statusDeviceListTitle">Devices</h4>
-                            <span class="text-xs text-gray-400 dark:text-gray-500" id="statusDeviceCount"></span>
+                <!-- Security -->
+                <div id="securityCard" class="card p-4 flex-1 flex flex-col justify-center bg-dark-card overflow-hidden">
+                    <div id="securitySummaryView">
+                        <div class="flex items-center justify-center gap-2 mb-3">
+                            <h3 class="text-sm font-bold text-dark-text">Security Issues</h3>
+                            <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-1.5 py-0.5 rounded flex items-center gap-1">
+                                <i class="fa-solid fa-hand-pointer text-[7px]"></i> Click
+                            </span>
                         </div>
-                        <!-- Status Filter -->
-                        <div class="flex items-center gap-2">
-                            <button onclick="filterStatusDevices('all')" id="statusFilterAll" class="px-3 py-1.5 text-xs rounded-lg bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors">All</button>
-                            <button onclick="filterStatusDevices('online')" id="statusFilterOnline" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Online</button>
-                            <button onclick="filterStatusDevices('warning')" id="statusFilterWarning" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Warning</button>
-                            <button onclick="filterStatusDevices('critical')" id="statusFilterCritical" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Critical</button>
-                            <button onclick="hideStatusDevices()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-2">
-                                <i class="fa-solid fa-times text-lg"></i>
-                            </button>
+                        <div class="flex items-center justify-between gap-2">
+                            <div class="cursor-pointer group flex-1 text-center" onclick="showSecurityAlerts('crit')">
+                                <span class="block text-2xl font-bold text-newrelic-error group-hover:text-red-500 transition-colors" id="securityCritCount">--</span>
+                                <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-red-500 inline-block">Critical</span>
+                            </div>
+                            <div class="flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-shield-halved text-4xl text-indigo-600 dark:text-indigo-400 opacity-30 dark:opacity-90"></i>
+                            </div>
+                            <div class="cursor-pointer group flex-1 text-center" onclick="showSecurityAlerts('warn')">
+                                <span class="block text-2xl font-bold text-amber-500 group-hover:text-amber-400 transition-colors" id="securityWarnCount">--</span>
+                                <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-amber-500 inline-block">Warning</span>
+                            </div>
                         </div>
                     </div>
-                    <!-- Search Input -->
-                    <div class="mb-3">
-                        <input type="text" id="statusSearchInput" placeholder="Search devices by name, site, or IP address..." class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-                    <!-- Device List -->
-                    <div class="flex-1 overflow-y-auto custom-scrollbar">
-                        <div id="statusDeviceListContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                            <!-- Device items will be populated here -->
+
+                    <!-- Expanded Security Alert Feed View (Initially Hidden) -->
+                    <div id="securityExpandedView" class="hidden h-full flex flex-col">
+                        <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                            <div class="flex items-center gap-3">
+                                <h4 class="text-base font-bold text-dark-text" id="securityAlertTitle">Security Alerts</h4>
+                                <span class="text-xs text-gray-400 dark:text-gray-500" id="securityAlertCount"></span>
+                            </div>
+                            <!-- Security Severity Filter -->
+                            <div class="flex items-center gap-2">
+                                <button onclick="filterSecurityAlerts('all')" id="securityFilterAll" class="px-3 py-1.5 text-xs rounded-lg bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors">All</button>
+                                <button onclick="filterSecurityAlerts('crit')" id="securityFilterCrit" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Critical</button>
+                                <button onclick="filterSecurityAlerts('warn')" id="securityFilterWarn" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Warning</button>
+                                <button onclick="filterSecurityAlerts('info')" id="securityFilterInfo" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Info</button>
+                                <button onclick="hideSecurityAlerts()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-2">
+                                    <i class="fa-solid fa-times text-lg"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Search & Site Filter -->
+                        <div class="flex gap-2 mb-3">
+                            <input type="text" id="securitySearchInput" placeholder="Search security alerts by site, device, or message..." class="flex-1 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <select id="securitySiteFilter" onchange="filterSecurityBySite(this.value)" class="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="all">All Sites</option>
+                            </select>
+                        </div>
+                        <!-- Alert Table -->
+                        <div class="flex-1 overflow-auto custom-scrollbar">
+                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0 z-10">
+                                    <tr>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" onclick="sortSecurityAlerts('sev')">Severity <i class="fa-solid fa-sort text-gray-400"></i></th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" onclick="sortSecurityAlerts('time')">Time <i class="fa-solid fa-sort text-gray-400"></i></th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" onclick="sortSecurityAlerts('site')">Site <i class="fa-solid fa-sort text-gray-400"></i></th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" onclick="sortSecurityAlerts('device')">Device <i class="fa-solid fa-sort text-gray-400"></i></th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Message</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-dark-card divide-y divide-gray-200 dark:divide-gray-700" id="securityAlertTableBody">
+                                    <!-- Rows populated by JS -->
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
