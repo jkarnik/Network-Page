@@ -317,6 +317,134 @@
             });
         }
 
+        // 6. Retransmission Rate
+        if (document.getElementById('retransmissionChart')) {
+            charts.retransmission = new Chart(document.getElementById('retransmissionChart'), {
+                type: 'line',
+                data: {
+                    labels: [''],
+                    datasets: [
+                        {
+                            label: '2.4 GHz',
+                            data: [0],
+                            borderColor: '#0B7EBF',
+                            backgroundColor: 'rgba(11, 126, 191, 0.1)',
+                            fill: false,
+                            tension: 0.3,
+                            pointRadius: 3,
+                            pointHoverRadius: 6,
+                            pointBackgroundColor: '#0B7EBF',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            borderWidth: 2
+                        },
+                        {
+                            label: '5 GHz',
+                            data: [0],
+                            borderColor: '#11A768',
+                            backgroundColor: 'rgba(17, 167, 104, 0.1)',
+                            fill: false,
+                            tension: 0.3,
+                            pointRadius: 3,
+                            pointHoverRadius: 6,
+                            pointBackgroundColor: '#11A768',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            borderWidth: 2
+                        },
+                        {
+                            label: '6 GHz',
+                            data: [0],
+                            borderColor: '#00CED1',
+                            backgroundColor: 'rgba(0, 206, 209, 0.1)',
+                            fill: false,
+                            tension: 0.3,
+                            pointRadius: 3,
+                            pointHoverRadius: 6,
+                            pointBackgroundColor: '#00CED1',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Warning (10%)',
+                            data: [0],
+                            borderColor: '#F5A623',
+                            borderWidth: 1.5,
+                            borderDash: [6, 4],
+                            pointRadius: 0,
+                            pointHoverRadius: 0,
+                            fill: false,
+                            tension: 0
+                        },
+                        {
+                            label: 'Critical (20%)',
+                            data: [0],
+                            borderColor: '#ef4444',
+                            borderWidth: 1.5,
+                            borderDash: [6, 4],
+                            pointRadius: 0,
+                            pointHoverRadius: 0,
+                            fill: false,
+                            tension: 0
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            enabled: true,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: '#0B7EBF',
+                            borderWidth: 1,
+                            filter: function(tooltipItem) {
+                                return tooltipItem.datasetIndex < 3;
+                            },
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) label += ': ';
+                                    label += context.parsed.y.toFixed(1) + '%';
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            grid: { display: false },
+                            ticks: {
+                                font: { size: 10 },
+                                maxRotation: 0,
+                                autoSkipPadding: 15
+                            }
+                        },
+                        y: {
+                            display: true,
+                            beginAtZero: true,
+                            ticks: {
+                                font: { size: 10 },
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            },
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' }
+                        }
+                    }
+                }
+            });
+        }
+
         // Initialize Everything
         initCharts();
 
@@ -492,6 +620,20 @@
                 charts.ssids.data.labels = ssids.labels;
                 charts.ssids.data.datasets[0].data = ssids.data;
                 charts.ssids.update();
+            }
+
+            // Update Retransmission Rate chart
+            if (charts.retransmission && currentDeviceData.retransmissionRate) {
+                const rr = currentDeviceData.retransmissionRate;
+                const sliced = TimelineManager.sliceData(rr.labels, rr.band24, rr.band5, rr.band6);
+                charts.retransmission.data.labels = sliced.labels;
+                charts.retransmission.data.datasets[0].data = sliced.datasets[0];
+                charts.retransmission.data.datasets[1].data = sliced.datasets[1];
+                charts.retransmission.data.datasets[2].data = sliced.datasets[2];
+                const pointCount = sliced.labels.length;
+                charts.retransmission.data.datasets[3].data = Array(pointCount).fill(10);
+                charts.retransmission.data.datasets[4].data = Array(pointCount).fill(20);
+                charts.retransmission.update();
             }
 
             // Render SSID-to-VLAN mapping table

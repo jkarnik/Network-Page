@@ -701,22 +701,7 @@
             currentStatusDeviceType = deviceType;
             currentStatusFilter = status;
 
-            // Update title
-            const deviceTypeNames = {
-                'gateway': 'Gateway',
-                'switch': 'Switch',
-                'ap': 'Access Point'
-            };
-            const statusNames = {
-                'online': 'Online',
-                'warning': 'Warning',
-                'critical': 'Critical'
-            };
-
-            document.getElementById('statusDeviceListTitle').innerText =
-                `${statusNames[status]} ${deviceTypeNames[deviceType]} Devices`;
-
-            updateStatusFilterButtons(status);
+            updateStatusFilterButtons(status, deviceType);
             renderStatusDeviceList();
         }
 
@@ -739,7 +724,13 @@
 
         function filterStatusDevices(status) {
             currentStatusFilter = status;
-            updateStatusFilterButtons(status);
+            updateStatusFilterButtons(status, currentStatusDeviceType);
+            renderStatusDeviceList();
+        }
+
+        function filterStatusDeviceType(deviceType) {
+            currentStatusDeviceType = deviceType;
+            updateStatusFilterButtons(currentStatusFilter, deviceType);
             renderStatusDeviceList();
         }
 
@@ -748,26 +739,23 @@
             renderStatusDeviceList();
         }
 
-        function updateStatusFilterButtons(activeFilter) {
-            // Reset all buttons
-            const buttons = ['statusFilterAll', 'statusFilterOnline', 'statusFilterWarning', 'statusFilterCritical'];
-            buttons.forEach(btnId => {
-                const btn = document.getElementById(btnId);
-                btn.className = 'px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors';
-            });
+        function updateStatusFilterButtons(activeStatusFilter, activeTypeFilter) {
+            const inactiveClass = 'px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors';
+            const activeClass = 'px-3 py-1.5 text-xs rounded-lg bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors';
 
-            // Activate selected button
-            const activeMap = {
-                'all': 'statusFilterAll',
-                'online': 'statusFilterOnline',
-                'warning': 'statusFilterWarning',
-                'critical': 'statusFilterCritical'
-            };
+            // Health filter buttons
+            const healthButtons = ['statusFilterAll', 'statusFilterOnline', 'statusFilterWarning', 'statusFilterCritical'];
+            const healthMap = { 'all': 'statusFilterAll', 'online': 'statusFilterOnline', 'warning': 'statusFilterWarning', 'critical': 'statusFilterCritical' };
+            healthButtons.forEach(id => { document.getElementById(id).className = inactiveClass; });
+            const activeHealthBtn = document.getElementById(healthMap[activeStatusFilter]);
+            if (activeHealthBtn) activeHealthBtn.className = activeClass;
 
-            const activeBtn = document.getElementById(activeMap[activeFilter]);
-            if (activeBtn) {
-                activeBtn.className = 'px-3 py-1.5 text-xs rounded-lg bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors';
-            }
+            // Device type filter buttons
+            const typeButtons = ['typeFilterAll', 'typeFilterGateway', 'typeFilterSwitch', 'typeFilterAp'];
+            const typeMap = { 'all': 'typeFilterAll', 'gateway': 'typeFilterGateway', 'switch': 'typeFilterSwitch', 'ap': 'typeFilterAp' };
+            typeButtons.forEach(id => { document.getElementById(id).className = inactiveClass; });
+            const activeTypeBtn = document.getElementById(typeMap[activeTypeFilter]);
+            if (activeTypeBtn) activeTypeBtn.className = activeClass;
         }
 
         function renderStatusDeviceList() {
