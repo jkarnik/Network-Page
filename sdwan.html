@@ -320,56 +320,8 @@
                 </div>
             </div>
 
-            <!-- ROW 3: Sequential Event Timeline, VPN Tunnel Status -->
-            <div class="col-span-12 lg:col-span-4 card p-4 bg-dark-card overflow-hidden flex flex-col" style="height: 240px;">
-                <div class="flex justify-between items-center mb-4 flex-none">
-                    <h3 class="text-sm font-bold text-dark-text">Sequential Event Timeline</h3>
-                    <span class="text-[10px] text-gray-400" data-timeline-label>Last 24 hours</span>
-                </div>
-
-                <div class="pl-2 space-y-0 overflow-y-auto custom-scrollbar flex-1 pr-2">
-
-                    <div class="timeline-item dark:border-gray-700 pb-5">
-                        <div class="timeline-dot bg-amber-500 ring-4 ring-white dark:ring-dark-card"></div>
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <p class="text-xs text-gray-400 dark:text-gray-500">10:50 AM - 11:15 AM</p>
-                                <p class="text-sm font-medium text-dark-text flex items-center gap-2">
-                                    OSPF Flapping Detected
-                                    <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-200 dark:border-amber-800">
-                                        25 Events
-                                    </span>
-                                </p>
-                                <p class="text-xs text-dark-muted mt-0.5">Neighbor 10.255.0.1 state changing repeatedly (Full/Down)</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="timeline-item dark:border-gray-700 pb-5">
-                        <div class="timeline-dot bg-red-500 ring-4 ring-white dark:ring-dark-card"></div>
-                        <p class="text-xs text-gray-400 dark:text-gray-500">10:42 AM</p>
-                        <p class="text-sm font-medium text-dark-text">Critical Link Failure</p>
-                        <p class="text-xs text-dark-muted mt-0.5">Physical carrier loss detected on Port 2 (WAN 1)</p>
-                    </div>
-
-                    <div class="timeline-item dark:border-gray-700 pb-5">
-                        <div class="timeline-dot bg-blue-500 ring-4 ring-white dark:ring-dark-card"></div>
-                        <p class="text-xs text-gray-400 dark:text-gray-500">10:42 AM</p>
-                        <p class="text-sm font-medium text-dark-text">Auto-VPN Failover</p>
-                        <p class="text-xs text-dark-muted mt-0.5">Traffic rerouted to LTE Backup (Verizon) automatically</p>
-                    </div>
-
-                    <div class="timeline-item border-none dark:border-gray-700 pb-2">
-                        <div class="timeline-dot bg-gray-400 ring-4 ring-white dark:ring-dark-card"></div>
-                        <p class="text-xs text-gray-400 dark:text-gray-500">08:00 AM</p>
-                        <p class="text-sm font-medium text-dark-text">Daily Backup</p>
-                        <p class="text-xs text-dark-muted mt-0.5">Configuration snapshot saved successfully</p>
-                    </div>
-
-                </div>
-            </div>
-
-            <div class="col-span-12 lg:col-span-8 card p-0 bg-dark-card overflow-hidden" style="height: 240px;">
+            <!-- ROW 3: VPN Tunnel Status -->
+            <div class="col-span-12 card p-0 bg-dark-card overflow-hidden" style="height: 240px;">
                 <div class="p-4 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
                     <div>
                         <h3 class="text-sm font-bold text-dark-text whitespace-nowrap">VPN Tunnel Status</h3>

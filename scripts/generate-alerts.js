@@ -138,7 +138,7 @@ const timeAgos = [
 ];
 
 // Alert types
-const alertTypes = ['network', 'hardware', 'security', 'system', 'performance'];
+const alertTypes = ['network', 'hardware', 'security', 'system', 'performance', 'ai'];
 
 // Generate a random item from array
 function randomItem(arr) {

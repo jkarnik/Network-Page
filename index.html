@@ -134,108 +134,13 @@
                 </div>
             </div>
 
-            <!-- 2. Active Devices by Device Type -->
-            <div id="activeDevicesCard" class="col-span-12 sm:col-span-6 lg:col-span-4 card p-3 h-64 bg-dark-card overflow-hidden">
-                <div class="flex items-baseline gap-2 mb-3">
-                    <h3 class="text-sm font-bold text-dark-text">Active Devices</h3>
-                    <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-1.5 py-0.5 rounded flex items-center gap-1">
-                        <i class="fa-solid fa-hand-pointer text-[7px]"></i> Click rows
-                    </span>
-                </div>
-                <div id="summaryView" class="flex flex-col justify-between h-[calc(100%-2rem)]">
-                    <!-- Gateways -->
-                    <div class="flex flex-col gap-1 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 p-1 rounded transition-colors" onclick="showDeviceList('gateway')">
-                        <div class="flex items-center gap-1.5">
-                            <i class="fa-solid fa-network-wired text-blue-600 text-xs"></i>
-                            <span class="text-xs font-medium text-gray-600 dark:text-gray-300">Gateways</span>
-                            <i class="fa-solid fa-chevron-right text-[8px] text-gray-400 ml-auto"></i>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-lg font-bold text-gray-900 dark:text-white w-14 flex-shrink-0" id="gwClientCount">3,200</span>
-                            <span class="text-[10px] text-newrelic-success dark:text-green-400 font-medium bg-green-50 dark:bg-green-900/30 px-1 py-0.5 rounded flex items-center gap-0.5 whitespace-nowrap flex-shrink-0">
-                                <i class="fa-solid fa-arrow-trend-up"></i> <span id="gwClientTrend">2.1%</span>
-                            </span>
-                            <div class="flex-1 h-4 min-w-0">
-                                <canvas id="gwSparkline"></canvas>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Switches -->
-                    <div class="flex flex-col gap-1 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 p-1 rounded transition-colors" onclick="showDeviceList('switch')">
-                        <div class="flex items-center gap-1.5">
-                            <i class="fa-solid fa-server text-purple-600 text-xs"></i>
-                            <span class="text-xs font-medium text-gray-600 dark:text-gray-300">Switches</span>
-                            <i class="fa-solid fa-chevron-right text-[8px] text-gray-400 ml-auto"></i>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-lg font-bold text-gray-900 dark:text-white w-14 flex-shrink-0" id="swClientCount">7,800</span>
-                            <span class="text-[10px] text-newrelic-success dark:text-green-400 font-medium bg-green-50 dark:bg-green-900/30 px-1 py-0.5 rounded flex items-center gap-0.5 whitespace-nowrap flex-shrink-0">
-                                <i class="fa-solid fa-arrow-trend-up"></i> <span id="swClientTrend">5.3%</span>
-                            </span>
-                            <div class="flex-1 h-4 min-w-0">
-                                <canvas id="swSparkline"></canvas>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Access Points -->
-                    <div class="flex flex-col gap-1 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 p-1 rounded transition-colors" onclick="showDeviceList('ap')">
-                        <div class="flex items-center gap-1.5">
-                            <i class="fa-solid fa-wifi text-newrelic-success text-xs"></i>
-                            <span class="text-xs font-medium text-gray-600 dark:text-gray-300">Access Points</span>
-                            <i class="fa-solid fa-chevron-right text-[8px] text-gray-400 ml-auto"></i>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-lg font-bold text-gray-900 dark:text-white w-14 flex-shrink-0" id="apClientCount">4,342</span>
-                            <span class="text-[10px] text-newrelic-success dark:text-green-400 font-medium bg-green-50 dark:bg-green-900/30 px-1 py-0.5 rounded flex items-center gap-0.5 whitespace-nowrap flex-shrink-0">
-                                <i class="fa-solid fa-arrow-trend-up"></i> <span id="apClientTrend">3.7%</span>
-                            </span>
-                            <div class="flex-1 h-4 min-w-0">
-                                <canvas id="apSparkline"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Expanded Device List View (Initially Hidden) -->
-                <div id="expandedView" class="hidden h-[calc(100%-2rem)] flex flex-col">
-                    <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
-                        <div class="flex items-center gap-3">
-                            <h4 class="text-base font-bold text-dark-text" id="deviceListTitle">Devices</h4>
-                            <span class="text-xs text-gray-400 dark:text-gray-500" id="deviceCount"></span>
-                        </div>
-                        <!-- Device Type Filter -->
-                        <div class="flex items-center gap-2">
-                            <button onclick="filterDevices('all')" id="filterAll" class="px-3 py-1.5 text-xs rounded-lg bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors">All</button>
-                            <button onclick="filterDevices('gateway')" id="filterGateway" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Gateways</button>
-                            <button onclick="filterDevices('switch')" id="filterSwitch" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Switches</button>
-                            <button onclick="filterDevices('ap')" id="filterAp" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Access Points</button>
-                            <button onclick="hideDeviceList()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-2">
-                                <i class="fa-solid fa-times text-lg"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <!-- Search Input -->
-                    <div class="mb-3">
-                        <input type="text" id="clientsSearchInput" placeholder="Search devices by name, site, or IP address..." class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-                    <!-- Device List -->
-                    <div class="flex-1 overflow-y-auto custom-scrollbar">
-                        <div id="deviceListContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                            <!-- Device items will be populated here -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 3. Network Issues & Security Posture -->
-            <div class="col-span-12 sm:col-span-6 lg:col-span-4 flex flex-col gap-3 h-64">
-                <!-- Network Issues -->
-                <div id="networkIssuesCard" class="card p-4 flex-1 flex flex-col justify-center bg-dark-card overflow-hidden">
+            <!-- 2. Infrastructure Alerts, Security Alerts & AI Alerts -->
+            <div class="col-span-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                <!-- Infrastructure Alerts -->
+                <div id="networkIssuesCard" class="card p-4 flex flex-col justify-center bg-dark-card overflow-hidden h-64">
                     <div id="issuesSummaryView">
                         <div class="flex items-center justify-center gap-2 mb-3">
-                            <h3 class="text-sm font-bold text-dark-text">Network Issues</h3>
+                            <h3 class="text-sm font-bold text-dark-text">Infrastructure Alerts</h3>
                             <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-1.5 py-0.5 rounded flex items-center gap-1">
                                 <i class="fa-solid fa-hand-pointer text-[7px]"></i> Click
                             </span>
@@ -300,11 +205,11 @@
                     </div>
                 </div>
 
-                <!-- Security -->
-                <div id="securityCard" class="card p-4 flex-1 flex flex-col justify-center bg-dark-card overflow-hidden">
+                <!-- Security Alerts -->
+                <div id="securityCard" class="card p-4 flex flex-col justify-center bg-dark-card overflow-hidden h-64">
                     <div id="securitySummaryView">
                         <div class="flex items-center justify-center gap-2 mb-3">
-                            <h3 class="text-sm font-bold text-dark-text">Security Issues</h3>
+                            <h3 class="text-sm font-bold text-dark-text">Security Alerts</h3>
                             <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-1.5 py-0.5 rounded flex items-center gap-1">
                                 <i class="fa-solid fa-hand-pointer text-[7px]"></i> Click
                             </span>
@@ -362,6 +267,75 @@
                                     </tr>
                                 </thead>
                                 <tbody class="bg-dark-card divide-y divide-gray-200 dark:divide-gray-700" id="securityAlertTableBody">
+                                    <!-- Rows populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Alerts -->
+                <div id="aiAlertsCard" class="card p-4 flex flex-col justify-center bg-dark-card overflow-hidden h-64">
+                    <div id="aiAlertsSummaryView">
+                        <div class="flex items-center justify-center gap-2 mb-3">
+                            <h3 class="text-sm font-bold text-dark-text">AI Alerts</h3>
+                            <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-1.5 py-0.5 rounded flex items-center gap-1">
+                                <i class="fa-solid fa-hand-pointer text-[7px]"></i> Click
+                            </span>
+                        </div>
+                        <div class="flex items-center justify-between gap-2">
+                            <div class="cursor-pointer group flex-1 text-center" onclick="showAIAlerts('crit')">
+                                <span class="block text-2xl font-bold text-newrelic-error group-hover:text-red-500 transition-colors" id="aiCritCount">0</span>
+                                <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-red-500 inline-block">Critical</span>
+                            </div>
+                            <div class="flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-brain text-4xl text-purple-600 dark:text-purple-400 opacity-30 dark:opacity-90"></i>
+                            </div>
+                            <div class="cursor-pointer group flex-1 text-center" onclick="showAIAlerts('warn')">
+                                <span class="block text-2xl font-bold text-amber-500 group-hover:text-amber-400 transition-colors" id="aiWarnCount">0</span>
+                                <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-amber-500 inline-block">Warning</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Expanded AI Alert Feed View (Initially Hidden) -->
+                    <div id="aiAlertsExpandedView" class="hidden h-full flex flex-col">
+                        <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                            <div class="flex items-center gap-3">
+                                <h4 class="text-base font-bold text-dark-text" id="aiAlertTitle">AI Alerts</h4>
+                                <span class="text-xs text-gray-400 dark:text-gray-500" id="aiAlertCount"></span>
+                            </div>
+                            <!-- AI Severity Filter -->
+                            <div class="flex items-center gap-2">
+                                <button onclick="filterAIAlerts('all')" id="aiFilterAll" class="px-3 py-1.5 text-xs rounded-lg bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors">All</button>
+                                <button onclick="filterAIAlerts('crit')" id="aiFilterCrit" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Critical</button>
+                                <button onclick="filterAIAlerts('warn')" id="aiFilterWarn" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Warning</button>
+                                <button onclick="filterAIAlerts('info')" id="aiFilterInfo" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Info</button>
+                                <button onclick="hideAIAlerts()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-2">
+                                    <i class="fa-solid fa-times text-lg"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Search & Site Filter -->
+                        <div class="flex gap-2 mb-3">
+                            <input type="text" id="aiSearchInput" placeholder="Search AI alerts by site, device, or message..." class="flex-1 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <select id="aiSiteFilter" onchange="filterAIBySite(this.value)" class="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="all">All Sites</option>
+                            </select>
+                        </div>
+                        <!-- Alert Table -->
+                        <div class="flex-1 overflow-auto custom-scrollbar">
+                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0 z-10">
+                                    <tr>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" onclick="sortAIAlerts('sev')">Severity <i class="fa-solid fa-sort text-gray-400"></i></th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" onclick="sortAIAlerts('time')">Time <i class="fa-solid fa-sort text-gray-400"></i></th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" onclick="sortAIAlerts('site')">Site <i class="fa-solid fa-sort text-gray-400"></i></th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" onclick="sortAIAlerts('device')">Device <i class="fa-solid fa-sort text-gray-400"></i></th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Message</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-dark-card divide-y divide-gray-200 dark:divide-gray-700" id="aiAlertTableBody">
                                     <!-- Rows populated by JS -->
                                 </tbody>
                             </table>

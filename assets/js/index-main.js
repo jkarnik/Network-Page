@@ -10,8 +10,12 @@
         let currentFilter = 'all'; // Alert filter (active fires, threats, etc)
         let currentScope = 'Global'; // Region Scope
         let currentSiteFilter = null; // Site-specific filter
-        let isDevicesExpanded = false; // Track if Active Devices widget is expanded
-        let currentDeviceFilter = 'all'; // Track current device type filter
+        let isAIExpanded = false; // Track if AI Alerts widget is expanded
+        let currentAIType = 'all'; // Track AI severity filter
+        let aiSearchTerm = ''; // Search term for AI alerts
+        let aiSortField = null; // Current sort field for AI alerts
+        let aiSortAsc = true; // Sort direction for AI alerts
+        let aiSiteFilterValue = 'all'; // Site filter for AI alerts
         let isStatusExpanded = false; // Track if Status widget is expanded
         let currentStatusDeviceType = 'all'; // Track device type for status view
         let currentStatusFilter = 'all'; // Track status filter (online/warning/critical)
@@ -27,7 +31,6 @@
         let securitySortField = null; // Current sort field for security
         let securitySortAsc = true; // Sort direction for security
         let securitySiteFilterValue = 'all'; // Site filter for security
-        let clientsSearchTerm = ''; // Search term for client devices
         let statusSearchTerm = ''; // Search term for status devices
 
         // Severity sort order for consistent ranking
@@ -138,21 +141,10 @@
             document.getElementById('securityCritCount').innerText = data.securityCrit;
             document.getElementById('securityWarnCount').innerText = data.securityWarn;
 
-            // 3. Update Active Device Counts by Type (from actual device data)
-            const effectiveScopeForDevices = isSiteScope ? siteName : currentScope;
-            const gwCount = DataLoader.getDevicesByScope(effectiveScopeForDevices, 'gateways').length;
-            const swCount = DataLoader.getDevicesByScope(effectiveScopeForDevices, 'switches').length;
-            const apCount = DataLoader.getDevicesByScope(effectiveScopeForDevices, 'accessPoints').length;
-
-            document.getElementById('gwClientCount').innerText = gwCount.toLocaleString();
-            document.getElementById('swClientCount').innerText = swCount.toLocaleString();
-            document.getElementById('apClientCount').innerText = apCount.toLocaleString();
-
-            // Set trends (from scope metrics)
-            const baseTrend = parseFloat(scopeInfo.trend) || 0;
-            document.getElementById('gwClientTrend').innerText = (baseTrend * 0.5).toFixed(1) + '%';
-            document.getElementById('swClientTrend').innerText = (baseTrend * 1.2).toFixed(1) + '%';
-            document.getElementById('apClientTrend').innerText = (baseTrend * 0.9).toFixed(1) + '%';
+            // 3. Update AI Alert Counts
+            const aiCounts = DataLoader.getAICounts(isSiteScope ? siteName : currentScope);
+            document.getElementById('aiCritCount').innerText = aiCounts.crit;
+            document.getElementById('aiWarnCount').innerText = aiCounts.warn;
 
             // 4. Update WAN Donut from DataLoader
             const wanData = DataLoader.getWanResilience(isSiteScope ? siteName : currentScope);
@@ -307,33 +299,6 @@
                 options: { plugins: { legend: { display: false } } }
             });
 
-            // E. Sparklines for each device type
-            charts.gwSpark = new Chart(document.getElementById('gwSparkline').getContext('2d'), {
-                type: 'line',
-                data: {
-                    labels: ['6h', '5h', '4h', '3h', '2h', '1h', 'Now'],
-                    datasets: [{ data: [3000, 3050, 3100, 3150, 3180, 3190, 3200], borderColor: '#3b82f6', borderWidth: 2, tension: 0.4, pointRadius: 0 }]
-                },
-                options: { plugins: { legend: { display: false }, tooltip: { enabled: false } }, scales: { x: { display: false }, y: { display: false } } }
-            });
-
-            charts.swSpark = new Chart(document.getElementById('swSparkline').getContext('2d'), {
-                type: 'line',
-                data: {
-                    labels: ['6h', '5h', '4h', '3h', '2h', '1h', 'Now'],
-                    datasets: [{ data: [7200, 7300, 7450, 7600, 7700, 7750, 7800], borderColor: '#9333ea', borderWidth: 2, tension: 0.4, pointRadius: 0 }]
-                },
-                options: { plugins: { legend: { display: false }, tooltip: { enabled: false } }, scales: { x: { display: false }, y: { display: false } } }
-            });
-
-            charts.apSpark = new Chart(document.getElementById('apSparkline').getContext('2d'), {
-                type: 'line',
-                data: {
-                    labels: ['6h', '5h', '4h', '3h', '2h', '1h', 'Now'],
-                    datasets: [{ data: [4050, 4100, 4150, 4200, 4280, 4310, 4342], borderColor: '#16a34a', borderWidth: 2, tension: 0.4, pointRadius: 0 }]
-                },
-                options: { plugins: { legend: { display: false }, tooltip: { enabled: false } }, scales: { x: { display: false }, y: { display: false } } }
-            });
         }
 
         // --- 4. ALERT TABLE LOGIC ---
@@ -462,9 +427,6 @@
         }
 
         function closeExpandedWidgets() {
-            if (isDevicesExpanded) {
-                hideDeviceList();
-            }
             if (isStatusExpanded) {
                 hideStatusDevices();
             }
@@ -474,206 +436,18 @@
             if (isSecurityExpanded) {
                 hideSecurityAlerts();
             }
-        }
-
-        function showDeviceList(deviceType) {
-            // Close other widgets if open
-            if (isStatusExpanded) {
-                hideStatusDevices();
-            }
-            if (isIssuesExpanded) {
-                hideIssuesAlerts();
-            }
-            if (isSecurityExpanded) {
-                hideSecurityAlerts();
-            }
-
-            const summaryView = document.getElementById('summaryView');
-            const expandedView = document.getElementById('expandedView');
-            const card = document.getElementById('activeDevicesCard');
-            const backdrop = document.getElementById('expandedBackdrop');
-            const mainContent = document.querySelector('main');
-
-            // Expand the card to overlay mode
-            card.classList.add('expanded');
-            backdrop.classList.add('active');
-            mainContent.style.overflow = 'hidden';
-            isDevicesExpanded = true;
-
-            summaryView.classList.add('hidden');
-            expandedView.classList.remove('hidden');
-
-            // Update title
-            const titles = {
-                'gateway': 'Gateway Devices',
-                'switch': 'Switch Devices',
-                'ap': 'Access Point Devices',
-                'all': 'All Devices'
-            };
-            document.getElementById('deviceListTitle').innerText = titles[deviceType] || 'Devices';
-
-            // Set initial filter
-            currentDeviceFilter = deviceType;
-            updateDeviceFilterButtons(deviceType);
-            renderDeviceList(deviceType);
-        }
-
-        function hideDeviceList() {
-            const summaryView = document.getElementById('summaryView');
-            const expandedView = document.getElementById('expandedView');
-            const card = document.getElementById('activeDevicesCard');
-            const backdrop = document.getElementById('expandedBackdrop');
-            const mainContent = document.querySelector('main');
-
-            // Collapse back
-            card.classList.remove('expanded');
-            backdrop.classList.remove('active');
-            mainContent.style.overflow = '';
-            isDevicesExpanded = false;
-
-            summaryView.classList.remove('hidden');
-            expandedView.classList.add('hidden');
-        }
-
-        function filterDevices(deviceType) {
-            currentDeviceFilter = deviceType;
-            updateDeviceFilterButtons(deviceType);
-            renderDeviceList(deviceType);
-        }
-
-        function searchDeviceList() {
-            clientsSearchTerm = document.getElementById('clientsSearchInput').value;
-            renderDeviceList(currentDeviceFilter);
-        }
-
-        function updateDeviceFilterButtons(activeFilter) {
-            // Reset all buttons
-            const buttons = ['filterAll', 'filterGateway', 'filterSwitch', 'filterAp'];
-            buttons.forEach(btnId => {
-                const btn = document.getElementById(btnId);
-                btn.className = 'px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors';
-            });
-
-            // Activate selected button
-            const activeMap = {
-                'all': 'filterAll',
-                'gateway': 'filterGateway',
-                'switch': 'filterSwitch',
-                'ap': 'filterAp'
-            };
-
-            const activeBtn = document.getElementById(activeMap[activeFilter]);
-            if (activeBtn) {
-                activeBtn.className = 'px-3 py-1.5 text-xs rounded-lg bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors';
+            if (isAIExpanded) {
+                hideAIAlerts();
             }
         }
 
-        function renderDeviceList(deviceType) {
-            const container = document.getElementById('deviceListContainer');
-            const deviceCountEl = document.getElementById('deviceCount');
-            container.innerHTML = '';
-
-            // Gather devices based on filter using DataLoader
-            let devices = [];
-            const typeMap = { 'gateway': 'gateways', 'switch': 'switches', 'ap': 'accessPoints' };
-            if (deviceType === 'all') {
-                devices = DataLoader.getAllDevices();
-            } else {
-                devices = DataLoader.getDevices(typeMap[deviceType]) || [];
-            }
-
-            // Apply site filter if active
-            if (currentSiteFilter) {
-                devices = devices.filter(d => d.site === currentSiteFilter);
-            }
-
-            // Apply search filter
-            if (clientsSearchTerm) {
-                const searchLower = clientsSearchTerm.toLowerCase();
-                devices = devices.filter(d =>
-                    d.name.toLowerCase().includes(searchLower) ||
-                    d.site.toLowerCase().includes(searchLower) ||
-                    d.ip.toLowerCase().includes(searchLower)
-                );
-            }
-
-            // Sort by clients (descending)
-            devices.sort((a, b) => b.clients - a.clients);
-
-            // Update device count
-            deviceCountEl.innerText = `${devices.length} device${devices.length !== 1 ? 's' : ''}`;
-
-            // Render device cards
-            devices.forEach(device => {
-                const statusColors = {
-                    'online': 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
-                    'warning': 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-                    'critical': 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
-                };
-
-                const statusIcons = {
-                    'online': 'fa-circle-check',
-                    'warning': 'fa-circle-exclamation',
-                    'critical': 'fa-circle-xmark'
-                };
-
-                const deviceTypeIcons = {
-                    'GW-': { icon: 'fa-network-wired', color: 'text-newrelic-cyan' },
-                    'SW-': { icon: 'fa-server', color: 'text-purple-600 dark:text-purple-400' },
-                    'AP-': { icon: 'fa-wifi', color: 'text-newrelic-success dark:text-green-400' }
-                };
-
-                const prefix = device.name.substring(0, 3);
-                const iconInfo = deviceTypeIcons[prefix] || { icon: 'fa-circle', color: 'text-gray-600' };
-
-                const deviceCard = document.createElement('div');
-                deviceCard.className = 'bg-gray-50 dark:bg-gray-800 p-4 rounded-xl hover:shadow-md hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 cursor-pointer border border-transparent hover:border-blue-200 dark:hover:border-blue-800';
-                deviceCard.innerHTML = `
-                    <div class="flex items-start justify-between mb-3">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-lg bg-white dark:bg-gray-900 flex items-center justify-center shadow-sm">
-                                <i class="fa-solid ${iconInfo.icon} ${iconInfo.color} text-lg"></i>
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <div class="text-sm font-bold text-gray-900 dark:text-white truncate mb-0.5">${device.name}</div>
-                                <div class="text-xs text-dark-muted">${device.site}</div>
-                            </div>
-                        </div>
-                        <span class="px-2 py-1 text-[10px] rounded-lg font-semibold ${statusColors[device.status]} flex items-center gap-1">
-                            <i class="fa-solid ${statusIcons[device.status]}"></i>
-                            ${device.status.toUpperCase()}
-                        </span>
-                    </div>
-                    <div class="flex items-center justify-between pt-3 border-t border-gray-200 dark:border-gray-700">
-                        <div class="flex items-center gap-2 text-xs text-dark-muted">
-                            <i class="fa-solid fa-network-wired text-[10px]"></i>
-                            <span>${device.ip}</span>
-                        </div>
-                        <div class="flex items-center gap-1.5">
-                            <i class="fa-solid fa-users text-newrelic-cyan text-xs"></i>
-                            <span class="text-sm font-bold text-gray-900 dark:text-white">${device.clients}</span>
-                            <span class="text-[10px] text-dark-muted">clients</span>
-                        </div>
-                    </div>
-                `;
-                deviceCard.onclick = () => {
-                    window.location.href = getDevicePageUrl(device.name);
-                };
-                container.appendChild(deviceCard);
-            });
-
-            // Show "no devices" message if empty
-            if (devices.length === 0) {
-                container.innerHTML = '<div class="col-span-full text-center text-sm text-gray-400 py-12">No devices found</div>';
-            }
-        }
 
         // --- STATUS WIDGET FUNCTIONS ---
 
         function showStatusDevices(deviceType, status) {
             // Close other widgets if open
-            if (isDevicesExpanded) {
-                hideDeviceList();
+            if (isAIExpanded) {
+                hideAIAlerts();
             }
             if (isIssuesExpanded) {
                 hideIssuesAlerts();
@@ -867,8 +641,8 @@
 
         function showIssuesAlerts(severity) {
             // Close other widgets if open
-            if (isDevicesExpanded) {
-                hideDeviceList();
+            if (isAIExpanded) {
+                hideAIAlerts();
             }
             if (isStatusExpanded) {
                 hideStatusDevices();
@@ -1048,8 +822,8 @@
 
         function showSecurityAlerts(securityType) {
             // Close other widgets if open
-            if (isDevicesExpanded) {
-                hideDeviceList();
+            if (isAIExpanded) {
+                hideAIAlerts();
             }
             if (isStatusExpanded) {
                 hideStatusDevices();
@@ -1248,6 +1022,187 @@
                 select.innerHTML += `<option value="${site}"${site === currentValue ? ' selected' : ''}>${site}</option>`;
             });
             select.value = securitySiteFilterValue === 'all' || sites.includes(securitySiteFilterValue) ? securitySiteFilterValue : 'all';
+        }
+
+        // --- AI ALERTS WIDGET FUNCTIONS ---
+
+        function showAIAlerts(aiType) {
+            // Close other widgets if open
+            if (isStatusExpanded) { hideStatusDevices(); }
+            if (isIssuesExpanded) { hideIssuesAlerts(); }
+            if (isSecurityExpanded) { hideSecurityAlerts(); }
+
+            const aiSummaryView = document.getElementById('aiAlertsSummaryView');
+            const aiExpandedView = document.getElementById('aiAlertsExpandedView');
+            const card = document.getElementById('aiAlertsCard');
+            const backdrop = document.getElementById('expandedBackdrop');
+            const mainContent = document.querySelector('main');
+
+            card.classList.add('expanded');
+            backdrop.classList.add('active');
+            mainContent.style.overflow = 'hidden';
+            isAIExpanded = true;
+
+            aiSummaryView.classList.add('hidden');
+            aiExpandedView.classList.remove('hidden');
+
+            currentAIType = aiType;
+            document.getElementById('aiAlertTitle').innerText = 'AI Alerts';
+
+            aiSortField = null;
+            aiSortAsc = true;
+            aiSiteFilterValue = 'all';
+
+            updateAIFilterButtons(aiType);
+            renderAIAlertTable();
+        }
+
+        function hideAIAlerts() {
+            const aiSummaryView = document.getElementById('aiAlertsSummaryView');
+            const aiExpandedView = document.getElementById('aiAlertsExpandedView');
+            const card = document.getElementById('aiAlertsCard');
+            const backdrop = document.getElementById('expandedBackdrop');
+            const mainContent = document.querySelector('main');
+
+            card.classList.remove('expanded');
+            backdrop.classList.remove('active');
+            mainContent.style.overflow = '';
+            isAIExpanded = false;
+
+            aiSummaryView.classList.remove('hidden');
+            aiExpandedView.classList.add('hidden');
+        }
+
+        function filterAIAlerts(aiType) {
+            currentAIType = aiType;
+            updateAIFilterButtons(aiType);
+            renderAIAlertTable();
+        }
+
+        function updateAIFilterButtons(activeFilter) {
+            const buttons = ['aiFilterAll', 'aiFilterCrit', 'aiFilterWarn', 'aiFilterInfo'];
+            buttons.forEach(btnId => {
+                const btn = document.getElementById(btnId);
+                btn.className = 'px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors';
+            });
+
+            const activeMap = {
+                'all': 'aiFilterAll',
+                'crit': 'aiFilterCrit',
+                'warn': 'aiFilterWarn',
+                'info': 'aiFilterInfo'
+            };
+
+            const activeBtn = document.getElementById(activeMap[activeFilter]);
+            if (activeBtn) {
+                activeBtn.className = 'px-3 py-1.5 text-xs rounded-lg bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors';
+            }
+        }
+
+        function renderAIAlertTable() {
+            const tableBody = document.getElementById('aiAlertTableBody');
+            const alertCountEl = document.getElementById('aiAlertCount');
+            tableBody.innerHTML = '';
+
+            const data = getFilteredData(currentScope, currentSiteFilter);
+            let alerts = data.aData;
+
+            // Show only AI-type alerts
+            alerts = alerts.filter(a => a.type === 'ai');
+
+            populateAISiteFilter(alerts);
+
+            if (currentAIType !== 'all') {
+                alerts = alerts.filter(a => a.sev === currentAIType);
+            }
+
+            if (aiSiteFilterValue !== 'all') {
+                alerts = alerts.filter(a => a.site === aiSiteFilterValue);
+            }
+
+            if (aiSearchTerm) {
+                const searchLower = aiSearchTerm.toLowerCase();
+                alerts = alerts.filter(a =>
+                    a.site.toLowerCase().includes(searchLower) ||
+                    a.device.toLowerCase().includes(searchLower) ||
+                    a.msg.toLowerCase().includes(searchLower)
+                );
+            }
+
+            alerts = sortAlerts(alerts, aiSortField, aiSortAsc);
+
+            alertCountEl.innerText = `${alerts.length} alert${alerts.length !== 1 ? 's' : ''}`;
+
+            if (alerts.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td colspan="5" class="px-4 py-4 text-center text-sm text-gray-400">No AI alerts found for this criteria.</td>`;
+                tableBody.appendChild(row);
+                return;
+            }
+
+            const sevStyles = {
+                crit: 'text-red-600 bg-red-50 dark:bg-red-900/20 dark:text-red-400 rounded-full px-2 py-0.5 text-xs font-bold border border-red-100 dark:border-red-900',
+                warn: 'text-amber-600 bg-amber-50 dark:bg-amber-900/20 dark:text-amber-400 rounded-full px-2 py-0.5 text-xs font-bold border border-amber-100 dark:border-amber-900',
+                info: 'text-blue-600 bg-blue-50 dark:bg-blue-900/20 dark:text-blue-400 rounded-full px-2 py-0.5 text-xs font-bold border border-blue-100 dark:border-blue-900'
+            };
+
+            const sevIcons = {
+                crit: '<i class="fa-solid fa-circle-exclamation"></i>',
+                warn: '<i class="fa-solid fa-triangle-exclamation"></i>',
+                info: '<i class="fa-solid fa-circle-info"></i>'
+            };
+
+            const sevLabels = { crit: 'CRITICAL', warn: 'WARNING', info: 'INFO' };
+
+            alerts.forEach(alert => {
+                const row = document.createElement('tr');
+                row.className = "hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors";
+                row.innerHTML = `
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <span class="${sevStyles[alert.sev]} flex items-center gap-1 w-fit">
+                            ${sevIcons[alert.sev]} ${sevLabels[alert.sev]}
+                        </span>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-xs text-dark-muted">${alert.time}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">${alert.site}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm">
+                        <a href="${getDevicePageUrl(alert.device)}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 font-medium hover:underline">${alert.device}</a>
+                    </td>
+                    <td class="px-4 py-3 text-sm text-dark-muted truncate max-w-xs" title="${alert.msg}">${alert.msg}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function searchAIAlerts() {
+            aiSearchTerm = document.getElementById('aiSearchInput').value;
+            renderAIAlertTable();
+        }
+
+        function sortAIAlerts(field) {
+            if (aiSortField === field) {
+                aiSortAsc = !aiSortAsc;
+            } else {
+                aiSortField = field;
+                aiSortAsc = true;
+            }
+            renderAIAlertTable();
+        }
+
+        function filterAIBySite(site) {
+            aiSiteFilterValue = site;
+            renderAIAlertTable();
+        }
+
+        function populateAISiteFilter(alerts) {
+            const select = document.getElementById('aiSiteFilter');
+            const currentValue = select.value;
+            const sites = [...new Set(alerts.map(a => a.site))].sort();
+            select.innerHTML = '<option value="all">All Sites</option>';
+            sites.forEach(site => {
+                select.innerHTML += `<option value="${site}"${site === currentValue ? ' selected' : ''}>${site}</option>`;
+            });
+            select.value = aiSiteFilterValue === 'all' || sites.includes(aiSiteFilterValue) ? aiSiteFilterValue : 'all';
         }
 
         // --- LATENCY TRENDS OVERLAY ---
@@ -1790,7 +1745,7 @@
                 // Then close card overlays
                 if (isIssuesExpanded) { hideIssuesAlerts(); return; }
                 if (isSecurityExpanded) { hideSecurityAlerts(); return; }
-                if (isDevicesExpanded) { hideDeviceList(); return; }
+                if (isAIExpanded) { hideAIAlerts(); return; }
                 if (isStatusExpanded) { hideStatusDevices(); return; }
             }
         });
@@ -1811,10 +1766,10 @@
 
             // Bind debounced search listeners (replaces inline oninput)
             const searchBindings = [
-                { id: 'clientsSearchInput', handler: searchDeviceList },
                 { id: 'statusSearchInput', handler: searchStatusDevices },
                 { id: 'issuesSearchInput', handler: searchIssuesAlerts },
-                { id: 'securitySearchInput', handler: searchSecurityAlerts }
+                { id: 'securitySearchInput', handler: searchSecurityAlerts },
+                { id: 'aiSearchInput', handler: searchAIAlerts }
             ];
             searchBindings.forEach(({ id, handler }) => {
                 const input = document.getElementById(id);

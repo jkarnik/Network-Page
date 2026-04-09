@@ -36,14 +36,14 @@
             currentDeviceData = await DataLoader.getDeviceData(deviceId, 'accesspoint');
 
             // Reset all VLAN filters on device change
-            ['funnelVlanFilter', 'clientCountVlanFilter', 'ssidVlanFilter', 'channelVlanFilter', 'snrVlanFilter'].forEach(id => {
+            ['clientCountVlanFilter', 'ssidVlanFilter', 'channelVlanFilter', 'snrVlanFilter'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.value = '';
             });
 
             SharedUI.updateDeviceInfo(currentDevice);
 
-            if (charts.associationGauge && currentDeviceData) {
+            if (charts.clientCount && currentDeviceData) {
                 updateChartsWithDeviceData();
             }
 
@@ -65,53 +65,7 @@
             // Unregister datalabels plugin globally (we'll enable it per chart)
             Chart.unregister(ChartDataLabels);
 
-            // 1. Client Journey Funnel - Dial Gauges (placeholder data, updated by loadDeviceData)
-            const funnelData = { association: 0, authentication: 0, dhcp: 0, dns: 0, success: 0 };
-
-            // Helper function to create gauge chart (full circle like DHCP Capacity)
-            function createGauge(canvasId, value, color) {
-                return new Chart(document.getElementById(canvasId), {
-                    type: 'doughnut',
-                    data: {
-                        datasets: [{
-                            data: [value, 100 - value],
-                            backgroundColor: [color, '#2A3036'],
-                            borderWidth: 0,
-                            cutout: '75%'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: true,
-                        plugins: {
-                            tooltip: { enabled: false },
-                            legend: { display: false }
-                        }
-                    }
-                });
-            }
-
-            // Association Gauge - New Relic Cyan
-            charts.associationGauge = createGauge('associationGauge', funnelData.association, '#00CED1');
-            document.getElementById('associationValue').textContent = funnelData.association.toFixed(1);
-
-            // Authentication Gauge - New Relic Teal
-            charts.authenticationGauge = createGauge('authenticationGauge', funnelData.authentication, '#008C99');
-            document.getElementById('authenticationValue').textContent = funnelData.authentication.toFixed(1);
-
-            // DHCP Gauge - New Relic Warning
-            charts.dhcpFunnelGauge = createGauge('dhcpFunnelGauge', funnelData.dhcp, '#F5A623');
-            document.getElementById('dhcpFunnelValue').textContent = funnelData.dhcp.toFixed(1);
-
-            // DNS Gauge - New Relic Info
-            charts.dnsGauge = createGauge('dnsGauge', funnelData.dns, '#0B7EBF');
-            document.getElementById('dnsValue').textContent = funnelData.dns.toFixed(1);
-
-            // Success Gauge - New Relic Success (product of all stages)
-            charts.successGauge = createGauge('successGauge', funnelData.success, '#11A768');
-            document.getElementById('successValue').textContent = funnelData.success.toFixed(1);
-
-            // 2. Active Client Count - Time Series (placeholder, updated by loadDeviceData)
+            // 1. Active Client Count - Time Series (placeholder, updated by loadDeviceData)
             const placeholderLabels = [''];
             const placeholderData = [0];
             const clientSliced = { labels: placeholderLabels, datasets: [placeholderData, placeholderData, placeholderData, placeholderData, placeholderData] };
@@ -517,44 +471,6 @@
         function updateChartsWithDeviceData() {
             if (!currentDeviceData) return;
 
-            // Update Funnel Gauges (respecting VLAN filter)
-            if (currentDeviceData.funnelData) {
-                const funnelVlan = getVlanFilter('funnelVlanFilter');
-                let fd;
-                if (funnelVlan && currentDeviceData.funnelDataByVlan && currentDeviceData.funnelDataByVlan[funnelVlan]) {
-                    fd = currentDeviceData.funnelDataByVlan[funnelVlan];
-                } else {
-                    fd = currentDeviceData.funnelData;
-                }
-                const success = (fd.association / 100) * (fd.authentication / 100) * (fd.dhcp / 100) * (fd.dns / 100) * 100;
-
-                if (charts.associationGauge) {
-                    charts.associationGauge.data.datasets[0].data = [fd.association, 100 - fd.association];
-                    charts.associationGauge.update();
-                    document.getElementById('associationValue').textContent = fd.association.toFixed(1);
-                }
-                if (charts.authenticationGauge) {
-                    charts.authenticationGauge.data.datasets[0].data = [fd.authentication, 100 - fd.authentication];
-                    charts.authenticationGauge.update();
-                    document.getElementById('authenticationValue').textContent = fd.authentication.toFixed(1);
-                }
-                if (charts.dhcpFunnelGauge) {
-                    charts.dhcpFunnelGauge.data.datasets[0].data = [fd.dhcp, 100 - fd.dhcp];
-                    charts.dhcpFunnelGauge.update();
-                    document.getElementById('dhcpFunnelValue').textContent = fd.dhcp.toFixed(1);
-                }
-                if (charts.dnsGauge) {
-                    charts.dnsGauge.data.datasets[0].data = [fd.dns, 100 - fd.dns];
-                    charts.dnsGauge.update();
-                    document.getElementById('dnsValue').textContent = fd.dns.toFixed(1);
-                }
-                if (charts.successGauge) {
-                    charts.successGauge.data.datasets[0].data = [success, 100 - success];
-                    charts.successGauge.update();
-                    document.getElementById('successValue').textContent = success.toFixed(1);
-                }
-            }
-
             // Update Client Count chart (respecting VLAN filter)
             if (charts.clientCount && currentDeviceData.clientCount) {
                 const ccVlan = getVlanFilter('clientCountVlanFilter');
@@ -642,210 +558,6 @@
 
         // Re-render charts when timeline range changes
         TimelineManager.onChange(() => { if (currentDeviceData) updateChartsWithDeviceData(); });
-
-        // --- FUNNEL TIME SERIES OVERLAY ---
-        let funnelTimeSeriesChart = null;
-
-        function openFunnelTimeSeries() {
-            const overlay = document.getElementById('funnelTimeSeriesOverlay');
-            overlay.classList.remove('hidden');
-
-            // Destroy existing chart if it exists
-            if (funnelTimeSeriesChart) {
-                funnelTimeSeriesChart.destroy();
-            }
-
-            // Use funnel time series data from DataLoader
-            const fts = currentDeviceData && currentDeviceData.funnelTimeSeries;
-            if (!fts) return;
-
-            // Calculate success as product of all stages
-            const baseSuccessData = fts.labels.map((_, idx) => {
-                const product = (fts.association[idx] / 100) *
-                               (fts.authentication[idx] / 100) *
-                               (fts.dhcp[idx] / 100) *
-                               (fts.dns[idx] / 100) * 100;
-                return parseFloat(product.toFixed(2));
-            });
-
-            // Slice according to timeline
-            const fSliced = TimelineManager.sliceData(fts.labels,
-                fts.association, fts.authentication,
-                fts.dhcp, fts.dns, baseSuccessData);
-
-            const percentageData = {
-                association: fSliced.datasets[0],
-                authentication: fSliced.datasets[1],
-                dhcp: fSliced.datasets[2],
-                dns: fSliced.datasets[3],
-                success: fSliced.datasets[4]
-            };
-
-            // Generate corresponding raw client counts for tooltips
-            const baseClients = 1200;
-            const rawData = {
-                association: percentageData.association.map(() => baseClients),
-                authentication: percentageData.authentication.map((pct) => Math.round(baseClients * pct / 100)),
-                dhcp: percentageData.dhcp.map((pct, idx) => Math.round(percentageData.authentication[idx] * baseClients / 100)),
-                dns: percentageData.dns.map((pct, idx) => Math.round(percentageData.dhcp[idx] * percentageData.authentication[idx] * baseClients / 10000)),
-                success: percentageData.success.map((pct) => Math.round(baseClients * pct / 100))
-            };
-
-            // Find the minimum value across all datasets
-            const allValues = [
-                ...percentageData.association,
-                ...percentageData.authentication,
-                ...percentageData.dhcp,
-                ...percentageData.dns,
-                ...percentageData.success
-            ];
-            const minValue = Math.min(...allValues);
-            const yAxisMin = Math.max(0, minValue - 5);
-
-            // Create time series chart
-            funnelTimeSeriesChart = new Chart(document.getElementById('funnelTimeSeriesChart'), {
-                type: 'line',
-                data: {
-                    labels: fSliced.labels,
-                    datasets: [
-                        {
-                            label: 'Association',
-                            data: percentageData.association,
-                            borderColor: '#3b82f6',
-                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                            fill: false,
-                            tension: 0.4,
-                            pointRadius: 4,
-                            pointHoverRadius: 6,
-                            rawData: rawData.association
-                        },
-                        {
-                            label: 'Authentication',
-                            data: percentageData.authentication,
-                            borderColor: '#6366f1',
-                            backgroundColor: 'rgba(99, 102, 241, 0.1)',
-                            fill: false,
-                            tension: 0.4,
-                            pointRadius: 4,
-                            pointHoverRadius: 6,
-                            rawData: rawData.authentication
-                        },
-                        {
-                            label: 'DHCP',
-                            data: percentageData.dhcp,
-                            borderColor: '#f59e0b',
-                            backgroundColor: 'rgba(245, 158, 11, 0.1)',
-                            fill: false,
-                            tension: 0.4,
-                            pointRadius: 4,
-                            pointHoverRadius: 6,
-                            rawData: rawData.dhcp
-                        },
-                        {
-                            label: 'DNS',
-                            data: percentageData.dns,
-                            borderColor: '#8b5cf6',
-                            backgroundColor: 'rgba(139, 92, 246, 0.1)',
-                            fill: false,
-                            tension: 0.4,
-                            pointRadius: 4,
-                            pointHoverRadius: 6,
-                            rawData: rawData.dns
-                        },
-                        {
-                            label: 'Success',
-                            data: percentageData.success,
-                            borderColor: '#10b981',
-                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                            fill: false,
-                            tension: 0.4,
-                            pointRadius: 4,
-                            pointHoverRadius: 6,
-                            borderWidth: 3,
-                            rawData: rawData.success
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false
-                    },
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: 'top',
-                            labels: {
-                                boxWidth: 12,
-                                font: { size: 12 },
-                                usePointStyle: true,
-                                padding: 15
-                            }
-                        },
-                        tooltip: {
-                            enabled: true,
-                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                            titleColor: '#fff',
-                            bodyColor: '#fff',
-                            borderColor: '#3b82f6',
-                            borderWidth: 1,
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    const percentage = context.parsed.y;
-                                    const absoluteValue = context.dataset.rawData[context.dataIndex];
-                                    label += percentage + '% (' + absoluteValue + ' clients)';
-                                    return label;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            display: true,
-                            grid: { display: true, color: 'rgba(0, 0, 0, 0.05)' },
-                            ticks: {
-                                font: { size: 11 }
-                            }
-                        },
-                        y: {
-                            display: true,
-                            beginAtZero: false,
-                            min: yAxisMin,
-                            max: 101,
-                            ticks: {
-                                font: { size: 11 },
-                                callback: function(value) {
-                                    return value + '%';
-                                }
-                            },
-                            grid: { color: 'rgba(0, 0, 0, 0.05)' }
-                        }
-                    }
-                },
-                plugins: [ChartDataLabels] // Disable datalabels for this chart
-            });
-
-            // Disable datalabels plugin for this specific chart
-            funnelTimeSeriesChart.options.plugins.datalabels = { display: false };
-            funnelTimeSeriesChart.update();
-        }
-
-        function closeFunnelTimeSeries() {
-            const overlay = document.getElementById('funnelTimeSeriesOverlay');
-            overlay.classList.add('hidden');
-
-            // Destroy chart to prevent memory leaks
-            if (funnelTimeSeriesChart) {
-                funnelTimeSeriesChart.destroy();
-                funnelTimeSeriesChart = null;
-            }
-        }
 
         // --- CLIENT DETAILS OVERLAY ---
         let clientCharts = {};
@@ -1303,8 +1015,6 @@
 
         // Expose functions to global scope for onclick handlers
         window.updateAccessPointView = updateAccessPointView;
-        window.openFunnelTimeSeries = openFunnelTimeSeries;
-        window.closeFunnelTimeSeries = closeFunnelTimeSeries;
         window.openChannelUtilTrends = openChannelUtilTrends;
         window.closeChannelUtilTrends = closeChannelUtilTrends;
         window.filterApVlan = filterApVlan;

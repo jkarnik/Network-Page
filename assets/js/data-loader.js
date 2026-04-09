@@ -459,6 +459,19 @@ const DataLoader = {
         };
     },
 
+    /**
+     * Get AI-related alert counts by severity
+     */
+    getAICounts(scope = 'Global') {
+        const alerts = this.getAlertsByScope(scope).filter(a => a.type === 'ai');
+        return {
+            crit: alerts.filter(a => a.severity === 'crit').length,
+            warn: alerts.filter(a => a.severity === 'warn').length,
+            info: alerts.filter(a => a.severity === 'info').length,
+            total: alerts.length
+        };
+    },
+
     // ==================== CHART DATA ACCESSORS ====================
 
     /**

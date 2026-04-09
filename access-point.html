@@ -99,89 +99,9 @@
 
             <div id="content-overview" class="tab-content">
                 <div class="grid grid-cols-12 gap-3">
-                    
-                    <div class="col-span-12 lg:col-span-7 card p-4 bg-dark-card h-64">
-                        <div class="flex justify-between items-center mb-2">
-                            <h3 class="text-sm font-bold text-dark-text">Client Journey Funnel - Success Rate</h3>
-                            <div class="flex items-center gap-2">
-                                <div onclick="event.stopPropagation()">
-                                    <select id="funnelVlanFilter" class="text-xs px-2 py-1 rounded border border-dark-border bg-dark-bg text-dark-text focus:outline-none focus:border-newrelic-cyan cursor-pointer" onchange="filterApVlan()">
-                                        <option value="">All VLANs</option>
-                                        <option value="Corp">Corp</option>
-                                        <option value="Guest">Guest</option>
-                                        <option value="IoT">IoT</option>
-                                        <option value="Secure">Secure</option>
-                                    </select>
-                                </div>
-                                <button onclick="openFunnelTimeSeries()" class="text-xs text-newrelic-cyan hover:text-newrelic-teal transition-colors flex items-center gap-1">
-                                    <i class="fa-solid fa-chart-line"></i> View Time Series
-                                </button>
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-around h-full py-0">
-                            <!-- Association Gauge -->
-                            <div class="flex flex-col items-center">
-                                <div class="relative w-32 h-32">
-                                    <canvas id="associationGauge"></canvas>
-                                    <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none" style="top: 12px;">
-                                        <span class="text-2xl font-bold text-dark-text" id="associationValue">--</span>
-                                        <span class="text-xs text-dark-muted">%</span>
-                                    </div>
-                                </div>
-                                <p class="text-sm font-medium text-dark-text mt-3">Association</p>
-                            </div>
 
-                            <!-- Authentication Gauge -->
-                            <div class="flex flex-col items-center">
-                                <div class="relative w-32 h-32">
-                                    <canvas id="authenticationGauge"></canvas>
-                                    <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none" style="top: 12px;">
-                                        <span class="text-2xl font-bold text-dark-text" id="authenticationValue">--</span>
-                                        <span class="text-xs text-dark-muted">%</span>
-                                    </div>
-                                </div>
-                                <p class="text-sm font-medium text-dark-text mt-3">Authentication</p>
-                            </div>
-
-                            <!-- DHCP Gauge -->
-                            <div class="flex flex-col items-center">
-                                <div class="relative w-32 h-32">
-                                    <canvas id="dhcpFunnelGauge"></canvas>
-                                    <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none" style="top: 12px;">
-                                        <span class="text-2xl font-bold text-dark-text" id="dhcpFunnelValue">--</span>
-                                        <span class="text-xs text-dark-muted">%</span>
-                                    </div>
-                                </div>
-                                <p class="text-sm font-medium text-dark-text mt-3">DHCP</p>
-                            </div>
-
-                            <!-- DNS Gauge -->
-                            <div class="flex flex-col items-center">
-                                <div class="relative w-32 h-32">
-                                    <canvas id="dnsGauge"></canvas>
-                                    <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none" style="top: 12px;">
-                                        <span class="text-2xl font-bold text-dark-text" id="dnsValue">--</span>
-                                        <span class="text-xs text-dark-muted">%</span>
-                                    </div>
-                                </div>
-                                <p class="text-sm font-medium text-dark-text mt-3">DNS</p>
-                            </div>
-
-                            <!-- Success Gauge -->
-                            <div class="flex flex-col items-center">
-                                <div class="relative w-32 h-32">
-                                    <canvas id="successGauge"></canvas>
-                                    <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none" style="top: 12px;">
-                                        <span class="text-2xl font-bold text-dark-text" id="successValue">--</span>
-                                        <span class="text-xs text-dark-muted">%</span>
-                                    </div>
-                                </div>
-                                <p class="text-sm font-medium text-newrelic-success mt-3">Success</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-span-12 lg:col-span-5 card p-4 bg-dark-card h-64">
+                    <!-- ROW 1: Active Client Count, Channel Utilization -->
+                    <div class="col-span-12 lg:col-span-6 card p-4 bg-dark-card h-64">
                         <div class="flex justify-between items-center mb-3">
                             <h3 class="text-sm font-bold text-dark-text">Active Client Count</h3>
                             <div class="flex items-center gap-3 text-xs">
@@ -206,28 +126,7 @@
                         </div>
                     </div>
 
-                    <div class="col-span-12 lg:col-span-4 card p-4 bg-dark-card h-64">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-sm font-bold text-dark-text">Top SSIDs</h3>
-                            <div class="flex items-center gap-2">
-                                <div onclick="event.stopPropagation()">
-                                    <select id="ssidVlanFilter" class="text-xs px-2 py-1 rounded border border-dark-border bg-dark-bg text-dark-text focus:outline-none focus:border-newrelic-cyan cursor-pointer" onchange="filterApVlan()">
-                                        <option value="">All VLANs</option>
-                                        <option value="Corp">Corp</option>
-                                        <option value="Guest">Guest</option>
-                                        <option value="IoT">IoT</option>
-                                        <option value="Secure">Secure</option>
-                                    </select>
-                                </div>
-                                <span class="text-xs text-dark-muted">Client Distribution</span>
-                            </div>
-                        </div>
-                         <div class="relative h-full w-full pb-4">
-                            <canvas id="ssidChart"></canvas>
-                        </div>
-                    </div>
-
-                    <div class="col-span-12 lg:col-span-4 card p-4 bg-dark-card h-64 cursor-pointer hover:shadow-lg transition-shadow" onclick="openChannelUtilTrends()">
+                    <div class="col-span-12 lg:col-span-6 card p-4 bg-dark-card h-64 cursor-pointer hover:shadow-lg transition-shadow" onclick="openChannelUtilTrends()">
                          <div class="flex justify-between items-center mb-4">
                             <div class="flex items-center gap-2">
                                 <h3 class="text-sm font-bold text-dark-text">Channel Utilization</h3>
@@ -253,6 +152,42 @@
                         </div>
                     </div>
 
+                    <!-- ROW 2: Retransmission Rate, Top SSIDs, Signal Quality Distribution -->
+                    <div class="col-span-12 lg:col-span-4 card p-4 h-64 bg-dark-card">
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="text-sm font-bold text-dark-text">Retransmission Rate</h3>
+                            <div class="flex items-center gap-3 text-xs">
+                                <span class="flex items-center gap-1 text-gray-500"><span class="w-2 h-2 rounded-full bg-[#0B7EBF]"></span> 2.4 GHz</span>
+                                <span class="flex items-center gap-1 text-gray-500"><span class="w-2 h-2 rounded-full bg-[#11A768]"></span> 5 GHz</span>
+                                <span class="flex items-center gap-1 text-gray-500"><span class="w-2 h-2 rounded-full bg-[#00CED1]"></span> 6 GHz</span>
+                            </div>
+                        </div>
+                        <div class="relative h-full w-full pb-4">
+                            <canvas id="retransmissionChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="col-span-12 lg:col-span-4 card p-4 bg-dark-card h-64">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-sm font-bold text-dark-text">Top SSIDs</h3>
+                            <div class="flex items-center gap-2">
+                                <div onclick="event.stopPropagation()">
+                                    <select id="ssidVlanFilter" class="text-xs px-2 py-1 rounded border border-dark-border bg-dark-bg text-dark-text focus:outline-none focus:border-newrelic-cyan cursor-pointer" onchange="filterApVlan()">
+                                        <option value="">All VLANs</option>
+                                        <option value="Corp">Corp</option>
+                                        <option value="Guest">Guest</option>
+                                        <option value="IoT">IoT</option>
+                                        <option value="Secure">Secure</option>
+                                    </select>
+                                </div>
+                                <span class="text-xs text-dark-muted">Client Distribution</span>
+                            </div>
+                        </div>
+                         <div class="relative h-full w-full pb-4">
+                            <canvas id="ssidChart"></canvas>
+                        </div>
+                    </div>
+
                     <div class="col-span-12 lg:col-span-4 card p-4 bg-dark-card h-64">
                         <div class="flex justify-between items-center mb-4">
                             <h3 class="text-sm font-bold text-dark-text">Signal Quality Distribution (SNR)</h3>
@@ -271,21 +206,6 @@
                         </div>
                         <div class="relative h-full w-full pb-4">
                             <canvas id="snrChart"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- Retransmission Rate -->
-                    <div class="col-span-12 lg:col-span-4 card p-4 h-64 bg-dark-card">
-                        <div class="flex justify-between items-center mb-3">
-                            <h3 class="text-sm font-bold text-dark-text">Retransmission Rate</h3>
-                            <div class="flex items-center gap-3 text-xs">
-                                <span class="flex items-center gap-1 text-gray-500"><span class="w-2 h-2 rounded-full bg-[#0B7EBF]"></span> 2.4 GHz</span>
-                                <span class="flex items-center gap-1 text-gray-500"><span class="w-2 h-2 rounded-full bg-[#11A768]"></span> 5 GHz</span>
-                                <span class="flex items-center gap-1 text-gray-500"><span class="w-2 h-2 rounded-full bg-[#00CED1]"></span> 6 GHz</span>
-                            </div>
-                        </div>
-                        <div class="relative h-full w-full pb-4">
-                            <canvas id="retransmissionChart"></canvas>
                         </div>
                     </div>
 
@@ -503,28 +423,6 @@
                 <div id="diagnostics-container" class="h-full"></div>
             </div>
 
-        </div>
-
-        <!-- Funnel Time Series Overlay -->
-        <div id="funnelTimeSeriesOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-6">
-            <div class="bg-white dark:bg-dark-card rounded-lg shadow-2xl w-full max-w-6xl overflow-hidden">
-                <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-                    <div class="flex items-center gap-3">
-                        <h2 class="text-xl font-bold text-gray-900 dark:text-white">Client Journey Funnel - Time Series Analysis</h2>
-                    </div>
-                    <button onclick="closeFunnelTimeSeries()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-                        <i class="fa-solid fa-times text-2xl"></i>
-                    </button>
-                </div>
-                <div class="p-6">
-                    <div class="card p-4 bg-gray-50 dark:bg-gray-800">
-                        <h3 class="text-sm font-bold text-gray-700 dark:text-white mb-3">Funnel Stage Completion Over Time (<span data-timeline-label>Last 24 hours</span>)</h3>
-                        <div style="height: 400px;">
-                            <canvas id="funnelTimeSeriesChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <!-- Client Details Overlay -->
