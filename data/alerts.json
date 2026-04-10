@@ -2,8 +2,8 @@
   "version": "1.0.0",
   "generated": "2026-04-09",
   "stats": {
-    "total": 646,
-    "critical": 95,
+    "total": 654,
+    "critical": 103,
     "warning": 158,
     "info": 393
   },
@@ -8405,6 +8405,110 @@
       "message": "Client roamed successfully",
       "timestamp": "2026-04-09T01:11:01.235Z",
       "timeAgo": "12h ago"
+    },
+    {
+      "id": "alert-0647",
+      "severity": "crit",
+      "type": "network",
+      "vendor": "meraki",
+      "site": "ATL-Retail",
+      "region": "North America",
+      "device": "GW-ATL-Edge-02",
+      "deviceId": "gw-atl-edge-02",
+      "message": "Device is offline",
+      "timestamp": "2026-04-09T12:05:00.000Z",
+      "timeAgo": "36m ago"
+    },
+    {
+      "id": "alert-0648",
+      "severity": "crit",
+      "type": "network",
+      "vendor": "mist",
+      "site": "BER-R&D",
+      "region": "EMEA",
+      "device": "GW-BER-Edge-02",
+      "deviceId": "gw-ber-edge-02",
+      "message": "Device is offline",
+      "timestamp": "2026-04-09T12:05:00.000Z",
+      "timeAgo": "36m ago"
+    },
+    {
+      "id": "alert-0649",
+      "severity": "crit",
+      "type": "network",
+      "vendor": "meraki",
+      "site": "NJ-Warehouse",
+      "region": "EMEA",
+      "device": "SW-LON-Access-03",
+      "deviceId": "sw-lon-access-03",
+      "message": "Device is offline",
+      "timestamp": "2026-04-09T12:05:00.000Z",
+      "timeAgo": "36m ago"
+    },
+    {
+      "id": "alert-0650",
+      "severity": "crit",
+      "type": "network",
+      "vendor": "mist",
+      "site": "MUM-Hub",
+      "region": "APAC",
+      "device": "SW-MUM-Access-03",
+      "deviceId": "sw-mum-access-03",
+      "message": "Device is offline",
+      "timestamp": "2026-04-09T12:05:00.000Z",
+      "timeAgo": "36m ago"
+    },
+    {
+      "id": "alert-0651",
+      "severity": "crit",
+      "type": "network",
+      "vendor": "mist",
+      "site": "CHI-Dist",
+      "region": "North America",
+      "device": "SW-CHI-Dist-01",
+      "deviceId": "sw-chi-dist-01",
+      "message": "Device is offline",
+      "timestamp": "2026-04-09T12:05:00.000Z",
+      "timeAgo": "36m ago"
+    },
+    {
+      "id": "alert-0652",
+      "severity": "crit",
+      "type": "network",
+      "vendor": "meraki",
+      "site": "NYC-HQ",
+      "region": "North America",
+      "device": "AP-NYC-Floor4-02",
+      "deviceId": "ap-nyc-f4-02",
+      "message": "Device is offline",
+      "timestamp": "2026-04-09T12:05:00.000Z",
+      "timeAgo": "36m ago"
+    },
+    {
+      "id": "alert-0653",
+      "severity": "crit",
+      "type": "network",
+      "vendor": "meraki",
+      "site": "NJ-Warehouse",
+      "region": "EMEA",
+      "device": "AP-LON-Office-03",
+      "deviceId": "ap-lon-off-03",
+      "message": "Device is offline",
+      "timestamp": "2026-04-09T12:05:00.000Z",
+      "timeAgo": "36m ago"
+    },
+    {
+      "id": "alert-0654",
+      "severity": "crit",
+      "type": "network",
+      "vendor": "mist",
+      "site": "SFO-Branch",
+      "region": "North America",
+      "device": "AP-SFO-Floor1-01",
+      "deviceId": "ap-sfo-f1-01",
+      "message": "Device is offline",
+      "timestamp": "2026-04-09T12:05:00.000Z",
+      "timeAgo": "36m ago"
     }
   ]
 }

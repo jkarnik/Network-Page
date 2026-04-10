@@ -32,6 +32,9 @@
         let securitySortAsc = true; // Sort direction for security
         let securitySiteFilterValue = 'all'; // Site filter for security
         let statusSearchTerm = ''; // Search term for status devices
+        let currentStatusVendor = null; // Track vendor filter for status view
+        let fleetViewMode = 'type-vendor'; // Fleet status grouping mode
+        let fleetExpandedKeys = new Set(); // Currently expanded sub-groups (e.g. 'gateways-meraki')
 
         // Severity sort order for consistent ranking
         const sevOrder = { crit: 0, warn: 1, info: 2 };
@@ -97,24 +100,13 @@
                 type: a.type
             }));
 
-            // Get device stats from DataLoader
-            const gwStats = DataLoader.getDeviceStatusCounts('gateways', effectiveScope);
-            const swStats = DataLoader.getDeviceStatusCounts('switches', effectiveScope);
-            const apStats = DataLoader.getDeviceStatusCounts('accessPoints', effectiveScope);
-
-            const stats = {
-                gateway: { online: gwStats.online, warn: gwStats.warn, crit: gwStats.crit },
-                switch: { online: swStats.online, warn: swStats.warn, crit: swStats.crit },
-                ap: { online: apStats.online, warn: apStats.warn, crit: apStats.crit }
-            };
-
             const totalCrit = aData.filter(a => a.sev === 'crit').length;
             const totalWarn = aData.filter(a => a.sev === 'warn').length;
 
             // Get security stats from DataLoader
             const securityCounts = DataLoader.getSecurityCounts(effectiveScope);
 
-            return { fData, lData, aData, stats, totalCrit, totalWarn, securityCrit: securityCounts.crit, securityWarn: securityCounts.warn };
+            return { fData, lData, aData, totalCrit, totalWarn, securityCrit: securityCounts.crit, securityWarn: securityCounts.warn };
         }
 
         function updateDashboardScope(scope) {
@@ -177,16 +169,8 @@
             charts.latency.data.datasets[0].data = data.lData.map(d => d.val);
             charts.latency.update();
 
-            // 7. Update Status Matrix
-            document.getElementById('gw-online').innerText = data.stats.gateway.online;
-            document.getElementById('gw-warn').innerText = data.stats.gateway.warn;
-            document.getElementById('gw-crit').innerText = data.stats.gateway.crit;
-            document.getElementById('sw-online').innerText = data.stats.switch.online;
-            document.getElementById('sw-warn').innerText = data.stats.switch.warn;
-            document.getElementById('sw-crit').innerText = data.stats.switch.crit;
-            document.getElementById('ap-online').innerText = data.stats.ap.online;
-            document.getElementById('ap-warn').innerText = data.stats.ap.warn;
-            document.getElementById('ap-crit').innerText = data.stats.ap.crit;
+            // 7. Update Status Matrix (dynamic grid)
+            renderFleetStatusGrid();
 
             // 8. Update Alerts
             renderTable(currentFilter, data.aData);
@@ -442,9 +426,138 @@
         }
 
 
+        // --- FLEET STATUS GRID ---
+
+        function changeFleetView(mode) {
+            fleetViewMode = mode;
+            fleetExpandedKeys.clear();
+            renderFleetStatusGrid();
+        }
+
+        function toggleFleetExpand(key) {
+            if (fleetExpandedKeys.has(key)) {
+                fleetExpandedKeys.delete(key);
+            } else {
+                fleetExpandedKeys.add(key);
+            }
+            renderFleetStatusGrid();
+        }
+
+        function renderFleetStatusGrid() {
+            const grid = document.getElementById('fleetStatusGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            const effectiveScope = currentSiteFilter || currentScope;
+
+            const types = [
+                { key: 'gateways', label: 'Gateways', filterKey: 'gateway' },
+                { key: 'switches', label: 'Switches', filterKey: 'switch' },
+                { key: 'accessPoints', label: 'APs', filterKey: 'ap' }
+            ];
+            const vendors = [
+                { key: 'meraki', label: 'Cisco Meraki' },
+                { key: 'mist', label: 'Juniper Mist' }
+            ];
+
+            const statusCols = [
+                { key: 'online', label: 'Healthy', headerClass: 'text-newrelic-success dark:text-green-400', cellClass: '' },
+                { key: 'warn', label: 'Warning', headerClass: 'text-amber-500', cellClass: 'bg-amber-50 dark:bg-amber-900/10 text-amber-700 dark:text-amber-400' },
+                { key: 'crit', label: 'Critical', headerClass: 'text-red-500', cellClass: 'bg-red-50 dark:bg-red-900/10 text-red-700 dark:text-red-400 font-bold' },
+                { key: 'offline', label: 'Offline', headerClass: 'text-gray-400 dark:text-gray-500', cellClass: 'bg-gray-50 dark:bg-gray-800/50 text-gray-500 dark:text-gray-400' }
+            ];
+
+            // Status key to filter value mapping
+            const statusFilterMap = { online: 'online', warn: 'warning', crit: 'critical', offline: 'offline' };
+
+            // Header row
+            const addCell = (text, classes) => {
+                const div = document.createElement('div');
+                div.className = classes;
+                div.innerHTML = text;
+                grid.appendChild(div);
+                return div;
+            };
+
+            if (fleetViewMode === 'type-vendor') {
+                addCell('Type', 'status-cell status-header');
+                addCell('Vendor', 'status-cell status-header');
+            } else {
+                addCell('Vendor', 'status-cell status-header');
+                addCell('Type', 'status-cell status-header');
+            }
+            statusCols.forEach(s => addCell(s.label, 'status-cell status-header ' + s.headerClass));
+
+            const groups = fleetViewMode === 'type-vendor' ? types : vendors;
+            const subGroups = fleetViewMode === 'type-vendor' ? vendors : types;
+
+            groups.forEach(group => {
+                // Calculate total rows this group spans (for the group cell)
+                let totalSubRows = subGroups.length;
+                // Check if any sub-group under this group is expanded
+                subGroups.forEach(sub => {
+                    const expandKey = fleetViewMode === 'type-vendor'
+                        ? `${group.key}-${sub.key}`
+                        : `${sub.key}-${group.key}`;
+                    if (fleetExpandedKeys.has(expandKey)) {
+                        const typeKey = fleetViewMode === 'type-vendor' ? group.key : sub.key;
+                        const vendorKey = fleetViewMode === 'type-vendor' ? sub.key : group.key;
+                        const models = DataLoader.getModelsByVendor(typeKey, vendorKey, effectiveScope);
+                        totalSubRows += models.length;
+                    }
+                });
+
+                // Group label cell spanning all sub-rows
+                const groupCell = addCell(group.label, 'status-cell status-group-cell text-dark-muted');
+                groupCell.style.gridRow = `span ${totalSubRows}`;
+
+                subGroups.forEach((sub, subIdx) => {
+                    const typeKey = fleetViewMode === 'type-vendor' ? group.key : sub.key;
+                    const vendorKey = fleetViewMode === 'type-vendor' ? sub.key : group.key;
+                    const typeFilterKey = fleetViewMode === 'type-vendor' ? group.filterKey : sub.filterKey;
+                    const expandKey = fleetViewMode === 'type-vendor'
+                        ? `${group.key}-${sub.key}`
+                        : `${sub.key}-${group.key}`;
+                    const isExpanded = fleetExpandedKeys.has(expandKey);
+                    const counts = DataLoader.getDeviceStatusCountsByVendor(typeKey, vendorKey, effectiveScope);
+
+                    // Sub-group label with chevron
+                    const chevron = isExpanded ? 'fa-chevron-down' : 'fa-chevron-right';
+                    const subCell = addCell(
+                        `<span class="flex items-center gap-1.5"><i class="fa-solid ${chevron} text-[9px] text-gray-400"></i>${sub.label}</span>`,
+                        'status-cell status-subgroup-cell text-dark-muted'
+                    );
+                    subCell.onclick = () => toggleFleetExpand(expandKey);
+
+                    // Status count cells for this sub-group row
+                    statusCols.forEach(s => {
+                        const val = counts[s.key] || 0;
+                        const cell = addCell(val, 'status-cell clickable ' + s.cellClass);
+                        cell.onclick = () => showStatusDevices(typeFilterKey, statusFilterMap[s.key], vendorKey);
+                    });
+
+                    // Model sub-rows if expanded
+                    if (isExpanded) {
+                        const models = DataLoader.getModelsByVendor(typeKey, vendorKey, effectiveScope);
+                        models.forEach(model => {
+                            const modelCounts = DataLoader.getDeviceStatusCountsByModel(typeKey, vendorKey, model, effectiveScope);
+                            // Strip vendor prefix from model name for display
+                            const shortName = model.replace(/^(Meraki |Mist )/, '');
+                            addCell(shortName, 'status-cell status-model-cell text-left');
+                            statusCols.forEach(s => {
+                                const val = modelCounts[s.key] || 0;
+                                const cell = addCell(val || '', 'status-cell status-model-cell clickable ' + (val > 0 ? s.cellClass : ''));
+                                cell.onclick = () => showStatusDevices(typeFilterKey, statusFilterMap[s.key], vendorKey);
+                            });
+                        });
+                    }
+                });
+            });
+        }
+
         // --- STATUS WIDGET FUNCTIONS ---
 
-        function showStatusDevices(deviceType, status) {
+        function showStatusDevices(deviceType, status, vendor) {
             // Close other widgets if open
             if (isAIExpanded) {
                 hideAIAlerts();
@@ -474,6 +587,7 @@
             // Set the filters
             currentStatusDeviceType = deviceType;
             currentStatusFilter = status;
+            currentStatusVendor = vendor || null;
 
             updateStatusFilterButtons(status, deviceType);
             renderStatusDeviceList();
@@ -508,6 +622,12 @@
             renderStatusDeviceList();
         }
 
+        function filterStatusVendor(vendor) {
+            currentStatusVendor = vendor;
+            updateStatusFilterButtons(currentStatusFilter, currentStatusDeviceType);
+            renderStatusDeviceList();
+        }
+
         function searchStatusDevices() {
             statusSearchTerm = document.getElementById('statusSearchInput').value;
             renderStatusDeviceList();
@@ -518,8 +638,8 @@
             const activeClass = 'px-3 py-1.5 text-xs rounded-lg bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors';
 
             // Health filter buttons
-            const healthButtons = ['statusFilterAll', 'statusFilterOnline', 'statusFilterWarning', 'statusFilterCritical'];
-            const healthMap = { 'all': 'statusFilterAll', 'online': 'statusFilterOnline', 'warning': 'statusFilterWarning', 'critical': 'statusFilterCritical' };
+            const healthButtons = ['statusFilterAll', 'statusFilterOnline', 'statusFilterWarning', 'statusFilterCritical', 'statusFilterOffline'];
+            const healthMap = { 'all': 'statusFilterAll', 'online': 'statusFilterOnline', 'warning': 'statusFilterWarning', 'critical': 'statusFilterCritical', 'offline': 'statusFilterOffline' };
             healthButtons.forEach(id => { document.getElementById(id).className = inactiveClass; });
             const activeHealthBtn = document.getElementById(healthMap[activeStatusFilter]);
             if (activeHealthBtn) activeHealthBtn.className = activeClass;
@@ -530,6 +650,13 @@
             typeButtons.forEach(id => { document.getElementById(id).className = inactiveClass; });
             const activeTypeBtn = document.getElementById(typeMap[activeTypeFilter]);
             if (activeTypeBtn) activeTypeBtn.className = activeClass;
+
+            // Vendor filter buttons
+            const vendorButtons = ['vendorFilterAll', 'vendorFilterMeraki', 'vendorFilterMist'];
+            const vendorMap = { null: 'vendorFilterAll', 'meraki': 'vendorFilterMeraki', 'mist': 'vendorFilterMist' };
+            vendorButtons.forEach(id => { document.getElementById(id).className = inactiveClass; });
+            const activeVendorBtn = document.getElementById(vendorMap[currentStatusVendor]);
+            if (activeVendorBtn) activeVendorBtn.className = activeClass;
         }
 
         function renderStatusDeviceList() {
@@ -544,6 +671,11 @@
                 devices = DataLoader.getAllDevices();
             } else {
                 devices = DataLoader.getDevices(typeMap[currentStatusDeviceType]) || [];
+            }
+
+            // Apply vendor filter if set
+            if (currentStatusVendor) {
+                devices = devices.filter(d => d.vendor === currentStatusVendor);
             }
 
             // Apply site filter if active
@@ -577,13 +709,15 @@
                 const statusColors = {
                     'online': 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
                     'warning': 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-                    'critical': 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+                    'critical': 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+                    'offline': 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
                 };
 
                 const statusIcons = {
                     'online': 'fa-circle-check',
                     'warning': 'fa-circle-exclamation',
-                    'critical': 'fa-circle-xmark'
+                    'critical': 'fa-circle-xmark',
+                    'offline': 'fa-power-off'
                 };
 
                 const deviceTypeIcons = {

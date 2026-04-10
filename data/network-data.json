@@ -304,7 +304,7 @@
       "clients": 145
     },
     "gw-atl-edge-02": {
-      "status": "critical",
+      "status": "offline",
       "clients": 0
     },
     "gw-chi-core-01": {
@@ -320,8 +320,8 @@
       "clients": 240
     },
     "gw-ber-edge-02": {
-      "status": "online",
-      "clients": 220
+      "status": "offline",
+      "clients": 0
     },
     "gw-par-core-01": {
       "status": "online",
@@ -400,8 +400,8 @@
       "clients": 0
     },
     "sw-lon-access-03": {
-      "status": "online",
-      "clients": 95
+      "status": "offline",
+      "clients": 0
     },
     "sw-sfo-core-01": {
       "status": "online",
@@ -460,8 +460,8 @@
       "clients": 125
     },
     "sw-mum-access-03": {
-      "status": "warning",
-      "clients": 110
+      "status": "offline",
+      "clients": 0
     },
     "sw-atl-core-01": {
       "status": "online",
@@ -480,8 +480,8 @@
       "clients": 380
     },
     "sw-chi-dist-01": {
-      "status": "online",
-      "clients": 245
+      "status": "offline",
+      "clients": 0
     },
     "sw-chi-access-01": {
       "status": "online",
@@ -640,8 +640,8 @@
       "timeToConnect": 1529
     },
     "ap-nyc-f4-02": {
-      "status": "online",
-      "clients": 38,
+      "status": "offline",
+      "clients": 0,
       "timeToConnect": 1297
     },
     "ap-nyc-f4-03": {
@@ -694,8 +694,8 @@
       "timeToConnect": 2072
     },
     "ap-lon-off-03": {
-      "status": "online",
-      "clients": 32,
+      "status": "offline",
+      "clients": 0,
       "timeToConnect": 2222
     },
     "ap-lon-off-04": {
@@ -709,8 +709,8 @@
       "timeToConnect": 2249
     },
     "ap-sfo-f1-01": {
-      "status": "online",
-      "clients": 32,
+      "status": "offline",
+      "clients": 0,
       "timeToConnect": 882
     },
     "ap-sfo-f1-02": {

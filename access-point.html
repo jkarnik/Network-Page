@@ -87,9 +87,6 @@
                         <button data-tab="overview" id="tab-overview" class="tab-button border-newrelic-cyan text-newrelic-cyan whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors">
                             Overview
                         </button>
-                        <button data-tab="advanced" id="tab-advanced" class="tab-button border-transparent text-dark-muted hover:text-newrelic-cyan hover:border-newrelic-cyan whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors">
-                            Advanced
-                        </button>
                         <button data-tab="diagnostics" id="tab-diagnostics" class="tab-button border-transparent text-dark-muted hover:text-newrelic-cyan hover:border-newrelic-cyan whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors">
                             Diagnostics
                         </button>
@@ -208,12 +205,6 @@
                             <canvas id="snrChart"></canvas>
                         </div>
                     </div>
-
-                </div>
-            </div>
-
-            <div id="content-advanced" class="tab-content hidden">
-                <div class="grid grid-cols-12 gap-3">
 
                     <!-- SSID-to-VLAN Mapping Table -->
                     <div class="col-span-12 card p-0 bg-dark-card flex flex-col h-56">
@@ -418,6 +409,7 @@
 
                 </div>
             </div>
+            <!-- End Overview Tab -->
 
             <div id="content-diagnostics" class="tab-content hidden">
                 <div id="diagnostics-container" class="h-full"></div>

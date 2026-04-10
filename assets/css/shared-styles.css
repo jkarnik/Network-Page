@@ -117,13 +117,11 @@ body {
 /* Status Grid Component */
 .status-grid {
     display: grid;
-    grid-template-columns: auto repeat(3, 1fr);
-    grid-template-rows: auto repeat(3, 1fr);
+    grid-template-columns: auto auto repeat(4, 1fr);
     gap: 1px;
     background-color: #e5e7eb;
     border-radius: 0.5rem;
     overflow: hidden;
-    height: 100%;
 }
 
 .dark .status-grid {
@@ -131,13 +129,14 @@ body {
 }
 
 .status-cell {
-    padding: 0.5rem 0.75rem;
+    padding: 0.4rem 0.65rem;
     text-align: center;
     background-color: white;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    font-size: 0.95rem;
 }
 
 .dark .status-cell {
@@ -146,7 +145,7 @@ body {
 
 .status-header {
     font-weight: 600;
-    font-size: 0.75rem;
+    font-size: 0.9rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     background-color: #f9fafb;
@@ -169,6 +168,48 @@ body {
 
 .dark .status-cell.clickable:hover {
     background-color: rgba(59, 130, 246, 0.2) !important;
+}
+
+.status-group-cell {
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-align: left;
+    padding-left: 0.65rem;
+    background-color: #f3f4f6;
+}
+
+.dark .status-group-cell {
+    background-color: #111827;
+    color: #e5e7eb;
+}
+
+.status-subgroup-cell {
+    font-size: 0.9rem;
+    text-align: left;
+    padding-left: 0.65rem;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.status-subgroup-cell:hover {
+    background-color: rgba(59, 130, 246, 0.08) !important;
+}
+
+.dark .status-subgroup-cell:hover {
+    background-color: rgba(59, 130, 246, 0.15) !important;
+}
+
+.status-model-cell {
+    font-size: 0.85rem;
+    padding: 0.3rem 0.5rem;
+    padding-left: 1.25rem;
+    background-color: #f9fafb;
+    color: #6b7280;
+}
+
+.dark .status-model-cell {
+    background-color: #0f172a;
+    color: #9ca3af;
 }
 
 /* Expandable Widget Overlay */

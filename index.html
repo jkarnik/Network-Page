@@ -52,41 +52,23 @@
         <div class="grid grid-cols-12 gap-3 max-w-[1920px] mx-auto">
 
              <!-- 1. Fleet Status (Status Matrix) -->
-             <div id="deviceStatusCard" class="col-span-12 sm:col-span-6 lg:col-span-4 card p-4 h-64 bg-dark-card overflow-hidden">
+             <div id="deviceStatusCard" class="col-span-12 sm:col-span-6 lg:col-span-6 card p-4 bg-dark-card overflow-hidden">
                 <div id="statusSummaryView" class="h-full flex flex-col">
                     <div class="flex justify-between items-center mb-2">
                         <h3 class="text-sm font-bold text-dark-text">Fleet Status</h3>
                         <div class="flex items-center gap-2">
+                            <select id="fleetViewSelect" onchange="changeFleetView(this.value)" class="text-[10px] bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded px-1.5 py-0.5 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer">
+                                <option value="type-vendor">Type &rarr; Vendor</option>
+                                <option value="vendor-type">Vendor &rarr; Type</option>
+                            </select>
                             <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-2 py-0.5 rounded flex items-center gap-1">
                                 <i class="fa-solid fa-hand-pointer text-[8px]"></i> Click cells
                             </span>
                         </div>
                     </div>
-                    <div class="flex-1 flex items-center justify-center overflow-hidden">
-                        <div class="status-grid border border-gray-200 dark:border-gray-700 w-full h-full max-h-[180px]">
-                            <!-- Header Row -->
-                            <div class="status-cell status-header">Type</div>
-                            <div class="status-cell status-header text-newrelic-success dark:text-green-400">Healthy</div>
-                            <div class="status-cell status-header text-amber-500">Warning</div>
-                            <div class="status-cell status-header text-red-500">Critical</div>
-
-                            <!-- Gateways -->
-                            <div class="status-cell clickable font-medium text-xs text-dark-muted bg-gray-50 dark:bg-gray-800" onclick="showStatusDevices('gateway', 'all')">Gateways</div>
-                            <div class="status-cell clickable" id="gw-online" onclick="showStatusDevices('gateway', 'online')">--</div>
-                            <div class="status-cell clickable bg-amber-50 dark:bg-amber-900/10 text-amber-700 dark:text-amber-400" id="gw-warn" onclick="showStatusDevices('gateway', 'warning')">--</div>
-                            <div class="status-cell clickable bg-red-50 dark:bg-red-900/10 text-red-700 dark:text-red-400 font-bold" id="gw-crit" onclick="showStatusDevices('gateway', 'critical')">--</div>
-
-                            <!-- Switches -->
-                            <div class="status-cell clickable font-medium text-xs text-dark-muted bg-gray-50 dark:bg-gray-800" onclick="showStatusDevices('switch', 'all')">Switches</div>
-                            <div class="status-cell clickable" id="sw-online" onclick="showStatusDevices('switch', 'online')">--</div>
-                            <div class="status-cell clickable bg-amber-50 dark:bg-amber-900/10 text-amber-700 dark:text-amber-400" id="sw-warn" onclick="showStatusDevices('switch', 'warning')">--</div>
-                            <div class="status-cell clickable bg-red-50 dark:bg-red-900/10 text-red-700 dark:text-red-400 font-bold" id="sw-crit" onclick="showStatusDevices('switch', 'critical')">--</div>
-
-                            <!-- APs -->
-                            <div class="status-cell clickable font-medium text-xs text-dark-muted bg-gray-50 dark:bg-gray-800" onclick="showStatusDevices('ap', 'all')">Access Points</div>
-                            <div class="status-cell clickable" id="ap-online" onclick="showStatusDevices('ap', 'online')">--</div>
-                            <div class="status-cell clickable bg-amber-50 dark:bg-amber-900/10 text-amber-700 dark:text-amber-400" id="ap-warn" onclick="showStatusDevices('ap', 'warning')">--</div>
-                            <div class="status-cell clickable bg-red-50 dark:bg-red-900/10 text-red-700 dark:text-red-400 font-bold" id="ap-crit" onclick="showStatusDevices('ap', 'critical')">--</div>
+                    <div class="flex-1 overflow-y-auto custom-scrollbar">
+                        <div id="fleetStatusGrid" class="status-grid border border-gray-200 dark:border-gray-700 w-full">
+                            <!-- Dynamically rendered by renderFleetStatusGrid() -->
                         </div>
                     </div>
                 </div>
@@ -115,6 +97,15 @@
                                 <button onclick="filterStatusDevices('online')" id="statusFilterOnline" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Healthy</button>
                                 <button onclick="filterStatusDevices('warning')" id="statusFilterWarning" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Warning</button>
                                 <button onclick="filterStatusDevices('critical')" id="statusFilterCritical" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Critical</button>
+                                <button onclick="filterStatusDevices('offline')" id="statusFilterOffline" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Offline</button>
+                            </div>
+                            <div class="w-px h-5 bg-gray-300 dark:bg-gray-600"></div>
+                            <!-- Vendor Filter -->
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-xs text-gray-400 dark:text-gray-500 mr-1">Vendor</span>
+                                <button onclick="filterStatusVendor(null)" id="vendorFilterAll" class="px-3 py-1.5 text-xs rounded-lg bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors">All</button>
+                                <button onclick="filterStatusVendor('meraki')" id="vendorFilterMeraki" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Cisco Meraki</button>
+                                <button onclick="filterStatusVendor('mist')" id="vendorFilterMist" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Juniper Mist</button>
                             </div>
                             <button onclick="hideStatusDevices()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-2">
                                 <i class="fa-solid fa-times text-lg"></i>
@@ -134,10 +125,10 @@
                 </div>
             </div>
 
-            <!-- 2. Infrastructure Alerts, Security Alerts & AI Alerts -->
-            <div class="col-span-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            <!-- 2. Infrastructure Alerts, Security Alerts & AI Alerts (2x2 grid) -->
+            <div class="col-span-12 sm:col-span-6 lg:col-span-6 grid grid-cols-2 gap-3 self-start">
                 <!-- Infrastructure Alerts -->
-                <div id="networkIssuesCard" class="card p-4 flex flex-col justify-center bg-dark-card overflow-hidden h-64">
+                <div id="networkIssuesCard" class="card p-4 flex flex-col justify-center bg-dark-card overflow-hidden h-[9.6rem]">
                     <div id="issuesSummaryView">
                         <div class="flex items-center justify-center gap-2 mb-3">
                             <h3 class="text-sm font-bold text-dark-text">Infrastructure Alerts</h3>
@@ -206,7 +197,7 @@
                 </div>
 
                 <!-- Security Alerts -->
-                <div id="securityCard" class="card p-4 flex flex-col justify-center bg-dark-card overflow-hidden h-64">
+                <div id="securityCard" class="card p-4 flex flex-col justify-center bg-dark-card overflow-hidden h-[9.6rem]">
                     <div id="securitySummaryView">
                         <div class="flex items-center justify-center gap-2 mb-3">
                             <h3 class="text-sm font-bold text-dark-text">Security Alerts</h3>
@@ -275,7 +266,7 @@
                 </div>
 
                 <!-- AI Alerts -->
-                <div id="aiAlertsCard" class="card p-4 flex flex-col justify-center bg-dark-card overflow-hidden h-64">
+                <div id="aiAlertsCard" class="card p-4 flex flex-col justify-center bg-dark-card overflow-hidden h-[9.6rem]">
                     <div id="aiAlertsSummaryView">
                         <div class="flex items-center justify-center gap-2 mb-3">
                             <h3 class="text-sm font-bold text-dark-text">AI Alerts</h3>
@@ -341,6 +332,11 @@
                             </table>
                         </div>
                     </div>
+                </div>
+
+                <!-- Empty 4th Quadrant (Reserved) -->
+                <div class="card p-4 bg-dark-card overflow-hidden h-[9.6rem] flex items-center justify-center">
+                    <span class="text-xs text-gray-400 dark:text-gray-500 italic">Reserved</span>
                 </div>
             </div>
 

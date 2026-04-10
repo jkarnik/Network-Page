@@ -29,7 +29,7 @@
       "site": "NJ-Warehouse",
       "region": "EMEA",
       "ip": "10.2.1.1",
-      "model": "Meraki MX250",
+      "model": "Meraki MX105",
       "vendor": "meraki"
     },
     {
@@ -49,7 +49,7 @@
       "site": "SFO-Branch",
       "region": "North America",
       "ip": "10.3.1.1",
-      "model": "Mist SSR-120",
+      "model": "Mist SSR-130",
       "vendor": "mist"
     },
     {
@@ -59,7 +59,7 @@
       "site": "SFO-Branch",
       "region": "North America",
       "ip": "10.3.1.2",
-      "model": "Mist SSR-120",
+      "model": "Mist SSR-130",
       "vendor": "mist"
     },
     {
@@ -129,7 +129,7 @@
       "site": "CHI-Dist",
       "region": "North America",
       "ip": "10.7.1.1",
-      "model": "Mist SSR-120",
+      "model": "Mist SSR-130",
       "vendor": "mist"
     },
     {
@@ -139,7 +139,7 @@
       "site": "CHI-Dist",
       "region": "North America",
       "ip": "10.7.1.2",
-      "model": "Mist SSR-120",
+      "model": "Mist SRX320",
       "vendor": "mist"
     },
     {
@@ -149,7 +149,7 @@
       "site": "BER-R&D",
       "region": "EMEA",
       "ip": "10.8.1.1",
-      "model": "Mist SSR-120",
+      "model": "Mist SSR-130",
       "vendor": "mist"
     },
     {
@@ -159,7 +159,7 @@
       "site": "BER-R&D",
       "region": "EMEA",
       "ip": "10.8.1.2",
-      "model": "Mist SSR-120",
+      "model": "Mist SSR-130",
       "vendor": "mist"
     },
     {
@@ -189,7 +189,7 @@
       "site": "SYD-Office",
       "region": "APAC",
       "ip": "10.10.1.1",
-      "model": "Mist SSR-120",
+      "model": "Mist SSR-130",
       "vendor": "mist"
     },
     {
@@ -199,7 +199,7 @@
       "site": "SYD-Office",
       "region": "APAC",
       "ip": "10.10.1.2",
-      "model": "Mist SSR-120",
+      "model": "Mist SSR-130",
       "vendor": "mist"
     },
     {
@@ -251,7 +251,7 @@
       "site": "NYC-HQ",
       "region": "North America",
       "ip": "10.1.2.3",
-      "model": "Mist EX4400",
+      "model": "Mist EX4100",
       "vendor": "mist",
       "portCount": 48
     },
@@ -284,7 +284,7 @@
       "site": "NYC-HQ",
       "region": "North America",
       "ip": "10.1.2.6",
-      "model": "Meraki MS225-48",
+      "model": "Meraki MS390-48",
       "vendor": "meraki",
       "portCount": 48
     },
@@ -383,7 +383,7 @@
       "site": "SFO-Branch",
       "region": "North America",
       "ip": "10.3.2.1",
-      "model": "Mist EX4400",
+      "model": "Mist EX4100",
       "vendor": "mist",
       "portCount": 48
     },
@@ -438,7 +438,7 @@
       "site": "TOK-Sales",
       "region": "APAC",
       "ip": "10.4.2.2",
-      "model": "Meraki MS225-48",
+      "model": "Meraki MS390-48",
       "vendor": "meraki",
       "portCount": 48
     },
@@ -493,7 +493,7 @@
       "site": "MUM-Hub",
       "region": "APAC",
       "ip": "10.5.2.3",
-      "model": "Mist EX4400",
+      "model": "Mist EX4100",
       "vendor": "mist",
       "portCount": 48
     },
@@ -504,7 +504,7 @@
       "site": "MUM-Hub",
       "region": "APAC",
       "ip": "10.5.2.4",
-      "model": "Meraki MS225-48",
+      "model": "Meraki MS390-48",
       "vendor": "meraki",
       "portCount": 48
     },
@@ -548,7 +548,7 @@
       "site": "ATL-Retail",
       "region": "North America",
       "ip": "10.6.2.1",
-      "model": "Meraki MS225-48",
+      "model": "Meraki MS390-48",
       "vendor": "meraki",
       "portCount": 48
     },
@@ -872,7 +872,7 @@
       "site": "NYC-HQ",
       "region": "North America",
       "ip": "10.1.3.12",
-      "model": "Meraki MR56",
+      "model": "Meraki CW9166",
       "vendor": "meraki"
     },
     {
@@ -882,7 +882,7 @@
       "site": "NYC-HQ",
       "region": "North America",
       "ip": "10.1.3.13",
-      "model": "Meraki MR56",
+      "model": "Meraki CW9166",
       "vendor": "meraki"
     },
     {
@@ -892,7 +892,7 @@
       "site": "NYC-HQ",
       "region": "North America",
       "ip": "10.1.3.14",
-      "model": "Meraki MR56",
+      "model": "Meraki CW9166",
       "vendor": "meraki"
     },
     {
@@ -902,7 +902,7 @@
       "site": "NYC-HQ",
       "region": "North America",
       "ip": "10.1.3.15",
-      "model": "Meraki MR56",
+      "model": "Meraki CW9166",
       "vendor": "meraki"
     },
     {
@@ -912,7 +912,7 @@
       "site": "NYC-HQ",
       "region": "North America",
       "ip": "10.1.3.21",
-      "model": "Mist AP45",
+      "model": "Mist AP63",
       "vendor": "mist"
     },
     {
@@ -922,7 +922,7 @@
       "site": "NYC-HQ",
       "region": "North America",
       "ip": "10.1.3.22",
-      "model": "Mist AP45",
+      "model": "Mist AP63",
       "vendor": "mist"
     },
     {
@@ -932,7 +932,7 @@
       "site": "NYC-HQ",
       "region": "North America",
       "ip": "10.1.3.23",
-      "model": "Mist AP45",
+      "model": "Mist AP63",
       "vendor": "mist"
     },
     {
@@ -1072,7 +1072,7 @@
       "site": "NJ-Warehouse",
       "region": "EMEA",
       "ip": "10.2.3.12",
-      "model": "Meraki MR56",
+      "model": "Meraki CW9166",
       "vendor": "meraki"
     },
     {
@@ -1082,7 +1082,7 @@
       "site": "NJ-Warehouse",
       "region": "EMEA",
       "ip": "10.2.3.13",
-      "model": "Meraki MR56",
+      "model": "Meraki CW9166",
       "vendor": "meraki"
     },
     {
@@ -1122,7 +1122,7 @@
       "site": "SFO-Branch",
       "region": "North America",
       "ip": "10.3.3.2",
-      "model": "Mist AP43",
+      "model": "Mist AP34",
       "vendor": "mist"
     },
     {
@@ -1142,7 +1142,7 @@
       "site": "SFO-Branch",
       "region": "North America",
       "ip": "10.3.3.4",
-      "model": "Mist AP43",
+      "model": "Mist AP34",
       "vendor": "mist"
     },
     {
@@ -1222,7 +1222,7 @@
       "site": "TOK-Sales",
       "region": "APAC",
       "ip": "10.4.3.4",
-      "model": "Meraki MR56",
+      "model": "Meraki CW9166",
       "vendor": "meraki"
     },
     {
@@ -1232,7 +1232,7 @@
       "site": "TOK-Sales",
       "region": "APAC",
       "ip": "10.4.3.5",
-      "model": "Meraki MR56",
+      "model": "Meraki CW9166",
       "vendor": "meraki"
     },
     {
@@ -1272,7 +1272,7 @@
       "site": "MUM-Hub",
       "region": "APAC",
       "ip": "10.5.3.2",
-      "model": "Meraki MR56",
+      "model": "Meraki CW9166",
       "vendor": "meraki"
     },
     {
@@ -1282,7 +1282,7 @@
       "site": "MUM-Hub",
       "region": "APAC",
       "ip": "10.5.3.3",
-      "model": "Meraki MR56",
+      "model": "Meraki CW9166",
       "vendor": "meraki"
     },
     {
@@ -1362,7 +1362,7 @@
       "site": "MUM-Hub",
       "region": "APAC",
       "ip": "10.5.3.21",
-      "model": "Mist AP43",
+      "model": "Mist AP34",
       "vendor": "mist"
     },
     {
@@ -1372,7 +1372,7 @@
       "site": "MUM-Hub",
       "region": "APAC",
       "ip": "10.5.3.22",
-      "model": "Mist AP43",
+      "model": "Mist AP34",
       "vendor": "mist"
     },
     {
@@ -1392,7 +1392,7 @@
       "site": "MUM-Hub",
       "region": "APAC",
       "ip": "10.5.3.24",
-      "model": "Mist AP43",
+      "model": "Mist AP34",
       "vendor": "mist"
     },
     {
@@ -1432,7 +1432,7 @@
       "site": "ATL-Retail",
       "region": "North America",
       "ip": "10.6.3.3",
-      "model": "Meraki MR36",
+      "model": "Meraki MR28",
       "vendor": "meraki"
     },
     {
@@ -1472,7 +1472,7 @@
       "site": "CHI-Dist",
       "region": "North America",
       "ip": "10.7.3.1",
-      "model": "Mist AP43",
+      "model": "Mist AP34",
       "vendor": "mist"
     },
     {
@@ -1482,7 +1482,7 @@
       "site": "CHI-Dist",
       "region": "North America",
       "ip": "10.7.3.2",
-      "model": "Mist AP43",
+      "model": "Mist AP34",
       "vendor": "mist"
     },
     {
@@ -1492,7 +1492,7 @@
       "site": "CHI-Dist",
       "region": "North America",
       "ip": "10.7.3.3",
-      "model": "Mist AP43",
+      "model": "Mist AP34",
       "vendor": "mist"
     },
     {
@@ -1532,7 +1532,7 @@
       "site": "CHI-Dist",
       "region": "North America",
       "ip": "10.7.3.12",
-      "model": "Mist AP45",
+      "model": "Mist AP63",
       "vendor": "mist"
     },
     {
@@ -1592,7 +1592,7 @@
       "site": "BER-R&D",
       "region": "EMEA",
       "ip": "10.8.3.3",
-      "model": "Mist AP45",
+      "model": "Mist AP63",
       "vendor": "mist"
     },
     {
@@ -1632,7 +1632,7 @@
       "site": "BER-R&D",
       "region": "EMEA",
       "ip": "10.8.3.12",
-      "model": "Mist AP43",
+      "model": "Mist AP34",
       "vendor": "mist"
     },
     {
@@ -1652,7 +1652,7 @@
       "site": "BER-R&D",
       "region": "EMEA",
       "ip": "10.8.3.14",
-      "model": "Mist AP43",
+      "model": "Mist AP34",
       "vendor": "mist"
     },
     {
@@ -1702,7 +1702,7 @@
       "site": "PAR-Office",
       "region": "EMEA",
       "ip": "10.9.3.4",
-      "model": "Meraki MR56",
+      "model": "Meraki CW9166",
       "vendor": "meraki"
     },
     {
@@ -1752,7 +1752,7 @@
       "site": "SYD-Office",
       "region": "APAC",
       "ip": "10.10.3.1",
-      "model": "Mist AP45",
+      "model": "Mist AP63",
       "vendor": "mist"
     },
     {
@@ -1782,7 +1782,7 @@
       "site": "SYD-Office",
       "region": "APAC",
       "ip": "10.10.3.4",
-      "model": "Mist AP45",
+      "model": "Mist AP63",
       "vendor": "mist"
     },
     {
@@ -1812,7 +1812,7 @@
       "site": "SYD-Office",
       "region": "APAC",
       "ip": "10.10.3.13",
-      "model": "Mist AP43",
+      "model": "Mist AP34",
       "vendor": "mist"
     },
     {
@@ -1862,7 +1862,7 @@
       "site": "BRA-Remote",
       "region": "North America",
       "ip": "10.11.3.4",
-      "model": "Meraki MR36",
+      "model": "Meraki MR28",
       "vendor": "meraki"
     }
   ]

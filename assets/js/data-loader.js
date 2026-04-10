@@ -349,8 +349,48 @@ const DataLoader = {
             online: devices.filter(d => d.status === 'online').length,
             warn: devices.filter(d => d.status === 'warning').length,
             crit: devices.filter(d => d.status === 'critical').length,
+            offline: devices.filter(d => d.status === 'offline').length,
             total: devices.length
         };
+    },
+
+    /**
+     * Get device counts by status for a given type, vendor, and scope
+     */
+    getDeviceStatusCountsByVendor(type, vendor, scope = 'Global') {
+        let devices = this.getDevicesByScope(scope, type);
+        devices = devices.filter(d => d.vendor === vendor);
+        return {
+            online: devices.filter(d => d.status === 'online').length,
+            warn: devices.filter(d => d.status === 'warning').length,
+            crit: devices.filter(d => d.status === 'critical').length,
+            offline: devices.filter(d => d.status === 'offline').length,
+            total: devices.length
+        };
+    },
+
+    /**
+     * Get device counts by status for a specific model within a type/vendor
+     */
+    getDeviceStatusCountsByModel(type, vendor, model, scope = 'Global') {
+        let devices = this.getDevicesByScope(scope, type);
+        devices = devices.filter(d => d.vendor === vendor && d.model === model);
+        return {
+            online: devices.filter(d => d.status === 'online').length,
+            warn: devices.filter(d => d.status === 'warning').length,
+            crit: devices.filter(d => d.status === 'critical').length,
+            offline: devices.filter(d => d.status === 'offline').length,
+            total: devices.length
+        };
+    },
+
+    /**
+     * Get unique model names for a given type and vendor
+     */
+    getModelsByVendor(type, vendor, scope = 'Global') {
+        let devices = this.getDevicesByScope(scope, type);
+        devices = devices.filter(d => d.vendor === vendor);
+        return [...new Set(devices.map(d => d.model))].sort();
     },
 
     /**
