@@ -1,6 +1,5 @@
 {
   "version": "1.0.0",
-  "generated": "2026-04-09",
   "stats": {
     "total": 654,
     "critical": 103,
@@ -18,7 +17,6 @@
       "device": "GW-NJ-Primary",
       "deviceId": "gw-nj-primary",
       "message": "Health check passed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "30m ago"
     },
     {
@@ -31,7 +29,6 @@
       "device": "GW-NJ-Primary",
       "deviceId": "gw-nj-primary",
       "message": "High CPU utilization (>95%)",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "12m ago"
     },
     {
@@ -44,7 +41,6 @@
       "device": "GW-NJ-Backup",
       "deviceId": "gw-nj-backup",
       "message": "Configuration backup completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "25m ago"
     },
     {
@@ -57,7 +53,6 @@
       "device": "GW-NJ-Backup",
       "deviceId": "gw-nj-backup",
       "message": "Secondary WAN failover active",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "35m ago"
     },
     {
@@ -70,7 +65,6 @@
       "device": "GW-SFO-Primary",
       "deviceId": "gw-sfo-primary",
       "message": "Log rotation completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "5m ago"
     },
     {
@@ -83,7 +77,6 @@
       "device": "GW-SFO-Primary",
       "deviceId": "gw-sfo-primary",
       "message": "IPsec tunnel collapsed - all SAs down",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "18m ago"
     },
     {
@@ -96,7 +89,6 @@
       "device": "GW-SFO-Backup",
       "deviceId": "gw-sfo-backup",
       "message": "Scheduled maintenance window starting",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "25m ago"
     },
     {
@@ -109,7 +101,6 @@
       "device": "GW-SFO-Backup",
       "deviceId": "gw-sfo-backup",
       "message": "BGP route flapping detected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "45m ago"
     },
     {
@@ -122,7 +113,6 @@
       "device": "GW-TOK-Core-01",
       "deviceId": "gw-tok-core-01",
       "message": "QoS policy violation detected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "5m ago"
     },
     {
@@ -135,7 +125,6 @@
       "device": "GW-TOK-Core-01",
       "deviceId": "gw-tok-core-01",
       "message": "High memory utilization (85%)",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "8m ago"
     },
     {
@@ -148,7 +137,6 @@
       "device": "GW-TOK-Core-01",
       "deviceId": "gw-tok-core-01",
       "message": "Routing table overflow detected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "18m ago"
     },
     {
@@ -161,7 +149,6 @@
       "device": "GW-TOK-Core-01",
       "deviceId": "gw-tok-core-01",
       "message": "WAN link down - primary circuit failure",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "2m ago"
     },
     {
@@ -174,7 +161,6 @@
       "device": "GW-TOK-Edge-02",
       "deviceId": "gw-tok-edge-02",
       "message": "VPN tunnel rekeying failures",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "20m ago"
     },
     {
@@ -187,7 +173,6 @@
       "device": "GW-TOK-Edge-02",
       "deviceId": "gw-tok-edge-02",
       "message": "Backup link test successful",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "50m ago"
     },
     {
@@ -200,7 +185,6 @@
       "device": "GW-MUM-Core-01",
       "deviceId": "gw-mum-core-01",
       "message": "NTP sync completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "18m ago"
     },
     {
@@ -213,7 +197,6 @@
       "device": "GW-MUM-Core-01",
       "deviceId": "gw-mum-core-01",
       "message": "BGP route flapping detected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "40m ago"
     },
     {
@@ -226,7 +209,6 @@
       "device": "GW-MUM-Core-01",
       "deviceId": "gw-mum-core-01",
       "message": "Log rotation completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "30m ago"
     },
     {
@@ -239,7 +221,6 @@
       "device": "GW-MUM-Core-01",
       "deviceId": "gw-mum-core-01",
       "message": "Security policy updated",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "12m ago"
     },
     {
@@ -252,7 +233,6 @@
       "device": "GW-MUM-Edge-02",
       "deviceId": "gw-mum-edge-02",
       "message": "IPsec tunnel collapsed - all SAs down",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "20m ago"
     },
     {
@@ -265,7 +245,6 @@
       "device": "GW-MUM-Edge-02",
       "deviceId": "gw-mum-edge-02",
       "message": "Backup link test successful",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "10m ago"
     },
     {
@@ -278,7 +257,6 @@
       "device": "GW-MUM-Edge-02",
       "deviceId": "gw-mum-edge-02",
       "message": "Health check passed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "2m ago"
     },
     {
@@ -291,7 +269,6 @@
       "device": "GW-MUM-Edge-02",
       "deviceId": "gw-mum-edge-02",
       "message": "Firmware update available",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "1m ago"
     },
     {
@@ -304,7 +281,6 @@
       "device": "GW-ATL-Core-01",
       "deviceId": "gw-atl-core-01",
       "message": "BGP session lost with upstream peer",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "30m ago"
     },
     {
@@ -317,7 +293,6 @@
       "device": "GW-ATL-Edge-02",
       "deviceId": "gw-atl-edge-02",
       "message": "Health check passed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "30m ago"
     },
     {
@@ -330,7 +305,6 @@
       "device": "GW-ATL-Edge-02",
       "deviceId": "gw-atl-edge-02",
       "message": "NTP sync completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "20m ago"
     },
     {
@@ -343,7 +317,6 @@
       "device": "GW-CHI-Core-01",
       "deviceId": "gw-chi-core-01",
       "message": "Health check passed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "1h ago"
     },
     {
@@ -356,7 +329,6 @@
       "device": "GW-CHI-Edge-02",
       "deviceId": "gw-chi-edge-02",
       "message": "Health check passed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "45m ago"
     },
     {
@@ -369,7 +341,6 @@
       "device": "GW-BER-Core-01",
       "deviceId": "gw-ber-core-01",
       "message": "New BGP route learned",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "3m ago"
     },
     {
@@ -382,7 +353,6 @@
       "device": "GW-BER-Core-01",
       "deviceId": "gw-ber-core-01",
       "message": "DHCP lease renewed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "30m ago"
     },
     {
@@ -395,7 +365,6 @@
       "device": "GW-BER-Edge-02",
       "deviceId": "gw-ber-edge-02",
       "message": "New BGP route learned",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "45m ago"
     },
     {
@@ -408,7 +377,6 @@
       "device": "GW-PAR-Core-01",
       "deviceId": "gw-par-core-01",
       "message": "Unusual traffic pattern detected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "30m ago"
     },
     {
@@ -421,7 +389,6 @@
       "device": "GW-PAR-Core-01",
       "deviceId": "gw-par-core-01",
       "message": "QoS policy violation detected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "40m ago"
     },
     {
@@ -434,7 +401,6 @@
       "device": "GW-PAR-Edge-02",
       "deviceId": "gw-par-edge-02",
       "message": "High latency detected on WAN link (>150ms)",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "45m ago"
     },
     {
@@ -447,7 +413,6 @@
       "device": "GW-PAR-Edge-02",
       "deviceId": "gw-par-edge-02",
       "message": "Secondary WAN failover active",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "12m ago"
     },
     {
@@ -460,7 +425,6 @@
       "device": "GW-SYD-Core-01",
       "deviceId": "gw-syd-core-01",
       "message": "Scheduled maintenance window starting",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "1m ago"
     },
     {
@@ -473,7 +437,6 @@
       "device": "GW-SYD-Core-01",
       "deviceId": "gw-syd-core-01",
       "message": "VPN tunnel rekeying failures",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "25m ago"
     },
     {
@@ -486,7 +449,6 @@
       "device": "GW-SYD-Edge-02",
       "deviceId": "gw-syd-edge-02",
       "message": "Memory exhaustion detected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "45m ago"
     },
     {
@@ -499,7 +461,6 @@
       "device": "GW-SYD-Edge-02",
       "deviceId": "gw-syd-edge-02",
       "message": "Secondary WAN failover active",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "3m ago"
     },
     {
@@ -512,7 +473,6 @@
       "device": "GW-BRA-Core-01",
       "deviceId": "gw-bra-core-01",
       "message": "Interface statistics reset",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "20m ago"
     },
     {
@@ -525,7 +485,6 @@
       "device": "GW-BRA-Edge-02",
       "deviceId": "gw-bra-edge-02",
       "message": "QoS policy violation detected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "25m ago"
     },
     {
@@ -538,7 +497,6 @@
       "device": "GW-BRA-Edge-02",
       "deviceId": "gw-bra-edge-02",
       "message": "Scheduled maintenance window starting",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "1m ago"
     },
     {
@@ -551,7 +509,6 @@
       "device": "GW-BRA-Edge-02",
       "deviceId": "gw-bra-edge-02",
       "message": "New BGP route learned",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "40m ago"
     },
     {
@@ -564,7 +521,6 @@
       "device": "SW-NYC-Core-01",
       "deviceId": "sw-nyc-core-01",
       "message": "Diagnostic test passed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "10m ago"
     },
     {
@@ -577,7 +533,6 @@
       "device": "SW-NYC-Core-01",
       "deviceId": "sw-nyc-core-01",
       "message": "New MAC address learned",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "10m ago"
     },
     {
@@ -590,7 +545,6 @@
       "device": "SW-NYC-Core-01",
       "deviceId": "sw-nyc-core-01",
       "message": "Temperature critical (>75C)",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "8m ago"
     },
     {
@@ -603,7 +557,6 @@
       "device": "SW-NYC-Core-02",
       "deviceId": "sw-nyc-core-02",
       "message": "VLAN configuration updated",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "30m ago"
     },
     {
@@ -616,7 +569,6 @@
       "device": "SW-NYC-Core-02",
       "deviceId": "sw-nyc-core-02",
       "message": "Spanning tree loop detected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "30m ago"
     },
     {
@@ -629,7 +581,6 @@
       "device": "SW-NYC-Dist-01",
       "deviceId": "sw-nyc-dist-01",
       "message": "Temperature warning (>65C)",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "15m ago"
     },
     {
@@ -642,7 +593,6 @@
       "device": "SW-NYC-Dist-02",
       "deviceId": "sw-nyc-dist-02",
       "message": "STP topology change detected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "1h ago"
     },
     {
@@ -655,7 +605,6 @@
       "device": "SW-NYC-Dist-02",
       "deviceId": "sw-nyc-dist-02",
       "message": "LLDP neighbor discovered",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "15m ago"
     },
     {
@@ -668,7 +617,6 @@
       "device": "SW-NYC-Dist-02",
       "deviceId": "sw-nyc-dist-02",
       "message": "Diagnostic test passed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "40m ago"
     },
     {
@@ -681,7 +629,6 @@
       "device": "SW-NYC-Access-01",
       "deviceId": "sw-nyc-access-01",
       "message": "Diagnostic test passed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "1m ago"
     },
     {
@@ -694,7 +641,6 @@
       "device": "SW-NYC-Access-01",
       "deviceId": "sw-nyc-access-01",
       "message": "High port utilization (>80%)",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "18m ago"
     },
     {
@@ -707,7 +653,6 @@
       "device": "SW-NYC-Access-02",
       "deviceId": "sw-nyc-access-02",
       "message": "Port flapping detected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "3m ago"
     },
     {
@@ -720,7 +665,6 @@
       "device": "SW-NYC-Access-02",
       "deviceId": "sw-nyc-access-02",
       "message": "VLAN mismatch detected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "3m ago"
     },
     {
@@ -733,7 +677,6 @@
       "device": "SW-NYC-Access-03",
       "deviceId": "sw-nyc-access-03",
       "message": "Diagnostic test passed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "50m ago"
     },
     {
@@ -746,7 +689,6 @@
       "device": "SW-NYC-Access-03",
       "deviceId": "sw-nyc-access-03",
       "message": "Trunk port negotiated successfully",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "8m ago"
     },
     {
@@ -759,7 +701,6 @@
       "device": "SW-NYC-Access-03",
       "deviceId": "sw-nyc-access-03",
       "message": "LLDP neighbor discovered",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "25m ago"
     },
     {
@@ -772,7 +713,6 @@
       "device": "SW-NYC-Access-04",
       "deviceId": "sw-nyc-access-04",
       "message": "Firmware check completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "15m ago"
     },
     {
@@ -785,7 +725,6 @@
       "device": "SW-NYC-Access-04",
       "deviceId": "sw-nyc-access-04",
       "message": "Trunk port negotiated successfully",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "3m ago"
     },
     {
@@ -798,7 +737,6 @@
       "device": "SW-NYC-Access-04",
       "deviceId": "sw-nyc-access-04",
       "message": "Port channel all members down",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "8m ago"
     },
     {
@@ -811,7 +749,6 @@
       "device": "SW-LON-Core-01",
       "deviceId": "sw-lon-core-01",
       "message": "Port channel all members down",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "1h ago"
     },
     {
@@ -824,7 +761,6 @@
       "device": "SW-LON-Core-01",
       "deviceId": "sw-lon-core-01",
       "message": "Port statistics cleared",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "25m ago"
     },
     {
@@ -837,7 +773,6 @@
       "device": "SW-LON-Dist-01",
       "deviceId": "sw-lon-dist-01",
       "message": "VLAN configuration updated",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "1h ago"
     },
     {
@@ -850,7 +785,6 @@
       "device": "SW-LON-Dist-01",
       "deviceId": "sw-lon-dist-01",
       "message": "LLDP neighbor discovered",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "1m ago"
     },
     {
@@ -863,7 +797,6 @@
       "device": "SW-LON-Access-01",
       "deviceId": "sw-lon-access-01",
       "message": "Port error rate elevated",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "30m ago"
     },
     {
@@ -876,7 +809,6 @@
       "device": "SW-LON-Access-01",
       "deviceId": "sw-lon-access-01",
       "message": "PoE power budget exceeded",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "2m ago"
     },
     {
@@ -889,7 +821,6 @@
       "device": "SW-LON-Access-02",
       "deviceId": "sw-lon-access-02",
       "message": "STP topology change detected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "5m ago"
     },
     {
@@ -902,7 +833,6 @@
       "device": "SW-LON-Access-02",
       "deviceId": "sw-lon-access-02",
       "message": "MAC address table overflow",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "20m ago"
     },
     {
@@ -915,7 +845,6 @@
       "device": "SW-LON-Access-03",
       "deviceId": "sw-lon-access-03",
       "message": "Stack member disconnected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "2m ago"
     },
     {
@@ -928,7 +857,6 @@
       "device": "SW-LON-Access-03",
       "deviceId": "sw-lon-access-03",
       "message": "LLDP neighbor discovered",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "20m ago"
     },
     {
@@ -941,7 +869,6 @@
       "device": "SW-SFO-Core-01",
       "deviceId": "sw-sfo-core-01",
       "message": "Trunk negotiation failed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "35m ago"
     },
     {
@@ -954,7 +881,6 @@
       "device": "SW-SFO-Core-01",
       "deviceId": "sw-sfo-core-01",
       "message": "Firmware check completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "12m ago"
     },
     {
@@ -967,7 +893,6 @@
       "device": "SW-SFO-Dist-01",
       "deviceId": "sw-sfo-dist-01",
       "message": "Trunk port negotiated successfully",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "35m ago"
     },
     {
@@ -980,7 +905,6 @@
       "device": "SW-SFO-Access-01",
       "deviceId": "sw-sfo-access-01",
       "message": "STP topology change detected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "40m ago"
     },
     {
@@ -993,7 +917,6 @@
       "device": "SW-SFO-Access-02",
       "deviceId": "sw-sfo-access-02",
       "message": "Stack member disconnected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "10m ago"
     },
     {
@@ -1006,7 +929,6 @@
       "device": "SW-TOK-Core-01",
       "deviceId": "sw-tok-core-01",
       "message": "Access control list updated",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "25m ago"
     },
     {
@@ -1019,7 +941,6 @@
       "device": "SW-TOK-Core-01",
       "deviceId": "sw-tok-core-01",
       "message": "Stack member disconnected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "30m ago"
     },
     {
@@ -1032,7 +953,6 @@
       "device": "SW-TOK-Dist-01",
       "deviceId": "sw-tok-dist-01",
       "message": "Firmware check completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "30m ago"
     },
     {
@@ -1045,7 +965,6 @@
       "device": "SW-TOK-Dist-01",
       "deviceId": "sw-tok-dist-01",
       "message": "Temperature warning (>65C)",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "2m ago"
     },
     {
@@ -1058,7 +977,6 @@
       "device": "SW-TOK-Dist-01",
       "deviceId": "sw-tok-dist-01",
       "message": "Power supply failure",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "25m ago"
     },
     {
@@ -1071,7 +989,6 @@
       "device": "SW-TOK-Access-01",
       "deviceId": "sw-tok-access-01",
       "message": "LLDP neighbor discovered",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "30m ago"
     },
     {
@@ -1084,7 +1001,6 @@
       "device": "SW-TOK-Access-01",
       "deviceId": "sw-tok-access-01",
       "message": "Stack member disconnected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "35m ago"
     },
     {
@@ -1097,7 +1013,6 @@
       "device": "SW-TOK-Access-02",
       "deviceId": "sw-tok-access-02",
       "message": "New MAC address learned",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "1h ago"
     },
     {
@@ -1110,7 +1025,6 @@
       "device": "SW-TOK-Access-02",
       "deviceId": "sw-tok-access-02",
       "message": "VLAN configuration updated",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "40m ago"
     },
     {
@@ -1123,7 +1037,6 @@
       "device": "SW-TOK-Access-02",
       "deviceId": "sw-tok-access-02",
       "message": "MAC address learning anomaly",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "50m ago"
     },
     {
@@ -1136,7 +1049,6 @@
       "device": "SW-MUM-Core-01",
       "deviceId": "sw-mum-core-01",
       "message": "LLDP neighbor discovered",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "2m ago"
     },
     {
@@ -1149,7 +1061,6 @@
       "device": "SW-MUM-Core-02",
       "deviceId": "sw-mum-core-02",
       "message": "Configuration saved",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "2m ago"
     },
     {
@@ -1162,7 +1073,6 @@
       "device": "SW-MUM-Dist-01",
       "deviceId": "sw-mum-dist-01",
       "message": "STP topology change detected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "2m ago"
     },
     {
@@ -1175,7 +1085,6 @@
       "device": "SW-MUM-Dist-01",
       "deviceId": "sw-mum-dist-01",
       "message": "LLDP neighbor discovered",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "18m ago"
     },
     {
@@ -1188,7 +1097,6 @@
       "device": "SW-MUM-Dist-02",
       "deviceId": "sw-mum-dist-02",
       "message": "Configuration saved",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "1m ago"
     },
     {
@@ -1201,7 +1109,6 @@
       "device": "SW-MUM-Dist-02",
       "deviceId": "sw-mum-dist-02",
       "message": "Temperature warning (>65C)",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "25m ago"
     },
     {
@@ -1214,7 +1121,6 @@
       "device": "SW-MUM-Dist-02",
       "deviceId": "sw-mum-dist-02",
       "message": "PoE power draw high on port",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "2m ago"
     },
     {
@@ -1227,7 +1133,6 @@
       "device": "SW-MUM-Access-01",
       "deviceId": "sw-mum-access-01",
       "message": "VLAN mismatch detected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "2m ago"
     },
     {
@@ -1240,7 +1145,6 @@
       "device": "SW-MUM-Access-01",
       "deviceId": "sw-mum-access-01",
       "message": "Configuration saved",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "40m ago"
     },
     {
@@ -1253,7 +1157,6 @@
       "device": "SW-MUM-Access-03",
       "deviceId": "sw-mum-access-03",
       "message": "High port utilization (>80%)",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "15m ago"
     },
     {
@@ -1266,7 +1169,6 @@
       "device": "SW-ATL-Core-01",
       "deviceId": "sw-atl-core-01",
       "message": "Temperature warning (>65C)",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "45m ago"
     },
     {
@@ -1279,7 +1181,6 @@
       "device": "SW-ATL-Core-01",
       "deviceId": "sw-atl-core-01",
       "message": "Port flapping detected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "10m ago"
     },
     {
@@ -1292,7 +1193,6 @@
       "device": "SW-ATL-Core-01",
       "deviceId": "sw-atl-core-01",
       "message": "Firmware check completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "18m ago"
     },
     {
@@ -1305,7 +1205,6 @@
       "device": "SW-ATL-Access-01",
       "deviceId": "sw-atl-access-01",
       "message": "Configuration saved",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "2m ago"
     },
     {
@@ -1318,7 +1217,6 @@
       "device": "SW-ATL-Access-01",
       "deviceId": "sw-atl-access-01",
       "message": "Firmware check completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "8m ago"
     },
     {
@@ -1331,7 +1229,6 @@
       "device": "SW-ATL-Access-01",
       "deviceId": "sw-atl-access-01",
       "message": "Diagnostic test passed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "35m ago"
     },
     {
@@ -1344,7 +1241,6 @@
       "device": "SW-ATL-Access-02",
       "deviceId": "sw-atl-access-02",
       "message": "Spanning tree loop detected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "12m ago"
     },
     {
@@ -1357,7 +1253,6 @@
       "device": "SW-ATL-Access-02",
       "deviceId": "sw-atl-access-02",
       "message": "Port flapping detected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "45m ago"
     },
     {
@@ -1370,7 +1265,6 @@
       "device": "SW-CHI-Core-01",
       "deviceId": "sw-chi-core-01",
       "message": "Diagnostic test passed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "10m ago"
     },
     {
@@ -1383,7 +1277,6 @@
       "device": "SW-CHI-Core-01",
       "deviceId": "sw-chi-core-01",
       "message": "PoE device connected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "50m ago"
     },
     {
@@ -1396,7 +1289,6 @@
       "device": "SW-CHI-Core-01",
       "deviceId": "sw-chi-core-01",
       "message": "VLAN mismatch detected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "10m ago"
     },
     {
@@ -1409,7 +1301,6 @@
       "device": "SW-CHI-Dist-01",
       "deviceId": "sw-chi-dist-01",
       "message": "Trunk negotiation failed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "50m ago"
     },
     {
@@ -1422,7 +1313,6 @@
       "device": "SW-CHI-Access-01",
       "deviceId": "sw-chi-access-01",
       "message": "STP root bridge election in progress",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "20m ago"
     },
     {
@@ -1435,7 +1325,6 @@
       "device": "SW-CHI-Access-01",
       "deviceId": "sw-chi-access-01",
       "message": "Port came online",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "45m ago"
     },
     {
@@ -1448,7 +1337,6 @@
       "device": "SW-CHI-Access-01",
       "deviceId": "sw-chi-access-01",
       "message": "Spanning tree loop detected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "10m ago"
     },
     {
@@ -1461,7 +1349,6 @@
       "device": "SW-CHI-Access-02",
       "deviceId": "sw-chi-access-02",
       "message": "Port statistics cleared",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "20m ago"
     },
     {
@@ -1474,7 +1361,6 @@
       "device": "SW-CHI-Access-02",
       "deviceId": "sw-chi-access-02",
       "message": "Configuration saved",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "18m ago"
     },
     {
@@ -1487,7 +1373,6 @@
       "device": "SW-CHI-Access-02",
       "deviceId": "sw-chi-access-02",
       "message": "STP topology change detected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "5m ago"
     },
     {
@@ -1500,7 +1385,6 @@
       "device": "SW-CHI-Access-03",
       "deviceId": "sw-chi-access-03",
       "message": "QoS policy applied",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "2m ago"
     },
     {
@@ -1513,7 +1397,6 @@
       "device": "SW-CHI-Access-03",
       "deviceId": "sw-chi-access-03",
       "message": "Access control list updated",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "35m ago"
     },
     {
@@ -1526,7 +1409,6 @@
       "device": "SW-BER-Core-01",
       "deviceId": "sw-ber-core-01",
       "message": "High port utilization (>80%)",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "12m ago"
     },
     {
@@ -1539,7 +1421,6 @@
       "device": "SW-BER-Dist-01",
       "deviceId": "sw-ber-dist-01",
       "message": "Trunk port negotiated successfully",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "2m ago"
     },
     {
@@ -1552,7 +1433,6 @@
       "device": "SW-BER-Dist-01",
       "deviceId": "sw-ber-dist-01",
       "message": "LLDP neighbor discovered",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "35m ago"
     },
     {
@@ -1565,7 +1445,6 @@
       "device": "SW-BER-Access-01",
       "deviceId": "sw-ber-access-01",
       "message": "STP root bridge election in progress",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "8m ago"
     },
     {
@@ -1578,7 +1457,6 @@
       "device": "SW-BER-Access-01",
       "deviceId": "sw-ber-access-01",
       "message": "New MAC address learned",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "8m ago"
     },
     {
@@ -1591,7 +1469,6 @@
       "device": "SW-BER-Access-02",
       "deviceId": "sw-ber-access-02",
       "message": "PoE device connected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "10m ago"
     },
     {
@@ -1604,7 +1481,6 @@
       "device": "SW-BER-Access-03",
       "deviceId": "sw-ber-access-03",
       "message": "Port statistics cleared",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "12m ago"
     },
     {
@@ -1617,7 +1493,6 @@
       "device": "SW-BER-Access-03",
       "deviceId": "sw-ber-access-03",
       "message": "Port came online",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "50m ago"
     },
     {
@@ -1630,7 +1505,6 @@
       "device": "SW-BER-Access-03",
       "deviceId": "sw-ber-access-03",
       "message": "VLAN configuration updated",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "50m ago"
     },
     {
@@ -1643,7 +1517,6 @@
       "device": "SW-PAR-Core-01",
       "deviceId": "sw-par-core-01",
       "message": "Diagnostic test passed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "3m ago"
     },
     {
@@ -1656,7 +1529,6 @@
       "device": "SW-PAR-Dist-01",
       "deviceId": "sw-par-dist-01",
       "message": "Port error rate elevated",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "1h ago"
     },
     {
@@ -1669,7 +1541,6 @@
       "device": "SW-PAR-Dist-01",
       "deviceId": "sw-par-dist-01",
       "message": "Access control list updated",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "15m ago"
     },
     {
@@ -1682,7 +1553,6 @@
       "device": "SW-PAR-Dist-01",
       "deviceId": "sw-par-dist-01",
       "message": "Configuration saved",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "18m ago"
     },
     {
@@ -1695,7 +1565,6 @@
       "device": "SW-PAR-Dist-01",
       "deviceId": "sw-par-dist-01",
       "message": "Diagnostic test passed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "8m ago"
     },
     {
@@ -1708,7 +1577,6 @@
       "device": "SW-PAR-Access-02",
       "deviceId": "sw-par-access-02",
       "message": "STP topology change detected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "15m ago"
     },
     {
@@ -1721,7 +1589,6 @@
       "device": "SW-PAR-Access-02",
       "deviceId": "sw-par-access-02",
       "message": "Trunk port negotiated successfully",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "35m ago"
     },
     {
@@ -1734,7 +1601,6 @@
       "device": "SW-SYD-Core-01",
       "deviceId": "sw-syd-core-01",
       "message": "Port came online",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "40m ago"
     },
     {
@@ -1747,7 +1613,6 @@
       "device": "SW-SYD-Dist-01",
       "deviceId": "sw-syd-dist-01",
       "message": "Access control list updated",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "50m ago"
     },
     {
@@ -1760,7 +1625,6 @@
       "device": "SW-SYD-Dist-01",
       "deviceId": "sw-syd-dist-01",
       "message": "Port came online",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "35m ago"
     },
     {
@@ -1773,7 +1637,6 @@
       "device": "SW-SYD-Access-01",
       "deviceId": "sw-syd-access-01",
       "message": "QoS policy applied",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "5m ago"
     },
     {
@@ -1786,7 +1649,6 @@
       "device": "SW-SYD-Access-01",
       "deviceId": "sw-syd-access-01",
       "message": "Port came online",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "35m ago"
     },
     {
@@ -1799,7 +1661,6 @@
       "device": "SW-SYD-Access-01",
       "deviceId": "sw-syd-access-01",
       "message": "Port came online",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "12m ago"
     },
     {
@@ -1812,7 +1673,6 @@
       "device": "SW-SYD-Access-02",
       "deviceId": "sw-syd-access-02",
       "message": "Trunk negotiation failed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "50m ago"
     },
     {
@@ -1825,7 +1685,6 @@
       "device": "SW-SYD-Access-02",
       "deviceId": "sw-syd-access-02",
       "message": "Diagnostic test passed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "5m ago"
     },
     {
@@ -1838,7 +1697,6 @@
       "device": "SW-BRA-Core-01",
       "deviceId": "sw-bra-core-01",
       "message": "Trunk negotiation failed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "2m ago"
     },
     {
@@ -1851,7 +1709,6 @@
       "device": "SW-BRA-Core-01",
       "deviceId": "sw-bra-core-01",
       "message": "New MAC address learned",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "12m ago"
     },
     {
@@ -1864,7 +1721,6 @@
       "device": "SW-BRA-Access-01",
       "deviceId": "sw-bra-access-01",
       "message": "PoE power draw high on port",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "30m ago"
     },
     {
@@ -1877,7 +1733,6 @@
       "device": "SW-BRA-Access-02",
       "deviceId": "sw-bra-access-02",
       "message": "Access control list updated",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "50m ago"
     },
     {
@@ -1890,7 +1745,6 @@
       "device": "AP-NYC-Floor1-01",
       "deviceId": "ap-nyc-f1-01",
       "message": "Band steering failures",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "45m ago"
     },
     {
@@ -1903,7 +1757,6 @@
       "device": "AP-NYC-Floor1-02",
       "deviceId": "ap-nyc-f1-02",
       "message": "Memory critical",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "50m ago"
     },
     {
@@ -1916,7 +1769,6 @@
       "device": "AP-NYC-Floor1-03",
       "deviceId": "ap-nyc-f1-03",
       "message": "DFS radar detected - channel change required",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "45m ago"
     },
     {
@@ -1929,7 +1781,6 @@
       "device": "AP-NYC-Floor1-04",
       "deviceId": "ap-nyc-f1-04",
       "message": "Channel optimization completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "30m ago"
     },
     {
@@ -1942,7 +1793,6 @@
       "device": "AP-NYC-Floor1-04",
       "deviceId": "ap-nyc-f1-04",
       "message": "Channel optimization completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "1m ago"
     },
     {
@@ -1955,7 +1805,6 @@
       "device": "AP-NYC-Floor1-05",
       "deviceId": "ap-nyc-f1-05",
       "message": "Client deauthenticated normally",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "3m ago"
     },
     {
@@ -1968,7 +1817,6 @@
       "device": "AP-NYC-Floor2-01",
       "deviceId": "ap-nyc-f2-01",
       "message": "Configuration sync completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "45m ago"
     },
     {
@@ -1981,7 +1829,6 @@
       "device": "AP-NYC-Floor2-01",
       "deviceId": "ap-nyc-f2-01",
       "message": "Rogue AP detected nearby",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "50m ago"
     },
     {
@@ -1994,7 +1841,6 @@
       "device": "AP-NYC-Floor2-01",
       "deviceId": "ap-nyc-f2-01",
       "message": "Power level adjusted",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "15m ago"
     },
     {
@@ -2007,7 +1853,6 @@
       "device": "AP-NYC-Floor2-02",
       "deviceId": "ap-nyc-f2-02",
       "message": "WIDS scan completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "45m ago"
     },
     {
@@ -2020,7 +1865,6 @@
       "device": "AP-NYC-Floor2-02",
       "deviceId": "ap-nyc-f2-02",
       "message": "Radio calibration finished",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "12m ago"
     },
     {
@@ -2033,7 +1877,6 @@
       "device": "AP-NYC-Floor2-02",
       "deviceId": "ap-nyc-f2-02",
       "message": "Channel congestion detected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "8m ago"
     },
     {
@@ -2046,7 +1889,6 @@
       "device": "AP-NYC-Floor2-03",
       "deviceId": "ap-nyc-f2-03",
       "message": "WIDS scan completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "35m ago"
     },
     {
@@ -2059,7 +1901,6 @@
       "device": "AP-NYC-Floor2-04",
       "deviceId": "ap-nyc-f2-04",
       "message": "Certificate validation failed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "35m ago"
     },
     {
@@ -2072,7 +1913,6 @@
       "device": "AP-NYC-Floor2-04",
       "deviceId": "ap-nyc-f2-04",
       "message": "Rogue AP detected nearby",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "12m ago"
     },
     {
@@ -2085,7 +1925,6 @@
       "device": "AP-NYC-Floor2-05",
       "deviceId": "ap-nyc-f2-05",
       "message": "Co-channel interference detected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "5m ago"
     },
     {
@@ -2098,7 +1937,6 @@
       "device": "AP-NYC-Floor2-05",
       "deviceId": "ap-nyc-f2-05",
       "message": "Spectrum analysis updated",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "15m ago"
     },
     {
@@ -2111,7 +1949,6 @@
       "device": "AP-NYC-Floor2-05",
       "deviceId": "ap-nyc-f2-05",
       "message": "Authentication server unreachable",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "10m ago"
     },
     {
@@ -2124,7 +1961,6 @@
       "device": "AP-NYC-Floor3-01",
       "deviceId": "ap-nyc-f3-01",
       "message": "Client deauthenticated normally",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "1m ago"
     },
     {
@@ -2137,7 +1973,6 @@
       "device": "AP-NYC-Floor3-01",
       "deviceId": "ap-nyc-f3-01",
       "message": "Power level adjusted",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "5m ago"
     },
     {
@@ -2150,7 +1985,6 @@
       "device": "AP-NYC-Floor3-01",
       "deviceId": "ap-nyc-f3-01",
       "message": "Client authentication failures",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "30m ago"
     },
     {
@@ -2163,7 +1997,6 @@
       "device": "AP-NYC-Floor3-02",
       "deviceId": "ap-nyc-f3-02",
       "message": "DFS radar detected - channel change required",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "50m ago"
     },
     {
@@ -2176,7 +2009,6 @@
       "device": "AP-NYC-Floor3-02",
       "deviceId": "ap-nyc-f3-02",
       "message": "Band steering failures",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "3m ago"
     },
     {
@@ -2189,7 +2021,6 @@
       "device": "AP-NYC-Floor3-02",
       "deviceId": "ap-nyc-f3-02",
       "message": "High channel utilization (>70%)",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "45m ago"
     },
     {
@@ -2202,7 +2033,6 @@
       "device": "AP-NYC-Floor3-03",
       "deviceId": "ap-nyc-f3-03",
       "message": "Power level adjusted",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "12m ago"
     },
     {
@@ -2215,7 +2045,6 @@
       "device": "AP-NYC-Floor3-03",
       "deviceId": "ap-nyc-f3-03",
       "message": "Client roamed successfully",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "3m ago"
     },
     {
@@ -2228,7 +2057,6 @@
       "device": "AP-NYC-Floor3-03",
       "deviceId": "ap-nyc-f3-03",
       "message": "Configuration sync completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "1h ago"
     },
     {
@@ -2241,7 +2069,6 @@
       "device": "AP-NYC-Floor3-04",
       "deviceId": "ap-nyc-f3-04",
       "message": "Firmware corruption detected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "20m ago"
     },
     {
@@ -2254,7 +2081,6 @@
       "device": "AP-NYC-Floor3-04",
       "deviceId": "ap-nyc-f3-04",
       "message": "Radio calibration finished",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "1m ago"
     },
     {
@@ -2267,7 +2093,6 @@
       "device": "AP-NYC-Floor3-05",
       "deviceId": "ap-nyc-f3-05",
       "message": "Channel congestion detected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "45m ago"
     },
     {
@@ -2280,7 +2105,6 @@
       "device": "AP-NYC-Floor3-05",
       "deviceId": "ap-nyc-f3-05",
       "message": "Radio calibration finished",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "5m ago"
     },
     {
@@ -2293,7 +2117,6 @@
       "device": "AP-NYC-Floor3-05",
       "deviceId": "ap-nyc-f3-05",
       "message": "Client roamed successfully",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "25m ago"
     },
     {
@@ -2306,7 +2129,6 @@
       "device": "AP-NYC-Floor4-01",
       "deviceId": "ap-nyc-f4-01",
       "message": "Load balancing active",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "18m ago"
     },
     {
@@ -2319,7 +2141,6 @@
       "device": "AP-NYC-Floor4-01",
       "deviceId": "ap-nyc-f4-01",
       "message": "Power level adjusted",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "18m ago"
     },
     {
@@ -2332,7 +2153,6 @@
       "device": "AP-NYC-Floor4-02",
       "deviceId": "ap-nyc-f4-02",
       "message": "PoE power insufficient",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "20m ago"
     },
     {
@@ -2345,7 +2165,6 @@
       "device": "AP-NYC-Floor4-02",
       "deviceId": "ap-nyc-f4-02",
       "message": "Configuration sync completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "1h ago"
     },
     {
@@ -2358,7 +2177,6 @@
       "device": "AP-NYC-Floor4-02",
       "deviceId": "ap-nyc-f4-02",
       "message": "Channel optimization completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "10m ago"
     },
     {
@@ -2371,7 +2189,6 @@
       "device": "AP-NYC-Floor4-03",
       "deviceId": "ap-nyc-f4-03",
       "message": "Interference mitigation active",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "2m ago"
     },
     {
@@ -2384,7 +2201,6 @@
       "device": "AP-NYC-Floor4-04",
       "deviceId": "ap-nyc-f4-04",
       "message": "Load balancing active",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "12m ago"
     },
     {
@@ -2397,7 +2213,6 @@
       "device": "AP-NYC-Floor4-04",
       "deviceId": "ap-nyc-f4-04",
       "message": "Radar scan completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "40m ago"
     },
     {
@@ -2410,7 +2225,6 @@
       "device": "AP-NYC-Floor4-05",
       "deviceId": "ap-nyc-f4-05",
       "message": "Firmware corruption detected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "18m ago"
     },
     {
@@ -2423,7 +2237,6 @@
       "device": "AP-NYC-Floor4-05",
       "deviceId": "ap-nyc-f4-05",
       "message": "Spectrum analysis updated",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "40m ago"
     },
     {
@@ -2436,7 +2249,6 @@
       "device": "AP-NYC-Floor4-05",
       "deviceId": "ap-nyc-f4-05",
       "message": "Interference mitigation active",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "1h ago"
     },
     {
@@ -2449,7 +2261,6 @@
       "device": "AP-LON-WH-01",
       "deviceId": "ap-lon-wh-01",
       "message": "Power level adjusted",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "3m ago"
     },
     {
@@ -2462,7 +2273,6 @@
       "device": "AP-LON-WH-01",
       "deviceId": "ap-lon-wh-01",
       "message": "Configuration sync completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "45m ago"
     },
     {
@@ -2475,7 +2285,6 @@
       "device": "AP-LON-WH-02",
       "deviceId": "ap-lon-wh-02",
       "message": "Client deauthenticated normally",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "12m ago"
     },
     {
@@ -2488,7 +2297,6 @@
       "device": "AP-LON-WH-02",
       "deviceId": "ap-lon-wh-02",
       "message": "Band steering failures",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "5m ago"
     },
     {
@@ -2501,7 +2309,6 @@
       "device": "AP-LON-WH-03",
       "deviceId": "ap-lon-wh-03",
       "message": "Radar scan completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "45m ago"
     },
     {
@@ -2514,7 +2321,6 @@
       "device": "AP-LON-WH-03",
       "deviceId": "ap-lon-wh-03",
       "message": "Firmware corruption detected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "3m ago"
     },
     {
@@ -2527,7 +2333,6 @@
       "device": "AP-LON-WH-03",
       "deviceId": "ap-lon-wh-03",
       "message": "Band steering failures",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "1h ago"
     },
     {
@@ -2540,7 +2345,6 @@
       "device": "AP-LON-WH-04",
       "deviceId": "ap-lon-wh-04",
       "message": "Client roamed successfully",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "20m ago"
     },
     {
@@ -2553,7 +2357,6 @@
       "device": "AP-LON-WH-04",
       "deviceId": "ap-lon-wh-04",
       "message": "Load balancing active",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "15m ago"
     },
     {
@@ -2566,7 +2369,6 @@
       "device": "AP-LON-Office-01",
       "deviceId": "ap-lon-off-01",
       "message": "Channel optimization completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "2m ago"
     },
     {
@@ -2579,7 +2381,6 @@
       "device": "AP-LON-Office-01",
       "deviceId": "ap-lon-off-01",
       "message": "Channel optimization completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "15m ago"
     },
     {
@@ -2592,7 +2393,6 @@
       "device": "AP-LON-Office-02",
       "deviceId": "ap-lon-off-02",
       "message": "Channel congestion detected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "25m ago"
     },
     {
@@ -2605,7 +2405,6 @@
       "device": "AP-LON-Office-02",
       "deviceId": "ap-lon-off-02",
       "message": "Low SNR on multiple clients",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "8m ago"
     },
     {
@@ -2618,7 +2417,6 @@
       "device": "AP-LON-Office-02",
       "deviceId": "ap-lon-off-02",
       "message": "Radar scan completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "1h ago"
     },
     {
@@ -2631,7 +2429,6 @@
       "device": "AP-LON-Office-03",
       "deviceId": "ap-lon-off-03",
       "message": "Spectrum analysis updated",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "2m ago"
     },
     {
@@ -2644,7 +2441,6 @@
       "device": "AP-LON-Office-03",
       "deviceId": "ap-lon-off-03",
       "message": "Radio calibration finished",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "18m ago"
     },
     {
@@ -2657,7 +2453,6 @@
       "device": "AP-LON-Office-03",
       "deviceId": "ap-lon-off-03",
       "message": "Load balancing active",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "40m ago"
     },
     {
@@ -2670,7 +2465,6 @@
       "device": "AP-LON-Office-04",
       "deviceId": "ap-lon-off-04",
       "message": "Configuration sync completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "10m ago"
     },
     {
@@ -2683,7 +2477,6 @@
       "device": "AP-LON-Office-04",
       "deviceId": "ap-lon-off-04",
       "message": "DFS radar detected - channel change required",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "35m ago"
     },
     {
@@ -2696,7 +2489,6 @@
       "device": "AP-LON-Office-04",
       "deviceId": "ap-lon-off-04",
       "message": "Band steering failures",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "40m ago"
     },
     {
@@ -2709,7 +2501,6 @@
       "device": "AP-LON-Office-05",
       "deviceId": "ap-lon-off-05",
       "message": "Configuration sync completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "12m ago"
     },
     {
@@ -2722,7 +2513,6 @@
       "device": "AP-SFO-Floor1-01",
       "deviceId": "ap-sfo-f1-01",
       "message": "Configuration sync completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "45m ago"
     },
     {
@@ -2735,7 +2525,6 @@
       "device": "AP-SFO-Floor1-01",
       "deviceId": "ap-sfo-f1-01",
       "message": "Low SNR on multiple clients",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "5m ago"
     },
     {
@@ -2748,7 +2537,6 @@
       "device": "AP-SFO-Floor1-01",
       "deviceId": "ap-sfo-f1-01",
       "message": "Low SNR on multiple clients",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "25m ago"
     },
     {
@@ -2761,7 +2549,6 @@
       "device": "AP-SFO-Floor1-01",
       "deviceId": "ap-sfo-f1-01",
       "message": "Interference mitigation active",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "5m ago"
     },
     {
@@ -2774,7 +2561,6 @@
       "device": "AP-SFO-Floor1-02",
       "deviceId": "ap-sfo-f1-02",
       "message": "Power level adjusted",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "8m ago"
     },
     {
@@ -2787,7 +2573,6 @@
       "device": "AP-SFO-Floor1-03",
       "deviceId": "ap-sfo-f1-03",
       "message": "Interference mitigation active",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "40m ago"
     },
     {
@@ -2800,7 +2585,6 @@
       "device": "AP-SFO-Floor1-03",
       "deviceId": "ap-sfo-f1-03",
       "message": "Spectrum analysis updated",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "25m ago"
     },
     {
@@ -2813,7 +2597,6 @@
       "device": "AP-SFO-Floor1-04",
       "deviceId": "ap-sfo-f1-04",
       "message": "Load balancing active",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "25m ago"
     },
     {
@@ -2826,7 +2609,6 @@
       "device": "AP-SFO-Floor2-02",
       "deviceId": "ap-sfo-f2-02",
       "message": "Certificate validation failed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "12m ago"
     },
     {
@@ -2839,7 +2621,6 @@
       "device": "AP-SFO-Floor2-02",
       "deviceId": "ap-sfo-f2-02",
       "message": "Radio calibration finished",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "45m ago"
     },
     {
@@ -2852,7 +2633,6 @@
       "device": "AP-SFO-Floor2-03",
       "deviceId": "ap-sfo-f2-03",
       "message": "Radio hardware failure",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "20m ago"
     },
     {
@@ -2865,7 +2645,6 @@
       "device": "AP-SFO-Floor2-03",
       "deviceId": "ap-sfo-f2-03",
       "message": "Interference mitigation active",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "45m ago"
     },
     {
@@ -2878,7 +2657,6 @@
       "device": "AP-SFO-Floor2-03",
       "deviceId": "ap-sfo-f2-03",
       "message": "Client deauthenticated normally",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "25m ago"
     },
     {
@@ -2891,7 +2669,6 @@
       "device": "AP-SFO-Floor2-03",
       "deviceId": "ap-sfo-f2-03",
       "message": "Configuration sync completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "25m ago"
     },
     {
@@ -2904,7 +2681,6 @@
       "device": "AP-SFO-Floor2-04",
       "deviceId": "ap-sfo-f2-04",
       "message": "Radar scan completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "25m ago"
     },
     {
@@ -2917,7 +2693,6 @@
       "device": "AP-SFO-Floor2-04",
       "deviceId": "ap-sfo-f2-04",
       "message": "PoE power insufficient",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "35m ago"
     },
     {
@@ -2930,7 +2705,6 @@
       "device": "AP-TOK-Floor1-01",
       "deviceId": "ap-tok-f1-01",
       "message": "Client density high",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "45m ago"
     },
     {
@@ -2943,7 +2717,6 @@
       "device": "AP-TOK-Floor1-01",
       "deviceId": "ap-tok-f1-01",
       "message": "Load balancing active",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "18m ago"
     },
     {
@@ -2956,7 +2729,6 @@
       "device": "AP-TOK-Floor1-01",
       "deviceId": "ap-tok-f1-01",
       "message": "DFS radar detected - channel change required",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "50m ago"
     },
     {
@@ -2969,7 +2741,6 @@
       "device": "AP-TOK-Floor1-02",
       "deviceId": "ap-tok-f1-02",
       "message": "Authentication server unreachable",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "20m ago"
     },
     {
@@ -2982,7 +2753,6 @@
       "device": "AP-TOK-Floor1-02",
       "deviceId": "ap-tok-f1-02",
       "message": "Client authentication failures",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "45m ago"
     },
     {
@@ -2995,7 +2765,6 @@
       "device": "AP-TOK-Floor1-03",
       "deviceId": "ap-tok-f1-03",
       "message": "Client deauthenticated normally",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "8m ago"
     },
     {
@@ -3008,7 +2777,6 @@
       "device": "AP-TOK-Floor1-04",
       "deviceId": "ap-tok-f1-04",
       "message": "Spectrum analysis updated",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "2m ago"
     },
     {
@@ -3021,7 +2789,6 @@
       "device": "AP-TOK-Floor1-04",
       "deviceId": "ap-tok-f1-04",
       "message": "Client roamed successfully",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "2m ago"
     },
     {
@@ -3034,7 +2801,6 @@
       "device": "AP-TOK-Floor1-04",
       "deviceId": "ap-tok-f1-04",
       "message": "High channel utilization (>70%)",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "30m ago"
     },
     {
@@ -3047,7 +2813,6 @@
       "device": "AP-TOK-Floor1-05",
       "deviceId": "ap-tok-f1-05",
       "message": "Radio hardware failure",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "8m ago"
     },
     {
@@ -3060,7 +2825,6 @@
       "device": "AP-TOK-Floor2-01",
       "deviceId": "ap-tok-f2-01",
       "message": "PoE power insufficient",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "15m ago"
     },
     {
@@ -3073,7 +2837,6 @@
       "device": "AP-TOK-Floor2-01",
       "deviceId": "ap-tok-f2-01",
       "message": "New client associated",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "20m ago"
     },
     {
@@ -3086,7 +2849,6 @@
       "device": "AP-TOK-Floor2-01",
       "deviceId": "ap-tok-f2-01",
       "message": "Roaming failures increasing",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "40m ago"
     },
     {
@@ -3099,7 +2861,6 @@
       "device": "AP-MUM-Floor1-01",
       "deviceId": "ap-mum-f1-01",
       "message": "Power level adjusted",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "35m ago"
     },
     {
@@ -3112,7 +2873,6 @@
       "device": "AP-MUM-Floor1-01",
       "deviceId": "ap-mum-f1-01",
       "message": "Client density high",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "12m ago"
     },
     {
@@ -3125,7 +2885,6 @@
       "device": "AP-MUM-Floor1-02",
       "deviceId": "ap-mum-f1-02",
       "message": "Radar scan completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "5m ago"
     },
     {
@@ -3138,7 +2897,6 @@
       "device": "AP-MUM-Floor1-02",
       "deviceId": "ap-mum-f1-02",
       "message": "Radio calibration finished",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "8m ago"
     },
     {
@@ -3151,7 +2909,6 @@
       "device": "AP-MUM-Floor1-03",
       "deviceId": "ap-mum-f1-03",
       "message": "Power level adjusted",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "2m ago"
     },
     {
@@ -3164,7 +2921,6 @@
       "device": "AP-MUM-Floor1-03",
       "deviceId": "ap-mum-f1-03",
       "message": "Load balancing active",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "15m ago"
     },
     {
@@ -3177,7 +2933,6 @@
       "device": "AP-MUM-Floor1-03",
       "deviceId": "ap-mum-f1-03",
       "message": "Rogue AP detected nearby",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "25m ago"
     },
     {
@@ -3190,7 +2945,6 @@
       "device": "AP-MUM-Floor1-04",
       "deviceId": "ap-mum-f1-04",
       "message": "Client deauthenticated normally",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "10m ago"
     },
     {
@@ -3203,7 +2957,6 @@
       "device": "AP-MUM-Floor1-05",
       "deviceId": "ap-mum-f1-05",
       "message": "Channel congestion detected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "40m ago"
     },
     {
@@ -3216,7 +2969,6 @@
       "device": "AP-MUM-Floor1-05",
       "deviceId": "ap-mum-f1-05",
       "message": "Memory critical",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "12m ago"
     },
     {
@@ -3229,7 +2981,6 @@
       "device": "AP-MUM-Floor2-01",
       "deviceId": "ap-mum-f2-01",
       "message": "High channel utilization (>70%)",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "15m ago"
     },
     {
@@ -3242,7 +2993,6 @@
       "device": "AP-MUM-Floor2-01",
       "deviceId": "ap-mum-f2-01",
       "message": "High channel utilization (>70%)",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "1h ago"
     },
     {
@@ -3255,7 +3005,6 @@
       "device": "AP-MUM-Floor2-01",
       "deviceId": "ap-mum-f2-01",
       "message": "Radio hardware failure",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "5m ago"
     },
     {
@@ -3268,7 +3017,6 @@
       "device": "AP-MUM-Floor2-01",
       "deviceId": "ap-mum-f2-01",
       "message": "Channel optimization completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "2m ago"
     },
     {
@@ -3281,7 +3029,6 @@
       "device": "AP-MUM-Floor2-02",
       "deviceId": "ap-mum-f2-02",
       "message": "Channel optimization completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "18m ago"
     },
     {
@@ -3294,7 +3041,6 @@
       "device": "AP-MUM-Floor2-02",
       "deviceId": "ap-mum-f2-02",
       "message": "Radio calibration finished",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "25m ago"
     },
     {
@@ -3307,7 +3053,6 @@
       "device": "AP-MUM-Floor2-03",
       "deviceId": "ap-mum-f2-03",
       "message": "Band steering failures",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "15m ago"
     },
     {
@@ -3320,7 +3065,6 @@
       "device": "AP-MUM-Floor2-04",
       "deviceId": "ap-mum-f2-04",
       "message": "Radio calibration finished",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "15m ago"
     },
     {
@@ -3333,7 +3077,6 @@
       "device": "AP-MUM-Floor2-04",
       "deviceId": "ap-mum-f2-04",
       "message": "Rogue AP detected nearby",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "1m ago"
     },
     {
@@ -3346,7 +3089,6 @@
       "device": "AP-MUM-Floor2-05",
       "deviceId": "ap-mum-f2-05",
       "message": "Client deauthenticated normally",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "45m ago"
     },
     {
@@ -3359,7 +3101,6 @@
       "device": "AP-MUM-Floor2-05",
       "deviceId": "ap-mum-f2-05",
       "message": "Interference mitigation active",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "30m ago"
     },
     {
@@ -3372,7 +3113,6 @@
       "device": "AP-MUM-Floor2-05",
       "deviceId": "ap-mum-f2-05",
       "message": "Configuration sync completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "1h ago"
     },
     {
@@ -3385,7 +3125,6 @@
       "device": "AP-MUM-Floor3-01",
       "deviceId": "ap-mum-f3-01",
       "message": "Client deauthenticated normally",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "15m ago"
     },
     {
@@ -3398,7 +3137,6 @@
       "device": "AP-MUM-Floor3-01",
       "deviceId": "ap-mum-f3-01",
       "message": "Client deauthenticated normally",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "5m ago"
     },
     {
@@ -3411,7 +3149,6 @@
       "device": "AP-MUM-Floor3-01",
       "deviceId": "ap-mum-f3-01",
       "message": "Radio hardware failure",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "50m ago"
     },
     {
@@ -3424,7 +3161,6 @@
       "device": "AP-MUM-Floor3-02",
       "deviceId": "ap-mum-f3-02",
       "message": "Power level adjusted",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "5m ago"
     },
     {
@@ -3437,7 +3173,6 @@
       "device": "AP-MUM-Floor3-03",
       "deviceId": "ap-mum-f3-03",
       "message": "Interference mitigation active",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "5m ago"
     },
     {
@@ -3450,7 +3185,6 @@
       "device": "AP-MUM-Floor3-03",
       "deviceId": "ap-mum-f3-03",
       "message": "Configuration sync completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "12m ago"
     },
     {
@@ -3463,7 +3197,6 @@
       "device": "AP-MUM-Floor3-04",
       "deviceId": "ap-mum-f3-04",
       "message": "Co-channel interference detected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "8m ago"
     },
     {
@@ -3476,7 +3209,6 @@
       "device": "AP-MUM-Floor3-05",
       "deviceId": "ap-mum-f3-05",
       "message": "Client roamed successfully",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "1m ago"
     },
     {
@@ -3489,7 +3221,6 @@
       "device": "AP-MUM-Floor3-05",
       "deviceId": "ap-mum-f3-05",
       "message": "Radio hardware failure",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "20m ago"
     },
     {
@@ -3502,7 +3233,6 @@
       "device": "AP-ATL-Store-01",
       "deviceId": "ap-atl-01",
       "message": "Low SNR on multiple clients",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "1m ago"
     },
     {
@@ -3515,7 +3245,6 @@
       "device": "AP-ATL-Store-01",
       "deviceId": "ap-atl-01",
       "message": "Radar scan completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "2m ago"
     },
     {
@@ -3528,7 +3257,6 @@
       "device": "AP-ATL-Store-02",
       "deviceId": "ap-atl-02",
       "message": "Client roamed successfully",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "10m ago"
     },
     {
@@ -3541,7 +3269,6 @@
       "device": "AP-ATL-Store-02",
       "deviceId": "ap-atl-02",
       "message": "Channel optimization completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "12m ago"
     },
     {
@@ -3554,7 +3281,6 @@
       "device": "AP-ATL-Store-03",
       "deviceId": "ap-atl-03",
       "message": "Power level adjusted",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "40m ago"
     },
     {
@@ -3567,7 +3293,6 @@
       "device": "AP-ATL-Store-03",
       "deviceId": "ap-atl-03",
       "message": "Load balancing active",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "5m ago"
     },
     {
@@ -3580,7 +3305,6 @@
       "device": "AP-ATL-Store-03",
       "deviceId": "ap-atl-03",
       "message": "High channel utilization (>70%)",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "20m ago"
     },
     {
@@ -3593,7 +3317,6 @@
       "device": "AP-ATL-Store-04",
       "deviceId": "ap-atl-04",
       "message": "High channel utilization (>70%)",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "12m ago"
     },
     {
@@ -3606,7 +3329,6 @@
       "device": "AP-ATL-Store-05",
       "deviceId": "ap-atl-05",
       "message": "Client roamed successfully",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "1h ago"
     },
     {
@@ -3619,7 +3341,6 @@
       "device": "AP-ATL-Back-01",
       "deviceId": "ap-atl-06",
       "message": "Client deauthenticated normally",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "35m ago"
     },
     {
@@ -3632,7 +3353,6 @@
       "device": "AP-ATL-Back-01",
       "deviceId": "ap-atl-06",
       "message": "Client roamed successfully",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "10m ago"
     },
     {
@@ -3645,7 +3365,6 @@
       "device": "AP-CHI-Floor1-01",
       "deviceId": "ap-chi-f1-01",
       "message": "Channel optimization completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "40m ago"
     },
     {
@@ -3658,7 +3377,6 @@
       "device": "AP-CHI-Floor1-01",
       "deviceId": "ap-chi-f1-01",
       "message": "Authentication server unreachable",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "15m ago"
     },
     {
@@ -3671,7 +3389,6 @@
       "device": "AP-CHI-Floor1-01",
       "deviceId": "ap-chi-f1-01",
       "message": "Firmware corruption detected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "50m ago"
     },
     {
@@ -3684,7 +3401,6 @@
       "device": "AP-CHI-Floor1-02",
       "deviceId": "ap-chi-f1-02",
       "message": "New client associated",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "25m ago"
     },
     {
@@ -3697,7 +3413,6 @@
       "device": "AP-CHI-Floor1-02",
       "deviceId": "ap-chi-f1-02",
       "message": "Radio calibration finished",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "35m ago"
     },
     {
@@ -3710,7 +3425,6 @@
       "device": "AP-CHI-Floor1-03",
       "deviceId": "ap-chi-f1-03",
       "message": "Rogue AP detected nearby",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "5m ago"
     },
     {
@@ -3723,7 +3437,6 @@
       "device": "AP-CHI-Floor1-03",
       "deviceId": "ap-chi-f1-03",
       "message": "High channel utilization (>70%)",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "30m ago"
     },
     {
@@ -3736,7 +3449,6 @@
       "device": "AP-CHI-Floor1-04",
       "deviceId": "ap-chi-f1-04",
       "message": "PoE power insufficient",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "3m ago"
     },
     {
@@ -3749,7 +3461,6 @@
       "device": "AP-CHI-Floor1-04",
       "deviceId": "ap-chi-f1-04",
       "message": "Client roamed successfully",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "8m ago"
     },
     {
@@ -3762,7 +3473,6 @@
       "device": "AP-CHI-Floor1-04",
       "deviceId": "ap-chi-f1-04",
       "message": "Radar scan completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "35m ago"
     },
     {
@@ -3775,7 +3485,6 @@
       "device": "AP-CHI-Floor1-05",
       "deviceId": "ap-chi-f1-05",
       "message": "Spectrum analysis updated",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "30m ago"
     },
     {
@@ -3788,7 +3497,6 @@
       "device": "AP-CHI-Floor1-05",
       "deviceId": "ap-chi-f1-05",
       "message": "Spectrum analysis updated",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "3m ago"
     },
     {
@@ -3801,7 +3509,6 @@
       "device": "AP-CHI-Floor1-05",
       "deviceId": "ap-chi-f1-05",
       "message": "Lost connection to controller",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "25m ago"
     },
     {
@@ -3814,7 +3521,6 @@
       "device": "AP-CHI-Floor2-01",
       "deviceId": "ap-chi-f2-01",
       "message": "Channel optimization completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "10m ago"
     },
     {
@@ -3827,7 +3533,6 @@
       "device": "AP-CHI-Floor2-02",
       "deviceId": "ap-chi-f2-02",
       "message": "Radar scan completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "5m ago"
     },
     {
@@ -3840,7 +3545,6 @@
       "device": "AP-CHI-Floor2-02",
       "deviceId": "ap-chi-f2-02",
       "message": "Channel optimization completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "20m ago"
     },
     {
@@ -3853,7 +3557,6 @@
       "device": "AP-CHI-Floor2-02",
       "deviceId": "ap-chi-f2-02",
       "message": "Rogue AP detected nearby",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "8m ago"
     },
     {
@@ -3866,7 +3569,6 @@
       "device": "AP-CHI-Floor2-03",
       "deviceId": "ap-chi-f2-03",
       "message": "New client associated",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "50m ago"
     },
     {
@@ -3879,7 +3581,6 @@
       "device": "AP-CHI-Floor2-03",
       "deviceId": "ap-chi-f2-03",
       "message": "Rogue AP detected nearby",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "2m ago"
     },
     {
@@ -3892,7 +3593,6 @@
       "device": "AP-CHI-Floor2-03",
       "deviceId": "ap-chi-f2-03",
       "message": "Radio hardware failure",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "8m ago"
     },
     {
@@ -3905,7 +3605,6 @@
       "device": "AP-CHI-Floor2-04",
       "deviceId": "ap-chi-f2-04",
       "message": "Radio calibration finished",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "50m ago"
     },
     {
@@ -3918,7 +3617,6 @@
       "device": "AP-CHI-Floor2-05",
       "deviceId": "ap-chi-f2-05",
       "message": "Firmware corruption detected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "40m ago"
     },
     {
@@ -3931,7 +3629,6 @@
       "device": "AP-CHI-Floor2-05",
       "deviceId": "ap-chi-f2-05",
       "message": "Channel optimization completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "40m ago"
     },
     {
@@ -3944,7 +3641,6 @@
       "device": "AP-BER-Floor1-01",
       "deviceId": "ap-ber-f1-01",
       "message": "Channel optimization completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "35m ago"
     },
     {
@@ -3957,7 +3653,6 @@
       "device": "AP-BER-Floor1-01",
       "deviceId": "ap-ber-f1-01",
       "message": "Configuration sync completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "25m ago"
     },
     {
@@ -3970,7 +3665,6 @@
       "device": "AP-BER-Floor1-02",
       "deviceId": "ap-ber-f1-02",
       "message": "WIDS scan completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "3m ago"
     },
     {
@@ -3983,7 +3677,6 @@
       "device": "AP-BER-Floor1-03",
       "deviceId": "ap-ber-f1-03",
       "message": "WIDS scan completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "1h ago"
     },
     {
@@ -3996,7 +3689,6 @@
       "device": "AP-BER-Floor1-04",
       "deviceId": "ap-ber-f1-04",
       "message": "Channel congestion detected",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "2m ago"
     },
     {
@@ -4009,7 +3701,6 @@
       "device": "AP-BER-Floor1-04",
       "deviceId": "ap-ber-f1-04",
       "message": "New client associated",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "40m ago"
     },
     {
@@ -4022,7 +3713,6 @@
       "device": "AP-BER-Floor1-04",
       "deviceId": "ap-ber-f1-04",
       "message": "Interference mitigation active",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "5m ago"
     },
     {
@@ -4035,7 +3725,6 @@
       "device": "AP-BER-Floor1-04",
       "deviceId": "ap-ber-f1-04",
       "message": "Client density high",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "12m ago"
     },
     {
@@ -4048,7 +3737,6 @@
       "device": "AP-BER-Floor1-05",
       "deviceId": "ap-ber-f1-05",
       "message": "Client roamed successfully",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "8m ago"
     },
     {
@@ -4061,7 +3749,6 @@
       "device": "AP-BER-Floor2-01",
       "deviceId": "ap-ber-f2-01",
       "message": "PoE power insufficient",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "35m ago"
     },
     {
@@ -4074,7 +3761,6 @@
       "device": "AP-BER-Floor2-01",
       "deviceId": "ap-ber-f2-01",
       "message": "Radar scan completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "5m ago"
     },
     {
@@ -4087,7 +3773,6 @@
       "device": "AP-BER-Floor2-02",
       "deviceId": "ap-ber-f2-02",
       "message": "Spectrum analysis updated",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "1h ago"
     },
     {
@@ -4100,7 +3785,6 @@
       "device": "AP-BER-Floor2-02",
       "deviceId": "ap-ber-f2-02",
       "message": "Spectrum analysis updated",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "1h ago"
     },
     {
@@ -4113,7 +3797,6 @@
       "device": "AP-BER-Floor2-02",
       "deviceId": "ap-ber-f2-02",
       "message": "Roaming failures increasing",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "45m ago"
     },
     {
@@ -4126,7 +3809,6 @@
       "device": "AP-BER-Floor2-04",
       "deviceId": "ap-ber-f2-04",
       "message": "PoE power insufficient",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "10m ago"
     },
     {
@@ -4139,7 +3821,6 @@
       "device": "AP-BER-Floor2-04",
       "deviceId": "ap-ber-f2-04",
       "message": "Client authentication failures",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "1h ago"
     },
     {
@@ -4152,7 +3833,6 @@
       "device": "AP-BER-Floor2-05",
       "deviceId": "ap-ber-f2-05",
       "message": "Configuration sync completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "15m ago"
     },
     {
@@ -4165,7 +3845,6 @@
       "device": "AP-BER-Floor2-05",
       "deviceId": "ap-ber-f2-05",
       "message": "Client deauthenticated normally",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "10m ago"
     },
     {
@@ -4178,7 +3857,6 @@
       "device": "AP-PAR-Floor1-02",
       "deviceId": "ap-par-f1-02",
       "message": "Radio calibration finished",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "18m ago"
     },
     {
@@ -4191,7 +3869,6 @@
       "device": "AP-PAR-Floor1-02",
       "deviceId": "ap-par-f1-02",
       "message": "Client roamed successfully",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "50m ago"
     },
     {
@@ -4204,7 +3881,6 @@
       "device": "AP-PAR-Floor1-03",
       "deviceId": "ap-par-f1-03",
       "message": "Rogue AP detected nearby",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "3m ago"
     },
     {
@@ -4217,7 +3893,6 @@
       "device": "AP-PAR-Floor1-03",
       "deviceId": "ap-par-f1-03",
       "message": "Roaming failures increasing",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "1m ago"
     },
     {
@@ -4230,7 +3905,6 @@
       "device": "AP-PAR-Floor1-03",
       "deviceId": "ap-par-f1-03",
       "message": "Channel optimization completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "35m ago"
     },
     {
@@ -4243,7 +3917,6 @@
       "device": "AP-PAR-Floor1-04",
       "deviceId": "ap-par-f1-04",
       "message": "Radar scan completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "30m ago"
     },
     {
@@ -4256,7 +3929,6 @@
       "device": "AP-PAR-Floor2-01",
       "deviceId": "ap-par-f2-01",
       "message": "Radar scan completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "12m ago"
     },
     {
@@ -4269,7 +3941,6 @@
       "device": "AP-PAR-Floor2-01",
       "deviceId": "ap-par-f2-01",
       "message": "Client authentication failures",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "15m ago"
     },
     {
@@ -4282,7 +3953,6 @@
       "device": "AP-PAR-Floor2-01",
       "deviceId": "ap-par-f2-01",
       "message": "Certificate validation failed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "25m ago"
     },
     {
@@ -4295,7 +3965,6 @@
       "device": "AP-PAR-Floor2-02",
       "deviceId": "ap-par-f2-02",
       "message": "Load balancing active",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "40m ago"
     },
     {
@@ -4308,7 +3977,6 @@
       "device": "AP-PAR-Floor2-02",
       "deviceId": "ap-par-f2-02",
       "message": "Client deauthenticated normally",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "30m ago"
     },
     {
@@ -4321,7 +3989,6 @@
       "device": "AP-PAR-Floor2-03",
       "deviceId": "ap-par-f2-03",
       "message": "Radar scan completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "3m ago"
     },
     {
@@ -4334,7 +4001,6 @@
       "device": "AP-SYD-Floor1-01",
       "deviceId": "ap-syd-f1-01",
       "message": "Memory critical",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "3m ago"
     },
     {
@@ -4347,7 +4013,6 @@
       "device": "AP-SYD-Floor1-01",
       "deviceId": "ap-syd-f1-01",
       "message": "Client roamed successfully",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "15m ago"
     },
     {
@@ -4360,7 +4025,6 @@
       "device": "AP-SYD-Floor1-01",
       "deviceId": "ap-syd-f1-01",
       "message": "Low SNR on multiple clients",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "20m ago"
     },
     {
@@ -4373,7 +4037,6 @@
       "device": "AP-SYD-Floor1-02",
       "deviceId": "ap-syd-f1-02",
       "message": "Configuration sync completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "8m ago"
     },
     {
@@ -4386,7 +4049,6 @@
       "device": "AP-SYD-Floor1-02",
       "deviceId": "ap-syd-f1-02",
       "message": "Channel optimization completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "40m ago"
     },
     {
@@ -4399,7 +4061,6 @@
       "device": "AP-SYD-Floor1-03",
       "deviceId": "ap-syd-f1-03",
       "message": "Channel optimization completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "3m ago"
     },
     {
@@ -4412,7 +4073,6 @@
       "device": "AP-SYD-Floor1-04",
       "deviceId": "ap-syd-f1-04",
       "message": "Radio hardware failure",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "3m ago"
     },
     {
@@ -4425,7 +4085,6 @@
       "device": "AP-SYD-Floor1-04",
       "deviceId": "ap-syd-f1-04",
       "message": "Configuration sync completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "2m ago"
     },
     {
@@ -4438,7 +4097,6 @@
       "device": "AP-SYD-Floor1-04",
       "deviceId": "ap-syd-f1-04",
       "message": "New client associated",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "40m ago"
     },
     {
@@ -4451,7 +4109,6 @@
       "device": "AP-SYD-Floor2-01",
       "deviceId": "ap-syd-f2-01",
       "message": "Spectrum analysis updated",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "10m ago"
     },
     {
@@ -4464,7 +4121,6 @@
       "device": "AP-SYD-Floor2-01",
       "deviceId": "ap-syd-f2-01",
       "message": "Spectrum analysis updated",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "15m ago"
     },
     {
@@ -4477,7 +4133,6 @@
       "device": "AP-SYD-Floor2-01",
       "deviceId": "ap-syd-f2-01",
       "message": "Rogue AP detected nearby",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "30m ago"
     },
     {
@@ -4490,7 +4145,6 @@
       "device": "AP-SYD-Floor2-02",
       "deviceId": "ap-syd-f2-02",
       "message": "Client authentication failures",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "25m ago"
     },
     {
@@ -4503,7 +4157,6 @@
       "device": "AP-SYD-Floor2-02",
       "deviceId": "ap-syd-f2-02",
       "message": "Spectrum analysis updated",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "20m ago"
     },
     {
@@ -4516,7 +4169,6 @@
       "device": "AP-SYD-Floor2-03",
       "deviceId": "ap-syd-f2-03",
       "message": "Configuration sync completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "30m ago"
     },
     {
@@ -4529,7 +4181,6 @@
       "device": "AP-SYD-Floor2-03",
       "deviceId": "ap-syd-f2-03",
       "message": "Client authentication failures",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "3m ago"
     },
     {
@@ -4542,7 +4193,6 @@
       "device": "AP-SYD-Floor2-03",
       "deviceId": "ap-syd-f2-03",
       "message": "Authentication server unreachable",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "50m ago"
     },
     {
@@ -4555,7 +4205,6 @@
       "device": "AP-SYD-Floor2-03",
       "deviceId": "ap-syd-f2-03",
       "message": "Configuration sync completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "45m ago"
     },
     {
@@ -4568,7 +4217,6 @@
       "device": "AP-SYD-Floor2-04",
       "deviceId": "ap-syd-f2-04",
       "message": "Power level adjusted",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "5m ago"
     },
     {
@@ -4581,7 +4229,6 @@
       "device": "AP-SYD-Floor2-04",
       "deviceId": "ap-syd-f2-04",
       "message": "Client density high",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "40m ago"
     },
     {
@@ -4594,7 +4241,6 @@
       "device": "AP-SYD-Floor2-04",
       "deviceId": "ap-syd-f2-04",
       "message": "Spectrum analysis updated",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "35m ago"
     },
     {
@@ -4607,7 +4253,6 @@
       "device": "AP-BRA-Main-01",
       "deviceId": "ap-bra-01",
       "message": "Spectrum analysis updated",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "10m ago"
     },
     {
@@ -4620,7 +4265,6 @@
       "device": "AP-BRA-Main-01",
       "deviceId": "ap-bra-01",
       "message": "Load balancing active",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "2m ago"
     },
     {
@@ -4633,7 +4277,6 @@
       "device": "AP-BRA-Main-01",
       "deviceId": "ap-bra-01",
       "message": "Interference mitigation active",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "35m ago"
     },
     {
@@ -4646,7 +4289,6 @@
       "device": "AP-BRA-Main-01",
       "deviceId": "ap-bra-01",
       "message": "Load balancing active",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "15m ago"
     },
     {
@@ -4659,7 +4301,6 @@
       "device": "AP-BRA-Main-02",
       "deviceId": "ap-bra-02",
       "message": "Client deauthenticated normally",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "45m ago"
     },
     {
@@ -4672,7 +4313,6 @@
       "device": "AP-BRA-Main-02",
       "deviceId": "ap-bra-02",
       "message": "New client associated",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "40m ago"
     },
     {
@@ -4685,7 +4325,6 @@
       "device": "AP-BRA-Main-02",
       "deviceId": "ap-bra-02",
       "message": "Power level adjusted",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "40m ago"
     },
     {
@@ -4698,7 +4337,6 @@
       "device": "AP-BRA-Main-03",
       "deviceId": "ap-bra-03",
       "message": "Channel optimization completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "3m ago"
     },
     {
@@ -4711,7 +4349,6 @@
       "device": "AP-BRA-Main-04",
       "deviceId": "ap-bra-04",
       "message": "New client associated",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "50m ago"
     },
     {
@@ -4724,7 +4361,6 @@
       "device": "AP-BRA-Main-04",
       "deviceId": "ap-bra-04",
       "message": "Client deauthenticated normally",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "1m ago"
     },
     {
@@ -4737,7 +4373,6 @@
       "device": "AP-BRA-Main-04",
       "deviceId": "ap-bra-04",
       "message": "Channel optimization completed",
-      "timestamp": "2026-04-09T12:11:01.235Z",
       "timeAgo": "35m ago"
     },
     {
@@ -4750,7 +4385,6 @@
       "device": "GW-NYC-Core-01",
       "deviceId": "gw-nyc-core-01",
       "message": "DHCP pool utilization above 80%",
-      "timestamp": "2026-04-09T12:11:01.234Z",
       "timeAgo": "40m ago"
     },
     {
@@ -4763,7 +4397,6 @@
       "device": "GW-NYC-Edge-02",
       "deviceId": "gw-nyc-edge-02",
       "message": "Health check passed",
-      "timestamp": "2026-04-09T12:11:01.234Z",
       "timeAgo": "2m ago"
     },
     {
@@ -4776,7 +4409,6 @@
       "device": "GW-NYC-Edge-02",
       "deviceId": "gw-nyc-edge-02",
       "message": "DHCP lease renewed",
-      "timestamp": "2026-04-09T12:11:01.234Z",
       "timeAgo": "12m ago"
     },
     {
@@ -4789,7 +4421,6 @@
       "device": "GW-TOK-Edge-02",
       "deviceId": "gw-tok-edge-02",
       "message": "NTP sync completed",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "2h ago"
     },
     {
@@ -4802,7 +4433,6 @@
       "device": "GW-ATL-Core-01",
       "deviceId": "gw-atl-core-01",
       "message": "Security policy updated",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 45m ago"
     },
     {
@@ -4815,7 +4445,6 @@
       "device": "GW-CHI-Edge-02",
       "deviceId": "gw-chi-edge-02",
       "message": "Traffic report generated",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 15m ago"
     },
     {
@@ -4828,7 +4457,6 @@
       "device": "GW-BER-Core-01",
       "deviceId": "gw-ber-core-01",
       "message": "Backup link test successful",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 15m ago"
     },
     {
@@ -4841,7 +4469,6 @@
       "device": "GW-BER-Edge-02",
       "deviceId": "gw-ber-edge-02",
       "message": "WAN link down - primary circuit failure",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "2h ago"
     },
     {
@@ -4854,7 +4481,6 @@
       "device": "GW-SYD-Edge-02",
       "deviceId": "gw-syd-edge-02",
       "message": "BGP session lost with upstream peer",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 45m ago"
     },
     {
@@ -4867,7 +4493,6 @@
       "device": "SW-NYC-Dist-01",
       "deviceId": "sw-nyc-dist-01",
       "message": "MAC address table overflow",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 15m ago"
     },
     {
@@ -4880,7 +4505,6 @@
       "device": "SW-NYC-Dist-01",
       "deviceId": "sw-nyc-dist-01",
       "message": "PoE device connected",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "2h ago"
     },
     {
@@ -4893,7 +4517,6 @@
       "device": "SW-NYC-Dist-02",
       "deviceId": "sw-nyc-dist-02",
       "message": "Access control list updated",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 45m ago"
     },
     {
@@ -4906,7 +4529,6 @@
       "device": "SW-LON-Dist-01",
       "deviceId": "sw-lon-dist-01",
       "message": "Firmware check completed",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 15m ago"
     },
     {
@@ -4919,7 +4541,6 @@
       "device": "SW-LON-Dist-02",
       "deviceId": "sw-lon-dist-02",
       "message": "Power supply failure",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "2h ago"
     },
     {
@@ -4932,7 +4553,6 @@
       "device": "SW-LON-Access-01",
       "deviceId": "sw-lon-access-01",
       "message": "QoS policy applied",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 30m ago"
     },
     {
@@ -4945,7 +4565,6 @@
       "device": "SW-LON-Access-03",
       "deviceId": "sw-lon-access-03",
       "message": "MAC address learning anomaly",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 45m ago"
     },
     {
@@ -4958,7 +4577,6 @@
       "device": "SW-SFO-Dist-01",
       "deviceId": "sw-sfo-dist-01",
       "message": "VLAN mismatch detected",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 30m ago"
     },
     {
@@ -4971,7 +4589,6 @@
       "device": "SW-SFO-Access-02",
       "deviceId": "sw-sfo-access-02",
       "message": "New MAC address learned",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 45m ago"
     },
     {
@@ -4984,7 +4601,6 @@
       "device": "SW-TOK-Core-01",
       "deviceId": "sw-tok-core-01",
       "message": "Temperature warning (>65C)",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 30m ago"
     },
     {
@@ -4997,7 +4613,6 @@
       "device": "SW-TOK-Core-01",
       "deviceId": "sw-tok-core-01",
       "message": "Broadcast storm warning",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 30m ago"
     },
     {
@@ -5010,7 +4625,6 @@
       "device": "SW-MUM-Core-01",
       "deviceId": "sw-mum-core-01",
       "message": "LLDP neighbor discovered",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "2h ago"
     },
     {
@@ -5023,7 +4637,6 @@
       "device": "SW-MUM-Core-02",
       "deviceId": "sw-mum-core-02",
       "message": "Configuration saved",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 30m ago"
     },
     {
@@ -5036,7 +4649,6 @@
       "device": "SW-MUM-Core-02",
       "deviceId": "sw-mum-core-02",
       "message": "Firmware check completed",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "2h ago"
     },
     {
@@ -5049,7 +4661,6 @@
       "device": "SW-MUM-Dist-02",
       "deviceId": "sw-mum-dist-02",
       "message": "Power supply failure",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 30m ago"
     },
     {
@@ -5062,7 +4673,6 @@
       "device": "SW-MUM-Access-01",
       "deviceId": "sw-mum-access-01",
       "message": "Diagnostic test passed",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 15m ago"
     },
     {
@@ -5075,7 +4685,6 @@
       "device": "SW-MUM-Access-03",
       "deviceId": "sw-mum-access-03",
       "message": "Port came online",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 45m ago"
     },
     {
@@ -5088,7 +4697,6 @@
       "device": "SW-CHI-Dist-01",
       "deviceId": "sw-chi-dist-01",
       "message": "QoS policy applied",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 45m ago"
     },
     {
@@ -5101,7 +4709,6 @@
       "device": "SW-BER-Dist-01",
       "deviceId": "sw-ber-dist-01",
       "message": "LLDP neighbor discovered",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 45m ago"
     },
     {
@@ -5114,7 +4721,6 @@
       "device": "SW-BER-Access-03",
       "deviceId": "sw-ber-access-03",
       "message": "QoS policy applied",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 45m ago"
     },
     {
@@ -5127,7 +4733,6 @@
       "device": "SW-PAR-Core-01",
       "deviceId": "sw-par-core-01",
       "message": "VLAN configuration updated",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 45m ago"
     },
     {
@@ -5140,7 +4745,6 @@
       "device": "SW-PAR-Access-02",
       "deviceId": "sw-par-access-02",
       "message": "QoS policy applied",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 15m ago"
     },
     {
@@ -5153,7 +4757,6 @@
       "device": "SW-SYD-Core-01",
       "deviceId": "sw-syd-core-01",
       "message": "Port came online",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "2h ago"
     },
     {
@@ -5166,7 +4769,6 @@
       "device": "SW-SYD-Core-01",
       "deviceId": "sw-syd-core-01",
       "message": "Trunk negotiation failed",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 30m ago"
     },
     {
@@ -5179,7 +4781,6 @@
       "device": "SW-SYD-Access-01",
       "deviceId": "sw-syd-access-01",
       "message": "STP root bridge election in progress",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 45m ago"
     },
     {
@@ -5192,7 +4793,6 @@
       "device": "SW-BRA-Core-01",
       "deviceId": "sw-bra-core-01",
       "message": "Firmware check completed",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 45m ago"
     },
     {
@@ -5205,7 +4805,6 @@
       "device": "SW-BRA-Access-01",
       "deviceId": "sw-bra-access-01",
       "message": "QoS policy applied",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "2h ago"
     },
     {
@@ -5218,7 +4817,6 @@
       "device": "SW-BRA-Access-01",
       "deviceId": "sw-bra-access-01",
       "message": "QoS policy applied",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "2h ago"
     },
     {
@@ -5231,7 +4829,6 @@
       "device": "SW-BRA-Access-02",
       "deviceId": "sw-bra-access-02",
       "message": "PoE device connected",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 45m ago"
     },
     {
@@ -5244,7 +4841,6 @@
       "device": "AP-NYC-Floor1-03",
       "deviceId": "ap-nyc-f1-03",
       "message": "Radio calibration finished",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 45m ago"
     },
     {
@@ -5257,7 +4853,6 @@
       "device": "AP-NYC-Floor1-03",
       "deviceId": "ap-nyc-f1-03",
       "message": "Channel optimization completed",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 15m ago"
     },
     {
@@ -5270,7 +4865,6 @@
       "device": "AP-NYC-Floor2-02",
       "deviceId": "ap-nyc-f2-02",
       "message": "PoE power insufficient",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 45m ago"
     },
     {
@@ -5283,7 +4877,6 @@
       "device": "AP-NYC-Floor2-03",
       "deviceId": "ap-nyc-f2-03",
       "message": "Load balancing active",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "2h ago"
     },
     {
@@ -5296,7 +4889,6 @@
       "device": "AP-NYC-Floor3-04",
       "deviceId": "ap-nyc-f3-04",
       "message": "WIDS scan completed",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "2h ago"
     },
     {
@@ -5309,7 +4901,6 @@
       "device": "AP-NYC-Floor4-03",
       "deviceId": "ap-nyc-f4-03",
       "message": "Authentication server unreachable",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "2h ago"
     },
     {
@@ -5322,7 +4913,6 @@
       "device": "AP-NYC-Floor4-03",
       "deviceId": "ap-nyc-f4-03",
       "message": "Roaming failures increasing",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 45m ago"
     },
     {
@@ -5335,7 +4925,6 @@
       "device": "AP-NYC-Floor4-04",
       "deviceId": "ap-nyc-f4-04",
       "message": "Rogue AP detected nearby",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 15m ago"
     },
     {
@@ -5348,7 +4937,6 @@
       "device": "AP-LON-WH-03",
       "deviceId": "ap-lon-wh-03",
       "message": "Client deauthenticated normally",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "2h ago"
     },
     {
@@ -5361,7 +4949,6 @@
       "device": "AP-LON-WH-04",
       "deviceId": "ap-lon-wh-04",
       "message": "Radar scan completed",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "2h ago"
     },
     {
@@ -5374,7 +4961,6 @@
       "device": "AP-LON-Office-04",
       "deviceId": "ap-lon-off-04",
       "message": "Spectrum analysis updated",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 30m ago"
     },
     {
@@ -5387,7 +4973,6 @@
       "device": "AP-SFO-Floor1-03",
       "deviceId": "ap-sfo-f1-03",
       "message": "New client associated",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 30m ago"
     },
     {
@@ -5400,7 +4985,6 @@
       "device": "AP-SFO-Floor2-01",
       "deviceId": "ap-sfo-f2-01",
       "message": "PoE power insufficient",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "2h ago"
     },
     {
@@ -5413,7 +4997,6 @@
       "device": "AP-SFO-Floor2-01",
       "deviceId": "ap-sfo-f2-01",
       "message": "Channel optimization completed",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 45m ago"
     },
     {
@@ -5426,7 +5009,6 @@
       "device": "AP-SFO-Floor2-02",
       "deviceId": "ap-sfo-f2-02",
       "message": "Airtime fairness warning",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "2h ago"
     },
     {
@@ -5439,7 +5021,6 @@
       "device": "AP-TOK-Floor1-03",
       "deviceId": "ap-tok-f1-03",
       "message": "Load balancing active",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 45m ago"
     },
     {
@@ -5452,7 +5033,6 @@
       "device": "AP-TOK-Floor1-05",
       "deviceId": "ap-tok-f1-05",
       "message": "Roaming failures increasing",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 45m ago"
     },
     {
@@ -5465,7 +5045,6 @@
       "device": "AP-MUM-Floor1-04",
       "deviceId": "ap-mum-f1-04",
       "message": "Airtime fairness warning",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 30m ago"
     },
     {
@@ -5478,7 +5057,6 @@
       "device": "AP-MUM-Floor2-02",
       "deviceId": "ap-mum-f2-02",
       "message": "Spectrum analysis updated",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "2h ago"
     },
     {
@@ -5491,7 +5069,6 @@
       "device": "AP-MUM-Floor2-03",
       "deviceId": "ap-mum-f2-03",
       "message": "Client deauthenticated normally",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 45m ago"
     },
     {
@@ -5504,7 +5081,6 @@
       "device": "AP-MUM-Floor2-03",
       "deviceId": "ap-mum-f2-03",
       "message": "DFS radar detected - channel change required",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "2h ago"
     },
     {
@@ -5517,7 +5093,6 @@
       "device": "AP-MUM-Floor3-02",
       "deviceId": "ap-mum-f3-02",
       "message": "Airtime fairness warning",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 30m ago"
     },
     {
@@ -5530,7 +5105,6 @@
       "device": "AP-MUM-Floor3-04",
       "deviceId": "ap-mum-f3-04",
       "message": "Configuration sync completed",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 30m ago"
     },
     {
@@ -5543,7 +5117,6 @@
       "device": "AP-MUM-Floor3-05",
       "deviceId": "ap-mum-f3-05",
       "message": "Radar scan completed",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 15m ago"
     },
     {
@@ -5556,7 +5129,6 @@
       "device": "AP-ATL-Store-01",
       "deviceId": "ap-atl-01",
       "message": "WIDS scan completed",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 30m ago"
     },
     {
@@ -5569,7 +5141,6 @@
       "device": "AP-ATL-Store-05",
       "deviceId": "ap-atl-05",
       "message": "Configuration sync completed",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "2h ago"
     },
     {
@@ -5582,7 +5153,6 @@
       "device": "AP-CHI-Floor1-04",
       "deviceId": "ap-chi-f1-04",
       "message": "WIDS scan completed",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "2h ago"
     },
     {
@@ -5595,7 +5165,6 @@
       "device": "AP-CHI-Floor2-04",
       "deviceId": "ap-chi-f2-04",
       "message": "Client deauthenticated normally",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 15m ago"
     },
     {
@@ -5608,7 +5177,6 @@
       "device": "AP-BER-Floor1-01",
       "deviceId": "ap-ber-f1-01",
       "message": "Co-channel interference detected",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 15m ago"
     },
     {
@@ -5621,7 +5189,6 @@
       "device": "AP-BER-Floor2-03",
       "deviceId": "ap-ber-f2-03",
       "message": "WIDS scan completed",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 30m ago"
     },
     {
@@ -5634,7 +5201,6 @@
       "device": "AP-BER-Floor2-04",
       "deviceId": "ap-ber-f2-04",
       "message": "Roaming failures increasing",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "2h ago"
     },
     {
@@ -5647,7 +5213,6 @@
       "device": "AP-PAR-Floor1-01",
       "deviceId": "ap-par-f1-01",
       "message": "Configuration sync completed",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 45m ago"
     },
     {
@@ -5660,7 +5225,6 @@
       "device": "AP-PAR-Floor2-02",
       "deviceId": "ap-par-f2-02",
       "message": "Power level adjusted",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 15m ago"
     },
     {
@@ -5673,7 +5237,6 @@
       "device": "AP-SYD-Floor1-02",
       "deviceId": "ap-syd-f1-02",
       "message": "Certificate validation failed",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 30m ago"
     },
     {
@@ -5686,7 +5249,6 @@
       "device": "AP-SYD-Floor2-04",
       "deviceId": "ap-syd-f2-04",
       "message": "Client deauthenticated normally",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 45m ago"
     },
     {
@@ -5699,7 +5261,6 @@
       "device": "AP-BRA-Main-02",
       "deviceId": "ap-bra-02",
       "message": "Radio calibration finished",
-      "timestamp": "2026-04-09T11:11:01.235Z",
       "timeAgo": "1h 15m ago"
     },
     {
@@ -5712,7 +5273,6 @@
       "device": "GW-NYC-Core-01",
       "deviceId": "gw-nyc-core-01",
       "message": "VPN tunnel rekeying failures",
-      "timestamp": "2026-04-09T11:11:01.234Z",
       "timeAgo": "1h 45m ago"
     },
     {
@@ -5725,7 +5285,6 @@
       "device": "GW-NJ-Backup",
       "deviceId": "gw-nj-backup",
       "message": "Interface statistics reset",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "3h ago"
     },
     {
@@ -5738,7 +5297,6 @@
       "device": "GW-CHI-Core-01",
       "deviceId": "gw-chi-core-01",
       "message": "Secondary WAN failover active",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "3h ago"
     },
     {
@@ -5751,7 +5309,6 @@
       "device": "GW-PAR-Core-01",
       "deviceId": "gw-par-core-01",
       "message": "Scheduled maintenance window starting",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "2h 30m ago"
     },
     {
@@ -5764,7 +5321,6 @@
       "device": "GW-BRA-Core-01",
       "deviceId": "gw-bra-core-01",
       "message": "Scheduled maintenance window starting",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "2h 30m ago"
     },
     {
@@ -5777,7 +5333,6 @@
       "device": "SW-NYC-Access-03",
       "deviceId": "sw-nyc-access-03",
       "message": "Temperature warning (>65C)",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "3h ago"
     },
     {
@@ -5790,7 +5345,6 @@
       "device": "SW-LON-Access-02",
       "deviceId": "sw-lon-access-02",
       "message": "Stack member disconnected",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "3h ago"
     },
     {
@@ -5803,7 +5357,6 @@
       "device": "SW-SFO-Access-01",
       "deviceId": "sw-sfo-access-01",
       "message": "Firmware check completed",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "3h ago"
     },
     {
@@ -5816,7 +5369,6 @@
       "device": "SW-MUM-Core-02",
       "deviceId": "sw-mum-core-02",
       "message": "Port came online",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "2h 30m ago"
     },
     {
@@ -5829,7 +5381,6 @@
       "device": "SW-MUM-Access-02",
       "deviceId": "sw-mum-access-02",
       "message": "QoS policy applied",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "2h 30m ago"
     },
     {
@@ -5842,7 +5393,6 @@
       "device": "SW-MUM-Access-02",
       "deviceId": "sw-mum-access-02",
       "message": "Port flapping detected",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "2h 30m ago"
     },
     {
@@ -5855,7 +5405,6 @@
       "device": "SW-ATL-Access-02",
       "deviceId": "sw-atl-access-02",
       "message": "High port utilization (>80%)",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "2h 30m ago"
     },
     {
@@ -5868,7 +5417,6 @@
       "device": "SW-CHI-Access-03",
       "deviceId": "sw-chi-access-03",
       "message": "High port utilization (>80%)",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "2h 30m ago"
     },
     {
@@ -5881,7 +5429,6 @@
       "device": "AP-NYC-Floor1-01",
       "deviceId": "ap-nyc-f1-01",
       "message": "Power level adjusted",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "3h ago"
     },
     {
@@ -5894,7 +5441,6 @@
       "device": "AP-NYC-Floor2-04",
       "deviceId": "ap-nyc-f2-04",
       "message": "Radar scan completed",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "2h 30m ago"
     },
     {
@@ -5907,7 +5453,6 @@
       "device": "AP-LON-WH-01",
       "deviceId": "ap-lon-wh-01",
       "message": "Client authentication failures",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "3h ago"
     },
     {
@@ -5920,7 +5465,6 @@
       "device": "AP-LON-WH-01",
       "deviceId": "ap-lon-wh-01",
       "message": "New client associated",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "2h 30m ago"
     },
     {
@@ -5933,7 +5477,6 @@
       "device": "AP-LON-Office-05",
       "deviceId": "ap-lon-off-05",
       "message": "Interference mitigation active",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "2h 30m ago"
     },
     {
@@ -5946,7 +5489,6 @@
       "device": "AP-SFO-Floor1-04",
       "deviceId": "ap-sfo-f1-04",
       "message": "WIDS scan completed",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "2h 30m ago"
     },
     {
@@ -5959,7 +5501,6 @@
       "device": "AP-TOK-Floor1-02",
       "deviceId": "ap-tok-f1-02",
       "message": "Spectrum analysis updated",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "2h 30m ago"
     },
     {
@@ -5972,7 +5513,6 @@
       "device": "AP-TOK-Floor2-02",
       "deviceId": "ap-tok-f2-02",
       "message": "Channel optimization completed",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "3h ago"
     },
     {
@@ -5985,7 +5525,6 @@
       "device": "AP-TOK-Floor2-02",
       "deviceId": "ap-tok-f2-02",
       "message": "Radar scan completed",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "2h 30m ago"
     },
     {
@@ -5998,7 +5537,6 @@
       "device": "AP-MUM-Floor1-01",
       "deviceId": "ap-mum-f1-01",
       "message": "Roaming failures increasing",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "2h 30m ago"
     },
     {
@@ -6011,7 +5549,6 @@
       "device": "AP-MUM-Floor1-02",
       "deviceId": "ap-mum-f1-02",
       "message": "Radar scan completed",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "3h ago"
     },
     {
@@ -6024,7 +5561,6 @@
       "device": "AP-MUM-Floor1-05",
       "deviceId": "ap-mum-f1-05",
       "message": "Power level adjusted",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "2h 30m ago"
     },
     {
@@ -6037,7 +5573,6 @@
       "device": "AP-MUM-Floor2-02",
       "deviceId": "ap-mum-f2-02",
       "message": "Radio hardware failure",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "3h ago"
     },
     {
@@ -6050,7 +5585,6 @@
       "device": "AP-ATL-Store-02",
       "deviceId": "ap-atl-02",
       "message": "Memory critical",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "3h ago"
     },
     {
@@ -6063,7 +5597,6 @@
       "device": "AP-ATL-Store-04",
       "deviceId": "ap-atl-04",
       "message": "Power level adjusted",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "2h 30m ago"
     },
     {
@@ -6076,7 +5609,6 @@
       "device": "AP-ATL-Store-05",
       "deviceId": "ap-atl-05",
       "message": "Rogue AP detected nearby",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "2h 30m ago"
     },
     {
@@ -6089,7 +5621,6 @@
       "device": "AP-CHI-Floor2-01",
       "deviceId": "ap-chi-f2-01",
       "message": "Client deauthenticated normally",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "3h ago"
     },
     {
@@ -6102,7 +5633,6 @@
       "device": "AP-CHI-Floor2-04",
       "deviceId": "ap-chi-f2-04",
       "message": "Power level adjusted",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "2h 30m ago"
     },
     {
@@ -6115,7 +5645,6 @@
       "device": "AP-CHI-Floor2-05",
       "deviceId": "ap-chi-f2-05",
       "message": "Power level adjusted",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "3h ago"
     },
     {
@@ -6128,7 +5657,6 @@
       "device": "AP-BER-Floor1-03",
       "deviceId": "ap-ber-f1-03",
       "message": "Radar scan completed",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "3h ago"
     },
     {
@@ -6141,7 +5669,6 @@
       "device": "AP-BER-Floor1-05",
       "deviceId": "ap-ber-f1-05",
       "message": "WIDS scan completed",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "2h 30m ago"
     },
     {
@@ -6154,7 +5681,6 @@
       "device": "AP-BER-Floor1-05",
       "deviceId": "ap-ber-f1-05",
       "message": "PoE power insufficient",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "2h 30m ago"
     },
     {
@@ -6167,7 +5693,6 @@
       "device": "AP-BER-Floor2-05",
       "deviceId": "ap-ber-f2-05",
       "message": "Client authentication failures",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "3h ago"
     },
     {
@@ -6180,7 +5705,6 @@
       "device": "AP-PAR-Floor1-01",
       "deviceId": "ap-par-f1-01",
       "message": "Certificate validation failed",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "3h ago"
     },
     {
@@ -6193,7 +5717,6 @@
       "device": "AP-PAR-Floor1-01",
       "deviceId": "ap-par-f1-01",
       "message": "WIDS scan completed",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "2h 30m ago"
     },
     {
@@ -6206,7 +5729,6 @@
       "device": "AP-PAR-Floor1-02",
       "deviceId": "ap-par-f1-02",
       "message": "Roaming failures increasing",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "2h 30m ago"
     },
     {
@@ -6219,7 +5741,6 @@
       "device": "AP-PAR-Floor1-05",
       "deviceId": "ap-par-f1-05",
       "message": "Interference mitigation active",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "3h ago"
     },
     {
@@ -6232,7 +5753,6 @@
       "device": "AP-PAR-Floor2-01",
       "deviceId": "ap-par-f2-01",
       "message": "Client authentication failures",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "3h ago"
     },
     {
@@ -6245,7 +5765,6 @@
       "device": "AP-PAR-Floor2-03",
       "deviceId": "ap-par-f2-03",
       "message": "Low SNR on multiple clients",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "2h 30m ago"
     },
     {
@@ -6258,7 +5777,6 @@
       "device": "AP-PAR-Floor2-03",
       "deviceId": "ap-par-f2-03",
       "message": "Channel optimization completed",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "3h ago"
     },
     {
@@ -6271,7 +5789,6 @@
       "device": "AP-SYD-Floor2-02",
       "deviceId": "ap-syd-f2-02",
       "message": "Band steering failures",
-      "timestamp": "2026-04-09T10:11:01.235Z",
       "timeAgo": "2h 30m ago"
     },
     {
@@ -6284,7 +5801,6 @@
       "device": "SW-NYC-Core-02",
       "deviceId": "sw-nyc-core-02",
       "message": "VLAN mismatch detected",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "3h 30m ago"
     },
     {
@@ -6297,7 +5813,6 @@
       "device": "SW-NYC-Dist-01",
       "deviceId": "sw-nyc-dist-01",
       "message": "LLDP neighbor discovered",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "3h 30m ago"
     },
     {
@@ -6310,7 +5825,6 @@
       "device": "SW-LON-Core-01",
       "deviceId": "sw-lon-core-01",
       "message": "Configuration saved",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "3h 30m ago"
     },
     {
@@ -6323,7 +5837,6 @@
       "device": "SW-LON-Access-03",
       "deviceId": "sw-lon-access-03",
       "message": "QoS policy applied",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "3h 30m ago"
     },
     {
@@ -6336,7 +5849,6 @@
       "device": "SW-SFO-Dist-01",
       "deviceId": "sw-sfo-dist-01",
       "message": "PoE power budget exceeded",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "3h 30m ago"
     },
     {
@@ -6349,7 +5861,6 @@
       "device": "SW-TOK-Dist-01",
       "deviceId": "sw-tok-dist-01",
       "message": "VLAN configuration updated",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "4h ago"
     },
     {
@@ -6362,7 +5873,6 @@
       "device": "SW-MUM-Access-03",
       "deviceId": "sw-mum-access-03",
       "message": "VLAN configuration updated",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "4h ago"
     },
     {
@@ -6375,7 +5885,6 @@
       "device": "SW-BER-Core-01",
       "deviceId": "sw-ber-core-01",
       "message": "Configuration saved",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "3h 30m ago"
     },
     {
@@ -6388,7 +5897,6 @@
       "device": "SW-BER-Access-02",
       "deviceId": "sw-ber-access-02",
       "message": "Firmware check completed",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "4h ago"
     },
     {
@@ -6401,7 +5909,6 @@
       "device": "SW-BRA-Access-02",
       "deviceId": "sw-bra-access-02",
       "message": "Port error rate elevated",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "4h ago"
     },
     {
@@ -6414,7 +5921,6 @@
       "device": "AP-NYC-Floor1-01",
       "deviceId": "ap-nyc-f1-01",
       "message": "Interference mitigation active",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "3h 30m ago"
     },
     {
@@ -6427,7 +5933,6 @@
       "device": "AP-NYC-Floor1-02",
       "deviceId": "ap-nyc-f1-02",
       "message": "Client deauthenticated normally",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "3h 30m ago"
     },
     {
@@ -6440,7 +5945,6 @@
       "device": "AP-NYC-Floor1-04",
       "deviceId": "ap-nyc-f1-04",
       "message": "Power level adjusted",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "4h ago"
     },
     {
@@ -6453,7 +5957,6 @@
       "device": "AP-NYC-Floor2-03",
       "deviceId": "ap-nyc-f2-03",
       "message": "Load balancing active",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "4h ago"
     },
     {
@@ -6466,7 +5969,6 @@
       "device": "AP-NYC-Floor3-01",
       "deviceId": "ap-nyc-f3-01",
       "message": "Load balancing active",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "3h 30m ago"
     },
     {
@@ -6479,7 +5981,6 @@
       "device": "AP-NYC-Floor4-04",
       "deviceId": "ap-nyc-f4-04",
       "message": "Channel congestion detected",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "4h ago"
     },
     {
@@ -6492,7 +5993,6 @@
       "device": "AP-LON-WH-04",
       "deviceId": "ap-lon-wh-04",
       "message": "Band steering failures",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "3h 30m ago"
     },
     {
@@ -6505,7 +6005,6 @@
       "device": "AP-LON-WH-05",
       "deviceId": "ap-lon-wh-05",
       "message": "Low SNR on multiple clients",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "3h 30m ago"
     },
     {
@@ -6518,7 +6017,6 @@
       "device": "AP-SFO-Floor1-02",
       "deviceId": "ap-sfo-f1-02",
       "message": "Radar scan completed",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "4h ago"
     },
     {
@@ -6531,7 +6029,6 @@
       "device": "AP-SFO-Floor1-02",
       "deviceId": "ap-sfo-f1-02",
       "message": "Client authentication failures",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "3h 30m ago"
     },
     {
@@ -6544,7 +6041,6 @@
       "device": "AP-SFO-Floor2-04",
       "deviceId": "ap-sfo-f2-04",
       "message": "Band steering failures",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "3h 30m ago"
     },
     {
@@ -6557,7 +6053,6 @@
       "device": "AP-TOK-Floor1-02",
       "deviceId": "ap-tok-f1-02",
       "message": "New client associated",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "4h ago"
     },
     {
@@ -6570,7 +6065,6 @@
       "device": "AP-MUM-Floor1-01",
       "deviceId": "ap-mum-f1-01",
       "message": "Client roamed successfully",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "3h 30m ago"
     },
     {
@@ -6583,7 +6077,6 @@
       "device": "AP-MUM-Floor1-04",
       "deviceId": "ap-mum-f1-04",
       "message": "WIDS scan completed",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "3h 30m ago"
     },
     {
@@ -6596,7 +6089,6 @@
       "device": "AP-MUM-Floor1-05",
       "deviceId": "ap-mum-f1-05",
       "message": "Authentication server unreachable",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "4h ago"
     },
     {
@@ -6609,7 +6101,6 @@
       "device": "AP-ATL-Back-01",
       "deviceId": "ap-atl-06",
       "message": "Low SNR on multiple clients",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "3h 30m ago"
     },
     {
@@ -6622,7 +6113,6 @@
       "device": "AP-CHI-Floor1-02",
       "deviceId": "ap-chi-f1-02",
       "message": "Spectrum analysis updated",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "3h 30m ago"
     },
     {
@@ -6635,7 +6125,6 @@
       "device": "AP-CHI-Floor2-03",
       "deviceId": "ap-chi-f2-03",
       "message": "Co-channel interference detected",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "3h 30m ago"
     },
     {
@@ -6648,7 +6137,6 @@
       "device": "AP-BER-Floor1-05",
       "deviceId": "ap-ber-f1-05",
       "message": "Airtime fairness warning",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "3h 30m ago"
     },
     {
@@ -6661,7 +6149,6 @@
       "device": "AP-BER-Floor2-01",
       "deviceId": "ap-ber-f2-01",
       "message": "Client authentication failures",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "4h ago"
     },
     {
@@ -6674,7 +6161,6 @@
       "device": "AP-BER-Floor2-03",
       "deviceId": "ap-ber-f2-03",
       "message": "Spectrum analysis updated",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "3h 30m ago"
     },
     {
@@ -6687,7 +6173,6 @@
       "device": "AP-BER-Floor2-03",
       "deviceId": "ap-ber-f2-03",
       "message": "Authentication server unreachable",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "3h 30m ago"
     },
     {
@@ -6700,7 +6185,6 @@
       "device": "AP-BER-Floor2-04",
       "deviceId": "ap-ber-f2-04",
       "message": "WIDS scan completed",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "3h 30m ago"
     },
     {
@@ -6713,7 +6197,6 @@
       "device": "AP-PAR-Floor1-01",
       "deviceId": "ap-par-f1-01",
       "message": "DFS radar detected - channel change required",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "3h 30m ago"
     },
     {
@@ -6726,7 +6209,6 @@
       "device": "AP-PAR-Floor1-04",
       "deviceId": "ap-par-f1-04",
       "message": "Interference mitigation active",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "4h ago"
     },
     {
@@ -6739,7 +6221,6 @@
       "device": "AP-PAR-Floor1-05",
       "deviceId": "ap-par-f1-05",
       "message": "Channel congestion detected",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "3h 30m ago"
     },
     {
@@ -6752,7 +6233,6 @@
       "device": "AP-SYD-Floor1-01",
       "deviceId": "ap-syd-f1-01",
       "message": "Channel optimization completed",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "4h ago"
     },
     {
@@ -6765,7 +6245,6 @@
       "device": "AP-SYD-Floor1-03",
       "deviceId": "ap-syd-f1-03",
       "message": "Spectrum analysis updated",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "4h ago"
     },
     {
@@ -6778,7 +6257,6 @@
       "device": "AP-BRA-Main-03",
       "deviceId": "ap-bra-03",
       "message": "Client roamed successfully",
-      "timestamp": "2026-04-09T09:11:01.235Z",
       "timeAgo": "4h ago"
     },
     {
@@ -6791,7 +6269,6 @@
       "device": "GW-NYC-Core-01",
       "deviceId": "gw-nyc-core-01",
       "message": "Scheduled maintenance window starting",
-      "timestamp": "2026-04-09T09:11:01.234Z",
       "timeAgo": "3h 30m ago"
     },
     {
@@ -6804,7 +6281,6 @@
       "device": "GW-NYC-Core-01",
       "deviceId": "gw-nyc-core-01",
       "message": "VPN tunnel rekeying failures",
-      "timestamp": "2026-04-09T09:11:01.234Z",
       "timeAgo": "3h 30m ago"
     },
     {
@@ -6817,7 +6293,6 @@
       "device": "GW-NJ-Primary",
       "deviceId": "gw-nj-primary",
       "message": "NTP sync completed",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "4h 30m ago"
     },
     {
@@ -6830,7 +6305,6 @@
       "device": "GW-NJ-Backup",
       "deviceId": "gw-nj-backup",
       "message": "Security policy updated",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "5h ago"
     },
     {
@@ -6843,7 +6317,6 @@
       "device": "GW-SFO-Backup",
       "deviceId": "gw-sfo-backup",
       "message": "Critical firmware vulnerability detected",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "5h ago"
     },
     {
@@ -6856,7 +6329,6 @@
       "device": "GW-ATL-Core-01",
       "deviceId": "gw-atl-core-01",
       "message": "Log rotation completed",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "4h 30m ago"
     },
     {
@@ -6869,7 +6341,6 @@
       "device": "GW-CHI-Edge-02",
       "deviceId": "gw-chi-edge-02",
       "message": "DHCP lease renewed",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "5h ago"
     },
     {
@@ -6882,7 +6353,6 @@
       "device": "GW-BER-Edge-02",
       "deviceId": "gw-ber-edge-02",
       "message": "Scheduled maintenance window starting",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "4h 30m ago"
     },
     {
@@ -6895,7 +6365,6 @@
       "device": "GW-PAR-Core-01",
       "deviceId": "gw-par-core-01",
       "message": "Firmware update available",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "5h ago"
     },
     {
@@ -6908,7 +6377,6 @@
       "device": "GW-SYD-Core-01",
       "deviceId": "gw-syd-core-01",
       "message": "Health check passed",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "5h ago"
     },
     {
@@ -6921,7 +6389,6 @@
       "device": "GW-SYD-Edge-02",
       "deviceId": "gw-syd-edge-02",
       "message": "Secondary WAN failover active",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "4h 30m ago"
     },
     {
@@ -6934,7 +6401,6 @@
       "device": "SW-NYC-Core-02",
       "deviceId": "sw-nyc-core-02",
       "message": "Trunk port negotiated successfully",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "4h 30m ago"
     },
     {
@@ -6947,7 +6413,6 @@
       "device": "SW-LON-Access-01",
       "deviceId": "sw-lon-access-01",
       "message": "STP root bridge election in progress",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "5h ago"
     },
     {
@@ -6960,7 +6425,6 @@
       "device": "SW-SFO-Access-01",
       "deviceId": "sw-sfo-access-01",
       "message": "LLDP neighbor discovered",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "5h ago"
     },
     {
@@ -6973,7 +6437,6 @@
       "device": "SW-TOK-Access-01",
       "deviceId": "sw-tok-access-01",
       "message": "Trunk port negotiated successfully",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "4h 30m ago"
     },
     {
@@ -6986,7 +6449,6 @@
       "device": "SW-ATL-Core-01",
       "deviceId": "sw-atl-core-01",
       "message": "PoE device connected",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "4h 30m ago"
     },
     {
@@ -6999,7 +6461,6 @@
       "device": "SW-CHI-Dist-01",
       "deviceId": "sw-chi-dist-01",
       "message": "Port error rate elevated",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "4h 30m ago"
     },
     {
@@ -7012,7 +6473,6 @@
       "device": "SW-BER-Core-01",
       "deviceId": "sw-ber-core-01",
       "message": "Port flapping detected",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "5h ago"
     },
     {
@@ -7025,7 +6485,6 @@
       "device": "SW-BER-Access-02",
       "deviceId": "sw-ber-access-02",
       "message": "QoS policy applied",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "4h 30m ago"
     },
     {
@@ -7038,7 +6497,6 @@
       "device": "SW-PAR-Access-01",
       "deviceId": "sw-par-access-01",
       "message": "Diagnostic test passed",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "5h ago"
     },
     {
@@ -7051,7 +6509,6 @@
       "device": "SW-PAR-Access-01",
       "deviceId": "sw-par-access-01",
       "message": "Port statistics cleared",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "4h 30m ago"
     },
     {
@@ -7064,7 +6521,6 @@
       "device": "SW-PAR-Access-01",
       "deviceId": "sw-par-access-01",
       "message": "Temperature critical (>75C)",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "4h 30m ago"
     },
     {
@@ -7077,7 +6533,6 @@
       "device": "SW-SYD-Dist-01",
       "deviceId": "sw-syd-dist-01",
       "message": "Spanning tree loop detected",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "5h ago"
     },
     {
@@ -7090,7 +6545,6 @@
       "device": "SW-SYD-Access-02",
       "deviceId": "sw-syd-access-02",
       "message": "MAC address table overflow",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "5h ago"
     },
     {
@@ -7103,7 +6557,6 @@
       "device": "AP-NYC-Floor1-01",
       "deviceId": "ap-nyc-f1-01",
       "message": "Low SNR on multiple clients",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "4h 30m ago"
     },
     {
@@ -7116,7 +6569,6 @@
       "device": "AP-NYC-Floor1-03",
       "deviceId": "ap-nyc-f1-03",
       "message": "Low SNR on multiple clients",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "4h 30m ago"
     },
     {
@@ -7129,7 +6581,6 @@
       "device": "AP-NYC-Floor1-04",
       "deviceId": "ap-nyc-f1-04",
       "message": "Client authentication failures",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "5h ago"
     },
     {
@@ -7142,7 +6593,6 @@
       "device": "AP-NYC-Floor2-01",
       "deviceId": "ap-nyc-f2-01",
       "message": "Firmware corruption detected",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "5h ago"
     },
     {
@@ -7155,7 +6605,6 @@
       "device": "AP-NYC-Floor2-04",
       "deviceId": "ap-nyc-f2-04",
       "message": "Channel optimization completed",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "5h ago"
     },
     {
@@ -7168,7 +6617,6 @@
       "device": "AP-NYC-Floor3-04",
       "deviceId": "ap-nyc-f3-04",
       "message": "New client associated",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "4h 30m ago"
     },
     {
@@ -7181,7 +6629,6 @@
       "device": "AP-NYC-Floor4-01",
       "deviceId": "ap-nyc-f4-01",
       "message": "Airtime fairness warning",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "4h 30m ago"
     },
     {
@@ -7194,7 +6641,6 @@
       "device": "AP-NYC-Floor4-02",
       "deviceId": "ap-nyc-f4-02",
       "message": "WIDS scan completed",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "4h 30m ago"
     },
     {
@@ -7207,7 +6653,6 @@
       "device": "AP-LON-WH-02",
       "deviceId": "ap-lon-wh-02",
       "message": "New client associated",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "4h 30m ago"
     },
     {
@@ -7220,7 +6665,6 @@
       "device": "AP-LON-WH-05",
       "deviceId": "ap-lon-wh-05",
       "message": "Certificate validation failed",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "4h 30m ago"
     },
     {
@@ -7233,7 +6677,6 @@
       "device": "AP-LON-Office-03",
       "deviceId": "ap-lon-off-03",
       "message": "High channel utilization (>70%)",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "5h ago"
     },
     {
@@ -7246,7 +6689,6 @@
       "device": "AP-LON-Office-05",
       "deviceId": "ap-lon-off-05",
       "message": "Power level adjusted",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "5h ago"
     },
     {
@@ -7259,7 +6701,6 @@
       "device": "AP-SFO-Floor1-04",
       "deviceId": "ap-sfo-f1-04",
       "message": "Radio calibration finished",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "5h ago"
     },
     {
@@ -7272,7 +6713,6 @@
       "device": "AP-TOK-Floor2-02",
       "deviceId": "ap-tok-f2-02",
       "message": "Radio calibration finished",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "4h 30m ago"
     },
     {
@@ -7285,7 +6725,6 @@
       "device": "AP-MUM-Floor3-01",
       "deviceId": "ap-mum-f3-01",
       "message": "Client roamed successfully",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "5h ago"
     },
     {
@@ -7298,7 +6737,6 @@
       "device": "AP-MUM-Floor3-02",
       "deviceId": "ap-mum-f3-02",
       "message": "Power level adjusted",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "4h 30m ago"
     },
     {
@@ -7311,7 +6749,6 @@
       "device": "AP-MUM-Floor3-03",
       "deviceId": "ap-mum-f3-03",
       "message": "Co-channel interference detected",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "5h ago"
     },
     {
@@ -7324,7 +6761,6 @@
       "device": "AP-MUM-Floor3-04",
       "deviceId": "ap-mum-f3-04",
       "message": "Spectrum analysis updated",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "5h ago"
     },
     {
@@ -7337,7 +6773,6 @@
       "device": "AP-ATL-Store-04",
       "deviceId": "ap-atl-04",
       "message": "Load balancing active",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "5h ago"
     },
     {
@@ -7350,7 +6785,6 @@
       "device": "AP-CHI-Floor1-01",
       "deviceId": "ap-chi-f1-01",
       "message": "Band steering failures",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "4h 30m ago"
     },
     {
@@ -7363,7 +6797,6 @@
       "device": "AP-BER-Floor2-02",
       "deviceId": "ap-ber-f2-02",
       "message": "Interference mitigation active",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "5h ago"
     },
     {
@@ -7376,7 +6809,6 @@
       "device": "AP-BER-Floor2-03",
       "deviceId": "ap-ber-f2-03",
       "message": "Client deauthenticated normally",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "4h 30m ago"
     },
     {
@@ -7389,7 +6821,6 @@
       "device": "AP-BER-Floor2-05",
       "deviceId": "ap-ber-f2-05",
       "message": "Radar scan completed",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "5h ago"
     },
     {
@@ -7402,7 +6833,6 @@
       "device": "AP-SYD-Floor1-04",
       "deviceId": "ap-syd-f1-04",
       "message": "Co-channel interference detected",
-      "timestamp": "2026-04-09T08:11:01.235Z",
       "timeAgo": "5h ago"
     },
     {
@@ -7415,7 +6845,6 @@
       "device": "GW-ATL-Edge-02",
       "deviceId": "gw-atl-edge-02",
       "message": "Configuration backup completed",
-      "timestamp": "2026-04-09T07:11:01.235Z",
       "timeAgo": "6h ago"
     },
     {
@@ -7428,7 +6857,6 @@
       "device": "GW-PAR-Edge-02",
       "deviceId": "gw-par-edge-02",
       "message": "Critical firmware vulnerability detected",
-      "timestamp": "2026-04-09T07:11:01.235Z",
       "timeAgo": "6h ago"
     },
     {
@@ -7441,7 +6869,6 @@
       "device": "GW-BRA-Core-01",
       "deviceId": "gw-bra-core-01",
       "message": "Configuration backup completed",
-      "timestamp": "2026-04-09T07:11:01.235Z",
       "timeAgo": "6h ago"
     },
     {
@@ -7454,7 +6881,6 @@
       "device": "SW-NYC-Access-02",
       "deviceId": "sw-nyc-access-02",
       "message": "Access control list updated",
-      "timestamp": "2026-04-09T07:11:01.235Z",
       "timeAgo": "6h ago"
     },
     {
@@ -7467,7 +6893,6 @@
       "device": "SW-LON-Dist-01",
       "deviceId": "sw-lon-dist-01",
       "message": "Port came online",
-      "timestamp": "2026-04-09T07:11:01.235Z",
       "timeAgo": "6h ago"
     },
     {
@@ -7480,7 +6905,6 @@
       "device": "SW-LON-Dist-02",
       "deviceId": "sw-lon-dist-02",
       "message": "PoE device connected",
-      "timestamp": "2026-04-09T07:11:01.235Z",
       "timeAgo": "6h ago"
     },
     {
@@ -7493,7 +6917,6 @@
       "device": "SW-MUM-Core-01",
       "deviceId": "sw-mum-core-01",
       "message": "High port utilization (>80%)",
-      "timestamp": "2026-04-09T07:11:01.235Z",
       "timeAgo": "6h ago"
     },
     {
@@ -7506,7 +6929,6 @@
       "device": "SW-MUM-Access-01",
       "deviceId": "sw-mum-access-01",
       "message": "VLAN mismatch detected",
-      "timestamp": "2026-04-09T07:11:01.235Z",
       "timeAgo": "6h ago"
     },
     {
@@ -7519,7 +6941,6 @@
       "device": "SW-BER-Access-01",
       "deviceId": "sw-ber-access-01",
       "message": "Diagnostic test passed",
-      "timestamp": "2026-04-09T07:11:01.235Z",
       "timeAgo": "6h ago"
     },
     {
@@ -7532,7 +6953,6 @@
       "device": "AP-NYC-Floor1-02",
       "deviceId": "ap-nyc-f1-02",
       "message": "Client deauthenticated normally",
-      "timestamp": "2026-04-09T07:11:01.235Z",
       "timeAgo": "6h ago"
     },
     {
@@ -7545,7 +6965,6 @@
       "device": "AP-NYC-Floor3-02",
       "deviceId": "ap-nyc-f3-02",
       "message": "WIDS scan completed",
-      "timestamp": "2026-04-09T07:11:01.235Z",
       "timeAgo": "6h ago"
     },
     {
@@ -7558,7 +6977,6 @@
       "device": "AP-NYC-Floor4-01",
       "deviceId": "ap-nyc-f4-01",
       "message": "Channel congestion detected",
-      "timestamp": "2026-04-09T07:11:01.235Z",
       "timeAgo": "6h ago"
     },
     {
@@ -7571,7 +6989,6 @@
       "device": "AP-LON-WH-05",
       "deviceId": "ap-lon-wh-05",
       "message": "Certificate validation failed",
-      "timestamp": "2026-04-09T07:11:01.235Z",
       "timeAgo": "6h ago"
     },
     {
@@ -7584,7 +7001,6 @@
       "device": "AP-SFO-Floor2-01",
       "deviceId": "ap-sfo-f2-01",
       "message": "Interference mitigation active",
-      "timestamp": "2026-04-09T07:11:01.235Z",
       "timeAgo": "6h ago"
     },
     {
@@ -7597,7 +7013,6 @@
       "device": "AP-SFO-Floor2-02",
       "deviceId": "ap-sfo-f2-02",
       "message": "Low SNR on multiple clients",
-      "timestamp": "2026-04-09T07:11:01.235Z",
       "timeAgo": "6h ago"
     },
     {
@@ -7610,7 +7025,6 @@
       "device": "AP-SFO-Floor2-04",
       "deviceId": "ap-sfo-f2-04",
       "message": "Load balancing active",
-      "timestamp": "2026-04-09T07:11:01.235Z",
       "timeAgo": "6h ago"
     },
     {
@@ -7623,7 +7037,6 @@
       "device": "AP-TOK-Floor1-03",
       "deviceId": "ap-tok-f1-03",
       "message": "Client authentication failures",
-      "timestamp": "2026-04-09T07:11:01.235Z",
       "timeAgo": "6h ago"
     },
     {
@@ -7636,7 +7049,6 @@
       "device": "AP-TOK-Floor1-05",
       "deviceId": "ap-tok-f1-05",
       "message": "Load balancing active",
-      "timestamp": "2026-04-09T07:11:01.235Z",
       "timeAgo": "6h ago"
     },
     {
@@ -7649,7 +7061,6 @@
       "device": "AP-TOK-Floor1-05",
       "deviceId": "ap-tok-f1-05",
       "message": "Power level adjusted",
-      "timestamp": "2026-04-09T07:11:01.235Z",
       "timeAgo": "6h ago"
     },
     {
@@ -7662,7 +7073,6 @@
       "device": "AP-ATL-Store-01",
       "deviceId": "ap-atl-01",
       "message": "Client authentication failures",
-      "timestamp": "2026-04-09T07:11:01.235Z",
       "timeAgo": "6h ago"
     },
     {
@@ -7675,7 +7085,6 @@
       "device": "AP-ATL-Store-02",
       "deviceId": "ap-atl-02",
       "message": "Authentication server unreachable",
-      "timestamp": "2026-04-09T07:11:01.235Z",
       "timeAgo": "6h ago"
     },
     {
@@ -7688,7 +7097,6 @@
       "device": "AP-CHI-Floor1-03",
       "deviceId": "ap-chi-f1-03",
       "message": "Client roamed successfully",
-      "timestamp": "2026-04-09T07:11:01.235Z",
       "timeAgo": "6h ago"
     },
     {
@@ -7701,7 +7109,6 @@
       "device": "AP-CHI-Floor2-01",
       "deviceId": "ap-chi-f2-01",
       "message": "Client density high",
-      "timestamp": "2026-04-09T07:11:01.235Z",
       "timeAgo": "6h ago"
     },
     {
@@ -7714,7 +7121,6 @@
       "device": "AP-PAR-Floor1-02",
       "deviceId": "ap-par-f1-02",
       "message": "Radio hardware failure",
-      "timestamp": "2026-04-09T07:11:01.235Z",
       "timeAgo": "6h ago"
     },
     {
@@ -7727,7 +7133,6 @@
       "device": "AP-PAR-Floor2-02",
       "deviceId": "ap-par-f2-02",
       "message": "WIDS scan completed",
-      "timestamp": "2026-04-09T07:11:01.235Z",
       "timeAgo": "6h ago"
     },
     {
@@ -7740,7 +7145,6 @@
       "device": "AP-SYD-Floor1-02",
       "deviceId": "ap-syd-f1-02",
       "message": "Firmware corruption detected",
-      "timestamp": "2026-04-09T07:11:01.235Z",
       "timeAgo": "6h ago"
     },
     {
@@ -7753,7 +7157,6 @@
       "device": "AP-SYD-Floor1-03",
       "deviceId": "ap-syd-f1-03",
       "message": "Radio calibration finished",
-      "timestamp": "2026-04-09T07:11:01.235Z",
       "timeAgo": "6h ago"
     },
     {
@@ -7766,7 +7169,6 @@
       "device": "AP-BRA-Main-03",
       "deviceId": "ap-bra-03",
       "message": "Radio calibration finished",
-      "timestamp": "2026-04-09T07:11:01.235Z",
       "timeAgo": "6h ago"
     },
     {
@@ -7779,7 +7181,6 @@
       "device": "GW-NYC-Edge-02",
       "deviceId": "gw-nyc-edge-02",
       "message": "Health check passed",
-      "timestamp": "2026-04-09T07:11:01.234Z",
       "timeAgo": "6h ago"
     },
     {
@@ -7792,7 +7193,6 @@
       "device": "GW-NJ-Primary",
       "deviceId": "gw-nj-primary",
       "message": "Scheduled maintenance window starting",
-      "timestamp": "2026-04-09T07:11:01.234Z",
       "timeAgo": "6h ago"
     },
     {
@@ -7805,7 +7205,6 @@
       "device": "GW-SFO-Primary",
       "deviceId": "gw-sfo-primary",
       "message": "DHCP pool utilization above 80%",
-      "timestamp": "2026-04-09T05:11:01.235Z",
       "timeAgo": "8h ago"
     },
     {
@@ -7818,7 +7217,6 @@
       "device": "SW-NYC-Access-01",
       "deviceId": "sw-nyc-access-01",
       "message": "Power supply failure",
-      "timestamp": "2026-04-09T05:11:01.235Z",
       "timeAgo": "8h ago"
     },
     {
@@ -7831,7 +7229,6 @@
       "device": "SW-NYC-Access-02",
       "deviceId": "sw-nyc-access-02",
       "message": "Port statistics cleared",
-      "timestamp": "2026-04-09T05:11:01.235Z",
       "timeAgo": "8h ago"
     },
     {
@@ -7844,7 +7241,6 @@
       "device": "SW-NYC-Access-04",
       "deviceId": "sw-nyc-access-04",
       "message": "MAC address learning anomaly",
-      "timestamp": "2026-04-09T05:11:01.235Z",
       "timeAgo": "8h ago"
     },
     {
@@ -7857,7 +7253,6 @@
       "device": "SW-LON-Core-01",
       "deviceId": "sw-lon-core-01",
       "message": "Configuration saved",
-      "timestamp": "2026-04-09T05:11:01.235Z",
       "timeAgo": "8h ago"
     },
     {
@@ -7870,7 +7265,6 @@
       "device": "SW-SFO-Access-02",
       "deviceId": "sw-sfo-access-02",
       "message": "VLAN configuration updated",
-      "timestamp": "2026-04-09T05:11:01.235Z",
       "timeAgo": "8h ago"
     },
     {
@@ -7883,7 +7277,6 @@
       "device": "SW-MUM-Access-03",
       "deviceId": "sw-mum-access-03",
       "message": "Port came online",
-      "timestamp": "2026-04-09T05:11:01.235Z",
       "timeAgo": "8h ago"
     },
     {
@@ -7896,7 +7289,6 @@
       "device": "SW-PAR-Core-01",
       "deviceId": "sw-par-core-01",
       "message": "VLAN configuration updated",
-      "timestamp": "2026-04-09T05:11:01.235Z",
       "timeAgo": "8h ago"
     },
     {
@@ -7909,7 +7301,6 @@
       "device": "SW-PAR-Access-01",
       "deviceId": "sw-par-access-01",
       "message": "VLAN mismatch detected",
-      "timestamp": "2026-04-09T05:11:01.235Z",
       "timeAgo": "8h ago"
     },
     {
@@ -7922,7 +7313,6 @@
       "device": "SW-SYD-Core-01",
       "deviceId": "sw-syd-core-01",
       "message": "Firmware check completed",
-      "timestamp": "2026-04-09T05:11:01.235Z",
       "timeAgo": "8h ago"
     },
     {
@@ -7935,7 +7325,6 @@
       "device": "AP-NYC-Floor1-02",
       "deviceId": "ap-nyc-f1-02",
       "message": "Configuration sync completed",
-      "timestamp": "2026-04-09T05:11:01.235Z",
       "timeAgo": "8h ago"
     },
     {
@@ -7948,7 +7337,6 @@
       "device": "AP-NYC-Floor1-05",
       "deviceId": "ap-nyc-f1-05",
       "message": "Roaming failures increasing",
-      "timestamp": "2026-04-09T05:11:01.235Z",
       "timeAgo": "8h ago"
     },
     {
@@ -7961,7 +7349,6 @@
       "device": "AP-NYC-Floor4-05",
       "deviceId": "ap-nyc-f4-05",
       "message": "Radio hardware failure",
-      "timestamp": "2026-04-09T05:11:01.235Z",
       "timeAgo": "8h ago"
     },
     {
@@ -7974,7 +7361,6 @@
       "device": "AP-LON-Office-02",
       "deviceId": "ap-lon-off-02",
       "message": "Client authentication failures",
-      "timestamp": "2026-04-09T05:11:01.235Z",
       "timeAgo": "8h ago"
     },
     {
@@ -7987,7 +7373,6 @@
       "device": "AP-SFO-Floor1-03",
       "deviceId": "ap-sfo-f1-03",
       "message": "Client roamed successfully",
-      "timestamp": "2026-04-09T05:11:01.235Z",
       "timeAgo": "8h ago"
     },
     {
@@ -8000,7 +7385,6 @@
       "device": "AP-TOK-Floor1-03",
       "deviceId": "ap-tok-f1-03",
       "message": "Power level adjusted",
-      "timestamp": "2026-04-09T05:11:01.235Z",
       "timeAgo": "8h ago"
     },
     {
@@ -8013,7 +7397,6 @@
       "device": "AP-TOK-Floor2-01",
       "deviceId": "ap-tok-f2-01",
       "message": "Client roamed successfully",
-      "timestamp": "2026-04-09T05:11:01.235Z",
       "timeAgo": "8h ago"
     },
     {
@@ -8026,7 +7409,6 @@
       "device": "AP-MUM-Floor2-04",
       "deviceId": "ap-mum-f2-04",
       "message": "Interference mitigation active",
-      "timestamp": "2026-04-09T05:11:01.235Z",
       "timeAgo": "8h ago"
     },
     {
@@ -8039,7 +7421,6 @@
       "device": "AP-CHI-Floor1-05",
       "deviceId": "ap-chi-f1-05",
       "message": "Spectrum analysis updated",
-      "timestamp": "2026-04-09T05:11:01.235Z",
       "timeAgo": "8h ago"
     },
     {
@@ -8052,7 +7433,6 @@
       "device": "AP-BER-Floor1-03",
       "deviceId": "ap-ber-f1-03",
       "message": "WIDS scan completed",
-      "timestamp": "2026-04-09T05:11:01.235Z",
       "timeAgo": "8h ago"
     },
     {
@@ -8065,7 +7445,6 @@
       "device": "AP-PAR-Floor1-05",
       "deviceId": "ap-par-f1-05",
       "message": "Radio calibration finished",
-      "timestamp": "2026-04-09T05:11:01.235Z",
       "timeAgo": "8h ago"
     },
     {
@@ -8078,7 +7457,6 @@
       "device": "GW-NYC-Edge-02",
       "deviceId": "gw-nyc-edge-02",
       "message": "Traffic report generated",
-      "timestamp": "2026-04-09T05:11:01.234Z",
       "timeAgo": "8h ago"
     },
     {
@@ -8091,7 +7469,6 @@
       "device": "SW-LON-Dist-02",
       "deviceId": "sw-lon-dist-02",
       "message": "Broadcast storm warning",
-      "timestamp": "2026-04-09T03:11:01.235Z",
       "timeAgo": "10h ago"
     },
     {
@@ -8104,7 +7481,6 @@
       "device": "SW-MUM-Access-02",
       "deviceId": "sw-mum-access-02",
       "message": "Firmware check completed",
-      "timestamp": "2026-04-09T03:11:01.235Z",
       "timeAgo": "10h ago"
     },
     {
@@ -8117,7 +7493,6 @@
       "device": "SW-BER-Core-01",
       "deviceId": "sw-ber-core-01",
       "message": "Access control list updated",
-      "timestamp": "2026-04-09T03:11:01.235Z",
       "timeAgo": "10h ago"
     },
     {
@@ -8130,7 +7505,6 @@
       "device": "SW-BRA-Access-02",
       "deviceId": "sw-bra-access-02",
       "message": "Port channel all members down",
-      "timestamp": "2026-04-09T03:11:01.235Z",
       "timeAgo": "10h ago"
     },
     {
@@ -8143,7 +7517,6 @@
       "device": "AP-MUM-Floor2-05",
       "deviceId": "ap-mum-f2-05",
       "message": "Client density high",
-      "timestamp": "2026-04-09T03:11:01.235Z",
       "timeAgo": "10h ago"
     },
     {
@@ -8156,7 +7529,6 @@
       "device": "AP-BER-Floor1-02",
       "deviceId": "ap-ber-f1-02",
       "message": "Airtime fairness warning",
-      "timestamp": "2026-04-09T03:11:01.235Z",
       "timeAgo": "10h ago"
     },
     {
@@ -8169,7 +7541,6 @@
       "device": "AP-PAR-Floor1-03",
       "deviceId": "ap-par-f1-03",
       "message": "Interference mitigation active",
-      "timestamp": "2026-04-09T03:11:01.235Z",
       "timeAgo": "10h ago"
     },
     {
@@ -8182,7 +7553,6 @@
       "device": "GW-SFO-Primary",
       "deviceId": "gw-sfo-primary",
       "message": "Unusual traffic pattern detected",
-      "timestamp": "2026-04-09T01:11:01.235Z",
       "timeAgo": "12h ago"
     },
     {
@@ -8195,7 +7565,6 @@
       "device": "GW-CHI-Core-01",
       "deviceId": "gw-chi-core-01",
       "message": "NTP sync completed",
-      "timestamp": "2026-04-09T01:11:01.235Z",
       "timeAgo": "12h ago"
     },
     {
@@ -8208,7 +7577,6 @@
       "device": "GW-CHI-Edge-02",
       "deviceId": "gw-chi-edge-02",
       "message": "Hardware failure detected on interface",
-      "timestamp": "2026-04-09T01:11:01.235Z",
       "timeAgo": "12h ago"
     },
     {
@@ -8221,7 +7589,6 @@
       "device": "SW-SFO-Core-01",
       "deviceId": "sw-sfo-core-01",
       "message": "MAC address table overflow",
-      "timestamp": "2026-04-09T01:11:01.235Z",
       "timeAgo": "12h ago"
     },
     {
@@ -8234,7 +7601,6 @@
       "device": "SW-MUM-Core-01",
       "deviceId": "sw-mum-core-01",
       "message": "Port statistics cleared",
-      "timestamp": "2026-04-09T01:11:01.235Z",
       "timeAgo": "12h ago"
     },
     {
@@ -8247,7 +7613,6 @@
       "device": "SW-MUM-Dist-01",
       "deviceId": "sw-mum-dist-01",
       "message": "Configuration saved",
-      "timestamp": "2026-04-09T01:11:01.235Z",
       "timeAgo": "12h ago"
     },
     {
@@ -8260,7 +7625,6 @@
       "device": "SW-MUM-Dist-01",
       "deviceId": "sw-mum-dist-01",
       "message": "Diagnostic test passed",
-      "timestamp": "2026-04-09T01:11:01.235Z",
       "timeAgo": "12h ago"
     },
     {
@@ -8273,7 +7637,6 @@
       "device": "SW-PAR-Access-02",
       "deviceId": "sw-par-access-02",
       "message": "QoS policy applied",
-      "timestamp": "2026-04-09T01:11:01.235Z",
       "timeAgo": "12h ago"
     },
     {
@@ -8286,7 +7649,6 @@
       "device": "SW-BRA-Access-01",
       "deviceId": "sw-bra-access-01",
       "message": "QoS policy applied",
-      "timestamp": "2026-04-09T01:11:01.235Z",
       "timeAgo": "12h ago"
     },
     {
@@ -8299,7 +7661,6 @@
       "device": "AP-NYC-Floor1-05",
       "deviceId": "ap-nyc-f1-05",
       "message": "Client roamed successfully",
-      "timestamp": "2026-04-09T01:11:01.235Z",
       "timeAgo": "12h ago"
     },
     {
@@ -8312,7 +7673,6 @@
       "device": "AP-NYC-Floor2-03",
       "deviceId": "ap-nyc-f2-03",
       "message": "Rogue AP detected nearby",
-      "timestamp": "2026-04-09T01:11:01.235Z",
       "timeAgo": "12h ago"
     },
     {
@@ -8325,7 +7685,6 @@
       "device": "AP-LON-Office-01",
       "deviceId": "ap-lon-off-01",
       "message": "Lost connection to controller",
-      "timestamp": "2026-04-09T01:11:01.235Z",
       "timeAgo": "12h ago"
     },
     {
@@ -8338,7 +7697,6 @@
       "device": "AP-SFO-Floor1-04",
       "deviceId": "ap-sfo-f1-04",
       "message": "Lost connection to controller",
-      "timestamp": "2026-04-09T01:11:01.235Z",
       "timeAgo": "12h ago"
     },
     {
@@ -8351,7 +7709,6 @@
       "device": "AP-MUM-Floor1-03",
       "deviceId": "ap-mum-f1-03",
       "message": "Load balancing active",
-      "timestamp": "2026-04-09T01:11:01.235Z",
       "timeAgo": "12h ago"
     },
     {
@@ -8364,7 +7721,6 @@
       "device": "AP-CHI-Floor2-02",
       "deviceId": "ap-chi-f2-02",
       "message": "Roaming failures increasing",
-      "timestamp": "2026-04-09T01:11:01.235Z",
       "timeAgo": "12h ago"
     },
     {
@@ -8377,7 +7733,6 @@
       "device": "AP-BER-Floor1-02",
       "deviceId": "ap-ber-f1-02",
       "message": "Memory critical",
-      "timestamp": "2026-04-09T01:11:01.235Z",
       "timeAgo": "12h ago"
     },
     {
@@ -8390,7 +7745,6 @@
       "device": "AP-PAR-Floor1-04",
       "deviceId": "ap-par-f1-04",
       "message": "Client deauthenticated normally",
-      "timestamp": "2026-04-09T01:11:01.235Z",
       "timeAgo": "12h ago"
     },
     {
@@ -8403,7 +7757,6 @@
       "device": "AP-PAR-Floor1-05",
       "deviceId": "ap-par-f1-05",
       "message": "Client roamed successfully",
-      "timestamp": "2026-04-09T01:11:01.235Z",
       "timeAgo": "12h ago"
     },
     {
@@ -8416,7 +7769,6 @@
       "device": "GW-ATL-Edge-02",
       "deviceId": "gw-atl-edge-02",
       "message": "Device is offline",
-      "timestamp": "2026-04-09T12:05:00.000Z",
       "timeAgo": "36m ago"
     },
     {
@@ -8429,7 +7781,6 @@
       "device": "GW-BER-Edge-02",
       "deviceId": "gw-ber-edge-02",
       "message": "Device is offline",
-      "timestamp": "2026-04-09T12:05:00.000Z",
       "timeAgo": "36m ago"
     },
     {
@@ -8442,7 +7793,6 @@
       "device": "SW-LON-Access-03",
       "deviceId": "sw-lon-access-03",
       "message": "Device is offline",
-      "timestamp": "2026-04-09T12:05:00.000Z",
       "timeAgo": "36m ago"
     },
     {
@@ -8455,7 +7805,6 @@
       "device": "SW-MUM-Access-03",
       "deviceId": "sw-mum-access-03",
       "message": "Device is offline",
-      "timestamp": "2026-04-09T12:05:00.000Z",
       "timeAgo": "36m ago"
     },
     {
@@ -8468,7 +7817,6 @@
       "device": "SW-CHI-Dist-01",
       "deviceId": "sw-chi-dist-01",
       "message": "Device is offline",
-      "timestamp": "2026-04-09T12:05:00.000Z",
       "timeAgo": "36m ago"
     },
     {
@@ -8481,7 +7829,6 @@
       "device": "AP-NYC-Floor4-02",
       "deviceId": "ap-nyc-f4-02",
       "message": "Device is offline",
-      "timestamp": "2026-04-09T12:05:00.000Z",
       "timeAgo": "36m ago"
     },
     {
@@ -8494,7 +7841,6 @@
       "device": "AP-LON-Office-03",
       "deviceId": "ap-lon-off-03",
       "message": "Device is offline",
-      "timestamp": "2026-04-09T12:05:00.000Z",
       "timeAgo": "36m ago"
     },
     {
@@ -8507,7 +7853,6 @@
       "device": "AP-SFO-Floor1-01",
       "deviceId": "ap-sfo-f1-01",
       "message": "Device is offline",
-      "timestamp": "2026-04-09T12:05:00.000Z",
       "timeAgo": "36m ago"
     }
   ]

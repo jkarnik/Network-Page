@@ -51,6 +51,217 @@
         <!-- Dashboard Grid -->
         <div class="grid grid-cols-12 gap-3 max-w-[1920px] mx-auto">
 
+            <!-- ROW 1: Alert Widgets -->
+
+            <!-- Infrastructure Alerts -->
+            <div id="networkIssuesCard" class="col-span-12 sm:col-span-4 lg:col-span-4 card p-4 flex flex-col justify-center bg-dark-card overflow-hidden h-[9.6rem]">
+                    <div id="issuesSummaryView">
+                        <div class="flex items-center justify-center gap-2 mb-3">
+                            <h3 class="text-sm font-bold text-dark-text">Infrastructure Alerts</h3>
+                            <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-1.5 py-0.5 rounded flex items-center gap-1">
+                                <i class="fa-solid fa-hand-pointer text-[7px]"></i> Click
+                            </span>
+                        </div>
+                        <div class="flex items-center justify-between gap-2">
+                            <div class="cursor-pointer group flex-1 text-center" onclick="showIssuesAlerts('crit')">
+                                <span class="block text-2xl font-bold text-newrelic-error group-hover:text-red-500 transition-colors" id="criticalCount">--</span>
+                                <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-red-500 inline-block">Critical</span>
+                            </div>
+                            <div class="flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-triangle-exclamation text-4xl text-newrelic-error opacity-30 dark:opacity-90"></i>
+                            </div>
+                            <div class="cursor-pointer group flex-1 text-center" onclick="showIssuesAlerts('warn')">
+                                <span class="block text-2xl font-bold text-amber-500 group-hover:text-amber-400 transition-colors" id="warningCount">--</span>
+                                <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-amber-500 inline-block">Warning</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Expanded Alert Feed View (Initially Hidden) -->
+                    <div id="issuesExpandedView" class="hidden h-full flex flex-col">
+                        <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                            <div class="flex items-center gap-3">
+                                <h4 class="text-base font-bold text-dark-text" id="issuesAlertTitle">Network Alerts</h4>
+                                <span class="text-xs text-gray-400 dark:text-gray-500" id="issuesAlertCount"></span>
+                            </div>
+                            <!-- Severity Filter -->
+                            <div class="flex items-center gap-2">
+                                <button onclick="filterIssuesAlerts('all')" id="issuesFilterAll" class="px-3 py-1.5 text-xs rounded-lg bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors">All</button>
+                                <button onclick="filterIssuesAlerts('crit')" id="issuesFilterCrit" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Critical</button>
+                                <button onclick="filterIssuesAlerts('warn')" id="issuesFilterWarn" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Warning</button>
+                                <button onclick="filterIssuesAlerts('info')" id="issuesFilterInfo" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Info</button>
+                                <button onclick="hideIssuesAlerts()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-2">
+                                    <i class="fa-solid fa-times text-lg"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Search & Site Filter -->
+                        <div class="flex gap-2 mb-3">
+                            <input type="text" id="issuesSearchInput" placeholder="Search alerts by site, device, or message..." class="flex-1 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <select id="issuesSiteFilter" onchange="filterIssuesBySite(this.value)" class="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="all">All Sites</option>
+                            </select>
+                        </div>
+                        <!-- Alert Table -->
+                        <div class="flex-1 overflow-auto custom-scrollbar">
+                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0 z-10">
+                                    <tr>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" onclick="sortIssuesAlerts('sev')">Severity <i class="fa-solid fa-sort text-gray-400"></i></th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" onclick="sortIssuesAlerts('time')">Time <i class="fa-solid fa-sort text-gray-400"></i></th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" onclick="sortIssuesAlerts('site')">Site <i class="fa-solid fa-sort text-gray-400"></i></th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" onclick="sortIssuesAlerts('device')">Device <i class="fa-solid fa-sort text-gray-400"></i></th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Message</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-dark-card divide-y divide-gray-200 dark:divide-gray-700" id="issuesAlertTableBody">
+                                    <!-- Rows populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- Security Alerts -->
+            <div id="securityCard" class="col-span-12 sm:col-span-4 lg:col-span-4 card p-4 flex flex-col justify-center bg-dark-card overflow-hidden h-[9.6rem]">
+                    <div id="securitySummaryView">
+                        <div class="flex items-center justify-center gap-2 mb-3">
+                            <h3 class="text-sm font-bold text-dark-text">Security Alerts</h3>
+                            <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-1.5 py-0.5 rounded flex items-center gap-1">
+                                <i class="fa-solid fa-hand-pointer text-[7px]"></i> Click
+                            </span>
+                        </div>
+                        <div class="flex items-center justify-between gap-2">
+                            <div class="cursor-pointer group flex-1 text-center" onclick="showSecurityAlerts('crit')">
+                                <span class="block text-2xl font-bold text-newrelic-error group-hover:text-red-500 transition-colors" id="securityCritCount">--</span>
+                                <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-red-500 inline-block">Critical</span>
+                            </div>
+                            <div class="flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-shield-halved text-4xl text-indigo-600 dark:text-indigo-400 opacity-30 dark:opacity-90"></i>
+                            </div>
+                            <div class="cursor-pointer group flex-1 text-center" onclick="showSecurityAlerts('warn')">
+                                <span class="block text-2xl font-bold text-amber-500 group-hover:text-amber-400 transition-colors" id="securityWarnCount">--</span>
+                                <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-amber-500 inline-block">Warning</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Expanded Security Alert Feed View (Initially Hidden) -->
+                    <div id="securityExpandedView" class="hidden h-full flex flex-col">
+                        <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                            <div class="flex items-center gap-3">
+                                <h4 class="text-base font-bold text-dark-text" id="securityAlertTitle">Security Alerts</h4>
+                                <span class="text-xs text-gray-400 dark:text-gray-500" id="securityAlertCount"></span>
+                            </div>
+                            <!-- Security Severity Filter -->
+                            <div class="flex items-center gap-2">
+                                <button onclick="filterSecurityAlerts('all')" id="securityFilterAll" class="px-3 py-1.5 text-xs rounded-lg bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors">All</button>
+                                <button onclick="filterSecurityAlerts('crit')" id="securityFilterCrit" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Critical</button>
+                                <button onclick="filterSecurityAlerts('warn')" id="securityFilterWarn" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Warning</button>
+                                <button onclick="filterSecurityAlerts('info')" id="securityFilterInfo" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Info</button>
+                                <button onclick="hideSecurityAlerts()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-2">
+                                    <i class="fa-solid fa-times text-lg"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Search & Site Filter -->
+                        <div class="flex gap-2 mb-3">
+                            <input type="text" id="securitySearchInput" placeholder="Search security alerts by site, device, or message..." class="flex-1 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <select id="securitySiteFilter" onchange="filterSecurityBySite(this.value)" class="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="all">All Sites</option>
+                            </select>
+                        </div>
+                        <!-- Alert Table -->
+                        <div class="flex-1 overflow-auto custom-scrollbar">
+                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0 z-10">
+                                    <tr>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" onclick="sortSecurityAlerts('sev')">Severity <i class="fa-solid fa-sort text-gray-400"></i></th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" onclick="sortSecurityAlerts('time')">Time <i class="fa-solid fa-sort text-gray-400"></i></th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" onclick="sortSecurityAlerts('site')">Site <i class="fa-solid fa-sort text-gray-400"></i></th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" onclick="sortSecurityAlerts('device')">Device <i class="fa-solid fa-sort text-gray-400"></i></th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Message</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-dark-card divide-y divide-gray-200 dark:divide-gray-700" id="securityAlertTableBody">
+                                    <!-- Rows populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- AI Alerts -->
+            <div id="aiAlertsCard" class="col-span-12 sm:col-span-4 lg:col-span-4 card p-4 flex flex-col justify-center bg-dark-card overflow-hidden h-[9.6rem]">
+                    <div id="aiAlertsSummaryView">
+                        <div class="flex items-center justify-center gap-2 mb-3">
+                            <h3 class="text-sm font-bold text-dark-text">AI Alerts</h3>
+                            <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-1.5 py-0.5 rounded flex items-center gap-1">
+                                <i class="fa-solid fa-hand-pointer text-[7px]"></i> Click
+                            </span>
+                        </div>
+                        <div class="flex items-center justify-between gap-2">
+                            <div class="cursor-pointer group flex-1 text-center" onclick="showAIAlerts('crit')">
+                                <span class="block text-2xl font-bold text-newrelic-error group-hover:text-red-500 transition-colors" id="aiCritCount">0</span>
+                                <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-red-500 inline-block">Critical</span>
+                            </div>
+                            <div class="flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-brain text-4xl text-purple-600 dark:text-purple-400 opacity-30 dark:opacity-90"></i>
+                            </div>
+                            <div class="cursor-pointer group flex-1 text-center" onclick="showAIAlerts('warn')">
+                                <span class="block text-2xl font-bold text-amber-500 group-hover:text-amber-400 transition-colors" id="aiWarnCount">0</span>
+                                <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-amber-500 inline-block">Warning</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Expanded AI Alert Feed View (Initially Hidden) -->
+                    <div id="aiAlertsExpandedView" class="hidden h-full flex flex-col">
+                        <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                            <div class="flex items-center gap-3">
+                                <h4 class="text-base font-bold text-dark-text" id="aiAlertTitle">AI Alerts</h4>
+                                <span class="text-xs text-gray-400 dark:text-gray-500" id="aiAlertCount"></span>
+                            </div>
+                            <!-- AI Severity Filter -->
+                            <div class="flex items-center gap-2">
+                                <button onclick="filterAIAlerts('all')" id="aiFilterAll" class="px-3 py-1.5 text-xs rounded-lg bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors">All</button>
+                                <button onclick="filterAIAlerts('crit')" id="aiFilterCrit" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Critical</button>
+                                <button onclick="filterAIAlerts('warn')" id="aiFilterWarn" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Warning</button>
+                                <button onclick="filterAIAlerts('info')" id="aiFilterInfo" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Info</button>
+                                <button onclick="hideAIAlerts()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-2">
+                                    <i class="fa-solid fa-times text-lg"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Search & Site Filter -->
+                        <div class="flex gap-2 mb-3">
+                            <input type="text" id="aiSearchInput" placeholder="Search AI alerts by site, device, or message..." class="flex-1 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <select id="aiSiteFilter" onchange="filterAIBySite(this.value)" class="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="all">All Sites</option>
+                            </select>
+                        </div>
+                        <!-- Alert Table -->
+                        <div class="flex-1 overflow-auto custom-scrollbar">
+                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0 z-10">
+                                    <tr>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" onclick="sortAIAlerts('sev')">Severity <i class="fa-solid fa-sort text-gray-400"></i></th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" onclick="sortAIAlerts('time')">Time <i class="fa-solid fa-sort text-gray-400"></i></th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" onclick="sortAIAlerts('site')">Site <i class="fa-solid fa-sort text-gray-400"></i></th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" onclick="sortAIAlerts('device')">Device <i class="fa-solid fa-sort text-gray-400"></i></th>
+                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Message</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-dark-card divide-y divide-gray-200 dark:divide-gray-700" id="aiAlertTableBody">
+                                    <!-- Rows populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- ROW 2: Fleet Status + Latency -->
+
              <!-- 1. Fleet Status (Status Matrix) -->
              <div id="deviceStatusCard" class="col-span-12 sm:col-span-6 lg:col-span-6 card p-4 bg-dark-card overflow-hidden">
                 <div id="statusSummaryView" class="h-full flex flex-col">
@@ -125,225 +336,8 @@
                 </div>
             </div>
 
-            <!-- 2. Infrastructure Alerts, Security Alerts & AI Alerts (2x2 grid) -->
-            <div class="col-span-12 sm:col-span-6 lg:col-span-6 grid grid-cols-2 gap-3 self-start">
-                <!-- Infrastructure Alerts -->
-                <div id="networkIssuesCard" class="card p-4 flex flex-col justify-center bg-dark-card overflow-hidden h-[9.6rem]">
-                    <div id="issuesSummaryView">
-                        <div class="flex items-center justify-center gap-2 mb-3">
-                            <h3 class="text-sm font-bold text-dark-text">Infrastructure Alerts</h3>
-                            <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-1.5 py-0.5 rounded flex items-center gap-1">
-                                <i class="fa-solid fa-hand-pointer text-[7px]"></i> Click
-                            </span>
-                        </div>
-                        <div class="flex items-center justify-between gap-2">
-                            <div class="cursor-pointer group flex-1 text-center" onclick="showIssuesAlerts('crit')">
-                                <span class="block text-2xl font-bold text-newrelic-error group-hover:text-red-500 transition-colors" id="criticalCount">--</span>
-                                <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-red-500 inline-block">Critical</span>
-                            </div>
-                            <div class="flex items-center justify-center flex-shrink-0">
-                                <i class="fa-solid fa-triangle-exclamation text-4xl text-newrelic-error opacity-30 dark:opacity-90"></i>
-                            </div>
-                            <div class="cursor-pointer group flex-1 text-center" onclick="showIssuesAlerts('warn')">
-                                <span class="block text-2xl font-bold text-amber-500 group-hover:text-amber-400 transition-colors" id="warningCount">--</span>
-                                <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-amber-500 inline-block">Warning</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Expanded Alert Feed View (Initially Hidden) -->
-                    <div id="issuesExpandedView" class="hidden h-full flex flex-col">
-                        <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
-                            <div class="flex items-center gap-3">
-                                <h4 class="text-base font-bold text-dark-text" id="issuesAlertTitle">Network Alerts</h4>
-                                <span class="text-xs text-gray-400 dark:text-gray-500" id="issuesAlertCount"></span>
-                            </div>
-                            <!-- Severity Filter -->
-                            <div class="flex items-center gap-2">
-                                <button onclick="filterIssuesAlerts('all')" id="issuesFilterAll" class="px-3 py-1.5 text-xs rounded-lg bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors">All</button>
-                                <button onclick="filterIssuesAlerts('crit')" id="issuesFilterCrit" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Critical</button>
-                                <button onclick="filterIssuesAlerts('warn')" id="issuesFilterWarn" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Warning</button>
-                                <button onclick="filterIssuesAlerts('info')" id="issuesFilterInfo" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Info</button>
-                                <button onclick="hideIssuesAlerts()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-2">
-                                    <i class="fa-solid fa-times text-lg"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <!-- Search & Site Filter -->
-                        <div class="flex gap-2 mb-3">
-                            <input type="text" id="issuesSearchInput" placeholder="Search alerts by site, device, or message..." class="flex-1 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <select id="issuesSiteFilter" onchange="filterIssuesBySite(this.value)" class="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="all">All Sites</option>
-                            </select>
-                        </div>
-                        <!-- Alert Table -->
-                        <div class="flex-1 overflow-auto custom-scrollbar">
-                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                                <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0 z-10">
-                                    <tr>
-                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" onclick="sortIssuesAlerts('sev')">Severity <i class="fa-solid fa-sort text-gray-400"></i></th>
-                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" onclick="sortIssuesAlerts('time')">Time <i class="fa-solid fa-sort text-gray-400"></i></th>
-                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" onclick="sortIssuesAlerts('site')">Site <i class="fa-solid fa-sort text-gray-400"></i></th>
-                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" onclick="sortIssuesAlerts('device')">Device <i class="fa-solid fa-sort text-gray-400"></i></th>
-                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Message</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="bg-dark-card divide-y divide-gray-200 dark:divide-gray-700" id="issuesAlertTableBody">
-                                    <!-- Rows populated by JS -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Security Alerts -->
-                <div id="securityCard" class="card p-4 flex flex-col justify-center bg-dark-card overflow-hidden h-[9.6rem]">
-                    <div id="securitySummaryView">
-                        <div class="flex items-center justify-center gap-2 mb-3">
-                            <h3 class="text-sm font-bold text-dark-text">Security Alerts</h3>
-                            <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-1.5 py-0.5 rounded flex items-center gap-1">
-                                <i class="fa-solid fa-hand-pointer text-[7px]"></i> Click
-                            </span>
-                        </div>
-                        <div class="flex items-center justify-between gap-2">
-                            <div class="cursor-pointer group flex-1 text-center" onclick="showSecurityAlerts('crit')">
-                                <span class="block text-2xl font-bold text-newrelic-error group-hover:text-red-500 transition-colors" id="securityCritCount">--</span>
-                                <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-red-500 inline-block">Critical</span>
-                            </div>
-                            <div class="flex items-center justify-center flex-shrink-0">
-                                <i class="fa-solid fa-shield-halved text-4xl text-indigo-600 dark:text-indigo-400 opacity-30 dark:opacity-90"></i>
-                            </div>
-                            <div class="cursor-pointer group flex-1 text-center" onclick="showSecurityAlerts('warn')">
-                                <span class="block text-2xl font-bold text-amber-500 group-hover:text-amber-400 transition-colors" id="securityWarnCount">--</span>
-                                <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-amber-500 inline-block">Warning</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Expanded Security Alert Feed View (Initially Hidden) -->
-                    <div id="securityExpandedView" class="hidden h-full flex flex-col">
-                        <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
-                            <div class="flex items-center gap-3">
-                                <h4 class="text-base font-bold text-dark-text" id="securityAlertTitle">Security Alerts</h4>
-                                <span class="text-xs text-gray-400 dark:text-gray-500" id="securityAlertCount"></span>
-                            </div>
-                            <!-- Security Severity Filter -->
-                            <div class="flex items-center gap-2">
-                                <button onclick="filterSecurityAlerts('all')" id="securityFilterAll" class="px-3 py-1.5 text-xs rounded-lg bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors">All</button>
-                                <button onclick="filterSecurityAlerts('crit')" id="securityFilterCrit" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Critical</button>
-                                <button onclick="filterSecurityAlerts('warn')" id="securityFilterWarn" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Warning</button>
-                                <button onclick="filterSecurityAlerts('info')" id="securityFilterInfo" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Info</button>
-                                <button onclick="hideSecurityAlerts()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-2">
-                                    <i class="fa-solid fa-times text-lg"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <!-- Search & Site Filter -->
-                        <div class="flex gap-2 mb-3">
-                            <input type="text" id="securitySearchInput" placeholder="Search security alerts by site, device, or message..." class="flex-1 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <select id="securitySiteFilter" onchange="filterSecurityBySite(this.value)" class="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="all">All Sites</option>
-                            </select>
-                        </div>
-                        <!-- Alert Table -->
-                        <div class="flex-1 overflow-auto custom-scrollbar">
-                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                                <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0 z-10">
-                                    <tr>
-                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" onclick="sortSecurityAlerts('sev')">Severity <i class="fa-solid fa-sort text-gray-400"></i></th>
-                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" onclick="sortSecurityAlerts('time')">Time <i class="fa-solid fa-sort text-gray-400"></i></th>
-                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" onclick="sortSecurityAlerts('site')">Site <i class="fa-solid fa-sort text-gray-400"></i></th>
-                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" onclick="sortSecurityAlerts('device')">Device <i class="fa-solid fa-sort text-gray-400"></i></th>
-                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Message</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="bg-dark-card divide-y divide-gray-200 dark:divide-gray-700" id="securityAlertTableBody">
-                                    <!-- Rows populated by JS -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- AI Alerts -->
-                <div id="aiAlertsCard" class="card p-4 flex flex-col justify-center bg-dark-card overflow-hidden h-[9.6rem]">
-                    <div id="aiAlertsSummaryView">
-                        <div class="flex items-center justify-center gap-2 mb-3">
-                            <h3 class="text-sm font-bold text-dark-text">AI Alerts</h3>
-                            <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-1.5 py-0.5 rounded flex items-center gap-1">
-                                <i class="fa-solid fa-hand-pointer text-[7px]"></i> Click
-                            </span>
-                        </div>
-                        <div class="flex items-center justify-between gap-2">
-                            <div class="cursor-pointer group flex-1 text-center" onclick="showAIAlerts('crit')">
-                                <span class="block text-2xl font-bold text-newrelic-error group-hover:text-red-500 transition-colors" id="aiCritCount">0</span>
-                                <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-red-500 inline-block">Critical</span>
-                            </div>
-                            <div class="flex items-center justify-center flex-shrink-0">
-                                <i class="fa-solid fa-brain text-4xl text-purple-600 dark:text-purple-400 opacity-30 dark:opacity-90"></i>
-                            </div>
-                            <div class="cursor-pointer group flex-1 text-center" onclick="showAIAlerts('warn')">
-                                <span class="block text-2xl font-bold text-amber-500 group-hover:text-amber-400 transition-colors" id="aiWarnCount">0</span>
-                                <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-amber-500 inline-block">Warning</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Expanded AI Alert Feed View (Initially Hidden) -->
-                    <div id="aiAlertsExpandedView" class="hidden h-full flex flex-col">
-                        <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
-                            <div class="flex items-center gap-3">
-                                <h4 class="text-base font-bold text-dark-text" id="aiAlertTitle">AI Alerts</h4>
-                                <span class="text-xs text-gray-400 dark:text-gray-500" id="aiAlertCount"></span>
-                            </div>
-                            <!-- AI Severity Filter -->
-                            <div class="flex items-center gap-2">
-                                <button onclick="filterAIAlerts('all')" id="aiFilterAll" class="px-3 py-1.5 text-xs rounded-lg bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors">All</button>
-                                <button onclick="filterAIAlerts('crit')" id="aiFilterCrit" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Critical</button>
-                                <button onclick="filterAIAlerts('warn')" id="aiFilterWarn" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Warning</button>
-                                <button onclick="filterAIAlerts('info')" id="aiFilterInfo" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Info</button>
-                                <button onclick="hideAIAlerts()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-2">
-                                    <i class="fa-solid fa-times text-lg"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <!-- Search & Site Filter -->
-                        <div class="flex gap-2 mb-3">
-                            <input type="text" id="aiSearchInput" placeholder="Search AI alerts by site, device, or message..." class="flex-1 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <select id="aiSiteFilter" onchange="filterAIBySite(this.value)" class="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="all">All Sites</option>
-                            </select>
-                        </div>
-                        <!-- Alert Table -->
-                        <div class="flex-1 overflow-auto custom-scrollbar">
-                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                                <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0 z-10">
-                                    <tr>
-                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" onclick="sortAIAlerts('sev')">Severity <i class="fa-solid fa-sort text-gray-400"></i></th>
-                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" onclick="sortAIAlerts('time')">Time <i class="fa-solid fa-sort text-gray-400"></i></th>
-                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" onclick="sortAIAlerts('site')">Site <i class="fa-solid fa-sort text-gray-400"></i></th>
-                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" onclick="sortAIAlerts('device')">Device <i class="fa-solid fa-sort text-gray-400"></i></th>
-                                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Message</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="bg-dark-card divide-y divide-gray-200 dark:divide-gray-700" id="aiAlertTableBody">
-                                    <!-- Rows populated by JS -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Empty 4th Quadrant (Reserved) -->
-                <div class="card p-4 bg-dark-card overflow-hidden h-[9.6rem] flex items-center justify-center">
-                    <span class="text-xs text-gray-400 dark:text-gray-500 italic">Reserved</span>
-                </div>
-            </div>
-
-            <!-- ROW 2: Analytical Charts -->
-
             <!-- 7. Top Impacted SD-WANs (Latency) -->
-            <div class="col-span-12 lg:col-span-4 card p-4 h-80 bg-dark-card cursor-pointer hover:shadow-lg transition-shadow" onclick="openLatencyTrends()">
+            <div class="col-span-12 lg:col-span-6 card p-4 h-80 bg-dark-card cursor-pointer hover:shadow-lg transition-shadow" onclick="openLatencyTrends()">
                 <div class="flex justify-between items-center mb-4">
                     <div class="flex items-center gap-2">
                         <h3 class="text-sm font-bold text-dark-text">Top Impacted SD-WANs (Latency)</h3>
@@ -356,8 +350,10 @@
                 </div>
             </div>
 
+            <!-- ROW 3: Frustration + WAN Resilience -->
+
             <!-- 6. User Frustration Leaderboard -->
-            <div class="col-span-12 lg:col-span-5 card p-4 h-80 bg-dark-card cursor-pointer hover:shadow-lg transition-shadow" onclick="openFrustrationTrends()">
+            <div class="col-span-12 lg:col-span-7 card p-4 h-80 bg-dark-card cursor-pointer hover:shadow-lg transition-shadow" onclick="openFrustrationTrends()">
                 <div class="flex justify-between items-center mb-4">
                     <div class="flex items-center gap-2">
                         <h3 class="text-sm font-bold text-dark-text">User Frustration Leaderboard</h3>
@@ -371,7 +367,7 @@
             </div>
 
             <!-- 8. WAN Resilience (Donut) -->
-            <div class="col-span-12 lg:col-span-3 card p-4 h-80 bg-dark-card cursor-pointer hover:shadow-lg transition-shadow" onclick="openWanResilienceTrends()">
+            <div class="col-span-12 lg:col-span-5 card p-4 h-80 bg-dark-card cursor-pointer hover:shadow-lg transition-shadow" onclick="openWanResilienceTrends()">
                 <div class="flex items-center gap-2 mb-2">
                     <h3 class="text-sm font-bold text-dark-text">WAN Resilience</h3>
                     <i class="fa-solid fa-up-right-and-down-left-from-center text-xs text-gray-400 dark:text-gray-500"></i>
@@ -410,7 +406,7 @@
                 </div>
             </div>
 
-            <!-- ROW 3: Unified Alert Feed -->
+            <!-- ROW 4: Unified Alert Feed -->
             <div class="col-span-12 card h-96 flex flex-col bg-dark-card">
                 <div class="p-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
                     <h3 class="text-sm font-bold text-dark-text flex items-center gap-2">

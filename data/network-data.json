@@ -1,14 +1,12 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-01-30T12:00:00Z",
   "regions": {
     "Global": {
       "id": "global",
       "name": "Global",
       "deviceCount": 630,
       "clientCount": 15342,
-      "health": 91,
-      "trend": "4.2%"
+      "health": 91
     },
     "North America": {
       "id": "na",
@@ -16,7 +14,6 @@
       "deviceCount": 287,
       "clientCount": 6240,
       "health": 94,
-      "trend": "1.2%",
       "sites": [
         "NYC-HQ",
         "SFO-Branch",
@@ -31,7 +28,6 @@
       "deviceCount": 184,
       "clientCount": 5100,
       "health": 88,
-      "trend": "-2.1%",
       "sites": [
         "NJ-Warehouse",
         "BER-R&D",
@@ -44,7 +40,6 @@
       "deviceCount": 159,
       "clientCount": 4002,
       "health": 92,
-      "trend": "0.8%",
       "sites": [
         "TOK-Sales",
         "MUM-Hub",
@@ -59,9 +54,7 @@
       "region": "North America",
       "deviceCount": 110,
       "clientCount": 980,
-      "health": 89,
-      "trend": "2.1%",
-      "vendor": "mixed"
+      "health": 89
     },
     "NJ-Warehouse": {
       "id": "nj-warehouse",
@@ -69,9 +62,7 @@
       "region": "EMEA",
       "deviceCount": 68,
       "clientCount": 650,
-      "health": 85,
-      "trend": "-1.5%",
-      "vendor": "meraki"
+      "health": 85
     },
     "SFO-Branch": {
       "id": "sfo-branch",
@@ -79,9 +70,7 @@
       "region": "North America",
       "deviceCount": 46,
       "clientCount": 420,
-      "health": 92,
-      "trend": "0.8%",
-      "vendor": "mist"
+      "health": 92
     },
     "TOK-Sales": {
       "id": "tok-sales",
@@ -89,9 +78,7 @@
       "region": "APAC",
       "deviceCount": 41,
       "clientCount": 380,
-      "health": 94,
-      "trend": "1.5%",
-      "vendor": "meraki"
+      "health": 94
     },
     "MUM-Hub": {
       "id": "mum-hub",
@@ -99,9 +86,7 @@
       "region": "APAC",
       "deviceCount": 89,
       "clientCount": 820,
-      "health": 90,
-      "trend": "0.5%",
-      "vendor": "mixed"
+      "health": 90
     },
     "ATL-Retail": {
       "id": "atl-retail",
@@ -109,9 +94,7 @@
       "region": "North America",
       "deviceCount": 35,
       "clientCount": 290,
-      "health": 87,
-      "trend": "-0.8%",
-      "vendor": "meraki"
+      "health": 87
     },
     "CHI-Dist": {
       "id": "chi-dist",
@@ -119,9 +102,7 @@
       "region": "North America",
       "deviceCount": 62,
       "clientCount": 540,
-      "health": 91,
-      "trend": "1.2%",
-      "vendor": "mist"
+      "health": 91
     },
     "BER-R&D": {
       "id": "ber-rd",
@@ -129,9 +110,7 @@
       "region": "EMEA",
       "deviceCount": 57,
       "clientCount": 480,
-      "health": 93,
-      "trend": "2.0%",
-      "vendor": "mist"
+      "health": 93
     },
     "PAR-Office": {
       "id": "par-office",
@@ -139,9 +118,7 @@
       "region": "EMEA",
       "deviceCount": 51,
       "clientCount": 390,
-      "health": 86,
-      "trend": "-1.0%",
-      "vendor": "meraki"
+      "health": 86
     },
     "SYD-Office": {
       "id": "syd-office",
@@ -149,9 +126,7 @@
       "region": "APAC",
       "deviceCount": 46,
       "clientCount": 350,
-      "health": 95,
-      "trend": "1.8%",
-      "vendor": "mist"
+      "health": 95
     },
     "BRA-Remote": {
       "id": "bra-remote",
@@ -159,9 +134,7 @@
       "region": "North America",
       "deviceCount": 25,
       "clientCount": 180,
-      "health": 82,
-      "trend": "-2.5%",
-      "vendor": "meraki"
+      "health": 82
     }
   },
   "chartData": {

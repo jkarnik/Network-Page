@@ -55,8 +55,5 @@
     "labels": ["Ge48", "Ge24", "Ge12", "Ge36", "Ge8"],
     "upload": [18000, 2400, 2100, 1980, 1860],
     "download": [48000, 5400, 4800, 4500, 4200]
-  },
-  "shadowITPorts": [3, 12, 42],
-  "portCount": 48,
-  "poeCapablePorts": 24
+  }
 }
