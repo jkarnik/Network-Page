@@ -167,7 +167,7 @@
                         </div>
                     </div>
 
-                    <!-- Center: IP and MAC -->
+                    <!-- Center: IP, MAC, Serial, Firmware, Portal -->
                     <div class="flex items-center gap-8 text-sm">
                         <div class="flex items-center gap-2">
                             <span class="text-xs text-gray-400">IP:</span>
@@ -176,6 +176,19 @@
                         <div class="flex items-center gap-2">
                             <span class="text-xs text-gray-400">MAC:</span>
                             <span class="font-mono text-gray-700 dark:text-gray-300">54:3d:4b:1a:2c:3d</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-gray-400">S/N:</span>
+                            <span class="font-mono text-gray-700 dark:text-gray-300" data-device-serial>—</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-gray-400">FW:</span>
+                            <span class="font-mono text-gray-700 dark:text-gray-300" data-device-firmware>—</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <a href="#" target="_blank" rel="noopener" data-device-portal class="text-xs text-blue-500 hover:text-blue-400 flex items-center gap-1">
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i> Vendor Portal
+                            </a>
                         </div>
                     </div>
 

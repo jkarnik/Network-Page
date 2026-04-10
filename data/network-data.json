@@ -137,6 +137,114 @@
       "health": 82
     }
   },
+  "correlatedAlerts": [
+    {
+      "correlationId": "CORR-001",
+      "title": "WAN Outage Cascade - TOK-Sales",
+      "category": "network",
+      "firstSeen": "2m ago",
+      "alerts": [
+        { "id": "corr-001-a", "severity": "crit", "device": "GW-TOK-Core-01", "site": "TOK-Sales", "region": "APAC", "vendor": "meraki", "type": "gateway_down", "message": "WAN Edge offline", "timeAgo": "2m ago" },
+        { "id": "corr-001-b", "severity": "crit", "device": "GW-TOK-Core-01", "site": "TOK-Sales", "region": "APAC", "vendor": "meraki", "type": "gw_vpn_path_down", "message": "Wan Edge VPN Path Down", "timeAgo": "3m ago" },
+        { "id": "corr-001-c", "severity": "warn", "device": "GW-TOK-Edge-02", "site": "TOK-Sales", "region": "APAC", "vendor": "meraki", "type": "vpn_peer_down", "message": "Wan Edge VPN Peer Down", "timeAgo": "5m ago" },
+        { "id": "corr-001-d", "severity": "warn", "device": "GW-TOK-Core-01", "site": "TOK-Sales", "region": "APAC", "vendor": "meraki", "type": "secpolicy_violation", "message": "Security Policy Violation", "timeAgo": "5m ago" }
+      ]
+    },
+    {
+      "correlationId": "CORR-002",
+      "title": "IPSec Tunnel Failure - MUM-Hub",
+      "category": "performance",
+      "firstSeen": "20m ago",
+      "alerts": [
+        { "id": "corr-002-a", "severity": "crit", "device": "GW-MUM-Edge-02", "site": "MUM-Hub", "region": "APAC", "vendor": "mist", "type": "vpn_peer_down", "message": "Wan Edge VPN Peer Down", "timeAgo": "20m ago" },
+        { "id": "corr-002-b", "severity": "warn", "device": "GW-MUM-Core-01", "site": "MUM-Hub", "region": "APAC", "vendor": "meraki", "type": "gw_vpn_path_down", "message": "Wan Edge VPN Path Down", "timeAgo": "40m ago" },
+        { "id": "corr-002-c", "severity": "warn", "device": "GW-MUM-Edge-02", "site": "MUM-Hub", "region": "APAC", "vendor": "mist", "type": "gw_vpn_path_down", "message": "Wan Edge VPN Path Down", "timeAgo": "22m ago" }
+      ]
+    },
+    {
+      "correlationId": "CORR-003",
+      "title": "NJ-Warehouse Gateway Degradation",
+      "category": "hardware",
+      "firstSeen": "12m ago",
+      "alerts": [
+        { "id": "corr-003-a", "severity": "crit", "device": "GW-NJ-Primary", "site": "NJ-Warehouse", "region": "EMEA", "vendor": "meraki", "type": "switch_radius_server_unresponsive", "message": "Switch Radius Server Unresponsive", "timeAgo": "12m ago" },
+        { "id": "corr-003-b", "severity": "warn", "device": "GW-NJ-Backup", "site": "NJ-Warehouse", "region": "EMEA", "vendor": "meraki", "type": "gateway_reconnected", "message": "WAN Edge reconnected", "timeAgo": "35m ago" },
+        { "id": "corr-003-c", "severity": "warn", "device": "GW-NJ-Primary", "site": "NJ-Warehouse", "region": "EMEA", "vendor": "meraki", "type": "switch_restarted", "message": "Switch restarted", "timeAgo": "15m ago" }
+      ]
+    },
+    {
+      "correlationId": "CORR-004",
+      "title": "SFO-Branch IPSec & BGP Event",
+      "category": "network",
+      "firstSeen": "18m ago",
+      "alerts": [
+        { "id": "corr-004-a", "severity": "crit", "device": "GW-SFO-Primary", "site": "SFO-Branch", "region": "North America", "vendor": "mist", "type": "vpn_peer_down", "message": "Wan Edge VPN Peer Down", "timeAgo": "18m ago" },
+        { "id": "corr-004-b", "severity": "warn", "device": "GW-SFO-Backup", "site": "SFO-Branch", "region": "North America", "vendor": "mist", "type": "gw_vpn_path_down", "message": "Wan Edge VPN Path Down", "timeAgo": "45m ago" }
+      ]
+    },
+    {
+      "correlationId": "CORR-005",
+      "title": "BRA-Remote Link Instability",
+      "category": "performance",
+      "firstSeen": "8m ago",
+      "alerts": [
+        { "id": "corr-005-a", "severity": "warn", "device": "GW-BRA-Primary", "site": "BRA-Remote", "region": "North America", "vendor": "meraki", "type": "gw_vpn_path_down", "message": "Wan Edge VPN Path Down", "timeAgo": "8m ago" },
+        { "id": "corr-005-b", "severity": "warn", "device": "GW-BRA-Primary", "site": "BRA-Remote", "region": "North America", "vendor": "meraki", "type": "infra_arp_failure", "message": "ARP Failure", "timeAgo": "10m ago" },
+        { "id": "corr-005-c", "severity": "warn", "device": "GW-BRA-Backup", "site": "BRA-Remote", "region": "North America", "vendor": "meraki", "type": "vpn_peer_down", "message": "Wan Edge VPN Peer Down", "timeAgo": "9m ago" }
+      ]
+    }
+  ],
+  "ssidData": [
+    { "ssid": "Corp-WiFi", "site": "NYC-HQ", "region": "North America", "clients": 412, "vendor": "meraki" },
+    { "ssid": "Corp-WiFi", "site": "SFO-Branch", "region": "North America", "clients": 198, "vendor": "mist" },
+    { "ssid": "Corp-WiFi", "site": "CHI-Dist", "region": "North America", "clients": 231, "vendor": "meraki" },
+    { "ssid": "Corp-WiFi", "site": "ATL-Retail", "region": "North America", "clients": 143, "vendor": "meraki" },
+    { "ssid": "Corp-WiFi", "site": "BRA-Remote", "region": "North America", "clients": 62, "vendor": "meraki" },
+    { "ssid": "Corp-WiFi", "site": "NJ-Warehouse", "region": "EMEA", "clients": 287, "vendor": "meraki" },
+    { "ssid": "Corp-WiFi", "site": "BER-R&D", "region": "EMEA", "clients": 210, "vendor": "mist" },
+    { "ssid": "Corp-WiFi", "site": "PAR-Office", "region": "EMEA", "clients": 175, "vendor": "mist" },
+    { "ssid": "Corp-WiFi", "site": "TOK-Sales", "region": "APAC", "clients": 189, "vendor": "meraki" },
+    { "ssid": "Corp-WiFi", "site": "MUM-Hub", "region": "APAC", "clients": 354, "vendor": "meraki" },
+    { "ssid": "Corp-WiFi", "site": "SYD-Office", "region": "APAC", "clients": 148, "vendor": "mist" },
+    { "ssid": "Guest", "site": "NYC-HQ", "region": "North America", "clients": 156, "vendor": "meraki" },
+    { "ssid": "Guest", "site": "SFO-Branch", "region": "North America", "clients": 89, "vendor": "mist" },
+    { "ssid": "Guest", "site": "CHI-Dist", "region": "North America", "clients": 72, "vendor": "meraki" },
+    { "ssid": "Guest", "site": "ATL-Retail", "region": "North America", "clients": 95, "vendor": "meraki" },
+    { "ssid": "Guest", "site": "NJ-Warehouse", "region": "EMEA", "clients": 98, "vendor": "meraki" },
+    { "ssid": "Guest", "site": "BER-R&D", "region": "EMEA", "clients": 67, "vendor": "mist" },
+    { "ssid": "Guest", "site": "PAR-Office", "region": "EMEA", "clients": 82, "vendor": "mist" },
+    { "ssid": "Guest", "site": "TOK-Sales", "region": "APAC", "clients": 74, "vendor": "meraki" },
+    { "ssid": "Guest", "site": "MUM-Hub", "region": "APAC", "clients": 134, "vendor": "meraki" },
+    { "ssid": "Guest", "site": "SYD-Office", "region": "APAC", "clients": 58, "vendor": "mist" },
+    { "ssid": "IoT-Net", "site": "NYC-HQ", "region": "North America", "clients": 280, "vendor": "meraki" },
+    { "ssid": "IoT-Net", "site": "NJ-Warehouse", "region": "EMEA", "clients": 195, "vendor": "meraki" },
+    { "ssid": "IoT-Net", "site": "CHI-Dist", "region": "North America", "clients": 167, "vendor": "meraki" },
+    { "ssid": "IoT-Net", "site": "MUM-Hub", "region": "APAC", "clients": 148, "vendor": "meraki" },
+    { "ssid": "IoT-Net", "site": "ATL-Retail", "region": "North America", "clients": 121, "vendor": "meraki" },
+    { "ssid": "VoIP", "site": "NYC-HQ", "region": "North America", "clients": 98, "vendor": "meraki" },
+    { "ssid": "VoIP", "site": "BER-R&D", "region": "EMEA", "clients": 87, "vendor": "mist" },
+    { "ssid": "VoIP", "site": "SFO-Branch", "region": "North America", "clients": 65, "vendor": "mist" },
+    { "ssid": "VoIP", "site": "PAR-Office", "region": "EMEA", "clients": 71, "vendor": "mist" },
+    { "ssid": "VoIP", "site": "TOK-Sales", "region": "APAC", "clients": 54, "vendor": "meraki" }
+  ],
+  "apiQuota": {
+    "Global": {
+      "meraki": { "used": 7820, "limit": 10000, "resetIn": "41m", "label": "Cisco Meraki", "rpmLimit": 60, "rpmTrend": [28,31,35,29,33,38,42,45,41,39,44,47,52,55,49,51,58,62,57,53,48,44,40,38,35,32,29,27,30,34] },
+      "mist":   { "used": 4230, "limit": 5000,  "resetIn": "41m", "label": "Juniper Mist" }
+    },
+    "North America": {
+      "meraki": { "used": 3540, "limit": 5000,  "resetIn": "41m", "label": "Cisco Meraki", "rpmLimit": 60, "rpmTrend": [12,14,15,13,16,18,20,22,19,18,21,23,26,28,24,25,29,31,28,26,24,21,19,18,17,15,14,13,15,17] },
+      "mist":   { "used": 1820, "limit": 5000,  "resetIn": "41m", "label": "Juniper Mist" }
+    },
+    "EMEA": {
+      "meraki": { "used": 2140, "limit": 2500,  "resetIn": "41m", "label": "Cisco Meraki", "rpmLimit": 60, "rpmTrend": [8,9,10,8,11,12,14,15,13,12,14,16,18,20,17,18,20,22,20,18,17,15,13,12,11,10,9,8,10,12] },
+      "mist":   { "used": 1340, "limit": 5000,  "resetIn": "41m", "label": "Juniper Mist" }
+    },
+    "APAC": {
+      "meraki": { "used": 2140, "limit": 2500,  "resetIn": "41m", "label": "Cisco Meraki", "rpmLimit": 60, "rpmTrend": [9,10,11,9,12,13,15,16,14,13,15,17,19,21,18,19,21,23,21,19,18,16,14,13,12,11,10,9,11,13] },
+      "mist":   { "used": 1070, "limit": 5000,  "resetIn": "41m", "label": "Juniper Mist" }
+    }
+  },
   "chartData": {
     "latencyData": [
       {

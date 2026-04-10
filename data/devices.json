@@ -10,7 +10,12 @@
       "region": "North America",
       "ip": "10.1.1.1",
       "model": "Meraki MX450",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "XAJI-0Y6D-PBHS",
+      "firmware": "MX 18.211.2",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "11:65:B0:18:A2:9F",
+      "uptime": "179d 3h 56m"
     },
     {
       "id": "gw-nyc-edge-02",
@@ -20,7 +25,12 @@
       "region": "North America",
       "ip": "10.1.1.2",
       "model": "Mist SSR-120",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "A1652580863E",
+      "firmware": "6.3.4-lts.4",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "62:B8:03:DF:6D:29",
+      "uptime": "161d 6h 38m"
     },
     {
       "id": "gw-nj-primary",
@@ -30,7 +40,12 @@
       "region": "EMEA",
       "ip": "10.2.1.1",
       "model": "Meraki MX105",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "8MDD-4V30-T9NT",
+      "firmware": "MX 18.211.2",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "CF:2C:18:DB:68:6A",
+      "uptime": "38d 7h 6m"
     },
     {
       "id": "gw-nj-backup",
@@ -40,7 +55,12 @@
       "region": "EMEA",
       "ip": "10.2.1.2",
       "model": "Meraki MX84",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "3W5U-ZBIK-CIDK",
+      "firmware": "MX 18.211.2",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "3F:29:82:E2:33:96",
+      "uptime": "58d 8h 24m"
     },
     {
       "id": "gw-sfo-primary",
@@ -50,7 +70,12 @@
       "region": "North America",
       "ip": "10.3.1.1",
       "model": "Mist SSR-130",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "Q3322966171J",
+      "firmware": "6.3.4-lts.4",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "1B:AF:85:40:B5:AC",
+      "uptime": "102d 1h 17m"
     },
     {
       "id": "gw-sfo-backup",
@@ -60,7 +85,12 @@
       "region": "North America",
       "ip": "10.3.1.2",
       "model": "Mist SSR-130",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "Z6568720322Y",
+      "firmware": "6.3.4-lts.4",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "B1:92:66:CC:1A:9D",
+      "uptime": "26d 12h 31m"
     },
     {
       "id": "gw-tok-core-01",
@@ -70,7 +100,12 @@
       "region": "APAC",
       "ip": "10.4.1.1",
       "model": "Meraki MX250",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "5LXO-6QJI-UJV6",
+      "firmware": "MX 18.211.2",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "EF:7C:B4:7F:61:DE",
+      "uptime": "52d 13h 35m"
     },
     {
       "id": "gw-tok-edge-02",
@@ -80,7 +115,12 @@
       "region": "APAC",
       "ip": "10.4.1.2",
       "model": "Meraki MX84",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "OH9S-DBDW-2PCN",
+      "firmware": "MX 18.211.2",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "AB:09:76:6B:A1:BF",
+      "uptime": "45d 10h 53m"
     },
     {
       "id": "gw-mum-core-01",
@@ -90,7 +130,12 @@
       "region": "APAC",
       "ip": "10.5.1.1",
       "model": "Meraki MX450",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "9T84-AZYT-JXEP",
+      "firmware": "MX 18.211.2",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "D6:18:38:2B:35:82",
+      "uptime": "178d 20h 32m"
     },
     {
       "id": "gw-mum-edge-02",
@@ -100,7 +145,12 @@
       "region": "APAC",
       "ip": "10.5.1.2",
       "model": "Mist SSR-120",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "L9825198266D",
+      "firmware": "6.3.4-lts.4",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "F9:88:5F:93:6F:0A",
+      "uptime": "5d 22h 57m"
     },
     {
       "id": "gw-atl-core-01",
@@ -110,7 +160,12 @@
       "region": "North America",
       "ip": "10.6.1.1",
       "model": "Meraki MX84",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "1T2T-ALA7-53LC",
+      "firmware": "MX 18.211.2",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "97:35:85:B8:F3:2B",
+      "uptime": "31d 8h 58m"
     },
     {
       "id": "gw-atl-edge-02",
@@ -120,7 +175,12 @@
       "region": "North America",
       "ip": "10.6.1.2",
       "model": "Meraki MX67",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "58DR-C11E-RTJ5",
+      "firmware": "MX 18.211.2",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "B7:B4:5D:B0:26:36",
+      "uptime": "114d 6h 26m"
     },
     {
       "id": "gw-chi-core-01",
@@ -130,7 +190,12 @@
       "region": "North America",
       "ip": "10.7.1.1",
       "model": "Mist SSR-130",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "L2572396451F",
+      "firmware": "6.3.4-lts.4",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "21:58:C5:AC:C2:BF",
+      "uptime": "96d 12h 23m"
     },
     {
       "id": "gw-chi-edge-02",
@@ -140,7 +205,12 @@
       "region": "North America",
       "ip": "10.7.1.2",
       "model": "Mist SRX320",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "I5220629802R",
+      "firmware": "6.3.4-lts.4",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "8E:63:61:4B:95:44",
+      "uptime": "92d 23h 10m"
     },
     {
       "id": "gw-ber-core-01",
@@ -150,7 +220,12 @@
       "region": "EMEA",
       "ip": "10.8.1.1",
       "model": "Mist SSR-130",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "F1954781044M",
+      "firmware": "6.3.4-lts.4",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "E5:EA:31:8F:BB:BD",
+      "uptime": "117d 18h 18m"
     },
     {
       "id": "gw-ber-edge-02",
@@ -160,7 +235,12 @@
       "region": "EMEA",
       "ip": "10.8.1.2",
       "model": "Mist SSR-130",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "S6904382144H",
+      "firmware": "6.3.4-lts.4",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "64:C3:6D:5D:3E:EC",
+      "uptime": "123d 18h 33m"
     },
     {
       "id": "gw-par-core-01",
@@ -170,7 +250,12 @@
       "region": "EMEA",
       "ip": "10.9.1.1",
       "model": "Meraki MX250",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "I7P5-TB94-874F",
+      "firmware": "MX 18.211.2",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "2E:09:A3:AD:7F:4E",
+      "uptime": "45d 6h 20m"
     },
     {
       "id": "gw-par-edge-02",
@@ -180,7 +265,12 @@
       "region": "EMEA",
       "ip": "10.9.1.2",
       "model": "Meraki MX84",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "RHOC-N9J2-QP89",
+      "firmware": "MX 18.211.2",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "49:50:2C:A1:D6:B0",
+      "uptime": "88d 20h 3m"
     },
     {
       "id": "gw-syd-core-01",
@@ -190,7 +280,12 @@
       "region": "APAC",
       "ip": "10.10.1.1",
       "model": "Mist SSR-130",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "O7129557055W",
+      "firmware": "6.3.4-lts.4",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "DB:AF:10:3E:69:B2",
+      "uptime": "86d 16h 13m"
     },
     {
       "id": "gw-syd-edge-02",
@@ -200,7 +295,12 @@
       "region": "APAC",
       "ip": "10.10.1.2",
       "model": "Mist SSR-130",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "E9015621825Q",
+      "firmware": "6.3.4-lts.4",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "D2:D3:2A:64:01:BA",
+      "uptime": "11d 11h 13m"
     },
     {
       "id": "gw-bra-core-01",
@@ -210,7 +310,12 @@
       "region": "North America",
       "ip": "10.11.1.1",
       "model": "Meraki MX67",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "PVS7-HZIO-YKL1",
+      "firmware": "MX 18.211.2",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "95:77:10:63:96:59",
+      "uptime": "140d 15h 41m"
     },
     {
       "id": "gw-bra-edge-02",
@@ -220,7 +325,12 @@
       "region": "North America",
       "ip": "10.11.1.2",
       "model": "Meraki MX67",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "CQ99-CHJ7-55NF",
+      "firmware": "MX 18.211.2",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "E2:B3:59:95:4D:1C",
+      "uptime": "149d 9h 56m"
     },
     {
       "id": "sw-nyc-core-01",
@@ -231,7 +341,12 @@
       "ip": "10.1.2.1",
       "model": "Meraki MS425-32",
       "vendor": "meraki",
-      "portCount": 48
+      "portCount": 48,
+      "serial": "4ZW9-XA3K-X7EE",
+      "firmware": "MS 15.23.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "A6:CD:58:38:CB:05",
+      "uptime": "168d 11h 26m"
     },
     {
       "id": "sw-nyc-core-02",
@@ -242,7 +357,12 @@
       "ip": "10.1.2.2",
       "model": "Meraki MS425-32",
       "vendor": "meraki",
-      "portCount": 48
+      "portCount": 48,
+      "serial": "DTJV-ZHWJ-R64D",
+      "firmware": "MS 15.23.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "FF:04:6E:28:54:46",
+      "uptime": "106d 19h 39m"
     },
     {
       "id": "sw-nyc-dist-01",
@@ -253,7 +373,12 @@
       "ip": "10.1.2.3",
       "model": "Mist EX4100",
       "vendor": "mist",
-      "portCount": 48
+      "portCount": 48,
+      "serial": "L2076275400W",
+      "firmware": "23.4R1.9",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "8B:04:2A:86:13:6C",
+      "uptime": "179d 4h 23m"
     },
     {
       "id": "sw-nyc-dist-02",
@@ -264,7 +389,12 @@
       "ip": "10.1.2.4",
       "model": "Mist EX4400",
       "vendor": "mist",
-      "portCount": 48
+      "portCount": 48,
+      "serial": "X5851138788F",
+      "firmware": "23.4R1.9",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "35:89:92:40:5B:FC",
+      "uptime": "152d 16h 48m"
     },
     {
       "id": "sw-nyc-access-01",
@@ -275,7 +405,12 @@
       "ip": "10.1.2.5",
       "model": "Meraki MS225-48",
       "vendor": "meraki",
-      "portCount": 48
+      "portCount": 48,
+      "serial": "ID25-OWF7-5935",
+      "firmware": "MS 15.23.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "20:AE:76:EA:DE:18",
+      "uptime": "173d 12h 20m"
     },
     {
       "id": "sw-nyc-access-02",
@@ -286,7 +421,12 @@
       "ip": "10.1.2.6",
       "model": "Meraki MS390-48",
       "vendor": "meraki",
-      "portCount": 48
+      "portCount": 48,
+      "serial": "A0L7-253J-2D54",
+      "firmware": "MS 15.23.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "83:AC:E6:BA:13:78",
+      "uptime": "85d 4h 19m"
     },
     {
       "id": "sw-nyc-access-03",
@@ -297,7 +437,12 @@
       "ip": "10.1.2.7",
       "model": "Mist EX2300",
       "vendor": "mist",
-      "portCount": 24
+      "portCount": 24,
+      "serial": "F8437201389H",
+      "firmware": "23.4R1.9",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "D9:74:6B:22:33:D1",
+      "uptime": "128d 22h 28m"
     },
     {
       "id": "sw-nyc-access-04",
@@ -308,7 +453,12 @@
       "ip": "10.1.2.8",
       "model": "Mist EX2300",
       "vendor": "mist",
-      "portCount": 24
+      "portCount": 24,
+      "serial": "Q3959191921L",
+      "firmware": "23.4R1.9",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "18:56:55:84:D0:68",
+      "uptime": "95d 16h 47m"
     },
     {
       "id": "sw-lon-core-01",
@@ -319,7 +469,12 @@
       "ip": "10.2.2.1",
       "model": "Meraki MS425-32",
       "vendor": "meraki",
-      "portCount": 48
+      "portCount": 48,
+      "serial": "0LVS-NUJZ-A7TZ",
+      "firmware": "MS 15.23.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "15:E6:61:5D:36:1E",
+      "uptime": "166d 8h 0m"
     },
     {
       "id": "sw-lon-dist-01",
@@ -330,7 +485,12 @@
       "ip": "10.2.2.2",
       "model": "Meraki MS225-48",
       "vendor": "meraki",
-      "portCount": 48
+      "portCount": 48,
+      "serial": "0YNC-XLL4-ZKLO",
+      "firmware": "MS 15.23.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "36:C7:A2:76:47:63",
+      "uptime": "104d 20h 27m"
     },
     {
       "id": "sw-lon-dist-02",
@@ -341,7 +501,12 @@
       "ip": "10.2.2.3",
       "model": "Meraki MS225-48",
       "vendor": "meraki",
-      "portCount": 48
+      "portCount": 48,
+      "serial": "OKEP-7Y6W-KTAK",
+      "firmware": "MS 15.23.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "C0:0B:34:18:F4:0F",
+      "uptime": "26d 16h 56m"
     },
     {
       "id": "sw-lon-access-01",
@@ -352,7 +517,12 @@
       "ip": "10.2.2.4",
       "model": "Meraki MS120-24",
       "vendor": "meraki",
-      "portCount": 24
+      "portCount": 24,
+      "serial": "PUXQ-PHR6-2GDS",
+      "firmware": "MS 15.23.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "EC:EA:CC:1D:86:96",
+      "uptime": "8d 14h 27m"
     },
     {
       "id": "sw-lon-access-02",
@@ -363,7 +533,12 @@
       "ip": "10.2.2.5",
       "model": "Meraki MS120-24",
       "vendor": "meraki",
-      "portCount": 24
+      "portCount": 24,
+      "serial": "WM31-YIHA-IR4C",
+      "firmware": "MS 15.23.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "75:C4:6B:55:10:BF",
+      "uptime": "25d 4h 2m"
     },
     {
       "id": "sw-lon-access-03",
@@ -374,7 +549,12 @@
       "ip": "10.2.2.6",
       "model": "Meraki MS120-24",
       "vendor": "meraki",
-      "portCount": 24
+      "portCount": 24,
+      "serial": "OWGZ-RIXA-11DP",
+      "firmware": "MS 15.23.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "B9:64:F1:A3:81:6A",
+      "uptime": "71d 5h 52m"
     },
     {
       "id": "sw-sfo-core-01",
@@ -385,7 +565,12 @@
       "ip": "10.3.2.1",
       "model": "Mist EX4100",
       "vendor": "mist",
-      "portCount": 48
+      "portCount": 48,
+      "serial": "E9502848695Y",
+      "firmware": "23.4R1.9",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "03:6A:42:72:44:C9",
+      "uptime": "125d 1h 40m"
     },
     {
       "id": "sw-sfo-dist-01",
@@ -396,7 +581,12 @@
       "ip": "10.3.2.2",
       "model": "Mist EX2300",
       "vendor": "mist",
-      "portCount": 24
+      "portCount": 24,
+      "serial": "X6758587422Q",
+      "firmware": "23.4R1.9",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "82:D5:DA:F2:32:E9",
+      "uptime": "137d 0h 36m"
     },
     {
       "id": "sw-sfo-access-01",
@@ -407,7 +597,12 @@
       "ip": "10.3.2.3",
       "model": "Mist EX2300",
       "vendor": "mist",
-      "portCount": 24
+      "portCount": 24,
+      "serial": "T5620223512S",
+      "firmware": "23.4R1.9",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "64:FA:E7:EF:2E:AA",
+      "uptime": "115d 8h 50m"
     },
     {
       "id": "sw-sfo-access-02",
@@ -418,7 +613,12 @@
       "ip": "10.3.2.4",
       "model": "Mist EX2300",
       "vendor": "mist",
-      "portCount": 24
+      "portCount": 24,
+      "serial": "S0454249568T",
+      "firmware": "23.4R1.9",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "0D:67:0A:B8:8A:05",
+      "uptime": "74d 6h 27m"
     },
     {
       "id": "sw-tok-core-01",
@@ -429,7 +629,12 @@
       "ip": "10.4.2.1",
       "model": "Meraki MS425-32",
       "vendor": "meraki",
-      "portCount": 48
+      "portCount": 48,
+      "serial": "NAM1-48P0-TVHH",
+      "firmware": "MS 15.23.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "1F:74:F9:D1:83:41",
+      "uptime": "95d 20h 20m"
     },
     {
       "id": "sw-tok-dist-01",
@@ -440,7 +645,12 @@
       "ip": "10.4.2.2",
       "model": "Meraki MS390-48",
       "vendor": "meraki",
-      "portCount": 48
+      "portCount": 48,
+      "serial": "PBMY-OFQE-WAOU",
+      "firmware": "MS 15.23.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "B4:52:D7:6A:B3:1F",
+      "uptime": "60d 23h 41m"
     },
     {
       "id": "sw-tok-access-01",
@@ -451,7 +661,12 @@
       "ip": "10.4.2.3",
       "model": "Meraki MS120-24",
       "vendor": "meraki",
-      "portCount": 24
+      "portCount": 24,
+      "serial": "AXEQ-BNHL-1N13",
+      "firmware": "MS 15.23.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "D0:DD:1F:E5:A0:3A",
+      "uptime": "35d 3h 29m"
     },
     {
       "id": "sw-tok-access-02",
@@ -462,7 +677,12 @@
       "ip": "10.4.2.4",
       "model": "Meraki MS120-24",
       "vendor": "meraki",
-      "portCount": 24
+      "portCount": 24,
+      "serial": "JCAT-9MX2-X18H",
+      "firmware": "MS 15.23.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "F1:9B:AB:68:A1:78",
+      "uptime": "9d 19h 49m"
     },
     {
       "id": "sw-mum-core-01",
@@ -473,7 +693,12 @@
       "ip": "10.5.2.1",
       "model": "Meraki MS425-32",
       "vendor": "meraki",
-      "portCount": 48
+      "portCount": 48,
+      "serial": "AFEY-UHZ1-GV0E",
+      "firmware": "MS 15.23.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "2F:6C:76:80:FA:D5",
+      "uptime": "146d 0h 33m"
     },
     {
       "id": "sw-mum-core-02",
@@ -484,7 +709,12 @@
       "ip": "10.5.2.2",
       "model": "Mist EX4400",
       "vendor": "mist",
-      "portCount": 48
+      "portCount": 48,
+      "serial": "V9103693706Q",
+      "firmware": "23.4R1.9",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "2F:AE:8F:3A:CA:5B",
+      "uptime": "10d 11h 10m"
     },
     {
       "id": "sw-mum-dist-01",
@@ -495,7 +725,12 @@
       "ip": "10.5.2.3",
       "model": "Mist EX4100",
       "vendor": "mist",
-      "portCount": 48
+      "portCount": 48,
+      "serial": "C7861973435I",
+      "firmware": "23.4R1.9",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "B9:40:98:31:E7:02",
+      "uptime": "35d 10h 6m"
     },
     {
       "id": "sw-mum-dist-02",
@@ -506,7 +741,12 @@
       "ip": "10.5.2.4",
       "model": "Meraki MS390-48",
       "vendor": "meraki",
-      "portCount": 48
+      "portCount": 48,
+      "serial": "43D8-W3ZP-08J3",
+      "firmware": "MS 15.23.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "1E:34:8B:D3:BE:38",
+      "uptime": "41d 21h 14m"
     },
     {
       "id": "sw-mum-access-01",
@@ -517,7 +757,12 @@
       "ip": "10.5.2.5",
       "model": "Meraki MS120-24",
       "vendor": "meraki",
-      "portCount": 24
+      "portCount": 24,
+      "serial": "TRP0-J43D-5IQV",
+      "firmware": "MS 15.23.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "05:22:2A:0A:50:26",
+      "uptime": "36d 17h 40m"
     },
     {
       "id": "sw-mum-access-02",
@@ -528,7 +773,12 @@
       "ip": "10.5.2.6",
       "model": "Mist EX2300",
       "vendor": "mist",
-      "portCount": 24
+      "portCount": 24,
+      "serial": "J0812738720Y",
+      "firmware": "23.4R1.9",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "6E:75:83:5F:87:C3",
+      "uptime": "128d 18h 23m"
     },
     {
       "id": "sw-mum-access-03",
@@ -539,7 +789,12 @@
       "ip": "10.5.2.7",
       "model": "Mist EX2300",
       "vendor": "mist",
-      "portCount": 24
+      "portCount": 24,
+      "serial": "C7476647026H",
+      "firmware": "23.4R1.9",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "11:C0:DB:EC:1A:FE",
+      "uptime": "56d 23h 54m"
     },
     {
       "id": "sw-atl-core-01",
@@ -550,7 +805,12 @@
       "ip": "10.6.2.1",
       "model": "Meraki MS390-48",
       "vendor": "meraki",
-      "portCount": 48
+      "portCount": 48,
+      "serial": "URTP-0LZJ-JEGE",
+      "firmware": "MS 15.23.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "78:C6:83:18:4A:A9",
+      "uptime": "91d 23h 31m"
     },
     {
       "id": "sw-atl-access-01",
@@ -561,7 +821,12 @@
       "ip": "10.6.2.2",
       "model": "Meraki MS120-24",
       "vendor": "meraki",
-      "portCount": 24
+      "portCount": 24,
+      "serial": "T1GH-R09S-KDGI",
+      "firmware": "MS 15.23.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "5E:8C:18:E8:1F:6E",
+      "uptime": "51d 21h 25m"
     },
     {
       "id": "sw-atl-access-02",
@@ -572,7 +837,12 @@
       "ip": "10.6.2.3",
       "model": "Meraki MS120-24",
       "vendor": "meraki",
-      "portCount": 24
+      "portCount": 24,
+      "serial": "GATJ-9TZE-5R5U",
+      "firmware": "MS 15.23.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "90:0A:32:75:F3:62",
+      "uptime": "73d 5h 35m"
     },
     {
       "id": "sw-chi-core-01",
@@ -583,7 +853,12 @@
       "ip": "10.7.2.1",
       "model": "Mist EX4400",
       "vendor": "mist",
-      "portCount": 48
+      "portCount": 48,
+      "serial": "M4109484060D",
+      "firmware": "23.4R1.9",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "64:87:95:CD:15:56",
+      "uptime": "14d 15h 49m"
     },
     {
       "id": "sw-chi-dist-01",
@@ -594,7 +869,12 @@
       "ip": "10.7.2.2",
       "model": "Mist EX4400",
       "vendor": "mist",
-      "portCount": 48
+      "portCount": 48,
+      "serial": "O3917672544W",
+      "firmware": "23.4R1.9",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "C0:37:B7:21:69:76",
+      "uptime": "141d 7h 3m"
     },
     {
       "id": "sw-chi-access-01",
@@ -605,7 +885,12 @@
       "ip": "10.7.2.3",
       "model": "Mist EX2300",
       "vendor": "mist",
-      "portCount": 24
+      "portCount": 24,
+      "serial": "Z3667922611B",
+      "firmware": "23.4R1.9",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "54:67:93:93:25:B8",
+      "uptime": "39d 15h 36m"
     },
     {
       "id": "sw-chi-access-02",
@@ -616,7 +901,12 @@
       "ip": "10.7.2.4",
       "model": "Mist EX2300",
       "vendor": "mist",
-      "portCount": 24
+      "portCount": 24,
+      "serial": "A4522774697Q",
+      "firmware": "23.4R1.9",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "79:E2:7C:10:ED:18",
+      "uptime": "124d 11h 58m"
     },
     {
       "id": "sw-chi-access-03",
@@ -627,7 +917,12 @@
       "ip": "10.7.2.5",
       "model": "Mist EX2300",
       "vendor": "mist",
-      "portCount": 24
+      "portCount": 24,
+      "serial": "R9456980137O",
+      "firmware": "23.4R1.9",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "B1:4E:EB:61:C5:94",
+      "uptime": "154d 0h 32m"
     },
     {
       "id": "sw-ber-core-01",
@@ -638,7 +933,12 @@
       "ip": "10.8.2.1",
       "model": "Mist EX4400",
       "vendor": "mist",
-      "portCount": 48
+      "portCount": 48,
+      "serial": "H1669540043G",
+      "firmware": "23.4R1.9",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "4B:0C:42:58:0C:CF",
+      "uptime": "170d 17h 21m"
     },
     {
       "id": "sw-ber-dist-01",
@@ -649,7 +949,12 @@
       "ip": "10.8.2.2",
       "model": "Mist EX4400",
       "vendor": "mist",
-      "portCount": 48
+      "portCount": 48,
+      "serial": "C9859962074Q",
+      "firmware": "23.4R1.9",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "33:81:37:78:78:D1",
+      "uptime": "145d 4h 34m"
     },
     {
       "id": "sw-ber-access-01",
@@ -660,7 +965,12 @@
       "ip": "10.8.2.3",
       "model": "Mist EX2300",
       "vendor": "mist",
-      "portCount": 24
+      "portCount": 24,
+      "serial": "X1564033683S",
+      "firmware": "23.4R1.9",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "21:0F:8A:34:3F:12",
+      "uptime": "3d 16h 26m"
     },
     {
       "id": "sw-ber-access-02",
@@ -671,7 +981,12 @@
       "ip": "10.8.2.4",
       "model": "Mist EX2300",
       "vendor": "mist",
-      "portCount": 24
+      "portCount": 24,
+      "serial": "H9854339459R",
+      "firmware": "23.4R1.9",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "9F:DC:93:8B:12:13",
+      "uptime": "173d 12h 30m"
     },
     {
       "id": "sw-ber-access-03",
@@ -682,7 +997,12 @@
       "ip": "10.8.2.5",
       "model": "Mist EX2300",
       "vendor": "mist",
-      "portCount": 24
+      "portCount": 24,
+      "serial": "O4137672594S",
+      "firmware": "23.4R1.9",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "55:86:BB:44:05:A6",
+      "uptime": "173d 9h 10m"
     },
     {
       "id": "sw-par-core-01",
@@ -693,7 +1013,12 @@
       "ip": "10.9.2.1",
       "model": "Meraki MS425-32",
       "vendor": "meraki",
-      "portCount": 48
+      "portCount": 48,
+      "serial": "E9VI-FTTD-96QE",
+      "firmware": "MS 15.23.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "55:3B:29:08:89:52",
+      "uptime": "157d 3h 34m"
     },
     {
       "id": "sw-par-dist-01",
@@ -704,7 +1029,12 @@
       "ip": "10.9.2.2",
       "model": "Meraki MS225-48",
       "vendor": "meraki",
-      "portCount": 48
+      "portCount": 48,
+      "serial": "3RZS-J49I-TN7S",
+      "firmware": "MS 15.23.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "AA:81:51:3C:07:A7",
+      "uptime": "43d 4h 59m"
     },
     {
       "id": "sw-par-access-01",
@@ -715,7 +1045,12 @@
       "ip": "10.9.2.3",
       "model": "Meraki MS120-24",
       "vendor": "meraki",
-      "portCount": 24
+      "portCount": 24,
+      "serial": "55J2-O7S3-KKV9",
+      "firmware": "MS 15.23.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "2C:BC:EE:B1:D9:42",
+      "uptime": "16d 23h 4m"
     },
     {
       "id": "sw-par-access-02",
@@ -726,7 +1061,12 @@
       "ip": "10.9.2.4",
       "model": "Meraki MS120-24",
       "vendor": "meraki",
-      "portCount": 24
+      "portCount": 24,
+      "serial": "RFTM-TTQL-GZUI",
+      "firmware": "MS 15.23.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "50:45:FF:E8:8B:BA",
+      "uptime": "68d 17h 12m"
     },
     {
       "id": "sw-syd-core-01",
@@ -737,7 +1077,12 @@
       "ip": "10.10.2.1",
       "model": "Mist EX4400",
       "vendor": "mist",
-      "portCount": 48
+      "portCount": 48,
+      "serial": "U0778368940N",
+      "firmware": "23.4R1.9",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "59:61:2C:38:CF:45",
+      "uptime": "53d 10h 13m"
     },
     {
       "id": "sw-syd-dist-01",
@@ -748,7 +1093,12 @@
       "ip": "10.10.2.2",
       "model": "Mist EX2300",
       "vendor": "mist",
-      "portCount": 24
+      "portCount": 24,
+      "serial": "P8845474614Z",
+      "firmware": "23.4R1.9",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "B5:C5:0E:3C:BC:1D",
+      "uptime": "108d 1h 48m"
     },
     {
       "id": "sw-syd-access-01",
@@ -759,7 +1109,12 @@
       "ip": "10.10.2.3",
       "model": "Mist EX2300",
       "vendor": "mist",
-      "portCount": 24
+      "portCount": 24,
+      "serial": "I6688833778A",
+      "firmware": "23.4R1.9",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "3E:4B:55:73:BB:25",
+      "uptime": "131d 21h 40m"
     },
     {
       "id": "sw-syd-access-02",
@@ -770,7 +1125,12 @@
       "ip": "10.10.2.4",
       "model": "Mist EX2300",
       "vendor": "mist",
-      "portCount": 24
+      "portCount": 24,
+      "serial": "B6997406846X",
+      "firmware": "23.4R1.9",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "46:25:40:A9:5A:FD",
+      "uptime": "119d 3h 2m"
     },
     {
       "id": "sw-bra-core-01",
@@ -781,7 +1141,12 @@
       "ip": "10.11.2.1",
       "model": "Meraki MS225-48",
       "vendor": "meraki",
-      "portCount": 48
+      "portCount": 48,
+      "serial": "B2KN-FTU2-GC5W",
+      "firmware": "MS 15.23.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "5A:AA:0E:AB:9B:E2",
+      "uptime": "36d 16h 9m"
     },
     {
       "id": "sw-bra-access-01",
@@ -792,7 +1157,12 @@
       "ip": "10.11.2.2",
       "model": "Meraki MS120-24",
       "vendor": "meraki",
-      "portCount": 24
+      "portCount": 24,
+      "serial": "I6FQ-JJA2-6YFP",
+      "firmware": "MS 15.23.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "A8:A6:04:C9:24:D2",
+      "uptime": "7d 4h 13m"
     },
     {
       "id": "sw-bra-access-02",
@@ -803,7 +1173,12 @@
       "ip": "10.11.2.3",
       "model": "Meraki MS120-24",
       "vendor": "meraki",
-      "portCount": 24
+      "portCount": 24,
+      "serial": "MVXP-J4HN-RIUU",
+      "firmware": "MS 15.23.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "64:EC:8D:5A:3C:42",
+      "uptime": "175d 11h 35m"
     },
     {
       "id": "ap-nyc-f1-01",
@@ -813,7 +1188,12 @@
       "region": "North America",
       "ip": "10.1.3.1",
       "model": "Mist AP43",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "Z2962567064X",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "C0:52:7B:7A:2B:F8",
+      "uptime": "6d 0h 43m"
     },
     {
       "id": "ap-nyc-f1-02",
@@ -823,7 +1203,12 @@
       "region": "North America",
       "ip": "10.1.3.2",
       "model": "Mist AP43",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "H7636667686X",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "72:88:EF:86:3C:2B",
+      "uptime": "115d 15h 2m"
     },
     {
       "id": "ap-nyc-f1-03",
@@ -833,7 +1218,12 @@
       "region": "North America",
       "ip": "10.1.3.3",
       "model": "Mist AP43",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "Q3457027115Z",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "11:31:36:94:F9:95",
+      "uptime": "124d 19h 14m"
     },
     {
       "id": "ap-nyc-f1-04",
@@ -843,7 +1233,12 @@
       "region": "North America",
       "ip": "10.1.3.4",
       "model": "Mist AP43",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "N9828487319D",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "0E:C3:5E:6C:09:EA",
+      "uptime": "174d 14h 20m"
     },
     {
       "id": "ap-nyc-f1-05",
@@ -853,7 +1248,12 @@
       "region": "North America",
       "ip": "10.1.3.5",
       "model": "Mist AP43",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "Z8799837054R",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "B3:88:AA:44:96:A2",
+      "uptime": "87d 11h 14m"
     },
     {
       "id": "ap-nyc-f2-01",
@@ -863,7 +1263,12 @@
       "region": "North America",
       "ip": "10.1.3.11",
       "model": "Meraki MR56",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "YV37-DIA5-U6HC",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "68:50:BE:67:A5:9D",
+      "uptime": "61d 0h 34m"
     },
     {
       "id": "ap-nyc-f2-02",
@@ -873,7 +1278,12 @@
       "region": "North America",
       "ip": "10.1.3.12",
       "model": "Meraki CW9166",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "36KO-F8KR-D5EQ",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "F8:E1:B8:E4:33:6F",
+      "uptime": "73d 18h 6m"
     },
     {
       "id": "ap-nyc-f2-03",
@@ -883,7 +1293,12 @@
       "region": "North America",
       "ip": "10.1.3.13",
       "model": "Meraki CW9166",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "Y08P-0FOD-RO8B",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "C3:5A:21:EA:E0:56",
+      "uptime": "30d 1h 2m"
     },
     {
       "id": "ap-nyc-f2-04",
@@ -893,7 +1308,12 @@
       "region": "North America",
       "ip": "10.1.3.14",
       "model": "Meraki CW9166",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "NP84-DYT9-MOGE",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "98:07:3B:BE:65:CE",
+      "uptime": "136d 21h 56m"
     },
     {
       "id": "ap-nyc-f2-05",
@@ -903,7 +1323,12 @@
       "region": "North America",
       "ip": "10.1.3.15",
       "model": "Meraki CW9166",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "4QXX-VA2I-EUC1",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "92:03:BE:1C:46:9C",
+      "uptime": "111d 12h 0m"
     },
     {
       "id": "ap-nyc-f3-01",
@@ -913,7 +1338,12 @@
       "region": "North America",
       "ip": "10.1.3.21",
       "model": "Mist AP63",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "F2831908112E",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "BF:EA:E7:77:A3:79",
+      "uptime": "153d 2h 22m"
     },
     {
       "id": "ap-nyc-f3-02",
@@ -923,7 +1353,12 @@
       "region": "North America",
       "ip": "10.1.3.22",
       "model": "Mist AP63",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "R0072310757M",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "1D:99:D5:94:CB:F6",
+      "uptime": "20d 1h 24m"
     },
     {
       "id": "ap-nyc-f3-03",
@@ -933,7 +1368,12 @@
       "region": "North America",
       "ip": "10.1.3.23",
       "model": "Mist AP63",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "U5159078549B",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "D7:4C:89:34:6D:AD",
+      "uptime": "76d 15h 36m"
     },
     {
       "id": "ap-nyc-f3-04",
@@ -943,7 +1383,12 @@
       "region": "North America",
       "ip": "10.1.3.24",
       "model": "Mist AP45",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "M4649006026O",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "C5:64:E0:35:67:8F",
+      "uptime": "77d 5h 16m"
     },
     {
       "id": "ap-nyc-f3-05",
@@ -953,7 +1398,12 @@
       "region": "North America",
       "ip": "10.1.3.25",
       "model": "Mist AP45",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "I9546078677F",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "D5:60:78:D0:D9:0B",
+      "uptime": "63d 4h 52m"
     },
     {
       "id": "ap-nyc-f4-01",
@@ -963,7 +1413,12 @@
       "region": "North America",
       "ip": "10.1.3.31",
       "model": "Meraki MR46",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "QIMQ-ODPX-NF7C",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "2F:F0:3D:E1:AB:D5",
+      "uptime": "93d 7h 58m"
     },
     {
       "id": "ap-nyc-f4-02",
@@ -973,7 +1428,12 @@
       "region": "North America",
       "ip": "10.1.3.32",
       "model": "Meraki MR46",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "3DD0-3UVU-LEMX",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "B3:BC:52:01:41:EF",
+      "uptime": "5d 20h 50m"
     },
     {
       "id": "ap-nyc-f4-03",
@@ -983,7 +1443,12 @@
       "region": "North America",
       "ip": "10.1.3.33",
       "model": "Meraki MR46",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "15Z8-VMUH-XID4",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "E6:1C:30:FE:A7:6C",
+      "uptime": "94d 23h 15m"
     },
     {
       "id": "ap-nyc-f4-04",
@@ -993,7 +1458,12 @@
       "region": "North America",
       "ip": "10.1.3.34",
       "model": "Meraki MR46",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "N1U3-493W-XA73",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "0B:2E:DB:D4:45:06",
+      "uptime": "149d 12h 26m"
     },
     {
       "id": "ap-nyc-f4-05",
@@ -1003,7 +1473,12 @@
       "region": "North America",
       "ip": "10.1.3.35",
       "model": "Meraki MR46",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "JGZL-MA5U-OFWB",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "26:4A:39:9A:B8:0F",
+      "uptime": "121d 11h 17m"
     },
     {
       "id": "ap-lon-wh-01",
@@ -1013,7 +1488,12 @@
       "region": "EMEA",
       "ip": "10.2.3.1",
       "model": "Meraki MR46",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "0HPM-NZ1U-DBFW",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "1F:6B:2B:EB:12:45",
+      "uptime": "55d 3h 0m"
     },
     {
       "id": "ap-lon-wh-02",
@@ -1023,7 +1503,12 @@
       "region": "EMEA",
       "ip": "10.2.3.2",
       "model": "Meraki MR46",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "YJXR-PJ1E-PKYR",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "35:48:61:32:AC:5B",
+      "uptime": "165d 17h 22m"
     },
     {
       "id": "ap-lon-wh-03",
@@ -1033,7 +1518,12 @@
       "region": "EMEA",
       "ip": "10.2.3.3",
       "model": "Meraki MR46",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "YBOV-AKHE-JLA0",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "CC:D3:29:FA:1A:F6",
+      "uptime": "150d 3h 16m"
     },
     {
       "id": "ap-lon-wh-04",
@@ -1043,7 +1533,12 @@
       "region": "EMEA",
       "ip": "10.2.3.4",
       "model": "Meraki MR46",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "GNZS-43C5-BA75",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "B7:A2:7A:B8:AF:CC",
+      "uptime": "106d 0h 24m"
     },
     {
       "id": "ap-lon-wh-05",
@@ -1053,7 +1548,12 @@
       "region": "EMEA",
       "ip": "10.2.3.5",
       "model": "Meraki MR46",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "UUZP-EAL2-W37D",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "A8:FF:F6:10:7E:47",
+      "uptime": "39d 0h 44m"
     },
     {
       "id": "ap-lon-off-01",
@@ -1063,7 +1563,12 @@
       "region": "EMEA",
       "ip": "10.2.3.11",
       "model": "Meraki MR56",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "4IVS-OLML-GSES",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "41:0B:D0:FA:4D:B9",
+      "uptime": "115d 17h 13m"
     },
     {
       "id": "ap-lon-off-02",
@@ -1073,7 +1578,12 @@
       "region": "EMEA",
       "ip": "10.2.3.12",
       "model": "Meraki CW9166",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "6M03-3IFH-V1XG",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "F9:12:BE:E8:A9:52",
+      "uptime": "52d 21h 15m"
     },
     {
       "id": "ap-lon-off-03",
@@ -1083,7 +1593,12 @@
       "region": "EMEA",
       "ip": "10.2.3.13",
       "model": "Meraki CW9166",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "1R11-Q7UW-W5WF",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "46:10:E3:73:B7:E8",
+      "uptime": "130d 5h 46m"
     },
     {
       "id": "ap-lon-off-04",
@@ -1093,7 +1608,12 @@
       "region": "EMEA",
       "ip": "10.2.3.14",
       "model": "Meraki MR56",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "CPKJ-CSLQ-C3C5",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "C8:4C:17:5C:94:A7",
+      "uptime": "131d 21h 22m"
     },
     {
       "id": "ap-lon-off-05",
@@ -1103,7 +1623,12 @@
       "region": "EMEA",
       "ip": "10.2.3.15",
       "model": "Meraki MR56",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "4WSQ-T26Q-3XLR",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "03:2E:6E:6A:4C:3E",
+      "uptime": "48d 9h 1m"
     },
     {
       "id": "ap-sfo-f1-01",
@@ -1113,7 +1638,12 @@
       "region": "North America",
       "ip": "10.3.3.1",
       "model": "Mist AP43",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "D0183751244N",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "10:14:02:29:0F:23",
+      "uptime": "23d 14h 26m"
     },
     {
       "id": "ap-sfo-f1-02",
@@ -1123,7 +1653,12 @@
       "region": "North America",
       "ip": "10.3.3.2",
       "model": "Mist AP34",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "E3243576006H",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "1C:79:E0:62:23:3D",
+      "uptime": "8d 18h 2m"
     },
     {
       "id": "ap-sfo-f1-03",
@@ -1133,7 +1668,12 @@
       "region": "North America",
       "ip": "10.3.3.3",
       "model": "Mist AP43",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "S6983513963P",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "43:A2:D2:BE:FC:F8",
+      "uptime": "58d 4h 54m"
     },
     {
       "id": "ap-sfo-f1-04",
@@ -1143,7 +1683,12 @@
       "region": "North America",
       "ip": "10.3.3.4",
       "model": "Mist AP34",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "Y3378687656L",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "F9:D6:98:AF:14:F7",
+      "uptime": "137d 0h 2m"
     },
     {
       "id": "ap-sfo-f2-01",
@@ -1153,7 +1698,12 @@
       "region": "North America",
       "ip": "10.3.3.11",
       "model": "Mist AP45",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "J3129421081U",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "BF:08:73:9B:F0:56",
+      "uptime": "92d 5h 16m"
     },
     {
       "id": "ap-sfo-f2-02",
@@ -1163,7 +1713,12 @@
       "region": "North America",
       "ip": "10.3.3.12",
       "model": "Mist AP45",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "V8037131878E",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "F4:06:3F:D1:84:B6",
+      "uptime": "18d 0h 8m"
     },
     {
       "id": "ap-sfo-f2-03",
@@ -1173,7 +1728,12 @@
       "region": "North America",
       "ip": "10.3.3.13",
       "model": "Mist AP45",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "L4624274538M",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "08:97:0C:A6:B9:9C",
+      "uptime": "165d 0h 0m"
     },
     {
       "id": "ap-sfo-f2-04",
@@ -1183,7 +1743,12 @@
       "region": "North America",
       "ip": "10.3.3.14",
       "model": "Mist AP45",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "V3994235988D",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "29:07:1A:3F:DC:3F",
+      "uptime": "110d 18h 59m"
     },
     {
       "id": "ap-tok-f1-01",
@@ -1193,7 +1758,12 @@
       "region": "APAC",
       "ip": "10.4.3.1",
       "model": "Meraki MR56",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "JX5T-D44K-1J6F",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "41:04:B3:75:B6:1F",
+      "uptime": "96d 14h 4m"
     },
     {
       "id": "ap-tok-f1-02",
@@ -1203,7 +1773,12 @@
       "region": "APAC",
       "ip": "10.4.3.2",
       "model": "Meraki MR56",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "P8HQ-MABS-I9NB",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "DB:95:25:89:8A:59",
+      "uptime": "132d 14h 9m"
     },
     {
       "id": "ap-tok-f1-03",
@@ -1213,7 +1788,12 @@
       "region": "APAC",
       "ip": "10.4.3.3",
       "model": "Meraki MR56",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "74X2-EK3Z-EZQA",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "BD:25:E9:73:6A:0F",
+      "uptime": "160d 9h 47m"
     },
     {
       "id": "ap-tok-f1-04",
@@ -1223,7 +1803,12 @@
       "region": "APAC",
       "ip": "10.4.3.4",
       "model": "Meraki CW9166",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "CJ4T-0SEK-KBP2",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "59:03:CD:02:10:B7",
+      "uptime": "105d 0h 17m"
     },
     {
       "id": "ap-tok-f1-05",
@@ -1233,7 +1818,12 @@
       "region": "APAC",
       "ip": "10.4.3.5",
       "model": "Meraki CW9166",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "QD6V-ASIF-PWIO",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "B2:8F:DB:2F:7B:49",
+      "uptime": "146d 18h 14m"
     },
     {
       "id": "ap-tok-f2-01",
@@ -1243,7 +1833,12 @@
       "region": "APAC",
       "ip": "10.4.3.11",
       "model": "Meraki MR46",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "XD9C-SS9T-OQW9",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "43:90:2E:28:F0:15",
+      "uptime": "16d 7h 52m"
     },
     {
       "id": "ap-tok-f2-02",
@@ -1253,7 +1848,12 @@
       "region": "APAC",
       "ip": "10.4.3.12",
       "model": "Meraki MR46",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "JA2M-0W10-LBT3",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "09:DC:E7:39:5A:CA",
+      "uptime": "139d 22h 25m"
     },
     {
       "id": "ap-mum-f1-01",
@@ -1263,7 +1863,12 @@
       "region": "APAC",
       "ip": "10.5.3.1",
       "model": "Meraki MR56",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "G2QZ-W3C1-QKBH",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "DE:55:F7:56:56:C6",
+      "uptime": "27d 16h 21m"
     },
     {
       "id": "ap-mum-f1-02",
@@ -1273,7 +1878,12 @@
       "region": "APAC",
       "ip": "10.5.3.2",
       "model": "Meraki CW9166",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "B7S9-TJ1G-M25L",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "E9:6F:57:42:AD:83",
+      "uptime": "39d 3h 35m"
     },
     {
       "id": "ap-mum-f1-03",
@@ -1283,7 +1893,12 @@
       "region": "APAC",
       "ip": "10.5.3.3",
       "model": "Meraki CW9166",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "EN60-6N9R-R7S2",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "DD:54:0B:F3:4C:04",
+      "uptime": "73d 23h 6m"
     },
     {
       "id": "ap-mum-f1-04",
@@ -1293,7 +1908,12 @@
       "region": "APAC",
       "ip": "10.5.3.4",
       "model": "Meraki MR56",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "0CV3-TLCX-LVPY",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "57:F0:CD:36:08:77",
+      "uptime": "7d 18h 50m"
     },
     {
       "id": "ap-mum-f1-05",
@@ -1303,7 +1923,12 @@
       "region": "APAC",
       "ip": "10.5.3.5",
       "model": "Meraki MR56",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "MB5M-9J98-CWN2",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "38:6F:E7:AD:2F:D4",
+      "uptime": "147d 23h 18m"
     },
     {
       "id": "ap-mum-f2-01",
@@ -1313,7 +1938,12 @@
       "region": "APAC",
       "ip": "10.5.3.11",
       "model": "Mist AP45",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "R9167007335P",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "74:28:4B:9F:07:65",
+      "uptime": "34d 15h 46m"
     },
     {
       "id": "ap-mum-f2-02",
@@ -1323,7 +1953,12 @@
       "region": "APAC",
       "ip": "10.5.3.12",
       "model": "Mist AP45",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "R9375536217M",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "46:F5:BC:B7:7D:DC",
+      "uptime": "151d 19h 7m"
     },
     {
       "id": "ap-mum-f2-03",
@@ -1333,7 +1968,12 @@
       "region": "APAC",
       "ip": "10.5.3.13",
       "model": "Mist AP45",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "K5224929418L",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "AF:7A:68:8B:EA:9A",
+      "uptime": "143d 0h 39m"
     },
     {
       "id": "ap-mum-f2-04",
@@ -1343,7 +1983,12 @@
       "region": "APAC",
       "ip": "10.5.3.14",
       "model": "Mist AP45",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "X4068330588S",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "4B:FA:27:12:6E:70",
+      "uptime": "116d 19h 28m"
     },
     {
       "id": "ap-mum-f2-05",
@@ -1353,7 +1998,12 @@
       "region": "APAC",
       "ip": "10.5.3.15",
       "model": "Mist AP45",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "Y6751217053U",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "1A:5C:12:E3:FD:13",
+      "uptime": "68d 20h 34m"
     },
     {
       "id": "ap-mum-f3-01",
@@ -1363,7 +2013,12 @@
       "region": "APAC",
       "ip": "10.5.3.21",
       "model": "Mist AP34",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "O6039757809Q",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "39:D8:0B:A8:FB:04",
+      "uptime": "171d 4h 23m"
     },
     {
       "id": "ap-mum-f3-02",
@@ -1373,7 +2028,12 @@
       "region": "APAC",
       "ip": "10.5.3.22",
       "model": "Mist AP34",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "L6387619490D",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "99:4B:62:DF:29:39",
+      "uptime": "20d 8h 32m"
     },
     {
       "id": "ap-mum-f3-03",
@@ -1383,7 +2043,12 @@
       "region": "APAC",
       "ip": "10.5.3.23",
       "model": "Mist AP43",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "D1373988265D",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "AA:49:50:84:5B:E1",
+      "uptime": "131d 16h 13m"
     },
     {
       "id": "ap-mum-f3-04",
@@ -1393,7 +2058,12 @@
       "region": "APAC",
       "ip": "10.5.3.24",
       "model": "Mist AP34",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "H5519167685V",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "AF:E9:B6:2B:6D:4E",
+      "uptime": "87d 4h 21m"
     },
     {
       "id": "ap-mum-f3-05",
@@ -1403,7 +2073,12 @@
       "region": "APAC",
       "ip": "10.5.3.25",
       "model": "Mist AP43",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "A0656746462Y",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "DE:1E:25:56:13:0F",
+      "uptime": "35d 21h 57m"
     },
     {
       "id": "ap-atl-01",
@@ -1413,7 +2088,12 @@
       "region": "North America",
       "ip": "10.6.3.1",
       "model": "Meraki MR36",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "R2YK-CCPR-HVLZ",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "37:F1:37:F3:38:FB",
+      "uptime": "41d 21h 7m"
     },
     {
       "id": "ap-atl-02",
@@ -1423,7 +2103,12 @@
       "region": "North America",
       "ip": "10.6.3.2",
       "model": "Meraki MR36",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "049E-NULQ-JIDK",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "D9:41:96:9F:8C:F4",
+      "uptime": "28d 20h 21m"
     },
     {
       "id": "ap-atl-03",
@@ -1433,7 +2118,12 @@
       "region": "North America",
       "ip": "10.6.3.3",
       "model": "Meraki MR28",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "NWI5-FLUL-1RSR",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "CB:79:AA:7B:90:C1",
+      "uptime": "60d 10h 27m"
     },
     {
       "id": "ap-atl-04",
@@ -1443,7 +2133,12 @@
       "region": "North America",
       "ip": "10.6.3.4",
       "model": "Meraki MR36",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "LA8S-8HMB-R5XQ",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "EF:AB:11:2A:6D:1D",
+      "uptime": "156d 19h 35m"
     },
     {
       "id": "ap-atl-05",
@@ -1453,7 +2148,12 @@
       "region": "North America",
       "ip": "10.6.3.5",
       "model": "Meraki MR36",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "T4P5-01NO-UHTC",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "94:43:F7:FC:F7:B0",
+      "uptime": "180d 13h 36m"
     },
     {
       "id": "ap-atl-06",
@@ -1463,7 +2163,12 @@
       "region": "North America",
       "ip": "10.6.3.11",
       "model": "Meraki MR46",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "S1K9-YE9O-2M71",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "54:74:6B:28:EE:87",
+      "uptime": "33d 15h 39m"
     },
     {
       "id": "ap-chi-f1-01",
@@ -1473,7 +2178,12 @@
       "region": "North America",
       "ip": "10.7.3.1",
       "model": "Mist AP34",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "F5501344653P",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "4C:DD:29:4A:18:9E",
+      "uptime": "68d 14h 41m"
     },
     {
       "id": "ap-chi-f1-02",
@@ -1483,7 +2193,12 @@
       "region": "North America",
       "ip": "10.7.3.2",
       "model": "Mist AP34",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "E9723857283R",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "65:2F:3E:9E:19:B2",
+      "uptime": "169d 20h 59m"
     },
     {
       "id": "ap-chi-f1-03",
@@ -1493,7 +2208,12 @@
       "region": "North America",
       "ip": "10.7.3.3",
       "model": "Mist AP34",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "Z5776049775S",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "3F:A6:28:E6:A9:1D",
+      "uptime": "85d 16h 14m"
     },
     {
       "id": "ap-chi-f1-04",
@@ -1503,7 +2223,12 @@
       "region": "North America",
       "ip": "10.7.3.4",
       "model": "Mist AP43",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "P1668160910I",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "7D:A5:57:CA:4D:F0",
+      "uptime": "156d 2h 15m"
     },
     {
       "id": "ap-chi-f1-05",
@@ -1513,7 +2238,12 @@
       "region": "North America",
       "ip": "10.7.3.5",
       "model": "Mist AP43",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "D6479870123R",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "C8:31:D5:5D:DF:E1",
+      "uptime": "93d 15h 38m"
     },
     {
       "id": "ap-chi-f2-01",
@@ -1523,7 +2253,12 @@
       "region": "North America",
       "ip": "10.7.3.11",
       "model": "Mist AP45",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "N3193377666E",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "9B:4B:14:AA:91:7C",
+      "uptime": "27d 2h 51m"
     },
     {
       "id": "ap-chi-f2-02",
@@ -1533,7 +2268,12 @@
       "region": "North America",
       "ip": "10.7.3.12",
       "model": "Mist AP63",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "G5292227339U",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "9D:D5:24:80:05:04",
+      "uptime": "63d 14h 2m"
     },
     {
       "id": "ap-chi-f2-03",
@@ -1543,7 +2283,12 @@
       "region": "North America",
       "ip": "10.7.3.13",
       "model": "Mist AP45",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "H1639898227J",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "20:BF:D0:C9:05:28",
+      "uptime": "81d 19h 42m"
     },
     {
       "id": "ap-chi-f2-04",
@@ -1553,7 +2298,12 @@
       "region": "North America",
       "ip": "10.7.3.14",
       "model": "Mist AP45",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "L2425961652R",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "FB:57:D7:E0:33:75",
+      "uptime": "23d 6h 13m"
     },
     {
       "id": "ap-chi-f2-05",
@@ -1563,7 +2313,12 @@
       "region": "North America",
       "ip": "10.7.3.15",
       "model": "Mist AP45",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "N6047170594Y",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "47:CA:22:B3:A8:E2",
+      "uptime": "132d 18h 35m"
     },
     {
       "id": "ap-ber-f1-01",
@@ -1573,7 +2328,12 @@
       "region": "EMEA",
       "ip": "10.8.3.1",
       "model": "Mist AP45",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "W4193690557Y",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "22:26:3B:0C:B3:AA",
+      "uptime": "178d 16h 39m"
     },
     {
       "id": "ap-ber-f1-02",
@@ -1583,7 +2343,12 @@
       "region": "EMEA",
       "ip": "10.8.3.2",
       "model": "Mist AP45",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "X1819934999W",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "B5:E3:4B:05:D0:6F",
+      "uptime": "134d 7h 56m"
     },
     {
       "id": "ap-ber-f1-03",
@@ -1593,7 +2358,12 @@
       "region": "EMEA",
       "ip": "10.8.3.3",
       "model": "Mist AP63",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "A5192954984F",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "82:8E:FE:F4:25:58",
+      "uptime": "151d 22h 2m"
     },
     {
       "id": "ap-ber-f1-04",
@@ -1603,7 +2373,12 @@
       "region": "EMEA",
       "ip": "10.8.3.4",
       "model": "Mist AP45",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "C1421775718X",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "6D:F4:DB:CE:AD:F2",
+      "uptime": "155d 19h 15m"
     },
     {
       "id": "ap-ber-f1-05",
@@ -1613,7 +2388,12 @@
       "region": "EMEA",
       "ip": "10.8.3.5",
       "model": "Mist AP45",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "V5061132227Y",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "55:2D:F9:AE:3F:95",
+      "uptime": "13d 12h 17m"
     },
     {
       "id": "ap-ber-f2-01",
@@ -1623,7 +2403,12 @@
       "region": "EMEA",
       "ip": "10.8.3.11",
       "model": "Mist AP43",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "H7066013458S",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "B9:47:E3:E0:AE:9F",
+      "uptime": "63d 20h 46m"
     },
     {
       "id": "ap-ber-f2-02",
@@ -1633,7 +2418,12 @@
       "region": "EMEA",
       "ip": "10.8.3.12",
       "model": "Mist AP34",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "I1926211764O",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "61:74:F4:14:40:75",
+      "uptime": "54d 4h 43m"
     },
     {
       "id": "ap-ber-f2-03",
@@ -1643,7 +2433,12 @@
       "region": "EMEA",
       "ip": "10.8.3.13",
       "model": "Mist AP43",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "M5622780470O",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "B3:51:8E:61:1D:57",
+      "uptime": "102d 21h 15m"
     },
     {
       "id": "ap-ber-f2-04",
@@ -1653,7 +2448,12 @@
       "region": "EMEA",
       "ip": "10.8.3.14",
       "model": "Mist AP34",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "B5551351250N",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "64:C2:17:05:0A:03",
+      "uptime": "129d 10h 44m"
     },
     {
       "id": "ap-ber-f2-05",
@@ -1663,7 +2463,12 @@
       "region": "EMEA",
       "ip": "10.8.3.15",
       "model": "Mist AP43",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "V4540487387P",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "0C:15:5D:98:FC:06",
+      "uptime": "85d 6h 34m"
     },
     {
       "id": "ap-par-f1-01",
@@ -1673,7 +2478,12 @@
       "region": "EMEA",
       "ip": "10.9.3.1",
       "model": "Meraki MR56",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "BMC9-7C7B-O119",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "56:F7:D3:D1:0C:69",
+      "uptime": "51d 21h 30m"
     },
     {
       "id": "ap-par-f1-02",
@@ -1683,7 +2493,12 @@
       "region": "EMEA",
       "ip": "10.9.3.2",
       "model": "Meraki MR56",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "XP9N-56NY-XTXM",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "0E:74:2E:DC:EE:B7",
+      "uptime": "125d 3h 53m"
     },
     {
       "id": "ap-par-f1-03",
@@ -1693,7 +2508,12 @@
       "region": "EMEA",
       "ip": "10.9.3.3",
       "model": "Meraki MR56",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "GTT0-IAAK-YTT3",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "09:90:26:79:77:BE",
+      "uptime": "148d 2h 37m"
     },
     {
       "id": "ap-par-f1-04",
@@ -1703,7 +2523,12 @@
       "region": "EMEA",
       "ip": "10.9.3.4",
       "model": "Meraki CW9166",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "IMJ7-0E3P-15AH",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "9D:AC:61:4E:F5:E2",
+      "uptime": "15d 9h 23m"
     },
     {
       "id": "ap-par-f1-05",
@@ -1713,7 +2538,12 @@
       "region": "EMEA",
       "ip": "10.9.3.5",
       "model": "Meraki MR56",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "DBVZ-B0OI-H5CS",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "B4:D4:CB:21:EC:D4",
+      "uptime": "74d 8h 28m"
     },
     {
       "id": "ap-par-f2-01",
@@ -1723,7 +2553,12 @@
       "region": "EMEA",
       "ip": "10.9.3.11",
       "model": "Meraki MR46",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "K30L-VYLK-FXHK",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "EF:79:46:44:EB:E7",
+      "uptime": "81d 21h 0m"
     },
     {
       "id": "ap-par-f2-02",
@@ -1733,7 +2568,12 @@
       "region": "EMEA",
       "ip": "10.9.3.12",
       "model": "Meraki MR46",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "C856-WPR9-7Y2L",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "37:AC:17:4F:57:F3",
+      "uptime": "20d 8h 28m"
     },
     {
       "id": "ap-par-f2-03",
@@ -1743,7 +2583,12 @@
       "region": "EMEA",
       "ip": "10.9.3.13",
       "model": "Meraki MR46",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "OFN1-R4KZ-36U8",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "BA:BA:29:19:A6:0B",
+      "uptime": "92d 9h 36m"
     },
     {
       "id": "ap-syd-f1-01",
@@ -1753,7 +2598,12 @@
       "region": "APAC",
       "ip": "10.10.3.1",
       "model": "Mist AP63",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "O1226980712R",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "BD:AC:E5:C1:00:06",
+      "uptime": "82d 11h 44m"
     },
     {
       "id": "ap-syd-f1-02",
@@ -1763,7 +2613,12 @@
       "region": "APAC",
       "ip": "10.10.3.2",
       "model": "Mist AP45",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "P8177548390Y",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "0C:84:CA:45:DD:37",
+      "uptime": "62d 20h 56m"
     },
     {
       "id": "ap-syd-f1-03",
@@ -1773,7 +2628,12 @@
       "region": "APAC",
       "ip": "10.10.3.3",
       "model": "Mist AP45",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "Z1942629573N",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "3D:74:4B:41:B6:09",
+      "uptime": "116d 2h 47m"
     },
     {
       "id": "ap-syd-f1-04",
@@ -1783,7 +2643,12 @@
       "region": "APAC",
       "ip": "10.10.3.4",
       "model": "Mist AP63",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "J2540948934O",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "C8:73:53:1D:E9:7D",
+      "uptime": "67d 23h 43m"
     },
     {
       "id": "ap-syd-f2-01",
@@ -1793,7 +2658,12 @@
       "region": "APAC",
       "ip": "10.10.3.11",
       "model": "Mist AP43",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "F1295413384R",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "7C:86:F1:B5:88:F9",
+      "uptime": "98d 12h 6m"
     },
     {
       "id": "ap-syd-f2-02",
@@ -1803,7 +2673,12 @@
       "region": "APAC",
       "ip": "10.10.3.12",
       "model": "Mist AP43",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "R2896417174X",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "C9:19:A1:13:ED:22",
+      "uptime": "173d 11h 58m"
     },
     {
       "id": "ap-syd-f2-03",
@@ -1813,7 +2688,12 @@
       "region": "APAC",
       "ip": "10.10.3.13",
       "model": "Mist AP34",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "O6008967482S",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "C6:F8:69:BB:D7:D4",
+      "uptime": "134d 16h 52m"
     },
     {
       "id": "ap-syd-f2-04",
@@ -1823,7 +2703,12 @@
       "region": "APAC",
       "ip": "10.10.3.14",
       "model": "Mist AP43",
-      "vendor": "mist"
+      "vendor": "mist",
+      "serial": "A5366644050N",
+      "firmware": "0.14.29084",
+      "vendor_portal": "https://manage.mist.com",
+      "mac": "E0:99:13:70:F8:7A",
+      "uptime": "173d 9h 0m"
     },
     {
       "id": "ap-bra-01",
@@ -1833,7 +2718,12 @@
       "region": "North America",
       "ip": "10.11.3.1",
       "model": "Meraki MR36",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "J9A3-Y36D-DFGS",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "E8:52:7B:8E:24:57",
+      "uptime": "37d 23h 36m"
     },
     {
       "id": "ap-bra-02",
@@ -1843,7 +2733,12 @@
       "region": "North America",
       "ip": "10.11.3.2",
       "model": "Meraki MR36",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "3JON-OU9I-Y4X4",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "F6:1E:1E:5E:32:86",
+      "uptime": "150d 8h 31m"
     },
     {
       "id": "ap-bra-03",
@@ -1853,7 +2748,12 @@
       "region": "North America",
       "ip": "10.11.3.3",
       "model": "Meraki MR36",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "1DNT-CAGR-P2U4",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "0D:63:3A:57:81:66",
+      "uptime": "50d 2h 46m"
     },
     {
       "id": "ap-bra-04",
@@ -1863,7 +2763,12 @@
       "region": "North America",
       "ip": "10.11.3.4",
       "model": "Meraki MR28",
-      "vendor": "meraki"
+      "vendor": "meraki",
+      "serial": "DTBH-55RB-C76U",
+      "firmware": "MR 30.7.1",
+      "vendor_portal": "https://dashboard.meraki.com",
+      "mac": "F0:EB:DC:17:04:93",
+      "uptime": "95d 11h 32m"
     }
   ]
 }

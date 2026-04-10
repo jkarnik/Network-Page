@@ -45,6 +45,52 @@
     <!-- Backdrop for expanded widget -->
     <div id="expandedBackdrop" onclick="closeExpandedWidgets()"></div>
 
+    <!-- Alert Detail Drawer (slides in from right) -->
+    <div id="alertDetailBackdrop" class="alert-detail-backdrop" onclick="closeAlertDetail()"></div>
+    <div id="alertDetailDrawer" class="alert-detail-drawer">
+        <div class="alert-detail-drawer-inner">
+            <div class="flex items-center justify-between mb-5">
+                <h2 id="alertDetailTitle" class="text-sm font-semibold text-dark-text">Alert Detail</h2>
+                <button onclick="closeAlertDetail()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
+                    <i class="fa-solid fa-xmark text-base"></i>
+                </button>
+            </div>
+
+            <!-- Severity + Type badge row -->
+            <div id="alertDetailBadges" class="flex items-center gap-2 mb-5"></div>
+
+            <!-- Site / Device -->
+            <div class="space-y-3 mb-6">
+                <div class="flex items-start gap-3">
+                    <i class="fa-solid fa-location-dot text-dark-muted text-xs mt-0.5 w-4 text-center"></i>
+                    <div>
+                        <div class="text-[10px] text-dark-muted uppercase tracking-wide mb-0.5">Site</div>
+                        <div id="alertDetailSite" class="text-sm font-medium text-dark-text"></div>
+                    </div>
+                </div>
+                <div class="flex items-start gap-3">
+                    <i class="fa-solid fa-server text-dark-muted text-xs mt-0.5 w-4 text-center"></i>
+                    <div>
+                        <div class="text-[10px] text-dark-muted uppercase tracking-wide mb-0.5">Device</div>
+                        <a id="alertDetailDevice" href="#" class="text-sm font-medium text-indigo-500 hover:underline"></a>
+                    </div>
+                </div>
+                <div class="flex items-start gap-3">
+                    <i id="alertDetailTimeIcon" class="fa-solid fa-clock text-dark-muted text-xs mt-0.5 w-4 text-center"></i>
+                    <div>
+                        <div id="alertDetailTimeLabel" class="text-[10px] text-dark-muted uppercase tracking-wide mb-0.5">Time</div>
+                        <div id="alertDetailTime" class="text-sm text-dark-text"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="alertDetailBottom" class="border-t border-gray-200 dark:border-gray-700 pt-5">
+                <div class="text-[10px] text-dark-muted uppercase tracking-wide mb-3">Alert Payload</div>
+                <pre id="alertDetailPayload" class="alert-detail-payload"></pre>
+            </div>
+        </div>
+    </div>
+
     <!-- Main Content Area -->
     <main class="flex-1 overflow-y-auto p-6 bg-dark-bg">
 
@@ -54,7 +100,7 @@
             <!-- ROW 1: Alert Widgets -->
 
             <!-- Infrastructure Alerts -->
-            <div id="networkIssuesCard" class="col-span-12 sm:col-span-4 lg:col-span-4 card p-4 flex flex-col justify-center bg-dark-card overflow-hidden h-[9.6rem]">
+            <div id="networkIssuesCard" class="col-span-12 sm:col-span-6 lg:col-span-3 card p-4 flex flex-col justify-center bg-dark-card overflow-hidden h-[9.6rem]">
                     <div id="issuesSummaryView">
                         <div class="flex items-center justify-center gap-2 mb-3">
                             <h3 class="text-sm font-bold text-dark-text">Infrastructure Alerts</h3>
@@ -123,7 +169,7 @@
                 </div>
 
             <!-- Security Alerts -->
-            <div id="securityCard" class="col-span-12 sm:col-span-4 lg:col-span-4 card p-4 flex flex-col justify-center bg-dark-card overflow-hidden h-[9.6rem]">
+            <div id="securityCard" class="col-span-12 sm:col-span-6 lg:col-span-3 card p-4 flex flex-col justify-center bg-dark-card overflow-hidden h-[9.6rem]">
                     <div id="securitySummaryView">
                         <div class="flex items-center justify-center gap-2 mb-3">
                             <h3 class="text-sm font-bold text-dark-text">Security Alerts</h3>
@@ -192,7 +238,7 @@
                 </div>
 
             <!-- AI Alerts -->
-            <div id="aiAlertsCard" class="col-span-12 sm:col-span-4 lg:col-span-4 card p-4 flex flex-col justify-center bg-dark-card overflow-hidden h-[9.6rem]">
+            <div id="aiAlertsCard" class="col-span-12 sm:col-span-6 lg:col-span-3 card p-4 flex flex-col justify-center bg-dark-card overflow-hidden h-[9.6rem]">
                     <div id="aiAlertsSummaryView">
                         <div class="flex items-center justify-center gap-2 mb-3">
                             <h3 class="text-sm font-bold text-dark-text">AI Alerts</h3>
@@ -260,10 +306,57 @@
                     </div>
                 </div>
 
-            <!-- ROW 2: Fleet Status + Latency -->
+            <!-- Correlated Alerts -->
+            <div id="correlatedAlertsCard" class="col-span-12 sm:col-span-6 lg:col-span-3 card p-4 flex flex-col justify-center bg-dark-card overflow-hidden h-[9.6rem]">
+                <div id="correlatedSummaryView">
+                    <div class="flex items-center justify-center gap-2 mb-3">
+                        <h3 class="text-sm font-bold text-dark-text">Correlated Alerts</h3>
+                        <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-1.5 py-0.5 rounded flex items-center gap-1">
+                            <i class="fa-solid fa-hand-pointer text-[7px]"></i> Click
+                        </span>
+                    </div>
+                    <div class="flex items-center justify-between gap-2">
+                        <div class="cursor-pointer group flex-1 text-center" onclick="showCorrelatedAlerts('crit')">
+                            <span class="block text-2xl font-bold text-newrelic-error group-hover:text-red-500 transition-colors" id="correlatedCritCount">--</span>
+                            <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-red-500 inline-block">Critical</span>
+                        </div>
+                        <div class="flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-link text-4xl text-orange-500 dark:text-orange-400 opacity-30 dark:opacity-90"></i>
+                        </div>
+                        <div class="cursor-pointer group flex-1 text-center" onclick="showCorrelatedAlerts('warn')">
+                            <span class="block text-2xl font-bold text-amber-500 group-hover:text-amber-400 transition-colors" id="correlatedWarnCount">--</span>
+                            <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-amber-500 inline-block">Warning</span>
+                        </div>
+                    </div>
+                </div>
 
-             <!-- 1. Fleet Status (Status Matrix) -->
-             <div id="deviceStatusCard" class="col-span-12 sm:col-span-6 lg:col-span-6 card p-4 bg-dark-card overflow-hidden">
+                <!-- Expanded Correlated Alerts View (Initially Hidden) -->
+                <div id="correlatedExpandedView" class="hidden h-full flex flex-col">
+                    <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                        <div class="flex items-center gap-3">
+                            <h4 class="text-base font-bold text-dark-text">Correlated Alerts</h4>
+                            <span class="text-xs text-gray-400 dark:text-gray-500" id="correlatedAlertCount"></span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="filterCorrelatedAlerts('all')" id="corrFilterAll" class="px-3 py-1.5 text-xs rounded-lg bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors">All</button>
+                            <button onclick="filterCorrelatedAlerts('crit')" id="corrFilterCrit" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Critical</button>
+                            <button onclick="filterCorrelatedAlerts('warn')" id="corrFilterWarn" class="px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Warning</button>
+                            <button onclick="hideCorrelatedAlerts()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-2">
+                                <i class="fa-solid fa-times text-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Correlated Groups List -->
+                    <div class="flex-1 overflow-auto custom-scrollbar" id="correlatedGroupsList">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- ROW 2: Fleet Status -->
+
+             <!-- 1. Fleet Status (Status Matrix) - Full Width -->
+             <div id="deviceStatusCard" class="col-span-12 card p-6 bg-dark-card overflow-hidden">
                 <div id="statusSummaryView" class="h-full flex flex-col">
                     <div class="flex justify-between items-center mb-2">
                         <h3 class="text-sm font-bold text-dark-text">Fleet Status</h3>
@@ -336,11 +429,13 @@
                 </div>
             </div>
 
-            <!-- 7. Top Impacted SD-WANs (Latency) -->
-            <div class="col-span-12 lg:col-span-6 card p-4 h-80 bg-dark-card cursor-pointer hover:shadow-lg transition-shadow" onclick="openLatencyTrends()">
+            <!-- ROW 3: Top Impacted Sites + Top SSIDs + Clients Connected -->
+
+            <!-- Top Impacted Sites (Latency) -->
+            <div class="col-span-12 lg:col-span-4 card p-4 h-80 bg-dark-card cursor-pointer hover:shadow-lg transition-shadow" onclick="openLatencyTrends()">
                 <div class="flex justify-between items-center mb-4">
                     <div class="flex items-center gap-2">
-                        <h3 class="text-sm font-bold text-dark-text">Top Impacted SD-WANs (Latency)</h3>
+                        <h3 class="text-sm font-bold text-dark-text">Top Impacted Sites</h3>
                         <i class="fa-solid fa-up-right-and-down-left-from-center text-xs text-gray-400 dark:text-gray-500"></i>
                     </div>
                     <span class="text-xs text-gray-400">Avg WAN Latency (ms)</span>
@@ -350,10 +445,36 @@
                 </div>
             </div>
 
-            <!-- ROW 3: Frustration + WAN Resilience -->
+            <!-- Top SSIDs by Client Count -->
+            <div class="col-span-12 lg:col-span-4 card p-4 h-80 bg-dark-card">
+                <div class="flex justify-between items-center mb-4">
+                    <div class="flex items-center gap-2">
+                        <h3 class="text-sm font-bold text-dark-text">Top SSIDs</h3>
+                    </div>
+                    <span class="text-xs text-gray-400">Clients Connected</span>
+                </div>
+                <div class="relative h-full w-full pb-4">
+                    <canvas id="ssidChart"></canvas>
+                </div>
+            </div>
 
-            <!-- 6. User Frustration Leaderboard -->
-            <div class="col-span-12 lg:col-span-7 card p-4 h-80 bg-dark-card cursor-pointer hover:shadow-lg transition-shadow" onclick="openFrustrationTrends()">
+            <!-- No. of Clients Connected (Site Level) -->
+            <div class="col-span-12 lg:col-span-4 card p-4 h-80 bg-dark-card">
+                <div class="flex justify-between items-center mb-4">
+                    <div class="flex items-center gap-2">
+                        <h3 class="text-sm font-bold text-dark-text">No. of Clients Connected</h3>
+                    </div>
+                    <span class="text-xs text-gray-400">Per Site</span>
+                </div>
+                <div class="relative h-full w-full pb-4">
+                    <canvas id="clientsChart"></canvas>
+                </div>
+            </div>
+
+            <!-- ROW 4: User Frustration + WAN Resilience + API Quota Health (1/3 each) -->
+
+            <!-- User Frustration Leaderboard - 1/3 -->
+            <div class="col-span-12 lg:col-span-4 card p-4 h-80 bg-dark-card cursor-pointer hover:shadow-lg transition-shadow" onclick="openFrustrationTrends()">
                 <div class="flex justify-between items-center mb-4">
                     <div class="flex items-center gap-2">
                         <h3 class="text-sm font-bold text-dark-text">User Frustration Leaderboard</h3>
@@ -366,18 +487,16 @@
                 </div>
             </div>
 
-            <!-- 8. WAN Resilience (Donut) -->
-            <div class="col-span-12 lg:col-span-5 card p-4 h-80 bg-dark-card cursor-pointer hover:shadow-lg transition-shadow" onclick="openWanResilienceTrends()">
+            <!-- WAN Resilience (Donut) - 1/3 -->
+            <div class="col-span-12 lg:col-span-4 card p-4 h-80 bg-dark-card cursor-pointer hover:shadow-lg transition-shadow" onclick="openWanResilienceTrends()">
                 <div class="flex items-center gap-2 mb-2">
                     <h3 class="text-sm font-bold text-dark-text">WAN Resilience</h3>
                     <i class="fa-solid fa-up-right-and-down-left-from-center text-xs text-gray-400 dark:text-gray-500"></i>
                 </div>
                 <div class="flex items-center justify-center gap-4" style="height: calc(100% - 2rem);">
-                    <!-- 2/3 area for the donut chart -->
                     <div class="relative flex items-center justify-center" style="flex: 2;">
                         <canvas id="wanDonut" style="max-width: 230px; max-height: 230px;"></canvas>
                     </div>
-                    <!-- 1/3 area for the legend -->
                     <div class="flex items-center justify-center" style="flex: 1;">
                         <div id="wanLegend">
                             <div class="flex items-center gap-2 mb-3">
@@ -406,7 +525,39 @@
                 </div>
             </div>
 
-            <!-- ROW 4: Unified Alert Feed -->
+            <!-- API Quota Health - 1/3 (two stacked sub-widgets) -->
+            <div class="col-span-12 lg:col-span-4 card bg-dark-card h-80 flex flex-col divide-y divide-gray-200 dark:divide-gray-700">
+
+                <!-- Top half: Meraki Requests/min trend -->
+                <div class="flex-1 p-3 flex flex-col min-h-0">
+                    <div class="flex justify-between items-center mb-1">
+                        <div class="flex items-center gap-1.5">
+                            <img src="images/cisco-logo.svg" class="h-3.5 w-auto opacity-70" alt="Meraki">
+                            <span class="text-xs font-semibold text-dark-text">Cisco Meraki API</span>
+                        </div>
+                        <span class="text-[10px] text-dark-muted">Requests / min</span>
+                    </div>
+                    <div class="flex-1 relative min-h-0">
+                        <canvas id="merakiRpmChart"></canvas>
+                        <!-- Rate limit annotation label -->
+                        <div id="merakiRpmLimitLabel" class="absolute right-0 text-[9px] text-red-400 font-medium pointer-events-none" style="top: 0;">— 60 rpm limit</div>
+                    </div>
+                </div>
+
+                <!-- Bottom half: Mist quota bar -->
+                <div class="flex-1 p-3 flex flex-col justify-center min-h-0">
+                    <div class="flex items-center gap-1.5 mb-2">
+                        <img src="images/juniper-logo.svg" class="h-3 w-auto opacity-70" alt="Mist">
+                        <span class="text-xs font-semibold text-dark-text">Juniper Mist API</span>
+                    </div>
+                    <div id="mistQuotaContainer">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ROW 5: Unified Alert Feed (full width) -->
             <div class="col-span-12 card h-96 flex flex-col bg-dark-card">
                 <div class="p-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
                     <h3 class="text-sm font-bold text-dark-text flex items-center gap-2">
@@ -449,7 +600,7 @@
             <div class="bg-dark-card rounded-lg shadow-2xl w-full max-w-6xl overflow-hidden">
                 <div class="p-6 border-b border-dark-border flex justify-between items-center">
                     <div class="flex items-center gap-3">
-                        <h2 class="text-xl font-bold text-dark-text">SD-WAN Latency Trends</h2>
+                        <h2 class="text-xl font-bold text-dark-text">Top Impacted Sites – Latency Trends</h2>
                         <span class="text-xs text-dark-muted" data-timeline-label>Last 24 hours</span>
                     </div>
                     <button onclick="closeLatencyTrends()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
@@ -458,7 +609,7 @@
                 </div>
                 <div class="p-6">
                     <div class="card p-4 bg-gray-50 dark:bg-gray-800">
-                        <h3 class="text-sm font-bold text-dark-text mb-3">Top 5 SD-WANs Latency Over Time</h3>
+                        <h3 class="text-sm font-bold text-dark-text mb-3">Top 5 Impacted Sites – Latency Over Time</h3>
                         <div style="height: 400px;">
                             <canvas id="latencyTrendsChart"></canvas>
                         </div>

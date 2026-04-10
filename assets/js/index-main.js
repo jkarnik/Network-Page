@@ -11,6 +11,8 @@
         let currentScope = 'Global'; // Region Scope
         let currentSiteFilter = null; // Site-specific filter
         let isAIExpanded = false; // Track if AI Alerts widget is expanded
+        let isCorrelatedExpanded = false; // Track if Correlated Alerts widget is expanded
+        let currentCorrelatedFilter = 'all'; // Track correlated severity filter
         let currentAIType = 'all'; // Track AI severity filter
         let aiSearchTerm = ''; // Search term for AI alerts
         let aiSortField = null; // Current sort field for AI alerts
@@ -33,6 +35,7 @@
         let securitySiteFilterValue = 'all'; // Site filter for security
         let statusSearchTerm = ''; // Search term for status devices
         let currentStatusVendor = null; // Track vendor filter for status view
+        let currentStatusModel = null; // Track model filter for status view
         let fleetViewMode = 'type-vendor'; // Fleet status grouping mode
         let fleetExpandedKeys = new Set(); // Currently expanded sub-groups (e.g. 'gateways-meraki')
 
@@ -95,6 +98,7 @@
                 site: a.site,
                 region: a.region,
                 device: a.device,
+                deviceId: a.deviceId,
                 msg: a.message,
                 time: a.timeAgo,
                 type: a.type
@@ -147,21 +151,11 @@
             document.getElementById('wanDown').innerText = wanData.down + '%';
 
             // 5. Update Frustration Chart
-            // Data is already sorted descending (highest first), which displays at the top in horizontal bar charts
             charts.frustration.data.labels = data.fData.map(d => d.label);
-            // Split the total time into 4 components with consistent percentages to maintain ordering
-            charts.frustration.data.datasets[0].data = data.fData.map(d => {
-                return Math.floor(d.val * 0.35); // 35% Association
-            });
-            charts.frustration.data.datasets[1].data = data.fData.map(d => {
-                return Math.floor(d.val * 0.25); // 25% Auth
-            });
-            charts.frustration.data.datasets[2].data = data.fData.map(d => {
-                return Math.floor(d.val * 0.25); // 25% DHCP
-            });
-            charts.frustration.data.datasets[3].data = data.fData.map(d => {
-                return Math.floor(d.val * 0.15); // 15% DNS Resolution
-            });
+            charts.frustration.data.datasets[0].data = data.fData.map(d => Math.floor(d.val * 0.35));
+            charts.frustration.data.datasets[1].data = data.fData.map(d => Math.floor(d.val * 0.25));
+            charts.frustration.data.datasets[2].data = data.fData.map(d => Math.floor(d.val * 0.25));
+            charts.frustration.data.datasets[3].data = data.fData.map(d => Math.floor(d.val * 0.15));
             charts.frustration.update();
 
             // 6. Update Latency Chart
@@ -174,6 +168,27 @@
 
             // 8. Update Alerts
             renderTable(currentFilter, data.aData);
+
+            // 9. Update Correlated Alert Counts
+            const effectiveScopeForCorr = isSiteScope ? siteName : currentScope;
+            const corrCounts = DataLoader.getCorrelatedAlertCounts(effectiveScopeForCorr);
+            document.getElementById('correlatedCritCount').innerText = corrCounts.crit;
+            document.getElementById('correlatedWarnCount').innerText = corrCounts.warn;
+
+            // 10. Update SSID Chart
+            const ssidData = DataLoader.getTopSSIDs(effectiveScopeForCorr, 5);
+            charts.ssid.data.labels = ssidData.map(d => d.ssid);
+            charts.ssid.data.datasets[0].data = ssidData.map(d => d.clients);
+            charts.ssid.update();
+
+            // 11. Update Clients per Site Chart
+            const clientsData = DataLoader.getTopSitesByClients(effectiveScopeForCorr, 5);
+            charts.clients.data.labels = clientsData.map(d => d.label);
+            charts.clients.data.datasets[0].data = clientsData.map(d => d.clients);
+            charts.clients.update();
+
+            // 12. Update API Quota
+            renderAPIQuota(effectiveScopeForCorr);
         }
 
         // --- 3. CHART INITIALIZATION ---
@@ -283,6 +298,42 @@
                 options: { plugins: { legend: { display: false } } }
             });
 
+            // E. SSID Chart
+            const ssidCanvas = document.getElementById('ssidChart');
+            charts.ssid = new Chart(ssidCanvas.getContext('2d'), {
+                type: 'bar',
+                data: { labels: [], datasets: [{ label: 'Clients', data: [], backgroundColor: ['#6366f1','#10b981','#f59e0b','#ef4444','#8b5cf6'], borderRadius: 4 }] },
+                options: {
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { callbacks: { label: ctx => ctx.parsed.x + ' clients' } }
+                    },
+                    scales: {
+                        x: { beginAtZero: true, grid: { display: true, borderDash: [2,2] } },
+                        y: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // F. Clients per Site Chart
+            const clientsCanvas = document.getElementById('clientsChart');
+            charts.clients = new Chart(clientsCanvas.getContext('2d'), {
+                type: 'bar',
+                data: { labels: [], datasets: [{ label: 'Clients', data: [], backgroundColor: '#0ea5e9', borderRadius: 4 }] },
+                options: {
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { callbacks: { label: ctx => ctx.parsed.x + ' clients' } }
+                    },
+                    scales: {
+                        x: { beginAtZero: true, grid: { display: true, borderDash: [2,2] } },
+                        y: { grid: { display: false } }
+                    }
+                }
+            });
+
         }
 
         // --- 4. ALERT TABLE LOGIC ---
@@ -336,7 +387,7 @@
 
             filteredAlerts.forEach(alert => {
                 const row = document.createElement('tr');
-                row.className = "hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors";
+                row.className = "hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer";
                 row.innerHTML = `
                     <td class="px-6 py-4 whitespace-nowrap">
                         <span class="${sevStyles[alert.sev]} flex items-center gap-1 w-fit">
@@ -353,11 +404,10 @@
                         </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">${alert.site}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm">
-                        <a href="${getDevicePageUrl(alert.device)}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 font-medium hover:underline">${alert.device}</a>
-                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-indigo-600 dark:text-indigo-400 font-medium">${alert.device}</td>
                     <td class="px-6 py-4 text-sm text-dark-muted truncate max-w-xs" title="${alert.msg}">${alert.msg}</td>
                 `;
+                row.addEventListener('click', () => openAlertDetail(alert));
                 tableBody.appendChild(row);
             });
         }
@@ -410,6 +460,229 @@
             return '#'; // Fallback
         }
 
+        // --- ALERT DETAIL DRAWER ---
+
+        function openAlertDetail(alert) {
+            const drawer = document.getElementById('alertDetailDrawer');
+            drawer.classList.remove('device-mode');
+            const backdrop = document.getElementById('alertDetailBackdrop');
+            // Restore shared rows hidden by device detail mode
+            const sharedRows = document.querySelector('#alertDetailDrawer .space-y-3');
+            if (sharedRows) sharedRows.style.display = '';
+            // Restore bottom border classes
+            const bottomEl = document.getElementById('alertDetailBottom');
+            bottomEl.classList.add('border-t', 'border-gray-200', 'dark:border-gray-700', 'pt-5');
+            document.getElementById('alertDetailTitle').textContent = 'Alert Detail';
+
+            // Severity badge
+            const sevStyles = {
+                crit: 'text-red-600 bg-red-50 dark:bg-red-900/20 dark:text-red-400 rounded-full px-2.5 py-1 text-[11px] font-bold border border-red-100 dark:border-red-900',
+                warn: 'text-amber-600 bg-amber-50 dark:bg-amber-900/20 dark:text-amber-400 rounded-full px-2.5 py-1 text-[11px] font-bold border border-amber-100 dark:border-amber-900',
+                info: 'text-blue-600 bg-blue-50 dark:bg-blue-900/20 dark:text-blue-400 rounded-full px-2.5 py-1 text-[11px] font-bold border border-blue-100 dark:border-blue-900'
+            };
+            const sevIcons = { crit: 'fa-circle-exclamation', warn: 'fa-triangle-exclamation', info: 'fa-circle-info' };
+            const sev = alert.sev || alert.severity || 'info';
+            const badgesEl = document.getElementById('alertDetailBadges');
+            badgesEl.innerHTML = `
+                <span class="${sevStyles[sev]}">
+                    <i class="fa-solid ${sevIcons[sev]} mr-1"></i>${sev.toUpperCase()}
+                </span>
+                ${alert.type ? `<span class="text-[11px] text-dark-muted bg-gray-100 dark:bg-gray-700 rounded-full px-2.5 py-1 font-medium">${alert.type}</span>` : ''}
+                ${alert.vendor ? `<span class="text-[11px] text-dark-muted bg-gray-100 dark:bg-gray-700 rounded-full px-2.5 py-1">${alert.vendor}</span>` : ''}
+            `;
+
+            // Site
+            document.getElementById('alertDetailSite').textContent = alert.site || '—';
+
+            // Device (linked)
+            const deviceEl = document.getElementById('alertDetailDevice');
+            const deviceName = alert.device || '—';
+            const deviceUrl = alert.deviceId ? getDevicePageUrl(alert.device) : '#';
+            deviceEl.textContent = deviceName;
+            deviceEl.href = deviceUrl;
+
+            // Time row
+            document.getElementById('alertDetailTimeLabel').textContent = 'Time';
+            document.getElementById('alertDetailTimeIcon').className = 'fa-solid fa-clock text-dark-muted text-xs mt-0.5 w-4 text-center';
+            document.getElementById('alertDetailTime').textContent = alert.time || alert.timeAgo || '—';
+
+            // Payload — build a clean object from available fields
+            const payload = {};
+            if (alert.type)     payload.type     = alert.type;
+            if (sev)            payload.severity  = sev;
+            if (alert.site)     payload.site      = alert.site;
+            if (alert.region)   payload.region    = alert.region;
+            if (alert.device)   payload.device    = alert.device;
+            if (alert.deviceId) payload.device_id = alert.deviceId;
+            if (alert.vendor)   payload.vendor    = alert.vendor;
+            if (alert.msg || alert.message) payload.message = alert.msg || alert.message;
+            if (alert.time || alert.timeAgo) payload.time_ago = alert.time || alert.timeAgo;
+            document.getElementById('alertDetailBottom').innerHTML = `
+                <div class="text-[10px] text-dark-muted uppercase tracking-wide mb-3">Alert Payload</div>
+                <pre id="alertDetailPayload" class="alert-detail-payload">${JSON.stringify(payload, null, 2)}</pre>
+            `;
+
+            backdrop.classList.add('active');
+            drawer.classList.add('active');
+        }
+
+        function closeAlertDetail() {
+            const drawer = document.getElementById('alertDetailDrawer');
+            drawer.classList.remove('active');
+            drawer.classList.remove('device-mode');
+            document.getElementById('alertDetailBackdrop').classList.remove('active');
+            // Restore shared rows for next open
+            const sharedRows = document.querySelector('#alertDetailDrawer .space-y-3');
+            if (sharedRows) sharedRows.style.display = '';
+            const bottomEl = document.getElementById('alertDetailBottom');
+            bottomEl.classList.add('border-t', 'border-gray-200', 'dark:border-gray-700', 'pt-5');
+        }
+
+        function openDeviceDetail(device) {
+            const drawer = document.getElementById('alertDetailDrawer');
+            const backdrop = document.getElementById('alertDetailBackdrop');
+            drawer.classList.add('device-mode');
+
+            const statusColors = {
+                online:   { border: 'border-green-500',  badge: 'text-green-400 bg-green-900/30 border border-green-700',  dot: 'bg-green-400', label: 'Online' },
+                warning:  { border: 'border-amber-500',  badge: 'text-amber-400 bg-amber-900/30 border border-amber-700',  dot: 'bg-amber-400', label: 'Warning' },
+                critical: { border: 'border-red-500',    badge: 'text-red-400 bg-red-900/30 border border-red-700',        dot: 'bg-red-400',   label: 'Critical' },
+                offline:  { border: 'border-gray-600',   badge: 'text-gray-400 bg-gray-800 border border-gray-600',        dot: 'bg-gray-500',  label: 'Offline' },
+            };
+            const statusIcons = { online: 'fa-circle-check', warning: 'fa-circle-exclamation', critical: 'fa-circle-xmark', offline: 'fa-power-off' };
+            const typeMap = { 'GW-': { icon: 'fa-network-wired', label: 'Gateway' }, 'SW-': { icon: 'fa-server', label: 'Switch' }, 'AP-': { icon: 'fa-wifi', label: 'Access Point' } };
+            const prefix = device.name.substring(0, 3);
+            const typeInfo = typeMap[prefix] || { icon: 'fa-circle', label: 'Device' };
+            const st = statusColors[device.status] || statusColors.offline;
+
+            const vendorLabel = device.vendor ? device.vendor.charAt(0).toUpperCase() + device.vendor.slice(1) : null;
+
+            const specCells = [
+                { label: 'IP Address',  value: device.ip       || '—', icon: 'fa-ethernet',     mono: true },
+                { label: 'MAC',         value: device.mac      || '—', icon: 'fa-id-card',      mono: true },
+                { label: 'Model',       value: device.model    || '—', icon: 'fa-microchip',    mono: false },
+                { label: 'Uptime',      value: device.uptime   || '—', icon: 'fa-clock',        mono: true },
+                { label: 'Serial',      value: device.serial   || '—', icon: 'fa-barcode',      mono: true },
+                { label: 'Firmware',    value: device.firmware || '—', icon: 'fa-code-branch',  mono: true },
+                { label: 'Site',        value: device.site     || '—', icon: 'fa-location-dot', mono: false },
+            ];
+
+            const tags = [
+                device.region ? { label: device.region,  color: 'bg-indigo-900/40 text-indigo-300 border border-indigo-700/50',  icon: 'fa-globe' }        : null,
+                device.vendor ? { label: vendorLabel,    color: 'bg-gray-800 text-gray-300 border border-gray-600',              icon: 'fa-building' }     : null,
+                { label: typeInfo.label,                  color: 'bg-gray-800 text-gray-300 border border-gray-600',              icon: typeInfo.icon },
+            ].filter(Boolean);
+
+            const alerts = DataLoader.getAlertsByDeviceId(device.id);
+            const sevBadge = {
+                crit: 'text-red-400 bg-red-900/30 border border-red-700',
+                warn: 'text-amber-400 bg-amber-900/30 border border-amber-700',
+                info: 'text-blue-400 bg-blue-900/30 border border-blue-700'
+            };
+
+            // Inject fully custom layout — hide the shared rows, use alertDetailBadges as root container
+            document.getElementById('alertDetailTitle').textContent = 'Device Detail';
+            document.getElementById('alertDetailBadges').innerHTML = '';
+
+            // Hide the shared site/device/time rows by targeting their parent .space-y-3
+            const sharedRows = document.querySelector('#alertDetailDrawer .space-y-3');
+            if (sharedRows) sharedRows.style.display = 'none';
+
+            document.getElementById('alertDetailBottom').classList.remove('border-t', 'border-gray-200', 'dark:border-gray-700', 'pt-5');
+
+            document.getElementById('alertDetailBottom').innerHTML = `
+                <!-- Device identity card -->
+                <div class="rounded-xl border border-white/10 bg-white/5 p-4 mb-4 ${st.border} border-l-4">
+                    <div class="flex items-start justify-between gap-3 mb-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-lg bg-white/8 flex items-center justify-center flex-shrink-0 border border-white/10">
+                                <i class="fa-solid ${typeInfo.icon} text-gray-300 text-sm"></i>
+                            </div>
+                            <div>
+                                <a href="${getDevicePageUrl(device.name)}" class="text-base font-bold text-white hover:text-indigo-300 transition-colors leading-tight block">${device.name}</a>
+                                ${device.model ? `<div class="text-xs text-gray-400 mt-0.5">${device.model}</div>` : ''}
+                            </div>
+                        </div>
+                        <span class="rounded-full px-2.5 py-1 text-[11px] font-bold flex items-center gap-1.5 flex-shrink-0 ${st.badge}">
+                            <i class="fa-solid ${statusIcons[device.status] || 'fa-circle'} text-[9px]"></i>${st.label}
+                        </span>
+                    </div>
+
+                    <!-- 2-col spec grid -->
+                    <div class="grid grid-cols-2 gap-x-4 gap-y-3">
+                        ${specCells.map(c => `
+                            <div>
+                                <div class="text-[10px] text-gray-500 uppercase tracking-wide mb-0.5 flex items-center gap-1">
+                                    <i class="fa-solid ${c.icon} text-[9px]"></i>${c.label}
+                                </div>
+                                <div class="text-xs ${c.mono ? 'font-mono' : 'font-medium'} text-gray-200 truncate">${c.value}</div>
+                            </div>
+                        `).join('')}
+                        ${device.vendor_portal ? `
+                            <div>
+                                <div class="text-[10px] text-gray-500 uppercase tracking-wide mb-0.5 flex items-center gap-1">
+                                    <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>Portal
+                                </div>
+                                <a href="${device.vendor_portal}" target="_blank" rel="noopener" class="text-xs text-indigo-400 hover:text-indigo-300 hover:underline transition-colors">Open Portal</a>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+
+                <!-- Tags -->
+                <div class="flex flex-wrap gap-1.5 mb-4">
+                    ${tags.map(t => `
+                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium ${t.color}">
+                            <i class="fa-solid ${t.icon} text-[9px]"></i>${t.label}
+                        </span>
+                    `).join('')}
+                </div>
+
+                <!-- Alerts -->
+                <div class="border-t border-white/8 pt-4">
+                    <div class="text-[10px] text-gray-500 uppercase tracking-wide mb-3 flex items-center gap-2">
+                        Alerts
+                        ${alerts.length > 0 ? `<span class="px-1.5 py-0.5 bg-gray-700 rounded text-[10px] font-medium text-gray-300">${alerts.length}</span>` : ''}
+                    </div>
+                    ${alerts.length === 0
+                        ? `<div class="text-xs text-gray-500 text-center py-5 rounded-lg border border-white/5 bg-white/2">
+                               <i class="fa-solid fa-circle-check text-green-500 block text-lg mb-2"></i>No active alerts
+                           </div>`
+                        : `<div class="space-y-2">
+                            ${alerts.map((a, i) => `
+                                <div class="device-alert-card rounded-lg border border-white/8 p-2.5 bg-white/4 cursor-pointer hover:border-indigo-500/50 hover:bg-white/7 transition-colors" data-alert-idx="${i}">
+                                    <div class="flex items-center justify-between gap-2 mb-1">
+                                        <span class="rounded-full px-2 py-0.5 text-[10px] font-bold ${sevBadge[a.severity] || sevBadge.info}">${a.severity.toUpperCase()}</span>
+                                        <span class="text-[10px] text-gray-500 flex-shrink-0">${a.timeAgo}</span>
+                                    </div>
+                                    <div class="text-xs text-gray-200">${a.message}</div>
+                                    ${a.type ? `<div class="text-[10px] text-gray-500 mt-1">${a.type}</div>` : ''}
+                                </div>
+                            `).join('')}
+                           </div>`
+                    }
+                </div>
+            `;
+
+            document.getElementById('alertDetailBottom').querySelectorAll('.device-alert-card').forEach(card => {
+                const a = alerts[parseInt(card.dataset.alertIdx)];
+                card.addEventListener('click', () => openAlertDetail({
+                    sev: a.severity,
+                    site: a.site,
+                    region: a.region,
+                    device: a.device,
+                    deviceId: a.deviceId,
+                    vendor: a.vendor,
+                    type: a.type,
+                    msg: a.message,
+                    time: a.timeAgo
+                }));
+            });
+
+            backdrop.classList.add('active');
+            drawer.classList.add('active');
+        }
+
         function closeExpandedWidgets() {
             if (isStatusExpanded) {
                 hideStatusDevices();
@@ -422,6 +695,9 @@
             }
             if (isAIExpanded) {
                 hideAIAlerts();
+            }
+            if (isCorrelatedExpanded) {
+                hideCorrelatedAlerts();
             }
         }
 
@@ -508,26 +784,40 @@
                 });
 
                 // Group label cell spanning all sub-rows
-                const groupCell = addCell(group.label, 'status-cell status-group-cell text-dark-muted');
+                const groupCell = addCell(group.label, 'status-cell status-group-cell clickable text-dark-muted');
                 groupCell.style.gridRow = `span ${totalSubRows}`;
+                if (fleetViewMode === 'type-vendor') {
+                    groupCell.onclick = () => showStatusDevices(group.filterKey, 'all', null);
+                } else {
+                    groupCell.onclick = () => showStatusDevices('all', 'all', group.key);
+                }
 
                 subGroups.forEach((sub, subIdx) => {
                     const typeKey = fleetViewMode === 'type-vendor' ? group.key : sub.key;
                     const vendorKey = fleetViewMode === 'type-vendor' ? sub.key : group.key;
                     const typeFilterKey = fleetViewMode === 'type-vendor' ? group.filterKey : sub.filterKey;
+                    const subFilterKey = fleetViewMode === 'type-vendor' ? sub.key : sub.filterKey;
                     const expandKey = fleetViewMode === 'type-vendor'
                         ? `${group.key}-${sub.key}`
                         : `${sub.key}-${group.key}`;
                     const isExpanded = fleetExpandedKeys.has(expandKey);
                     const counts = DataLoader.getDeviceStatusCountsByVendor(typeKey, vendorKey, effectiveScope);
 
-                    // Sub-group label with chevron
+                    // Sub-group label: chevron toggles expand, label opens overlay
                     const chevron = isExpanded ? 'fa-chevron-down' : 'fa-chevron-right';
                     const subCell = addCell(
-                        `<span class="flex items-center gap-1.5"><i class="fa-solid ${chevron} text-[9px] text-gray-400"></i>${sub.label}</span>`,
-                        'status-cell status-subgroup-cell text-dark-muted'
+                        `<span class="flex items-center gap-1.5"><i class="fa-solid ${chevron} text-[9px] text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-1 -m-1 z-10 relative" data-expand-key="${expandKey}"></i><span class="hover:underline">${sub.label}</span></span>`,
+                        'status-cell status-subgroup-cell clickable text-dark-muted'
                     );
-                    subCell.onclick = () => toggleFleetExpand(expandKey);
+                    subCell.onclick = (e) => {
+                        if (e.target.closest('i[data-expand-key]')) {
+                            toggleFleetExpand(expandKey);
+                        } else if (fleetViewMode === 'type-vendor') {
+                            showStatusDevices(typeFilterKey, 'all', subFilterKey);
+                        } else {
+                            showStatusDevices(sub.filterKey, 'all', group.key);
+                        }
+                    };
 
                     // Status count cells for this sub-group row
                     statusCols.forEach(s => {
@@ -543,11 +833,12 @@
                             const modelCounts = DataLoader.getDeviceStatusCountsByModel(typeKey, vendorKey, model, effectiveScope);
                             // Strip vendor prefix from model name for display
                             const shortName = model.replace(/^(Meraki |Mist )/, '');
-                            addCell(shortName, 'status-cell status-model-cell text-left');
+                            const modelCell = addCell(`<span class="hover:underline">${shortName}</span>`, 'status-cell status-model-cell clickable text-left');
+                            modelCell.onclick = () => showStatusDevices(typeFilterKey, 'all', vendorKey, model);
                             statusCols.forEach(s => {
                                 const val = modelCounts[s.key] || 0;
                                 const cell = addCell(val || '', 'status-cell status-model-cell clickable ' + (val > 0 ? s.cellClass : ''));
-                                cell.onclick = () => showStatusDevices(typeFilterKey, statusFilterMap[s.key], vendorKey);
+                                cell.onclick = () => showStatusDevices(typeFilterKey, statusFilterMap[s.key], vendorKey, model);
                             });
                         });
                     }
@@ -557,7 +848,7 @@
 
         // --- STATUS WIDGET FUNCTIONS ---
 
-        function showStatusDevices(deviceType, status, vendor) {
+        function showStatusDevices(deviceType, status, vendor, model) {
             // Close other widgets if open
             if (isAIExpanded) {
                 hideAIAlerts();
@@ -588,6 +879,7 @@
             currentStatusDeviceType = deviceType;
             currentStatusFilter = status;
             currentStatusVendor = vendor || null;
+            currentStatusModel = model || null;
 
             updateStatusFilterButtons(status, deviceType);
             renderStatusDeviceList();
@@ -605,6 +897,7 @@
             backdrop.classList.remove('active');
             mainContent.style.overflow = '';
             isStatusExpanded = false;
+            currentStatusModel = null;
 
             statusSummaryView.classList.remove('hidden');
             statusExpandedView.classList.add('hidden');
@@ -612,18 +905,21 @@
 
         function filterStatusDevices(status) {
             currentStatusFilter = status;
+            currentStatusModel = null;
             updateStatusFilterButtons(status, currentStatusDeviceType);
             renderStatusDeviceList();
         }
 
         function filterStatusDeviceType(deviceType) {
             currentStatusDeviceType = deviceType;
+            currentStatusModel = null;
             updateStatusFilterButtons(currentStatusFilter, deviceType);
             renderStatusDeviceList();
         }
 
         function filterStatusVendor(vendor) {
             currentStatusVendor = vendor;
+            currentStatusModel = null;
             updateStatusFilterButtons(currentStatusFilter, currentStatusDeviceType);
             renderStatusDeviceList();
         }
@@ -681,6 +977,11 @@
             // Apply site filter if active
             if (currentSiteFilter) {
                 devices = devices.filter(d => d.site === currentSiteFilter);
+            }
+
+            // Apply model filter if set
+            if (currentStatusModel) {
+                devices = devices.filter(d => d.model === currentStatusModel);
             }
 
             // Apply status filter
@@ -759,9 +1060,7 @@
                         </div>
                     </div>
                 `;
-                deviceCard.onclick = () => {
-                    window.location.href = getDevicePageUrl(device.name);
-                };
+                deviceCard.onclick = () => openDeviceDetail(device);
                 container.appendChild(deviceCard);
             });
 
@@ -903,7 +1202,7 @@
 
             alerts.forEach(alert => {
                 const row = document.createElement('tr');
-                row.className = "hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors";
+                row.className = "hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer";
                 row.innerHTML = `
                     <td class="px-4 py-3 whitespace-nowrap">
                         <span class="${sevStyles[alert.sev]} flex items-center gap-1 w-fit">
@@ -912,11 +1211,10 @@
                     </td>
                     <td class="px-4 py-3 whitespace-nowrap text-xs text-dark-muted">${alert.time}</td>
                     <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">${alert.site}</td>
-                    <td class="px-4 py-3 whitespace-nowrap text-sm">
-                        <a href="${getDevicePageUrl(alert.device)}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 font-medium hover:underline">${alert.device}</a>
-                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-indigo-600 dark:text-indigo-400 font-medium">${alert.device}</td>
                     <td class="px-4 py-3 text-sm text-dark-muted truncate max-w-xs" title="${alert.msg}">${alert.msg}</td>
                 `;
+                row.addEventListener('click', () => openAlertDetail(alert));
                 tableBody.appendChild(row);
             });
         }
@@ -1109,7 +1407,7 @@
 
             alerts.forEach(alert => {
                 const row = document.createElement('tr');
-                row.className = "hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors";
+                row.className = "hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer";
                 row.innerHTML = `
                     <td class="px-4 py-3 whitespace-nowrap">
                         <span class="${sevStyles[alert.sev]} flex items-center gap-1 w-fit">
@@ -1118,11 +1416,10 @@
                     </td>
                     <td class="px-4 py-3 whitespace-nowrap text-xs text-dark-muted">${alert.time}</td>
                     <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">${alert.site}</td>
-                    <td class="px-4 py-3 whitespace-nowrap text-sm">
-                        <a href="${getDevicePageUrl(alert.device)}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 font-medium hover:underline">${alert.device}</a>
-                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-indigo-600 dark:text-indigo-400 font-medium">${alert.device}</td>
                     <td class="px-4 py-3 text-sm text-dark-muted truncate max-w-xs" title="${alert.msg}">${alert.msg}</td>
                 `;
+                row.addEventListener('click', () => openAlertDetail(alert));
                 tableBody.appendChild(row);
             });
         }
@@ -1290,7 +1587,7 @@
 
             alerts.forEach(alert => {
                 const row = document.createElement('tr');
-                row.className = "hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors";
+                row.className = "hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer";
                 row.innerHTML = `
                     <td class="px-4 py-3 whitespace-nowrap">
                         <span class="${sevStyles[alert.sev]} flex items-center gap-1 w-fit">
@@ -1299,11 +1596,10 @@
                     </td>
                     <td class="px-4 py-3 whitespace-nowrap text-xs text-dark-muted">${alert.time}</td>
                     <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">${alert.site}</td>
-                    <td class="px-4 py-3 whitespace-nowrap text-sm">
-                        <a href="${getDevicePageUrl(alert.device)}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 font-medium hover:underline">${alert.device}</a>
-                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-indigo-600 dark:text-indigo-400 font-medium">${alert.device}</td>
                     <td class="px-4 py-3 text-sm text-dark-muted truncate max-w-xs" title="${alert.msg}">${alert.msg}</td>
                 `;
+                row.addEventListener('click', () => openAlertDetail(alert));
                 tableBody.appendChild(row);
             });
         }
@@ -1337,6 +1633,260 @@
                 select.innerHTML += `<option value="${site}"${site === currentValue ? ' selected' : ''}>${site}</option>`;
             });
             select.value = aiSiteFilterValue === 'all' || sites.includes(aiSiteFilterValue) ? aiSiteFilterValue : 'all';
+        }
+
+        // --- CORRELATED ALERTS WIDGET FUNCTIONS ---
+
+        function showCorrelatedAlerts(severity) {
+            if (isStatusExpanded) { hideStatusDevices(); }
+            if (isIssuesExpanded) { hideIssuesAlerts(); }
+            if (isSecurityExpanded) { hideSecurityAlerts(); }
+            if (isAIExpanded) { hideAIAlerts(); }
+
+            const summaryView = document.getElementById('correlatedSummaryView');
+            const expandedView = document.getElementById('correlatedExpandedView');
+            const card = document.getElementById('correlatedAlertsCard');
+            const backdrop = document.getElementById('expandedBackdrop');
+            const mainContent = document.querySelector('main');
+
+            card.classList.add('expanded');
+            backdrop.classList.add('active');
+            mainContent.style.overflow = 'hidden';
+            isCorrelatedExpanded = true;
+
+            summaryView.classList.add('hidden');
+            expandedView.classList.remove('hidden');
+
+            currentCorrelatedFilter = severity;
+            updateCorrelatedFilterButtons(severity);
+            renderCorrelatedGroupsList();
+        }
+
+        function hideCorrelatedAlerts() {
+            const summaryView = document.getElementById('correlatedSummaryView');
+            const expandedView = document.getElementById('correlatedExpandedView');
+            const card = document.getElementById('correlatedAlertsCard');
+            const backdrop = document.getElementById('expandedBackdrop');
+            const mainContent = document.querySelector('main');
+
+            card.classList.remove('expanded');
+            backdrop.classList.remove('active');
+            mainContent.style.overflow = '';
+            isCorrelatedExpanded = false;
+
+            summaryView.classList.remove('hidden');
+            expandedView.classList.add('hidden');
+        }
+
+        function filterCorrelatedAlerts(severity) {
+            currentCorrelatedFilter = severity;
+            updateCorrelatedFilterButtons(severity);
+            renderCorrelatedGroupsList();
+        }
+
+        function updateCorrelatedFilterButtons(active) {
+            const inactive = 'px-3 py-1.5 text-xs rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors';
+            const activeClass = 'px-3 py-1.5 text-xs rounded-lg bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors';
+            ['corrFilterAll', 'corrFilterCrit', 'corrFilterWarn'].forEach(id => {
+                document.getElementById(id).className = inactive;
+            });
+            const map = { all: 'corrFilterAll', crit: 'corrFilterCrit', warn: 'corrFilterWarn' };
+            const btn = document.getElementById(map[active]);
+            if (btn) btn.className = activeClass;
+        }
+
+        function renderCorrelatedGroupsList() {
+            const container = document.getElementById('correlatedGroupsList');
+            const countEl = document.getElementById('correlatedAlertCount');
+            container.innerHTML = '';
+
+            const effectiveScope = currentSiteFilter || currentScope;
+            let groups = DataLoader.getCorrelatedAlerts(effectiveScope);
+
+            if (currentCorrelatedFilter === 'crit') {
+                groups = groups.filter(g => g.alerts.some(a => a.severity === 'crit'));
+            } else if (currentCorrelatedFilter === 'warn') {
+                groups = groups.filter(g => !g.alerts.some(a => a.severity === 'crit'));
+            }
+
+            countEl.innerText = `${groups.length} group${groups.length !== 1 ? 's' : ''}`;
+
+            if (groups.length === 0) {
+                container.innerHTML = `<div class="text-center text-sm text-gray-400 py-8">No correlated alerts found.</div>`;
+                return;
+            }
+
+            const sevBadge = {
+                crit: 'text-red-600 bg-red-50 dark:bg-red-900/20 dark:text-red-400 rounded-full px-2 py-0.5 text-[10px] font-bold border border-red-100 dark:border-red-900',
+                warn: 'text-amber-600 bg-amber-50 dark:bg-amber-900/20 dark:text-amber-400 rounded-full px-2 py-0.5 text-[10px] font-bold border border-amber-100 dark:border-amber-900',
+                info: 'text-blue-600 bg-blue-50 dark:bg-blue-900/20 dark:text-blue-400 rounded-full px-2 py-0.5 text-[10px] font-bold border border-blue-100 dark:border-blue-900'
+            };
+
+            groups.forEach(group => {
+                const groupSev = group.alerts.some(a => a.severity === 'crit') ? 'crit' : 'warn';
+                const groupIcon = groupSev === 'crit'
+                    ? '<i class="fa-solid fa-circle-exclamation text-red-500"></i>'
+                    : '<i class="fa-solid fa-triangle-exclamation text-amber-500"></i>';
+
+                const el = document.createElement('div');
+                el.className = 'mb-3 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden';
+                el.innerHTML = `
+                    <div class="flex items-center justify-between px-3 py-2 bg-gray-50 dark:bg-gray-800 cursor-pointer select-none" onclick="this.nextElementSibling.classList.toggle('hidden')">
+                        <div class="flex items-center gap-2 min-w-0">
+                            ${groupIcon}
+                            <span class="text-xs font-semibold text-dark-text truncate">${group.title}</span>
+                        </div>
+                        <div class="flex items-center gap-2 flex-shrink-0 ml-2">
+                            <span class="text-[10px] text-dark-muted">${group.firstSeen}</span>
+                            <span class="text-[10px] text-dark-muted bg-gray-200 dark:bg-gray-700 rounded px-1.5 py-0.5">${group.alerts.length} alerts</span>
+                            <i class="fa-solid fa-chevron-down text-[9px] text-gray-400"></i>
+                        </div>
+                    </div>
+                    <div class="hidden">
+                        ${group.alerts.map((a, i) => `
+                            <div class="corr-alert-row flex items-start gap-2 px-3 py-2 border-t border-gray-100 dark:border-gray-700/50 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" data-group-idx="${groups.indexOf(group)}" data-alert-idx="${i}">
+                                <span class="${sevBadge[a.severity]} flex-shrink-0 mt-0.5">${a.severity.toUpperCase()}</span>
+                                <div class="min-w-0 flex-1">
+                                    <div class="text-xs font-medium text-dark-text truncate">${a.device}</div>
+                                    <div class="text-[10px] text-dark-muted truncate">${a.message}</div>
+                                </div>
+                                <span class="text-[10px] text-dark-muted flex-shrink-0">${a.timeAgo}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                container.appendChild(el);
+            });
+
+            // Attach click handlers to correlated alert rows
+            container.querySelectorAll('.corr-alert-row').forEach(row => {
+                row.addEventListener('click', e => {
+                    e.stopPropagation();
+                    const gIdx = parseInt(row.dataset.groupIdx);
+                    const aIdx = parseInt(row.dataset.alertIdx);
+                    const a = groups[gIdx].alerts[aIdx];
+                    openAlertDetail({
+                        sev: a.severity,
+                        site: a.site,
+                        region: a.region,
+                        device: a.device,
+                        vendor: a.vendor,
+                        type: a.type,
+                        msg: a.message,
+                        time: a.timeAgo
+                    });
+                });
+            });
+        }
+
+        // --- API QUOTA RENDERING ---
+
+        let merakiRpmChart = null;
+
+        function renderAPIQuota(scope = 'Global') {
+            const quota = DataLoader.getAPIQuota(scope);
+
+            // --- Meraki: rpm trend line chart ---
+            const merakiData = quota.meraki;
+            if (merakiData && merakiData.rpmTrend) {
+                const canvas = document.getElementById('merakiRpmChart');
+                if (canvas) {
+                    if (merakiRpmChart) { merakiRpmChart.destroy(); }
+
+                    const trend = merakiData.rpmTrend;
+                    const rpmLimit = merakiData.rpmLimit || 60;
+                    const labels = trend.map((_, i) => {
+                        const minsAgo = (trend.length - 1 - i) * 2;
+                        return minsAgo === 0 ? 'now' : `-${minsAgo}m`;
+                    });
+
+                    // Color each bar: red if over limit, amber if within 10%, green otherwise
+                    const barColors = trend.map(v =>
+                        v >= rpmLimit ? '#ef4444' : v >= rpmLimit * 0.9 ? '#f59e0b' : '#6366f1'
+                    );
+
+                    merakiRpmChart = new Chart(canvas.getContext('2d'), {
+                        type: 'bar',
+                        data: {
+                            labels,
+                            datasets: [
+                                {
+                                    label: 'Requests/min',
+                                    data: trend,
+                                    backgroundColor: barColors,
+                                    borderRadius: 2,
+                                    barPercentage: 0.8,
+                                    categoryPercentage: 0.9
+                                },
+                                {
+                                    // Rate-limit annotation line rendered as a scatter line
+                                    label: '60 rpm limit',
+                                    data: trend.map(() => rpmLimit),
+                                    type: 'line',
+                                    borderColor: '#ef4444',
+                                    borderWidth: 1.5,
+                                    borderDash: [4, 3],
+                                    pointRadius: 0,
+                                    fill: false
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            animation: false,
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: {
+                                    callbacks: {
+                                        label: ctx => ctx.datasetIndex === 0
+                                            ? `${ctx.parsed.y} rpm`
+                                            : `Limit: ${rpmLimit} rpm`
+                                    }
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    grid: { display: false },
+                                    ticks: {
+                                        font: { size: 8 },
+                                        maxTicksLimit: 6,
+                                        maxRotation: 0
+                                    }
+                                },
+                                y: {
+                                    beginAtZero: true,
+                                    suggestedMax: Math.max(...trend, rpmLimit) * 1.15,
+                                    grid: { color: 'rgba(128,128,128,0.1)', borderDash: [2, 2] },
+                                    ticks: { font: { size: 8 }, maxTicksLimit: 4 }
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+
+            // --- Mist: quota progress bar ---
+            const mistData = quota.mist;
+            const mistContainer = document.getElementById('mistQuotaContainer');
+            if (mistData && mistContainer) {
+                const pct = Math.round((mistData.used / mistData.limit) * 100);
+                const barColor = pct >= 90 ? 'bg-red-500' : pct >= 70 ? 'bg-amber-500' : 'bg-newrelic-success';
+                const textColor = pct >= 90 ? 'text-red-500 dark:text-red-400' : pct >= 70 ? 'text-amber-500' : 'text-green-600 dark:text-green-400';
+                mistContainer.innerHTML = `
+                    <div class="flex items-center justify-between mb-1.5">
+                        <span class="text-[10px] text-dark-muted">Daily API calls</span>
+                        <span class="text-xs ${textColor} font-bold">${pct}%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 mb-1.5">
+                        <div class="${barColor} h-2.5 rounded-full transition-all duration-500" style="width: ${pct}%"></div>
+                    </div>
+                    <div class="flex justify-between text-[10px] text-dark-muted">
+                        <span>${mistData.used.toLocaleString()} / ${mistData.limit.toLocaleString()} calls</span>
+                        <span>Resets in ${mistData.resetIn}</span>
+                    </div>
+                `;
+            }
         }
 
         // --- LATENCY TRENDS OVERLAY ---
@@ -1863,6 +2413,9 @@
         window.closeFrustrationTrends = closeFrustrationTrends;
         window.openWanResilienceTrends = openWanResilienceTrends;
         window.closeWanResilienceTrends = closeWanResilienceTrends;
+        window.showCorrelatedAlerts = showCorrelatedAlerts;
+        window.hideCorrelatedAlerts = hideCorrelatedAlerts;
+        window.filterCorrelatedAlerts = filterCorrelatedAlerts;
 
         // Global Escape key and click-outside handler for all overlays
         document.addEventListener('keydown', function(e) {
@@ -1880,6 +2433,7 @@
                 if (isIssuesExpanded) { hideIssuesAlerts(); return; }
                 if (isSecurityExpanded) { hideSecurityAlerts(); return; }
                 if (isAIExpanded) { hideAIAlerts(); return; }
+                if (isCorrelatedExpanded) { hideCorrelatedAlerts(); return; }
                 if (isStatusExpanded) { hideStatusDevices(); return; }
             }
         });

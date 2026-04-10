@@ -635,6 +635,85 @@ const DataLoader = {
         return metrics.health || 0;
     },
 
+    // ==================== CORRELATED ALERTS ====================
+
+    /**
+     * Get correlated alert groups filtered by scope
+     */
+    getCorrelatedAlerts(scope = 'Global') {
+        const groups = this._data?.correlatedAlerts || [];
+        if (scope === 'Global') return groups;
+        if (this._data?.sites?.[scope]) {
+            return groups.filter(g => g.alerts.some(a => a.site === scope));
+        }
+        return groups.filter(g => g.alerts.some(a => a.region === scope));
+    },
+
+    /**
+     * Get correlated alert summary counts
+     * A group is "critical" if any alert in it is critical, otherwise "warning"
+     */
+    getCorrelatedAlertCounts(scope = 'Global') {
+        const groups = this.getCorrelatedAlerts(scope);
+        const crit = groups.filter(g => g.alerts.some(a => a.severity === 'crit')).length;
+        const warn = groups.length - crit;
+        return { crit, warn, total: groups.length };
+    },
+
+    // ==================== SSID DATA ====================
+
+    /**
+     * Get top SSIDs by client count for a scope
+     */
+    getTopSSIDs(scope = 'Global', limit = 5) {
+        const data = this._data?.ssidData || [];
+        let filtered = data;
+        if (scope !== 'Global') {
+            if (this._data?.sites?.[scope]) {
+                filtered = data.filter(d => d.site === scope);
+            } else {
+                filtered = data.filter(d => d.region === scope);
+            }
+        }
+        // Aggregate by SSID name
+        const map = {};
+        filtered.forEach(d => {
+            if (!map[d.ssid]) map[d.ssid] = { ssid: d.ssid, clients: 0 };
+            map[d.ssid].clients += d.clients;
+        });
+        return Object.values(map)
+            .sort((a, b) => b.clients - a.clients)
+            .slice(0, limit);
+    },
+
+    /**
+     * Get top sites by client count for a scope
+     */
+    getTopSitesByClients(scope = 'Global', limit = 5) {
+        let sites = [];
+        if (scope === 'Global') {
+            sites = Object.values(this._data?.sites || {});
+        } else if (this._data?.regions?.[scope]) {
+            sites = Object.values(this._data?.sites || {}).filter(s => s.region === scope);
+        } else if (this._data?.sites?.[scope]) {
+            sites = [this._data.sites[scope]];
+        }
+        return sites
+            .map(s => ({ label: s.name, region: s.region, clients: s.clientCount }))
+            .sort((a, b) => b.clients - a.clients)
+            .slice(0, limit);
+    },
+
+    // ==================== API QUOTA ====================
+
+    /**
+     * Get API quota data for a scope
+     */
+    getAPIQuota(scope = 'Global') {
+        const quotaMap = this._data?.apiQuota || {};
+        return quotaMap[scope] || quotaMap['Global'] || {};
+    },
+
     // ==================== VALIDATION ====================
 
     /**

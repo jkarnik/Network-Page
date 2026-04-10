@@ -194,6 +194,21 @@ const SharedUI = {
             ipEl.textContent = device.ip;
         }
 
+        const serialEl = deviceInfoCard.querySelector('[data-device-serial]');
+        if (serialEl && device.serial) {
+            serialEl.textContent = device.serial;
+        }
+
+        const firmwareEl = deviceInfoCard.querySelector('[data-device-firmware]');
+        if (firmwareEl && device.firmware) {
+            firmwareEl.textContent = device.firmware;
+        }
+
+        const portalEl = deviceInfoCard.querySelector('[data-device-portal]');
+        if (portalEl && device.vendor_portal) {
+            portalEl.href = device.vendor_portal;
+        }
+
         // Update border color and status badge based on device status
         if (device.status) {
             const style = this.STATUS_STYLES[device.status] || this.STATUS_STYLES.online;
