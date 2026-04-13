@@ -316,6 +316,30 @@
                 }
             });
 
+            // B. Top Applications (Donut)
+            const dashAppsData = {
+                labels: ['M365', 'Teams', 'Salesforce', 'YouTube', 'Other'],
+                data: [35, 25, 18, 12, 10],
+                colors: ['#3b82f6', '#6366f1', '#0ea5e9', '#ef4444', '#9ca3af']
+            };
+            charts.dashApps = new Chart(document.getElementById('dashAppsChart').getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: dashAppsData.labels,
+                    datasets: [{ data: dashAppsData.data, backgroundColor: dashAppsData.colors, borderWidth: 0 }]
+                },
+                options: { cutout: '65%', plugins: { legend: { display: false } } }
+            });
+            const dashAppsLegend = document.getElementById('dashAppsLegend');
+            dashAppsLegend.innerHTML = dashAppsData.labels.map((label, i) => `
+                <div class="flex items-center gap-2 mb-2">
+                    <div class="w-2.5 h-2.5 rounded-sm flex-shrink-0" style="background:${dashAppsData.colors[i]}"></div>
+                    <div class="text-xs text-dark-text">
+                        <span class="font-medium">${label}</span>
+                        <span class="text-dark-muted ml-1">${dashAppsData.data[i]}%</span>
+                    </div>
+                </div>`).join('');
+
             // F. Clients per Site Chart
             const clientsCanvas = document.getElementById('clientsChart');
             charts.clients = new Chart(clientsCanvas.getContext('2d'), {
@@ -2202,209 +2226,104 @@
             }
         }
 
-        // --- WAN RESILIENCE TRENDS OVERLAY ---
-        let wanStatusTrendsChart = null;
-        let failoverEventsChart = null;
+        // --- WAN RESILIENCE OVERLAY ---
+        let _wanActiveFilter = 'failover';
 
         function openWanResilienceTrends() {
-            const overlay = document.getElementById('wanResilienceTrendsOverlay');
-            overlay.classList.remove('hidden');
-
-            // Destroy existing charts if they exist
-            if (wanStatusTrendsChart) {
-                wanStatusTrendsChart.destroy();
-            }
-            if (failoverEventsChart) {
-                failoverEventsChart.destroy();
-            }
-
-            // Generate time labels based on timeline selection
-            const timeLabels = TimelineManager.generateLabels(24);
-            const pointCount = timeLabels.length;
-
-            // Generate WAN status trends data
-            const primaryData = [];
-            const failoverData = [];
-            const downData = [];
-
-            for (let i = 0; i < pointCount; i++) {
-                // Simulate some variation in WAN status
-                const fraction = i / pointCount;
-                const baseDown = fraction >= 0.08 && fraction <= 0.17 ? 3 : 1;
-                const basePrimary = 91 - (fraction >= 0.08 && fraction <= 0.17 ? 5 : 0);
-                const baseFailover = 100 - basePrimary - baseDown;
-
-                primaryData.push(basePrimary + (Math.random() - 0.5) * 2);
-                failoverData.push(baseFailover + (Math.random() - 0.5) * 2);
-                downData.push(Math.max(0, baseDown + (Math.random() - 0.5) * 1));
-            }
-
-            wanStatusTrendsChart = new Chart(document.getElementById('wanStatusTrendsChart'), {
-                type: 'line',
-                data: {
-                    labels: timeLabels,
-                    datasets: [
-                        {
-                            label: 'Primary',
-                            data: primaryData,
-                            borderColor: '#3b82f6',
-                            backgroundColor: 'rgba(59, 130, 246, 0.2)',
-                            borderWidth: 2,
-                            pointRadius: 2,
-                            tension: 0.4,
-                            fill: true
-                        },
-                        {
-                            label: 'Failover',
-                            data: failoverData,
-                            borderColor: '#f59e0b',
-                            backgroundColor: 'rgba(245, 158, 11, 0.2)',
-                            borderWidth: 2,
-                            pointRadius: 2,
-                            tension: 0.4,
-                            fill: true
-                        },
-                        {
-                            label: 'Down',
-                            data: downData,
-                            borderColor: '#ef4444',
-                            backgroundColor: 'rgba(239, 68, 68, 0.2)',
-                            borderWidth: 2,
-                            pointRadius: 2,
-                            tension: 0.4,
-                            fill: true
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false
-                    },
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: 'top',
-                            labels: {
-                                boxWidth: 12,
-                                font: { size: 11 },
-                                padding: 15,
-                                usePointStyle: true
-                            }
-                        },
-                        tooltip: {
-                            enabled: true,
-                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                            callbacks: {
-                                label: function(context) {
-                                    return context.dataset.label + ': ' + context.parsed.y.toFixed(1) + '%';
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            display: true,
-                            grid: { color: 'rgba(0, 0, 0, 0.05)' },
-                            ticks: {
-                                maxRotation: 45,
-                                minRotation: 45,
-                                font: { size: 10 }
-                            }
-                        },
-                        y: {
-                            display: true,
-                            beginAtZero: true,
-                            max: 100,
-                            title: {
-                                display: true,
-                                text: 'Link Status (%)',
-                                font: { size: 12 }
-                            },
-                            ticks: {
-                                callback: function(value) {
-                                    return value + '%';
-                                },
-                                font: { size: 10 }
-                            },
-                            grid: { color: 'rgba(0, 0, 0, 0.05)' }
-                        }
-                    }
-                }
-            });
-
-            // Get sites for failover events chart
-            const sites = DataLoader.getSites ? DataLoader.getSites() : ['NYC-HQ', 'NJ-Warehouse', 'SFO-Branch', 'TOK-Sales', 'MUM-Hub'];
-            const siteNames = Object.keys(sites).slice(0, 8);
-
-            // Generate failover events data
-            const failoverCounts = siteNames.map(() => Math.floor(Math.random() * 5) + 1);
-            const failoverColors = failoverCounts.map(c => c >= 4 ? '#ef4444' : c >= 2 ? '#f59e0b' : '#10b981');
-
-            failoverEventsChart = new Chart(document.getElementById('failoverEventsChart'), {
-                type: 'bar',
-                data: {
-                    labels: siteNames,
-                    datasets: [{
-                        label: 'Failover Events',
-                        data: failoverCounts,
-                        backgroundColor: failoverColors,
-                        borderRadius: 4
-                    }]
-                },
-                options: {
-                    indexAxis: 'y',
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            enabled: true,
-                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                            callbacks: {
-                                label: function(context) {
-                                    return 'Failover Events: ' + context.parsed.x;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Number of Events',
-                                font: { size: 12 }
-                            },
-                            ticks: { font: { size: 10 } },
-                            grid: { color: 'rgba(0, 0, 0, 0.05)' }
-                        },
-                        y: {
-                            ticks: {
-                                font: { size: 11 }
-                            },
-                            grid: { display: false }
-                        }
-                    }
-                }
-            });
+            document.getElementById('wanResilienceTrendsOverlay').classList.remove('hidden');
+            _wanActiveFilter = 'failover';
+            renderWanSiteList();
+            updateWanFilterButtons();
         }
 
         function closeWanResilienceTrends() {
-            const overlay = document.getElementById('wanResilienceTrendsOverlay');
-            overlay.classList.add('hidden');
-
-            if (wanStatusTrendsChart) {
-                wanStatusTrendsChart.destroy();
-                wanStatusTrendsChart = null;
-            }
-            if (failoverEventsChart) {
-                failoverEventsChart.destroy();
-                failoverEventsChart = null;
-            }
+            document.getElementById('wanResilienceTrendsOverlay').classList.add('hidden');
         }
+
+        function filterWanSites(filter) {
+            _wanActiveFilter = filter;
+            renderWanSiteList();
+            updateWanFilterButtons();
+        }
+
+        function updateWanFilterButtons() {
+            const active = 'px-3 py-1.5 text-xs rounded-lg font-medium transition-colors';
+            const inactive = active + ' bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600';
+            const styles = {
+                failover: active + ' bg-amber-500 text-white',
+                down:     active + ' bg-red-500 text-white',
+                both:     active + ' bg-indigo-500 text-white'
+            };
+            ['failover', 'down', 'both'].forEach(f => {
+                document.getElementById('wanFilter' + f.charAt(0).toUpperCase() + f.slice(1)).className =
+                    _wanActiveFilter === f ? styles[f] : inactive;
+            });
+        }
+
+        function renderWanSiteList() {
+            const gateways = DataLoader.getDevicesByScope
+                ? DataLoader.getDevicesByScope(currentScope, 'gateways')
+                : (DataLoader._data?.devices?.gateways || []);
+
+            const rows = gateways.filter(g => {
+                if (_wanActiveFilter === 'failover') return g.status === 'warning';
+                if (_wanActiveFilter === 'down')     return g.status === 'critical' || g.status === 'offline';
+                // both
+                return g.status === 'warning' || g.status === 'critical' || g.status === 'offline';
+            });
+
+            const tbody = document.getElementById('wanSiteTableBody');
+            const empty = document.getElementById('wanSiteEmpty');
+            const count = document.getElementById('wanSiteCount');
+
+            count.textContent = rows.length + ' site' + (rows.length !== 1 ? 's' : '');
+
+            if (rows.length === 0) {
+                tbody.innerHTML = '';
+                empty.classList.remove('hidden');
+                return;
+            }
+            empty.classList.add('hidden');
+
+            // Deterministic "since" timestamp per gateway (stable across re-filters)
+            const nowMs = Date.now();
+            function gatewayStatusSince(g) {
+                // Build a larger seed by multiplying char codes positionally
+                const str = (g.id || g.serial || g.name || 'x');
+                let seed = 0;
+                for (let i = 0; i < str.length; i++) {
+                    seed = (seed * 31 + str.charCodeAt(i)) >>> 0; // keep as 32-bit uint
+                }
+                const maxAgeMs = (g.status === 'critical' || g.status === 'offline' ? 6 : 12) * 3600 * 1000;
+                const minAgeMs = 5 * 60 * 1000; // at least 5 minutes ago
+                const offsetMs = minAgeMs + (seed % (maxAgeMs - minAgeMs));
+                return new Date(nowMs - offsetMs);
+            }
+            function formatSince(date) {
+                const diffMin = Math.round((nowMs - date.getTime()) / 60000);
+                if (diffMin < 60) return diffMin + 'm ago';
+                const diffH = Math.floor(diffMin / 60);
+                const remMin = diffMin % 60;
+                return diffH + 'h ' + (remMin > 0 ? remMin + 'm ' : '') + 'ago';
+            }
+
+            tbody.innerHTML = rows.map(g => {
+                const isDown = g.status === 'critical' || g.status === 'offline';
+                const badge = isDown
+                    ? '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium bg-red-500/20 text-red-400"><i class="fa-solid fa-circle-xmark text-[9px]"></i> Down</span>'
+                    : '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium bg-amber-500/20 text-amber-400"><i class="fa-solid fa-triangle-exclamation text-[9px]"></i> Failover</span>';
+                const since = gatewayStatusSince(g);
+                const sinceStr = formatSince(since);
+                const sinceAbsolute = since.toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+                return `<tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                    <td class="px-4 py-2.5 text-sm font-medium text-dark-text">${g.site || '—'}</td>
+                    <td class="px-4 py-2.5">${badge}</td>
+                    <td class="px-4 py-2.5 text-xs text-dark-muted" title="${sinceAbsolute}">${sinceStr}</td>
+                </tr>`;
+            }).join('');
+        }
+
+        window.filterWanSites = filterWanSites;
 
         // Expose overlay functions to global scope for onclick handlers
         window.openLatencyTrends = openLatencyTrends;

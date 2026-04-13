@@ -429,52 +429,10 @@
                 </div>
             </div>
 
-            <!-- ROW 3: Top Impacted Sites + Top SSIDs + Clients Connected -->
+            <!-- ROW 3: User Frustration + WAN Resilience -->
 
-            <!-- Top Impacted Sites (Latency) -->
-            <div class="col-span-12 lg:col-span-4 card p-4 h-80 bg-dark-card cursor-pointer hover:shadow-lg transition-shadow" onclick="openLatencyTrends()">
-                <div class="flex justify-between items-center mb-4">
-                    <div class="flex items-center gap-2">
-                        <h3 class="text-sm font-bold text-dark-text">Top Impacted Sites</h3>
-                        <i class="fa-solid fa-up-right-and-down-left-from-center text-xs text-gray-400 dark:text-gray-500"></i>
-                    </div>
-                    <span class="text-xs text-gray-400">Avg WAN Latency (ms)</span>
-                </div>
-                <div class="relative h-full w-full pb-4">
-                    <canvas id="latencyChart"></canvas>
-                </div>
-            </div>
-
-            <!-- Top SSIDs by Client Count -->
-            <div class="col-span-12 lg:col-span-4 card p-4 h-80 bg-dark-card">
-                <div class="flex justify-between items-center mb-4">
-                    <div class="flex items-center gap-2">
-                        <h3 class="text-sm font-bold text-dark-text">Top SSIDs</h3>
-                    </div>
-                    <span class="text-xs text-gray-400">Clients Connected</span>
-                </div>
-                <div class="relative h-full w-full pb-4">
-                    <canvas id="ssidChart"></canvas>
-                </div>
-            </div>
-
-            <!-- No. of Clients Connected (Site Level) -->
-            <div class="col-span-12 lg:col-span-4 card p-4 h-80 bg-dark-card">
-                <div class="flex justify-between items-center mb-4">
-                    <div class="flex items-center gap-2">
-                        <h3 class="text-sm font-bold text-dark-text">No. of Clients Connected</h3>
-                    </div>
-                    <span class="text-xs text-gray-400">Per Site</span>
-                </div>
-                <div class="relative h-full w-full pb-4">
-                    <canvas id="clientsChart"></canvas>
-                </div>
-            </div>
-
-            <!-- ROW 4: User Frustration + WAN Resilience + API Quota Health (1/3 each) -->
-
-            <!-- User Frustration Leaderboard - 1/3 -->
-            <div class="col-span-12 lg:col-span-4 card p-4 h-80 bg-dark-card cursor-pointer hover:shadow-lg transition-shadow" onclick="openFrustrationTrends()">
+            <!-- User Frustration Leaderboard - 1/2 -->
+            <div class="col-span-12 lg:col-span-6 card p-4 h-80 bg-dark-card cursor-pointer hover:shadow-lg transition-shadow" onclick="openFrustrationTrends()">
                 <div class="flex justify-between items-center mb-4">
                     <div class="flex items-center gap-2">
                         <h3 class="text-sm font-bold text-dark-text">User Frustration Leaderboard</h3>
@@ -487,8 +445,8 @@
                 </div>
             </div>
 
-            <!-- WAN Resilience (Donut) - 1/3 -->
-            <div class="col-span-12 lg:col-span-4 card p-4 h-80 bg-dark-card cursor-pointer hover:shadow-lg transition-shadow" onclick="openWanResilienceTrends()">
+            <!-- WAN Resilience (Donut) - 1/2 -->
+            <div class="col-span-12 lg:col-span-6 card p-4 h-80 bg-dark-card cursor-pointer hover:shadow-lg transition-shadow" onclick="openWanResilienceTrends()">
                 <div class="flex items-center gap-2 mb-2">
                     <h3 class="text-sm font-bold text-dark-text">WAN Resilience</h3>
                     <i class="fa-solid fa-up-right-and-down-left-from-center text-xs text-gray-400 dark:text-gray-500"></i>
@@ -525,6 +483,68 @@
                 </div>
             </div>
 
+            <!-- ROW 4: Top Applications + Top Impacted Sites -->
+
+            <!-- Top Applications (Donut) - 1/2 -->
+            <div class="col-span-12 lg:col-span-6 card p-4 h-80 bg-dark-card">
+                <div class="flex justify-between items-center mb-2">
+                    <div class="flex items-center gap-2">
+                        <h3 class="text-sm font-bold text-dark-text">Top Applications</h3>
+                    </div>
+                    <span class="text-xs text-gray-400">By Traffic</span>
+                </div>
+                <div class="flex items-center justify-center gap-4" style="height: calc(100% - 2rem);">
+                    <div class="relative flex items-center justify-center" style="flex: 2;">
+                        <canvas id="dashAppsChart" style="max-width: 230px; max-height: 230px;"></canvas>
+                    </div>
+                    <div class="flex items-center justify-center" style="flex: 1;">
+                        <div id="dashAppsLegend"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Impacted Sites (Latency) - 1/2 -->
+            <div class="col-span-12 lg:col-span-6 card p-4 h-80 bg-dark-card cursor-pointer hover:shadow-lg transition-shadow" onclick="openLatencyTrends()">
+                <div class="flex justify-between items-center mb-4">
+                    <div class="flex items-center gap-2">
+                        <h3 class="text-sm font-bold text-dark-text">Top Impacted Sites</h3>
+                        <i class="fa-solid fa-up-right-and-down-left-from-center text-xs text-gray-400 dark:text-gray-500"></i>
+                    </div>
+                    <span class="text-xs text-gray-400">Avg WAN Latency (ms)</span>
+                </div>
+                <div class="relative h-full w-full pb-4">
+                    <canvas id="latencyChart"></canvas>
+                </div>
+            </div>
+
+            <!-- ROW 5: Clients Connected + Top SSIDs + API Quota Health -->
+
+            <!-- No. of Clients Connected (Site Level) - 1/3 -->
+            <div class="col-span-12 lg:col-span-4 card p-4 h-80 bg-dark-card">
+                <div class="flex justify-between items-center mb-4">
+                    <div class="flex items-center gap-2">
+                        <h3 class="text-sm font-bold text-dark-text">No. of Clients Connected</h3>
+                    </div>
+                    <span class="text-xs text-gray-400">Per Site</span>
+                </div>
+                <div class="relative h-full w-full pb-4">
+                    <canvas id="clientsChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Top SSIDs by Client Count - 1/3 -->
+            <div class="col-span-12 lg:col-span-4 card p-4 h-80 bg-dark-card">
+                <div class="flex justify-between items-center mb-4">
+                    <div class="flex items-center gap-2">
+                        <h3 class="text-sm font-bold text-dark-text">Top SSIDs</h3>
+                    </div>
+                    <span class="text-xs text-gray-400">Clients Connected</span>
+                </div>
+                <div class="relative h-full w-full pb-4">
+                    <canvas id="ssidChart"></canvas>
+                </div>
+            </div>
+
             <!-- API Quota Health - 1/3 (two stacked sub-widgets) -->
             <div class="col-span-12 lg:col-span-4 card bg-dark-card h-80 flex flex-col divide-y divide-gray-200 dark:divide-gray-700">
 
@@ -558,7 +578,7 @@
             </div>
 
             <!-- ROW 5: Unified Alert Feed (full width) -->
-            <div class="col-span-12 card h-96 flex flex-col bg-dark-card">
+            <div class="col-span-12 card flex flex-col bg-dark-card" style="height: 570px;">
                 <div class="p-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
                     <h3 class="text-sm font-bold text-dark-text flex items-center gap-2">
                         <i class="fa-regular fa-bell"></i> Unified Alert Feed
@@ -649,33 +669,36 @@
             </div>
         </div>
 
-        <!-- WAN Resilience Trends Overlay -->
+        <!-- WAN Resilience Overlay -->
         <div id="wanResilienceTrendsOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-6" onclick="if(event.target===this)closeWanResilienceTrends()">
-            <div class="bg-dark-card rounded-lg shadow-2xl w-full max-w-6xl overflow-hidden">
-                <div class="p-6 border-b border-dark-border flex justify-between items-center">
-                    <div class="flex items-center gap-3">
-                        <h2 class="text-xl font-bold text-dark-text">WAN Resilience Trends</h2>
-                        <span class="text-xs text-dark-muted" data-timeline-label>Last 24 hours</span>
-                    </div>
+            <div class="bg-dark-card rounded-lg shadow-2xl w-full max-w-3xl overflow-hidden flex flex-col" style="max-height: 80vh;">
+                <div class="p-5 border-b border-dark-border flex justify-between items-center flex-shrink-0">
+                    <h2 class="text-base font-bold text-dark-text">WAN Resilience – Site Status</h2>
                     <button onclick="closeWanResilienceTrends()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-                        <i class="fa-solid fa-times text-2xl"></i>
+                        <i class="fa-solid fa-times text-xl"></i>
                     </button>
                 </div>
-                <div class="p-6">
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="card p-4 bg-gray-50 dark:bg-gray-800">
-                            <h3 class="text-sm font-bold text-dark-text mb-3">WAN Link Status Over Time</h3>
-                            <div style="height: 350px;">
-                                <canvas id="wanStatusTrendsChart"></canvas>
-                            </div>
-                        </div>
-                        <div class="card p-4 bg-gray-50 dark:bg-gray-800">
-                            <h3 class="text-sm font-bold text-dark-text mb-3">Failover Events by Site</h3>
-                            <div style="height: 350px;">
-                                <canvas id="failoverEventsChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
+                <!-- Filter tabs -->
+                <div class="px-5 pt-4 pb-2 flex items-center gap-2 flex-shrink-0">
+                    <button id="wanFilterFailover" onclick="filterWanSites('failover')" class="px-3 py-1.5 text-xs rounded-lg font-medium transition-colors bg-amber-500 text-white">Failover</button>
+                    <button id="wanFilterDown" onclick="filterWanSites('down')" class="px-3 py-1.5 text-xs rounded-lg font-medium transition-colors bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600">Down</button>
+                    <button id="wanFilterBoth" onclick="filterWanSites('both')" class="px-3 py-1.5 text-xs rounded-lg font-medium transition-colors bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600">Both</button>
+                    <span id="wanSiteCount" class="ml-auto text-xs text-dark-muted"></span>
+                </div>
+                <!-- Site list -->
+                <div class="flex-1 overflow-y-auto custom-scrollbar px-5 pb-5">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0 z-10">
+                            <tr>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Site</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Status</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Since</th>
+                            </tr>
+                        </thead>
+                        <tbody id="wanSiteTableBody" class="bg-dark-card divide-y divide-gray-200 dark:divide-gray-700">
+                        </tbody>
+                    </table>
+                    <p id="wanSiteEmpty" class="hidden text-center text-sm text-dark-muted py-8">No sites in this state.</p>
                 </div>
             </div>
         </div>
