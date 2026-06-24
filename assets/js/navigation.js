@@ -13,10 +13,7 @@ const NavigationManager = {
      * @private
      */
     _pages: [
-        { key: 'summary', label: 'Summary', href: 'index.html', icon: 'fa-chart-line' },
-        { key: 'sdwan',   label: 'SD-WAN',  href: 'sdwan.html', icon: 'fa-network-wired' },
-        { key: 'switch',  label: 'Switch',   href: 'switch.html', icon: 'fa-server' },
-        { key: 'ap',      label: 'Access Point', href: 'access-point.html', icon: 'fa-wifi' }
+        { key: 'summary', label: 'Summary', href: 'index.html', icon: 'fa-chart-line' }
     ],
 
     /**

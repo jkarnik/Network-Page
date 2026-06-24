@@ -429,21 +429,7 @@
                 </div>
             </div>
 
-            <!-- ROW 3: User Frustration + WAN Resilience -->
-
-            <!-- User Frustration Leaderboard - 1/2 -->
-            <div class="col-span-12 lg:col-span-6 card p-4 h-80 bg-dark-card cursor-pointer hover:shadow-lg transition-shadow" onclick="openFrustrationTrends()">
-                <div class="flex justify-between items-center mb-4">
-                    <div class="flex items-center gap-2">
-                        <h3 class="text-sm font-bold text-dark-text">User Frustration Leaderboard</h3>
-                        <i class="fa-solid fa-up-right-and-down-left-from-center text-xs text-gray-400 dark:text-gray-500"></i>
-                    </div>
-                    <span class="text-xs text-gray-400">Time to Connect (ms)</span>
-                </div>
-                <div class="relative h-full w-full pb-4">
-                    <canvas id="frustrationChart"></canvas>
-                </div>
-            </div>
+            <!-- ROW 3: WAN Resilience + Top Impacted Sites -->
 
             <!-- WAN Resilience (Donut) - 1/2 -->
             <div class="col-span-12 lg:col-span-6 card p-4 h-80 bg-dark-card cursor-pointer hover:shadow-lg transition-shadow" onclick="openWanResilienceTrends()">
@@ -479,26 +465,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ROW 4: Top Applications + Top Impacted Sites -->
-
-            <!-- Top Applications (Donut) - 1/2 -->
-            <div class="col-span-12 lg:col-span-6 card p-4 h-80 bg-dark-card">
-                <div class="flex justify-between items-center mb-2">
-                    <div class="flex items-center gap-2">
-                        <h3 class="text-sm font-bold text-dark-text">Top Applications</h3>
-                    </div>
-                    <span class="text-xs text-gray-400">By Traffic</span>
-                </div>
-                <div class="flex items-center justify-center gap-4" style="height: calc(100% - 2rem);">
-                    <div class="relative flex items-center justify-center" style="flex: 2;">
-                        <canvas id="dashAppsChart" style="max-width: 230px; max-height: 230px;"></canvas>
-                    </div>
-                    <div class="flex items-center justify-center" style="flex: 1;">
-                        <div id="dashAppsLegend"></div>
                     </div>
                 </div>
             </div>
@@ -638,36 +604,6 @@
             </div>
         </div>
 
-        <!-- User Frustration Trends Overlay -->
-        <div id="frustrationTrendsOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-6" onclick="if(event.target===this)closeFrustrationTrends()">
-            <div class="bg-dark-card rounded-lg shadow-2xl w-full max-w-6xl overflow-hidden">
-                <div class="p-6 border-b border-dark-border flex justify-between items-center">
-                    <div class="flex items-center gap-3">
-                        <h2 class="text-xl font-bold text-dark-text">User Frustration Trends</h2>
-                        <span class="text-xs text-dark-muted" data-timeline-label>Last 24 hours</span>
-                    </div>
-                    <button onclick="closeFrustrationTrends()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-                        <i class="fa-solid fa-times text-2xl"></i>
-                    </button>
-                </div>
-                <div class="p-6">
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="card p-4 bg-gray-50 dark:bg-gray-800">
-                            <h3 class="text-sm font-bold text-dark-text mb-3">Connection Time Breakdown by Site</h3>
-                            <div style="height: 350px;">
-                                <canvas id="frustrationBreakdownChart"></canvas>
-                            </div>
-                        </div>
-                        <div class="card p-4 bg-gray-50 dark:bg-gray-800">
-                            <h3 class="text-sm font-bold text-dark-text mb-3">Connection Time Trends</h3>
-                            <div style="height: 350px;">
-                                <canvas id="frustrationTrendsChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <!-- WAN Resilience Overlay -->
         <div id="wanResilienceTrendsOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-6" onclick="if(event.target===this)closeWanResilienceTrends()">

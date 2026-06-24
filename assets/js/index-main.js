@@ -150,14 +150,6 @@
             document.getElementById('wanFailover').innerText = wanData.failover + '%';
             document.getElementById('wanDown').innerText = wanData.down + '%';
 
-            // 5. Update Frustration Chart
-            charts.frustration.data.labels = data.fData.map(d => d.label);
-            charts.frustration.data.datasets[0].data = data.fData.map(d => Math.floor(d.val * 0.35));
-            charts.frustration.data.datasets[1].data = data.fData.map(d => Math.floor(d.val * 0.25));
-            charts.frustration.data.datasets[2].data = data.fData.map(d => Math.floor(d.val * 0.25));
-            charts.frustration.data.datasets[3].data = data.fData.map(d => Math.floor(d.val * 0.15));
-            charts.frustration.update();
-
             // 6. Update Latency Chart
             charts.latency.data.labels = data.lData.map(d => d.label);
             charts.latency.data.datasets[0].data = data.lData.map(d => d.val);
@@ -196,63 +188,6 @@
         function initCharts() {
             // Initialize Chart.js defaults using shared config
             ChartConfig.initDefaults();
-
-            // A. Frustration
-            const frustrationCanvas = document.getElementById('frustrationChart');
-            charts.frustration = new Chart(frustrationCanvas.getContext('2d'), {
-                type: 'bar',
-                data: {
-                    labels: [],
-                    datasets: [
-                        { label: 'Association', data: [], backgroundColor: '#dc2626', borderRadius: 4 },
-                        { label: 'Auth', data: [], backgroundColor: '#ea580c', borderRadius: 4 },
-                        { label: 'DHCP', data: [], backgroundColor: '#f59e0b', borderRadius: 4 },
-                        { label: 'DNS Resolution', data: [], backgroundColor: '#16a34a', borderRadius: 4 }
-                    ]
-                },
-                options: {
-                    indexAxis: 'y',
-                    onClick: (event, elements, chart) => {
-                        // Only filter if clicking on a bar, not legend
-                        if (elements.length > 0 && elements[0].datasetIndex !== undefined) {
-                            const index = elements[0].index;
-                            const siteName = chart.data.labels[index];
-                            filterBySite(siteName);
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: 'bottom',
-                            labels: {
-                                boxWidth: 12,
-                                padding: 8,
-                                font: { size: 10 }
-                            },
-                            onClick: () => {} // Disable legend click
-                        },
-                        tooltip: {
-                            callbacks: {
-                                title: function(context) {
-                                    return context[0].label + ' (click to filter)';
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            stacked: true,
-                            beginAtZero: true,
-                            grid: { display: true, borderDash: [2, 2] },
-                            title: { display: true, text: 'Time (ms)', font: { size: 10 } }
-                        },
-                        y: {
-                            stacked: true,
-                            grid: { display: false }
-                        }
-                    }
-                }
-            });
 
             // C. Latency
             const latencyCanvas = document.getElementById('latencyChart');
@@ -315,30 +250,6 @@
                     }
                 }
             });
-
-            // B. Top Applications (Donut)
-            const dashAppsData = {
-                labels: ['M365', 'Teams', 'Salesforce', 'YouTube', 'Other'],
-                data: [35, 25, 18, 12, 10],
-                colors: ['#3b82f6', '#6366f1', '#0ea5e9', '#ef4444', '#9ca3af']
-            };
-            charts.dashApps = new Chart(document.getElementById('dashAppsChart').getContext('2d'), {
-                type: 'doughnut',
-                data: {
-                    labels: dashAppsData.labels,
-                    datasets: [{ data: dashAppsData.data, backgroundColor: dashAppsData.colors, borderWidth: 0 }]
-                },
-                options: { cutout: '65%', plugins: { legend: { display: false } } }
-            });
-            const dashAppsLegend = document.getElementById('dashAppsLegend');
-            dashAppsLegend.innerHTML = dashAppsData.labels.map((label, i) => `
-                <div class="flex items-center gap-2 mb-2">
-                    <div class="w-2.5 h-2.5 rounded-sm flex-shrink-0" style="background:${dashAppsData.colors[i]}"></div>
-                    <div class="text-xs text-dark-text">
-                        <span class="font-medium">${label}</span>
-                        <span class="text-dark-muted ml-1">${dashAppsData.data[i]}%</span>
-                    </div>
-                </div>`).join('');
 
             // F. Clients per Site Chart
             const clientsCanvas = document.getElementById('clientsChart');
@@ -2042,190 +1953,6 @@
             }
         }
 
-        // --- FRUSTRATION TRENDS OVERLAY ---
-        let frustrationBreakdownChart = null;
-        let frustrationTrendsChart = null;
-
-        function openFrustrationTrends() {
-            const overlay = document.getElementById('frustrationTrendsOverlay');
-            overlay.classList.remove('hidden');
-
-            // Destroy existing charts if they exist
-            if (frustrationBreakdownChart) {
-                frustrationBreakdownChart.destroy();
-            }
-            if (frustrationTrendsChart) {
-                frustrationTrendsChart.destroy();
-            }
-
-            // Get frustration data from current scope
-            const frustrationData = DataLoader.getFrustrationData(currentSiteFilter || currentScope, 10);
-            const siteNames = frustrationData.map(d => d.label);
-
-            // Create breakdown chart (stacked horizontal bar)
-            const breakdownData = frustrationData.map(d => ({
-                association: Math.floor(d.totalTime * 0.35),
-                auth: Math.floor(d.totalTime * 0.25),
-                dhcp: Math.floor(d.totalTime * 0.25),
-                dns: Math.floor(d.totalTime * 0.15)
-            }));
-
-            frustrationBreakdownChart = new Chart(document.getElementById('frustrationBreakdownChart'), {
-                type: 'bar',
-                data: {
-                    labels: siteNames,
-                    datasets: [
-                        { label: 'Association', data: breakdownData.map(d => d.association), backgroundColor: '#dc2626', borderRadius: 2 },
-                        { label: 'Auth', data: breakdownData.map(d => d.auth), backgroundColor: '#ea580c', borderRadius: 2 },
-                        { label: 'DHCP', data: breakdownData.map(d => d.dhcp), backgroundColor: '#f59e0b', borderRadius: 2 },
-                        { label: 'DNS', data: breakdownData.map(d => d.dns), backgroundColor: '#16a34a', borderRadius: 2 }
-                    ]
-                },
-                options: {
-                    indexAxis: 'y',
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: 'top',
-                            labels: {
-                                boxWidth: 12,
-                                font: { size: 10 },
-                                padding: 10
-                            }
-                        },
-                        tooltip: {
-                            enabled: true,
-                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                            callbacks: {
-                                label: function(context) {
-                                    return context.dataset.label + ': ' + context.parsed.x + ' ms';
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            stacked: true,
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Time (ms)',
-                                font: { size: 11 }
-                            },
-                            grid: { color: 'rgba(0, 0, 0, 0.05)' }
-                        },
-                        y: {
-                            stacked: true,
-                            ticks: { font: { size: 10 } },
-                            grid: { display: false }
-                        }
-                    }
-                }
-            });
-
-            // Generate time labels based on timeline selection
-            const timeLabels = TimelineManager.generateLabels(24);
-            const pointCount = timeLabels.length;
-
-            // Generate trends data for top 5 sites
-            const top5Sites = frustrationData.slice(0, 5);
-            const trendColors = ['#dc2626', '#ea580c', '#f59e0b', '#16a34a', '#3b82f6'];
-
-            const trendDatasets = top5Sites.map((site, idx) => {
-                const baseTime = site.totalTime;
-                const data = [];
-                for (let i = 0; i < pointCount; i++) {
-                    const isBusinessHours = (i / pointCount) >= 0.33 && (i / pointCount) < 0.75;
-                    const hourMultiplier = isBusinessHours ? 1.3 : 0.7;
-                    data.push(Math.max(50, baseTime * hourMultiplier + (Math.random() - 0.5) * 100));
-                }
-                return {
-                    label: site.label,
-                    data: data,
-                    borderColor: trendColors[idx],
-                    backgroundColor: trendColors[idx] + '33',
-                    borderWidth: 2,
-                    pointRadius: 2,
-                    tension: 0.4,
-                    fill: false
-                };
-            });
-
-            frustrationTrendsChart = new Chart(document.getElementById('frustrationTrendsChart'), {
-                type: 'line',
-                data: {
-                    labels: timeLabels,
-                    datasets: trendDatasets
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false
-                    },
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: 'top',
-                            labels: {
-                                boxWidth: 12,
-                                font: { size: 10 },
-                                padding: 10,
-                                usePointStyle: true
-                            }
-                        },
-                        tooltip: {
-                            enabled: true,
-                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                            callbacks: {
-                                label: function(context) {
-                                    return context.dataset.label + ': ' + context.parsed.y.toFixed(0) + ' ms';
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            display: true,
-                            grid: { color: 'rgba(0, 0, 0, 0.05)' },
-                            ticks: {
-                                maxRotation: 45,
-                                minRotation: 45,
-                                font: { size: 9 }
-                            }
-                        },
-                        y: {
-                            display: true,
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Connection Time (ms)',
-                                font: { size: 11 }
-                            },
-                            grid: { color: 'rgba(0, 0, 0, 0.05)' }
-                        }
-                    }
-                }
-            });
-        }
-
-        function closeFrustrationTrends() {
-            const overlay = document.getElementById('frustrationTrendsOverlay');
-            overlay.classList.add('hidden');
-
-            if (frustrationBreakdownChart) {
-                frustrationBreakdownChart.destroy();
-                frustrationBreakdownChart = null;
-            }
-            if (frustrationTrendsChart) {
-                frustrationTrendsChart.destroy();
-                frustrationTrendsChart = null;
-            }
-        }
-
         // --- WAN RESILIENCE OVERLAY ---
         let _wanActiveFilter = 'failover';
 
@@ -2328,8 +2055,6 @@
         // Expose overlay functions to global scope for onclick handlers
         window.openLatencyTrends = openLatencyTrends;
         window.closeLatencyTrends = closeLatencyTrends;
-        window.openFrustrationTrends = openFrustrationTrends;
-        window.closeFrustrationTrends = closeFrustrationTrends;
         window.openWanResilienceTrends = openWanResilienceTrends;
         window.closeWanResilienceTrends = closeWanResilienceTrends;
         window.showCorrelatedAlerts = showCorrelatedAlerts;
@@ -2341,11 +2066,9 @@
             if (e.key === 'Escape') {
                 // Close modal overlays first (higher z-index)
                 const latency = document.getElementById('latencyTrendsOverlay');
-                const frustration = document.getElementById('frustrationTrendsOverlay');
                 const wan = document.getElementById('wanResilienceTrendsOverlay');
 
                 if (!latency.classList.contains('hidden')) { closeLatencyTrends(); return; }
-                if (!frustration.classList.contains('hidden')) { closeFrustrationTrends(); return; }
                 if (!wan.classList.contains('hidden')) { closeWanResilienceTrends(); return; }
 
                 // Then close card overlays
