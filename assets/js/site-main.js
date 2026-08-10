@@ -266,3 +266,38 @@ function renderWanSection(siteName) {
 }
 
 registerSiteRenderer(renderWanSection);
+
+// --- LAN/SWITCHING DETAIL SECTION (Stage A) ---
+
+function renderLanSection(siteName) {
+    const switches = DataLoader.getDevicesBySite(siteName, 'switches');
+    const hardware = DataLoader.getHardwareRollup(siteName);
+
+    STAGE_TABS.forEach(tab => {
+        const tbody = document.getElementById(`lanTableBody-${tab}`);
+        if (!tbody) return;
+
+        if (switches.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" class="px-4 py-3 text-center text-sm text-gray-400">No switches at this site.</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = switches.map(sw => {
+            const statusBadge = CIRCUIT_STATUS_BADGES[sw.status] || CIRCUIT_STATUS_BADGES.online;
+            const psuFailed = hardware.psuFailedDeviceIds.includes(sw.id);
+            const psuBadge = psuFailed
+                ? '<span class="px-2 py-0.5 rounded text-xs font-bold bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">Failed</span>'
+                : '<span class="px-2 py-0.5 rounded text-xs font-bold bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">OK</span>';
+            return `
+                <tr>
+                    <td class="px-4 py-2.5 font-bold text-dark-text whitespace-nowrap">${sw.name}</td>
+                    <td class="px-4 py-2.5 text-dark-muted whitespace-nowrap">${sw.model}</td>
+                    <td class="px-4 py-2.5 whitespace-nowrap">${statusBadge}</td>
+                    <td class="px-4 py-2.5 whitespace-nowrap">${psuBadge}</td>
+                </tr>
+            `;
+        }).join('');
+    });
+}
+
+registerSiteRenderer(renderLanSection);
