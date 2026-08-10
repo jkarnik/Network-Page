@@ -103,6 +103,44 @@
             <!-- Tab Content: Stage A -->
             <div id="content-stageA" class="tab-content">
                 <div class="grid grid-cols-12 gap-3 mb-6" id="stageA-grid">
+                    <!-- Health Badge (Stage A) -->
+                    <div class="col-span-12 card p-4 bg-dark-card">
+                        <h3 class="text-sm font-bold text-dark-text mb-3">Site Health</h3>
+                        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+                            <div>
+                                <p class="text-xs text-gray-400">Uplinks</p>
+                                <p class="text-sm font-bold text-dark-text" id="healthUplinkStatus-stageA">—</p>
+                                <p class="text-xs text-gray-500" id="healthUplinkThroughput-stageA">—</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-400">Uplink Loss</p>
+                                <p class="text-sm font-bold text-dark-text" id="healthUplinkLoss-stageA">—</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-400">VPN Tunnels</p>
+                                <p class="text-sm font-bold text-dark-text" id="healthVpnStatus-stageA">—</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-400">Switches</p>
+                                <p class="text-sm font-bold text-dark-text" id="healthSwitchStatus-stageA">—</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-400">Access Points</p>
+                                <p class="text-sm font-bold text-dark-text" id="healthApStatus-stageA">—</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-400">PSU Redundancy</p>
+                                <p class="text-sm font-bold text-dark-text" id="healthPsuStatus-stageA">—</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-400">Routing Redundancy</p>
+                                <p class="text-sm font-bold text-dark-text" id="healthRoutingRedundancy-stageA">—</p>
+                            </div>
+                        </div>
+                        <div class="mt-3" style="height: 50px;">
+                            <canvas id="healthUplinkSparkline-stageA"></canvas>
+                        </div>
+                    </div>
                     <!-- Widget markup appended by Tasks 7, 8, 9, 10, 11 -->
                 </div>
             </div>
@@ -110,6 +148,44 @@
             <!-- Tab Content: Stage A+B -->
             <div id="content-stageAB" class="tab-content hidden">
                 <div class="grid grid-cols-12 gap-3 mb-6" id="stageAB-grid">
+                    <!-- Health Badge (Stage A) -->
+                    <div class="col-span-12 card p-4 bg-dark-card">
+                        <h3 class="text-sm font-bold text-dark-text mb-3">Site Health</h3>
+                        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+                            <div>
+                                <p class="text-xs text-gray-400">Uplinks</p>
+                                <p class="text-sm font-bold text-dark-text" id="healthUplinkStatus-stageAB">—</p>
+                                <p class="text-xs text-gray-500" id="healthUplinkThroughput-stageAB">—</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-400">Uplink Loss</p>
+                                <p class="text-sm font-bold text-dark-text" id="healthUplinkLoss-stageAB">—</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-400">VPN Tunnels</p>
+                                <p class="text-sm font-bold text-dark-text" id="healthVpnStatus-stageAB">—</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-400">Switches</p>
+                                <p class="text-sm font-bold text-dark-text" id="healthSwitchStatus-stageAB">—</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-400">Access Points</p>
+                                <p class="text-sm font-bold text-dark-text" id="healthApStatus-stageAB">—</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-400">PSU Redundancy</p>
+                                <p class="text-sm font-bold text-dark-text" id="healthPsuStatus-stageAB">—</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-400">Routing Redundancy</p>
+                                <p class="text-sm font-bold text-dark-text" id="healthRoutingRedundancy-stageAB">—</p>
+                            </div>
+                        </div>
+                        <div class="mt-3" style="height: 50px;">
+                            <canvas id="healthUplinkSparkline-stageAB"></canvas>
+                        </div>
+                    </div>
                     <!-- Widget markup appended by Tasks 7-14 -->
                 </div>
             </div>
@@ -117,6 +193,44 @@
             <!-- Tab Content: Stage A+B+C -->
             <div id="content-stageABC" class="tab-content hidden">
                 <div class="grid grid-cols-12 gap-3 mb-6" id="stageABC-grid">
+                    <!-- Health Badge (Stage A) -->
+                    <div class="col-span-12 card p-4 bg-dark-card">
+                        <h3 class="text-sm font-bold text-dark-text mb-3">Site Health</h3>
+                        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+                            <div>
+                                <p class="text-xs text-gray-400">Uplinks</p>
+                                <p class="text-sm font-bold text-dark-text" id="healthUplinkStatus-stageABC">—</p>
+                                <p class="text-xs text-gray-500" id="healthUplinkThroughput-stageABC">—</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-400">Uplink Loss</p>
+                                <p class="text-sm font-bold text-dark-text" id="healthUplinkLoss-stageABC">—</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-400">VPN Tunnels</p>
+                                <p class="text-sm font-bold text-dark-text" id="healthVpnStatus-stageABC">—</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-400">Switches</p>
+                                <p class="text-sm font-bold text-dark-text" id="healthSwitchStatus-stageABC">—</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-400">Access Points</p>
+                                <p class="text-sm font-bold text-dark-text" id="healthApStatus-stageABC">—</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-400">PSU Redundancy</p>
+                                <p class="text-sm font-bold text-dark-text" id="healthPsuStatus-stageABC">—</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-400">Routing Redundancy</p>
+                                <p class="text-sm font-bold text-dark-text" id="healthRoutingRedundancy-stageABC">—</p>
+                            </div>
+                        </div>
+                        <div class="mt-3" style="height: 50px;">
+                            <canvas id="healthUplinkSparkline-stageABC"></canvas>
+                        </div>
+                    </div>
                     <!-- Widget markup appended by Tasks 7-18 -->
                 </div>
             </div>
