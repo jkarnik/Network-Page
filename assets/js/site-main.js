@@ -223,3 +223,46 @@ function renderNeedsAttention(siteName) {
 }
 
 registerSiteRenderer(renderNeedsAttention);
+
+// --- WAN/UPLINK DETAIL SECTION (Stage A, cellular column filled by Task 12) ---
+
+const CIRCUIT_STATUS_BADGES = {
+    online: '<span class="px-2 py-0.5 rounded text-xs font-bold bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">Online</span>',
+    warning: '<span class="px-2 py-0.5 rounded text-xs font-bold bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400">Alerting</span>',
+    critical: '<span class="px-2 py-0.5 rounded text-xs font-bold bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">Critical</span>',
+    offline: '<span class="px-2 py-0.5 rounded text-xs font-bold bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-400">Offline</span>'
+};
+
+function renderWanSection(siteName) {
+    const circuits = DataLoader.getCircuits(siteName);
+
+    STAGE_TABS.forEach(tab => {
+        const tbody = document.getElementById(`circuitsTableBody-${tab}`);
+        if (!tbody) return;
+
+        if (circuits.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="9" class="px-4 py-3 text-center text-sm text-gray-400">No WAN circuits at this site.</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = circuits.map(c => {
+            const device = DataLoader.getDeviceFromManifest(c.deviceId);
+            const statusBadge = CIRCUIT_STATUS_BADGES[c.status] || CIRCUIT_STATUS_BADGES.online;
+            return `
+                <tr>
+                    <td class="px-4 py-2.5 font-bold text-dark-text whitespace-nowrap">${device ? device.name : c.deviceId}</td>
+                    <td class="px-4 py-2.5 text-dark-muted whitespace-nowrap">${SharedUI.escapeHtml(c.isp)}</td>
+                    <td class="px-4 py-2.5 text-dark-muted whitespace-nowrap">${c.tier}</td>
+                    <td class="px-4 py-2.5 text-dark-muted whitespace-nowrap">${c.connectionType}</td>
+                    <td class="px-4 py-2.5 whitespace-nowrap">${statusBadge}</td>
+                    <td class="px-4 py-2.5 text-right whitespace-nowrap">${c.throughputUpMbps} / ${c.throughputDownMbps} Mbps</td>
+                    <td class="px-4 py-2.5 text-right whitespace-nowrap">${c.latencyMs} ms</td>
+                    <td class="px-4 py-2.5 text-right whitespace-nowrap">${c.lossPct}%</td>
+                    <td class="px-4 py-2.5 text-right whitespace-nowrap text-gray-400" id="circuitCellular-${c.deviceId}-${tab}">—</td>
+                </tr>
+            `;
+        }).join('');
+    });
+}
+
+registerSiteRenderer(renderWanSection);
