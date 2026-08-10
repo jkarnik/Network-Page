@@ -714,6 +714,125 @@ const DataLoader = {
         return quotaMap[scope] || quotaMap['Global'] || {};
     },
 
+    // ==================== SITE DETAILS ACCESSORS ====================
+
+    _siteDetails: null,
+
+    /**
+     * Load data/site-details.json (circuits, VPN tunnels, hardware, BGP flaps,
+     * security detections, VLANs, DHCP, top apps — per site).
+     * @returns {Promise<Object>} The loaded { version, sites } object
+     */
+    async loadSiteDetails() {
+        if (this._siteDetails) return this._siteDetails;
+
+        const dataPath = this._basePath
+            ? `${this._basePath}/data/site-details.json`
+            : 'data/site-details.json';
+
+        try {
+            const response = await fetch(dataPath);
+            if (!response.ok) {
+                throw new Error(`Failed to load site details: HTTP ${response.status}`);
+            }
+            this._siteDetails = await response.json();
+            return this._siteDetails;
+        } catch (error) {
+            console.error('Failed to load site details:', error);
+            this._siteDetails = { version: '0', sites: {} };
+            return this._siteDetails;
+        }
+    },
+
+    /**
+     * Get the raw site-details block for one site.
+     * @param {string} siteName
+     * @returns {Object|null}
+     */
+    getSiteDetails(siteName) {
+        return this._siteDetails?.sites?.[siteName] || null;
+    },
+
+    getCircuits(siteName) {
+        return this.getSiteDetails(siteName)?.circuits || [];
+    },
+
+    getVpnTunnels(siteName) {
+        return this.getSiteDetails(siteName)?.vpnTunnels || [];
+    },
+
+    getHardwareRollup(siteName) {
+        return this.getSiteDetails(siteName)?.hardware || { psuTotal: 0, psuFailedDeviceIds: [] };
+    },
+
+    getBgpFlaps(siteName) {
+        return this.getSiteDetails(siteName)?.bgpFlaps || [];
+    },
+
+    getSecurityDetections(siteName) {
+        return this.getSiteDetails(siteName)?.security || [];
+    },
+
+    getVlanInventory(siteName) {
+        return this.getSiteDetails(siteName)?.vlans || [];
+    },
+
+    getSiteDhcp(siteName) {
+        return this.getSiteDetails(siteName)?.dhcp || { used: 0, total: 0 };
+    },
+
+    getTopApplications(siteName) {
+        return this.getSiteDetails(siteName)?.topApplications || { labels: [], data: [], colors: [] };
+    },
+
+    /**
+     * Build the Needs Attention list: device issues + PSU failures always;
+     * BGP flaps and security detections only when their stage flag is set,
+     * so the same accessor works for all 3 tabs.
+     * @param {string} siteName
+     * @param {Object} [opts]
+     * @param {boolean} [opts.includeBgp=false]
+     * @param {boolean} [opts.includeSecurity=false]
+     * @returns {Array<{severity: 'crit'|'warn', text: string}>}
+     */
+    getNeedsAttention(siteName, opts = {}) {
+        const items = [];
+
+        this.getDevicesBySite(siteName).forEach(device => {
+            if (device.status === 'critical' || device.status === 'offline') {
+                items.push({ severity: 'crit', text: `${device.name} is ${device.status}` });
+            } else if (device.status === 'warning') {
+                items.push({ severity: 'warn', text: `${device.name} needs attention` });
+            }
+        });
+
+        const hardware = this.getHardwareRollup(siteName);
+        hardware.psuFailedDeviceIds.forEach(deviceId => {
+            const device = this.getDeviceFromManifest(deviceId);
+            items.push({ severity: 'warn', text: `PSU failed: ${device ? device.name : deviceId}` });
+        });
+
+        this.getVpnTunnels(siteName).forEach(tunnel => {
+            if (tunnel.status === 'down') {
+                items.push({ severity: 'crit', text: `Tunnel down: ${tunnel.peerName}` });
+            }
+        });
+
+        if (opts.includeBgp) {
+            this.getBgpFlaps(siteName).forEach(flap => {
+                items.push({ severity: 'warn', text: `BGP flap detected ${flap.timeAgo}: ${flap.neighbor}` });
+            });
+        }
+
+        if (opts.includeSecurity) {
+            this.getSecurityDetections(siteName).forEach(detection => {
+                items.push({ severity: 'crit', text: `Rogue AP detected: ${detection.ssid} (${detection.rssi} dBm)` });
+            });
+        }
+
+        return items;
+    },
+
     // ==================== VALIDATION ====================
 
     /**
