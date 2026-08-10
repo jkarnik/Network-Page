@@ -492,3 +492,82 @@ function renderTopApplications(siteName) {
 }
 
 registerSiteRenderer(renderTopApplications);
+
+// --- VLAN/SEGMENTATION + DHCP POOL UTILIZATION (Stage A+B+C) ---
+
+const VLAN_COLORS = { Corp: '#3b82f6', Secure: '#8b5cf6', Guest: '#f59e0b', Prod: '#10b981' };
+const VLAN_DHCP_ID_PREFIX = { Corp: 'dhcpCorp', Secure: 'dhcpSecure', Guest: 'dhcpGuest', Prod: 'dhcpProd' };
+
+function createOrUpdateDhcpBar(id, used, total, color, isGlobal, vlans) {
+    const canvas = document.getElementById(id);
+    if (!canvas) return;
+    const available = Math.max(0, total - used);
+
+    const datasets = isGlobal
+        ? vlans.map(v => ({ label: v.name, data: [v.dhcpUsed], backgroundColor: VLAN_COLORS[v.name] || '#6b7280', borderRadius: 0 }))
+            .concat([{ label: 'Available', data: [available], backgroundColor: '#e5e7eb', borderRadius: 4 }])
+        : [
+            { label: 'Used', data: [used], backgroundColor: color, borderRadius: 0 },
+            { label: 'Available', data: [available], backgroundColor: '#e5e7eb', borderRadius: 4 }
+        ];
+
+    if (charts[id]) {
+        charts[id].data.datasets = datasets;
+        charts[id].options.scales.x.max = total;
+        charts[id].update();
+        return;
+    }
+
+    charts[id] = new Chart(canvas, {
+        type: 'bar',
+        data: { labels: [''], datasets },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { stacked: true, max: total, grid: { display: false }, ticks: { display: false } },
+                y: { stacked: true, grid: { display: false }, ticks: { display: false } }
+            }
+        }
+    });
+}
+
+function renderDhcpBars(siteName, vlans) {
+    const dhcp = DataLoader.getSiteDhcp(siteName);
+
+    createOrUpdateDhcpBar('dhcpGlobalBar-stageABC', dhcp.used, dhcp.total, null, true, vlans);
+    setText('dhcpGlobalPct-stageABC', dhcp.total ? `(${Math.round((dhcp.used / dhcp.total) * 100)}%)` : '');
+    setText('dhcpGlobalCount-stageABC', `${dhcp.used} / ${dhcp.total}`);
+
+    vlans.forEach(v => {
+        const prefix = VLAN_DHCP_ID_PREFIX[v.name];
+        if (!prefix) return;
+        createOrUpdateDhcpBar(`${prefix}Bar-stageABC`, v.dhcpUsed, v.dhcpTotal, VLAN_COLORS[v.name], false, null);
+        setText(`${prefix}Pct-stageABC`, v.dhcpTotal ? `(${Math.round((v.dhcpUsed / v.dhcpTotal) * 100)}%)` : '');
+        setText(`${prefix}Value-stageABC`, `${v.dhcpUsed}/${v.dhcpTotal}`);
+    });
+}
+
+function renderVlanSection(siteName) {
+    const vlans = DataLoader.getVlanInventory(siteName);
+
+    const tbody = document.getElementById('vlanTableBody-stageABC');
+    if (tbody) {
+        tbody.innerHTML = vlans.length === 0
+            ? '<tr><td colspan="4" class="px-4 py-3 text-center text-sm text-gray-400">No VLANs configured.</td></tr>'
+            : vlans.map(v => `
+                <tr>
+                    <td class="px-4 py-2.5 font-bold text-dark-text whitespace-nowrap">${v.id} - ${SharedUI.escapeHtml(v.name)}</td>
+                    <td class="px-4 py-2.5 text-dark-muted whitespace-nowrap">${SharedUI.escapeHtml(v.purpose)}</td>
+                    <td class="px-4 py-2.5 text-right whitespace-nowrap">${v.clientCount}</td>
+                    <td class="px-4 py-2.5 text-right whitespace-nowrap">${v.bandwidthMbps} Mbps</td>
+                </tr>
+            `).join('');
+    }
+
+    renderDhcpBars(siteName, vlans);
+}
+
+registerSiteRenderer(renderVlanSection);

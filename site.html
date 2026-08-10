@@ -622,6 +622,67 @@
                             <div class="flex-1 overflow-auto custom-scrollbar" id="topAppsLegend-stageABC"></div>
                         </div>
                     </div>
+                    <!-- VLAN/Segmentation (Stage A+B+C) -->
+                    <div class="col-span-12 lg:col-span-6 card p-0 bg-dark-card flex flex-col h-80">
+                        <div class="p-4 border-b border-gray-100 dark:border-gray-700">
+                            <h3 class="text-sm font-bold text-dark-text">VLAN / Segmentation</h3>
+                        </div>
+                        <div class="flex-1 overflow-auto custom-scrollbar">
+                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm">
+                                <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0">
+                                    <tr>
+                                        <th class="px-4 py-2 text-left text-[11px] font-medium text-gray-500 uppercase">VLAN</th>
+                                        <th class="px-4 py-2 text-left text-[11px] font-medium text-gray-500 uppercase">Purpose</th>
+                                        <th class="px-4 py-2 text-right text-[11px] font-medium text-gray-500 uppercase">Clients</th>
+                                        <th class="px-4 py-2 text-right text-[11px] font-medium text-gray-500 uppercase">Bandwidth</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="vlanTableBody-stageABC"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- DHCP Pool Utilization (Stage A+B+C) -->
+                    <div class="col-span-12 lg:col-span-6 card p-4 bg-dark-card h-80 overflow-auto custom-scrollbar">
+                        <h3 class="text-sm font-bold text-dark-text mb-3">DHCP Pool Utilization</h3>
+                        <div class="space-y-3">
+                            <div>
+                                <div class="flex justify-between text-xs text-gray-400 mb-1">
+                                    <span>Global <span id="dhcpGlobalPct-stageABC"></span></span>
+                                    <span id="dhcpGlobalCount-stageABC"></span>
+                                </div>
+                                <div style="height: 18px;"><canvas id="dhcpGlobalBar-stageABC"></canvas></div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-xs text-gray-400 mb-1">
+                                    <span>Corp <span id="dhcpCorpPct-stageABC"></span></span>
+                                    <span id="dhcpCorpValue-stageABC"></span>
+                                </div>
+                                <div style="height: 16px;"><canvas id="dhcpCorpBar-stageABC"></canvas></div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-xs text-gray-400 mb-1">
+                                    <span>Secure <span id="dhcpSecurePct-stageABC"></span></span>
+                                    <span id="dhcpSecureValue-stageABC"></span>
+                                </div>
+                                <div style="height: 16px;"><canvas id="dhcpSecureBar-stageABC"></canvas></div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-xs text-gray-400 mb-1">
+                                    <span>Guest <span id="dhcpGuestPct-stageABC"></span></span>
+                                    <span id="dhcpGuestValue-stageABC"></span>
+                                </div>
+                                <div style="height: 16px;"><canvas id="dhcpGuestBar-stageABC"></canvas></div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-xs text-gray-400 mb-1">
+                                    <span>Prod <span id="dhcpProdPct-stageABC"></span></span>
+                                    <span id="dhcpProdValue-stageABC"></span>
+                                </div>
+                                <div style="height: 16px;"><canvas id="dhcpProdBar-stageABC"></canvas></div>
+                            </div>
+                        </div>
+                    </div>
                     <!-- Widget markup appended by Tasks 7-18 -->
                 </div>
             </div>
