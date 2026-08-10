@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site Performance Monitoring</title>
+
+    <!-- Resource Hints for Performance -->
+    <link rel="preconnect" href="https://www.googletagmanager.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-3V0WMCMXMQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-3V0WMCMXMQ');
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="assets/js/tailwind-config.js"></script>
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="fontawesome/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="assets/css/shared-styles.css">
+
+    <!-- Chart.js - Deferred for Performance -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+</head>
+<body class="bg-dark-bg text-dark-text h-screen flex flex-col overflow-hidden">
+
+    <!-- Shared header rendered by NavigationManager -->
+    <div id="appHeader"></div>
+
+    <main class="flex-1 overflow-y-auto p-6 bg-dark-bg">
+        <div class="max-w-[1920px] mx-auto">
+
+            <!-- Site Identity Card (persistent, unaffected by tab selection) -->
+            <div class="card p-4 bg-dark-card border-l-4 border-green-500 mb-0" data-site-info>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-building text-gray-400 text-lg"></i>
+                        <div>
+                            <h2 class="text-lg font-bold text-dark-text" data-site-name>—</h2>
+                            <p class="text-xs text-gray-500" data-site-region>—</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-8 text-sm">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-gray-400">Gateways:</span>
+                            <span class="font-mono text-gray-700 dark:text-gray-300" data-site-gateway-count>—</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-gray-400">Switches:</span>
+                            <span class="font-mono text-gray-700 dark:text-gray-300" data-site-switch-count>—</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-gray-400">APs:</span>
+                            <span class="font-mono text-gray-700 dark:text-gray-300" data-site-ap-count>—</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-gray-400">WAN Circuits:</span>
+                            <span class="font-mono text-gray-700 dark:text-gray-300" data-site-circuit-count>—</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="text-right">
+                            <p class="text-xs text-gray-400 mb-0.5">Total Devices</p>
+                            <p class="font-mono text-lg font-bold text-dark-text" data-site-device-count>—</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabs Navigation -->
+            <div class="mb-4 mt-0">
+                <div class="border-b border-dark-border">
+                    <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+                        <button data-tab="stageA" id="tab-stageA" class="tab-button border-indigo-500 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                            Stage A
+                        </button>
+                        <button data-tab="stageAB" id="tab-stageAB" class="tab-button border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                            Stage A+B
+                        </button>
+                        <button data-tab="stageABC" id="tab-stageABC" class="tab-button border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                            Stage A+B+C
+                        </button>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Tab Content: Stage A -->
+            <div id="content-stageA" class="tab-content">
+                <div class="grid grid-cols-12 gap-3 mb-6" id="stageA-grid">
+                    <!-- Widget markup appended by Tasks 7, 8, 9, 10, 11 -->
+                </div>
+            </div>
+
+            <!-- Tab Content: Stage A+B -->
+            <div id="content-stageAB" class="tab-content hidden">
+                <div class="grid grid-cols-12 gap-3 mb-6" id="stageAB-grid">
+                    <!-- Widget markup appended by Tasks 7-14 -->
+                </div>
+            </div>
+
+            <!-- Tab Content: Stage A+B+C -->
+            <div id="content-stageABC" class="tab-content hidden">
+                <div class="grid grid-cols-12 gap-3 mb-6" id="stageABC-grid">
+                    <!-- Widget markup appended by Tasks 7-18 -->
+                </div>
+            </div>
+
+        </div>
+
+        <footer class="mt-8 mb-4 text-center text-xs text-gray-400 dark:text-gray-500">
+            <p>NPM 2.0 Operational Command Center</p>
+        </footer>
+    </main>
+
+    <!-- Mobile tab bar rendered by NavigationManager -->
+    <div id="mobileTabBar"></div>
+
+    <script src="assets/js/theme-manager.js" defer></script>
+    <script src="assets/js/chart-config.js" defer></script>
+    <script src="assets/js/navigation.js" defer></script>
+    <script src="assets/js/shared-ui.js" defer></script>
+    <script src="assets/js/data-loader.js" defer></script>
+
+    <!-- Main Application Script - Deferred for Performance -->
+    <script src="assets/js/site-main.js" defer></script>
+
+</body>
+</html>
