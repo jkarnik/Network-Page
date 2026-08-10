@@ -17,7 +17,13 @@ function registerSiteRenderer(fn) {
 }
 
 function renderAllTabs(siteName) {
-    siteRenderers.forEach(fn => fn(siteName));
+    siteRenderers.forEach(fn => {
+        try {
+            fn(siteName);
+        } catch (err) {
+            console.error('Site page renderer failed:', err);
+        }
+    });
 }
 
 // --- SITE IDENTITY CARD (persistent, stage-independent) ---
@@ -150,7 +156,7 @@ function formatStatusCounts(counts) {
 
 function computeCircuitSummary(siteName) {
     const circuits = DataLoader.getCircuits(siteName);
-    const up = circuits.filter(c => c.status === 'online').length;
+    const up = circuits.filter(c => c.status !== 'critical' && c.status !== 'offline').length;
     const totalUp = circuits.reduce((s, c) => s + c.throughputUpMbps, 0);
     const totalDown = circuits.reduce((s, c) => s + c.throughputDownMbps, 0);
     const maxLoss = circuits.reduce((m, c) => Math.max(m, c.lossPct), 0);
