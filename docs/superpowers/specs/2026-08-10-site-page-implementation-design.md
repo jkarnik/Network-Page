@@ -47,7 +47,8 @@ Per site:
 - **`hardware`**: `{ psuTotal, psuFailedDeviceIds: [...] }` — rollup used for both the health-badge count and naming specific devices in the Needs Attention panel.
 - **`bgpFlaps`**: 0–3 events — `{ neighbor, previousState, currentState, timeAgo }`. Empty on most sites; populated on 1–2 sites that already have WAN-instability alerts, for narrative consistency.
 - **`security`**: 0–2 rogue-AP detections — `{ ssid, bssid, band, rssi, classification, detectedAt }`.
-- **`vlans`**: fixed 4-VLAN inventory (Corp/Secure/Guest/Prod, matching the names already used in `gateway-defaults.json`'s `throughputByVlan`) — `{ id, name, purpose, clientCount, bandwidthMbps }` per site.
+- **`vlans`**: fixed 4-VLAN inventory (Corp/Secure/Guest/Prod, matching the names already used in `gateway-defaults.json`'s `throughputByVlan`) — `{ id, name, purpose, clientCount, bandwidthMbps, dhcpUsed, dhcpTotal }` per site. `dhcpUsed`/`dhcpTotal` reuse the same `{used, total}` shape already on `gateway-defaults.json`'s `dhcp` field.
+- **`dhcp`**: site-wide pool `{ used, total }`, for the global bar above the per-VLAN breakdown — same shape as `gateway-defaults.json`'s existing `dhcp` field, rolled up to site level.
 - **`topApplications`**: `{ labels: [...], data: [...pct], colors: [...] }` — same shape as `gateway-defaults.json`'s `topApps`, for a doughnut chart.
 
 ## 4. Tab Contents
@@ -71,13 +72,13 @@ Per site:
 ### Stage A+B+C — adds
 
 - **Application Visibility section** (new): Top Applications doughnut chart.
-- **VLAN/Segmentation section** (new): VLAN inventory table + per-VLAN client count + per-VLAN bandwidth. DHCP pool utilization stays excluded — matches the catalog's "not staged, blocked" call.
+- **VLAN/Segmentation section** (new): VLAN inventory table + per-VLAN client count + per-VLAN bandwidth + **DHCP pool utilization** (global pool bar + one bar per VLAN, same shape as the existing SD-WAN device page's DHCP Utilization widget).
 - **Wireless section**: Time-to-Connect breakdown appended (Assoc/Auth/DHCP/DNS stacked bar, same shape as the existing Frustration Leaderboard).
 - **Security Intelligence widget** (new): rogue-AP detections, feeding the Needs Attention panel.
 
 ## 5. Explicit Scope Cuts
 
 - **No click-to-expand trend overlays.** Every widget's sparkline is inline and fixed-window; there's no modal/detail-chart drill-down like the other 3 pages have. Can be added in a later round.
-- **DHCP pool utilization**: excluded, per the widget catalog's "Not staged — blocked" determination (no viable bulk data path on either vendor today).
 - **Fan/PSU**: PSU-only, no fan status — matches the catalog (fan dropped on both vendors).
+- **DHCP pool utilization is included in Stage C on this page, by direction, despite the widget catalog marking it "Not staged — blocked"** (no viable bulk data path on either vendor today — Meraki is device-level-only, Mist has no REST stat). It's mock/generated data here for the sequencing conversation, not a claim that the real bulk-data path exists — worth flagging explicitly to engineering when this tab comes up, so the demo doesn't imply the blocker was resolved.
 - **Meraki's 4-value device-status enum** (online/alerting/offline/dormant) is not introduced as a separate vocabulary — this page reuses the app's existing online/warning/critical/offline enum; "warning" carries the same meaning the catalog calls "alerting."
