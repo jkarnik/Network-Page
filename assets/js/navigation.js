@@ -13,7 +13,8 @@ const NavigationManager = {
      * @private
      */
     _pages: [
-        { key: 'summary', label: 'Summary', href: 'index.html', icon: 'fa-chart-line' }
+        { key: 'summary', label: 'Summary', href: 'index.html', icon: 'fa-chart-line' },
+        { key: 'site', label: 'Sites', href: 'site.html', icon: 'fa-building' }
     ],
 
     /**
@@ -83,7 +84,9 @@ const NavigationManager = {
         ).join('\n            ');
 
         // Build right-side selector
-        const selectorHtml = isSummary ? this._buildScopeSelector() : this._buildDeviceSelector();
+        const selectorHtml = isSummary
+            ? this._buildScopeSelector()
+            : (this._activePage === 'site' ? this._buildSiteSelector() : this._buildDeviceSelector());
 
         container.innerHTML = `
     <!-- Mobile Navigation Overlay -->
@@ -199,6 +202,19 @@ const NavigationManager = {
     _buildDeviceSelector() {
         return `<div class="relative">
                         <select id="deviceSelector" class="block w-full pl-3 pr-10 py-2 text-sm border-dark-border focus:outline-none focus:ring-newrelic-cyan focus:border-newrelic-cyan sm:text-sm rounded-md bg-dark-bg border text-dark-text transition-all">
+                            <!-- Options populated dynamically by JavaScript -->
+                        </select>
+                    </div>`;
+    },
+
+    /**
+     * Build the site selector dropdown HTML (site page).
+     * @returns {string}
+     * @private
+     */
+    _buildSiteSelector() {
+        return `<div class="relative">
+                        <select id="siteSelector" class="block w-full pl-3 pr-10 py-2 text-sm border-dark-border focus:outline-none focus:ring-newrelic-cyan focus:border-newrelic-cyan sm:text-sm rounded-md bg-dark-bg border text-dark-text transition-all">
                             <!-- Options populated dynamically by JavaScript -->
                         </select>
                     </div>`;
