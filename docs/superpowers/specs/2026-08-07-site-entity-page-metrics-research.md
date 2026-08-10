@@ -106,13 +106,6 @@ Every metric below is classified into one of these bands. All tiers are backgrou
 | Channel interference rollup ("2 APs with high interference") | 3 | 30–60 min, or event-driven | Leading indicator, not urgent. |
 | Rogue AP / wireless threat count | 2 | Event-driven | Security signal, same event-driven pattern as shadow IT. |
 
-### Security / Config Compliance
-
-| Metric | Tier | Cadence | Why |
-|---|---|---|---|
-| Firmware version compliance (site has N devices behind target version) | 3 | Daily | Changes rarely; a compliance view, not a health signal. |
-| Config drift flag (device config differs from intended baseline) | 3 | Daily, or event-driven off vendor change webhooks if available | Rare-changing — better as a change-triggered flag than a poll. |
-
 ### Site Identity & Device Inventory
 
 | Metric | Tier | Cadence | Why |
