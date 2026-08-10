@@ -192,3 +192,34 @@ function renderHealthBadge(siteName) {
 }
 
 registerSiteRenderer(renderHealthBadge);
+
+// --- NEEDS ATTENTION PANEL (Stage A, grows in B/C) ---
+
+const NEEDS_ATTENTION_OPTS_BY_TAB = {
+    stageA: {},
+    stageAB: { includeBgp: true },
+    stageABC: { includeBgp: true, includeSecurity: true }
+};
+
+function renderNeedsAttention(siteName) {
+    STAGE_TABS.forEach(tab => {
+        const container = document.getElementById(`needsAttentionList-${tab}`);
+        if (!container) return;
+
+        const items = DataLoader.getNeedsAttention(siteName, NEEDS_ATTENTION_OPTS_BY_TAB[tab]);
+
+        if (items.length === 0) {
+            container.innerHTML = '<p class="text-sm text-gray-400 italic">All systems normal — nothing needs attention.</p>';
+            return;
+        }
+
+        container.innerHTML = items.map(item => `
+            <div class="flex items-center gap-2 py-1.5 px-2 rounded ${item.severity === 'crit' ? 'bg-red-50 dark:bg-red-900/20' : 'bg-amber-50 dark:bg-amber-900/20'}">
+                <i class="fa-solid ${item.severity === 'crit' ? 'fa-circle-exclamation text-red-500' : 'fa-triangle-exclamation text-amber-500'}"></i>
+                <span class="text-sm text-dark-text">${SharedUI.escapeHtml(item.text)}</span>
+            </div>
+        `).join('');
+    });
+}
+
+registerSiteRenderer(renderNeedsAttention);
