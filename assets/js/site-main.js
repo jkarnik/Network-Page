@@ -655,3 +655,31 @@ function renderTimeToConnect(siteName) {
 }
 
 registerSiteRenderer(renderTimeToConnect);
+
+// --- SECURITY INTELLIGENCE (Stage A+B+C) ---
+
+function renderSecurityIntelligence(siteName) {
+    const detections = DataLoader.getSecurityDetections(siteName);
+    const listEl = document.getElementById('securityIntelList-stageABC');
+    const countEl = document.getElementById('securityIntelCount-stageABC');
+
+    if (countEl) countEl.textContent = `${detections.length} detection${detections.length !== 1 ? 's' : ''}`;
+    if (!listEl) return;
+
+    if (detections.length === 0) {
+        listEl.innerHTML = '<p class="text-sm text-gray-400 italic">No rogue APs or wireless threats detected.</p>';
+        return;
+    }
+
+    listEl.innerHTML = detections.map(d => `
+        <div class="flex items-center justify-between py-1.5 px-2 rounded bg-red-50 dark:bg-red-900/20">
+            <span class="text-sm text-dark-text">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300 uppercase mr-2">${SharedUI.escapeHtml(d.classification)}</span>
+                ${SharedUI.escapeHtml(d.ssid)} (${SharedUI.escapeHtml(d.bssid)}) — ${d.band}, ${d.rssi} dBm
+            </span>
+            <span class="text-xs text-gray-400">${d.detectedAt}</span>
+        </div>
+    `).join('');
+}
+
+registerSiteRenderer(renderSecurityIntelligence);
