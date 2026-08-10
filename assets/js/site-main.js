@@ -348,3 +348,63 @@ function renderSiteAlertFeeds(siteName) {
 }
 
 registerSiteRenderer(renderSiteAlertFeeds);
+
+// --- CELLULAR SIGNAL + VPN TUNNELS DETAIL (Stage A+B) ---
+
+async function renderCellularSignal(siteName) {
+    const circuits = DataLoader.getCircuits(siteName);
+
+    for (const circuit of circuits) {
+        const device = DataLoader.getDeviceFromManifest(circuit.deviceId);
+        if (!device) continue;
+
+        const deviceData = await DataLoader.getDeviceData(circuit.deviceId, 'gateway');
+        const cellular = deviceData && deviceData.cellular;
+
+        let text = '—';
+        if (cellular) {
+            text = device.vendor === 'meraki'
+                ? `${cellular.status} (${cellular.signalStrength} dBm)`
+                : cellular.status;
+        }
+
+        ['stageAB', 'stageABC'].forEach(tab => {
+            setText(`circuitCellular-${circuit.deviceId}-${tab}`, text);
+        });
+    }
+}
+
+registerSiteRenderer(renderCellularSignal);
+
+function renderVpnTunnels(siteName) {
+    const tunnels = DataLoader.getVpnTunnels(siteName);
+
+    ['stageAB', 'stageABC'].forEach(tab => {
+        const tbody = document.getElementById(`vpnTunnelsTableBody-${tab}`);
+        if (!tbody) return;
+
+        if (tunnels.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" class="px-4 py-3 text-center text-sm text-gray-400">No VPN tunnels at this site.</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = tunnels.map(t => {
+            const statusBadge = t.status === 'up'
+                ? '<span class="px-2 py-0.5 rounded text-xs font-bold bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">Up</span>'
+                : '<span class="px-2 py-0.5 rounded text-xs font-bold bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">Down</span>';
+            return `
+                <tr>
+                    <td class="px-4 py-2.5 font-bold text-dark-text whitespace-nowrap">${SharedUI.escapeHtml(t.peerName)}</td>
+                    <td class="px-4 py-2.5 text-dark-muted whitespace-nowrap capitalize">${t.vendor}</td>
+                    <td class="px-4 py-2.5 whitespace-nowrap">${statusBadge}</td>
+                    <td class="px-4 py-2.5 text-right whitespace-nowrap">${t.latencyMs != null ? t.latencyMs + ' ms' : '—'}</td>
+                    <td class="px-4 py-2.5 text-right whitespace-nowrap">${t.jitterMs != null ? t.jitterMs + ' ms' : '—'}</td>
+                    <td class="px-4 py-2.5 text-right whitespace-nowrap">${t.lossPct != null ? t.lossPct + '%' : '—'}</td>
+                    <td class="px-4 py-2.5 text-right whitespace-nowrap">${t.bandwidthUpMbps} / ${t.bandwidthDownMbps} Mbps</td>
+                </tr>
+            `;
+        }).join('');
+    });
+}
+
+registerSiteRenderer(renderVpnTunnels);
