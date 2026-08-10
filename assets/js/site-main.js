@@ -408,3 +408,30 @@ function renderVpnTunnels(siteName) {
 }
 
 registerSiteRenderer(renderVpnTunnels);
+
+// --- BGP FLAP DETECTOR (Stage A+B) ---
+
+function renderBgpFlapDetector(siteName) {
+    const flaps = DataLoader.getBgpFlaps(siteName);
+
+    ['stageAB', 'stageABC'].forEach(tab => {
+        const countEl = document.getElementById(`bgpFlapCount-${tab}`);
+        const listEl = document.getElementById(`bgpFlapList-${tab}`);
+        if (countEl) countEl.textContent = `${flaps.length} flap${flaps.length !== 1 ? 's' : ''}`;
+        if (!listEl) return;
+
+        if (flaps.length === 0) {
+            listEl.innerHTML = '<p class="text-sm text-gray-400 italic">No BGP flaps detected.</p>';
+            return;
+        }
+
+        listEl.innerHTML = flaps.map(f => `
+            <div class="flex items-center justify-between py-1.5 px-2 rounded bg-amber-50 dark:bg-amber-900/20">
+                <span class="text-sm text-dark-text">${SharedUI.escapeHtml(f.neighbor)}: ${f.previousState} → ${f.currentState}</span>
+                <span class="text-xs text-gray-400">${f.timeAgo}</span>
+            </div>
+        `).join('');
+    });
+}
+
+registerSiteRenderer(renderBgpFlapDetector);
