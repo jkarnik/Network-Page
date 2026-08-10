@@ -122,7 +122,7 @@ siteNames.forEach(siteName => {
     const security = SECURITY_SITES.includes(siteName)
         ? [{
             ssid: 'Free_Public_WiFi',
-            bssid: '02:1A:' + Math.random().toString(16).slice(2, 10).toUpperCase().replace(/(..)/g, '$1:').slice(0, 14),
+            bssid: ('02:1A:' + Math.random().toString(16).slice(2, 10).toUpperCase().replace(/(..)/g, '$1:')).slice(0, -1),
             band: '2.4GHz',
             rssi: -Math.round(50 + Math.random() * 20),
             classification: 'rogue',
