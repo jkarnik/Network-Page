@@ -165,6 +165,109 @@ const SharedUI = {
         return device;
     },
 
+    // ==================== SITE SELECTOR ====================
+
+    /**
+     * Initialize the site selector dropdown, grouped by region.
+     * Handles URL param pre-selection and returns the selected site.
+     *
+     * @param {Object} callbacks
+     * @param {function(Object): void} callbacks.onSiteSelected - Called with the selected site object (has .name)
+     * @param {function(string): void} callbacks.onSiteChanged - Called with the site name on dropdown change
+     * @returns {Promise<Object|null>} The initially selected site, or null
+     */
+    async initSiteSelector(callbacks) {
+        try {
+            await DataLoader.load();
+            const sites = DataLoader.getSites();
+            const siteNames = Object.keys(sites);
+            const selector = document.getElementById('siteSelector');
+
+            if (!selector) {
+                console.warn('Site selector element not found');
+                return null;
+            }
+            if (siteNames.length === 0) {
+                console.warn('No sites found in data');
+                return null;
+            }
+
+            const regionGroups = {};
+            siteNames.forEach(name => {
+                const region = sites[name].region || 'Other';
+                if (!regionGroups[region]) regionGroups[region] = [];
+                regionGroups[region].push(name);
+            });
+
+            let optionsHtml = '';
+            Object.keys(regionGroups).sort().forEach(region => {
+                optionsHtml += `<optgroup label="${region}">`;
+                regionGroups[region].sort().forEach(name => {
+                    optionsHtml += `<option value="${name}">${name}</option>`;
+                });
+                optionsHtml += '</optgroup>';
+            });
+            selector.innerHTML = optionsHtml;
+
+            let selectedSite = null;
+            const urlParams = new URLSearchParams(window.location.search);
+            const siteParam = urlParams.get('site');
+
+            if (siteParam && sites[siteParam]) {
+                selector.value = siteParam;
+                selectedSite = { name: siteParam, ...sites[siteParam] };
+            }
+
+            if (!selectedSite) {
+                const firstName = siteNames[0];
+                selector.value = firstName;
+                selectedSite = { name: firstName, ...sites[firstName] };
+            }
+
+            if (callbacks && callbacks.onSiteChanged) {
+                selector.addEventListener('change', (e) => {
+                    callbacks.onSiteChanged(e.target.value);
+                });
+            }
+
+            if (selectedSite && callbacks && callbacks.onSiteSelected) {
+                callbacks.onSiteSelected(selectedSite);
+            }
+
+            return selectedSite;
+        } catch (error) {
+            console.error('initSiteSelector failed:', error);
+            return null;
+        }
+    },
+
+    /**
+     * Handle site selection change from the dropdown.
+     * Updates the URL and invokes a callback with the site.
+     *
+     * @param {string} siteName - The selected site name
+     * @param {function(Object): void} onSiteChanged - Callback with the site object (has .name)
+     * @returns {Object|null} The site object, or null if not found
+     */
+    changeSite(siteName, onSiteChanged) {
+        const site = DataLoader.getSite(siteName);
+        if (!site) {
+            console.warn('Site not found:', siteName);
+            return null;
+        }
+        const siteWithName = { name: siteName, ...site };
+
+        const url = new URL(window.location);
+        url.searchParams.set('site', siteName);
+        window.history.replaceState({}, '', url);
+
+        if (onSiteChanged) {
+            onSiteChanged(siteWithName);
+        }
+
+        return siteWithName;
+    },
+
     // ==================== DEVICE INFO HEADER ====================
 
     /**
@@ -281,6 +384,64 @@ const SharedUI = {
                 <td class="px-6 py-4 whitespace-nowrap text-xs text-dark-muted">${alert.timeAgo}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-xs text-dark-muted capitalize">${alert.type}</td>
                 <td class="px-6 py-4 text-sm text-dark-text">${alert.message}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+    },
+
+    /**
+     * Render the site-specific alert feed table.
+     *
+     * @param {string} siteName - The site to fetch alerts for
+     * @param {Object} [options] - Optional configuration
+     * @param {string} [options.tableBodyId='siteAlertTableBody'] - ID of the tbody element
+     * @param {string} [options.alertCountId='siteAlertCount'] - ID of the alert count badge element
+     */
+    updateSiteAlertFeed(siteName, options) {
+        const opts = Object.assign({
+            tableBodyId: 'siteAlertTableBody',
+            alertCountId: 'siteAlertCount'
+        }, options);
+
+        const tableBody = document.getElementById(opts.tableBodyId);
+        const alertCount = document.getElementById(opts.alertCountId);
+        if (!tableBody) return;
+
+        const alerts = DataLoader.getAlertsBySite(siteName);
+
+        if (alertCount) {
+            alertCount.textContent = `${alerts.length} alert${alerts.length !== 1 ? 's' : ''}`;
+            if (alerts.some(a => a.severity === 'crit')) {
+                alertCount.className = 'ml-2 px-2 py-0.5 rounded text-xs font-normal bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300';
+            } else if (alerts.some(a => a.severity === 'warn')) {
+                alertCount.className = 'ml-2 px-2 py-0.5 rounded text-xs font-normal bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300';
+            } else {
+                alertCount.className = 'ml-2 px-2 py-0.5 rounded text-xs font-normal bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
+            }
+        }
+
+        tableBody.innerHTML = '';
+
+        if (alerts.length === 0) {
+            const row = document.createElement('tr');
+            row.innerHTML = '<td colspan="5" class="px-6 py-4 text-center text-sm text-gray-400">No alerts for this site.</td>';
+            tableBody.appendChild(row);
+            return;
+        }
+
+        alerts.forEach(alert => {
+            const row = document.createElement('tr');
+            row.className = 'hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors';
+            row.innerHTML = `
+                <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="${this.SEV_STYLES[alert.severity]} flex items-center gap-1 w-fit">
+                        ${this.SEV_ICONS[alert.severity]} ${alert.severity.toUpperCase()}
+                    </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-xs text-dark-muted">${alert.timeAgo}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-xs text-dark-muted">${this.escapeHtml(alert.device)}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-xs text-dark-muted capitalize">${alert.type}</td>
+                <td class="px-6 py-4 text-sm text-dark-text">${this.escapeHtml(alert.message)}</td>
             `;
             tableBody.appendChild(row);
         });
