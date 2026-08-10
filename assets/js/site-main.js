@@ -301,3 +301,50 @@ function renderLanSection(siteName) {
 }
 
 registerSiteRenderer(renderLanSection);
+
+// --- DEVICE INVENTORY + SITE ALERT FEED (Stage A) ---
+
+const DEVICE_TYPE_PAGES = { gateway: 'sdwan.html', switch: 'switch.html', accessPoint: 'access-point.html' };
+
+function renderDeviceInventory(siteName) {
+    const devices = DataLoader.getAllDevices().filter(d => d.site === siteName);
+
+    STAGE_TABS.forEach(tab => {
+        const tbody = document.getElementById(`deviceInventoryTableBody-${tab}`);
+        if (!tbody) return;
+
+        if (devices.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" class="px-4 py-3 text-center text-sm text-gray-400">No devices at this site.</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = devices.map(d => {
+            const statusBadge = CIRCUIT_STATUS_BADGES[d.status] || CIRCUIT_STATUS_BADGES.online;
+            const page = DEVICE_TYPE_PAGES[d.type] || 'sdwan.html';
+            return `
+                <tr class="hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">
+                    <td class="px-4 py-2.5 whitespace-nowrap">
+                        <a href="${page}?device=${d.id}" class="font-bold text-blue-600 dark:text-blue-400 hover:underline">${d.name}</a>
+                    </td>
+                    <td class="px-4 py-2.5 text-dark-muted whitespace-nowrap">${d.model}</td>
+                    <td class="px-4 py-2.5 text-dark-muted whitespace-nowrap capitalize">${d.type}</td>
+                    <td class="px-4 py-2.5 whitespace-nowrap">${statusBadge}</td>
+                    <td class="px-4 py-2.5 text-dark-muted whitespace-nowrap">${d.uptime || '—'}</td>
+                </tr>
+            `;
+        }).join('');
+    });
+}
+
+registerSiteRenderer(renderDeviceInventory);
+
+function renderSiteAlertFeeds(siteName) {
+    STAGE_TABS.forEach(tab => {
+        SharedUI.updateSiteAlertFeed(siteName, {
+            tableBodyId: `siteAlertTableBody-${tab}`,
+            alertCountId: `siteAlertCount-${tab}`
+        });
+    });
+}
+
+registerSiteRenderer(renderSiteAlertFeeds);

@@ -193,6 +193,50 @@
                             </table>
                         </div>
                     </div>
+                    <!-- Device Inventory (Stage A) -->
+                    <div class="col-span-12 card p-0 bg-dark-card flex flex-col h-80">
+                        <div class="p-4 border-b border-gray-100 dark:border-gray-700">
+                            <h3 class="text-sm font-bold text-dark-text">Device Inventory</h3>
+                        </div>
+                        <div class="flex-1 overflow-auto custom-scrollbar">
+                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm">
+                                <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0">
+                                    <tr>
+                                        <th class="px-4 py-2 text-left text-[11px] font-medium text-gray-500 uppercase">Device</th>
+                                        <th class="px-4 py-2 text-left text-[11px] font-medium text-gray-500 uppercase">Model</th>
+                                        <th class="px-4 py-2 text-left text-[11px] font-medium text-gray-500 uppercase">Type</th>
+                                        <th class="px-4 py-2 text-left text-[11px] font-medium text-gray-500 uppercase">Status</th>
+                                        <th class="px-4 py-2 text-left text-[11px] font-medium text-gray-500 uppercase">Uptime</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="deviceInventoryTableBody-stageA"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Site Alert Feed (Stage A) -->
+                    <div class="col-span-12 card h-80 flex flex-col bg-dark-card">
+                        <div class="p-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
+                            <h3 class="text-sm font-bold text-dark-text flex items-center gap-2">
+                                <i class="fa-regular fa-bell"></i> Site Alert Feed
+                                <span id="siteAlertCount-stageA" class="ml-2 px-2 py-0.5 rounded text-xs font-normal bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">0 alerts</span>
+                            </h3>
+                        </div>
+                        <div class="flex-1 overflow-auto custom-scrollbar p-0">
+                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0 z-10">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Severity</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Time</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Device</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Type</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Message</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="siteAlertTableBody-stageA"></tbody>
+                            </table>
+                        </div>
+                    </div>
                     <!-- Widget markup appended by Tasks 7, 8, 9, 10, 11 -->
                 </div>
             </div>
@@ -290,6 +334,50 @@
                             </table>
                         </div>
                     </div>
+                    <!-- Device Inventory (Stage A) -->
+                    <div class="col-span-12 card p-0 bg-dark-card flex flex-col h-80">
+                        <div class="p-4 border-b border-gray-100 dark:border-gray-700">
+                            <h3 class="text-sm font-bold text-dark-text">Device Inventory</h3>
+                        </div>
+                        <div class="flex-1 overflow-auto custom-scrollbar">
+                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm">
+                                <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0">
+                                    <tr>
+                                        <th class="px-4 py-2 text-left text-[11px] font-medium text-gray-500 uppercase">Device</th>
+                                        <th class="px-4 py-2 text-left text-[11px] font-medium text-gray-500 uppercase">Model</th>
+                                        <th class="px-4 py-2 text-left text-[11px] font-medium text-gray-500 uppercase">Type</th>
+                                        <th class="px-4 py-2 text-left text-[11px] font-medium text-gray-500 uppercase">Status</th>
+                                        <th class="px-4 py-2 text-left text-[11px] font-medium text-gray-500 uppercase">Uptime</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="deviceInventoryTableBody-stageAB"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Site Alert Feed (Stage A) -->
+                    <div class="col-span-12 card h-80 flex flex-col bg-dark-card">
+                        <div class="p-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
+                            <h3 class="text-sm font-bold text-dark-text flex items-center gap-2">
+                                <i class="fa-regular fa-bell"></i> Site Alert Feed
+                                <span id="siteAlertCount-stageAB" class="ml-2 px-2 py-0.5 rounded text-xs font-normal bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">0 alerts</span>
+                            </h3>
+                        </div>
+                        <div class="flex-1 overflow-auto custom-scrollbar p-0">
+                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0 z-10">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Severity</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Time</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Device</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Type</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Message</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="siteAlertTableBody-stageAB"></tbody>
+                            </table>
+                        </div>
+                    </div>
                     <!-- Widget markup appended by Tasks 7-14 -->
                 </div>
             </div>
@@ -384,6 +472,50 @@
                                     </tr>
                                 </thead>
                                 <tbody id="lanTableBody-stageABC"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- Device Inventory (Stage A) -->
+                    <div class="col-span-12 card p-0 bg-dark-card flex flex-col h-80">
+                        <div class="p-4 border-b border-gray-100 dark:border-gray-700">
+                            <h3 class="text-sm font-bold text-dark-text">Device Inventory</h3>
+                        </div>
+                        <div class="flex-1 overflow-auto custom-scrollbar">
+                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm">
+                                <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0">
+                                    <tr>
+                                        <th class="px-4 py-2 text-left text-[11px] font-medium text-gray-500 uppercase">Device</th>
+                                        <th class="px-4 py-2 text-left text-[11px] font-medium text-gray-500 uppercase">Model</th>
+                                        <th class="px-4 py-2 text-left text-[11px] font-medium text-gray-500 uppercase">Type</th>
+                                        <th class="px-4 py-2 text-left text-[11px] font-medium text-gray-500 uppercase">Status</th>
+                                        <th class="px-4 py-2 text-left text-[11px] font-medium text-gray-500 uppercase">Uptime</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="deviceInventoryTableBody-stageABC"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Site Alert Feed (Stage A) -->
+                    <div class="col-span-12 card h-80 flex flex-col bg-dark-card">
+                        <div class="p-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
+                            <h3 class="text-sm font-bold text-dark-text flex items-center gap-2">
+                                <i class="fa-regular fa-bell"></i> Site Alert Feed
+                                <span id="siteAlertCount-stageABC" class="ml-2 px-2 py-0.5 rounded text-xs font-normal bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">0 alerts</span>
+                            </h3>
+                        </div>
+                        <div class="flex-1 overflow-auto custom-scrollbar p-0">
+                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0 z-10">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Severity</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Time</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Device</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Type</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-dark-muted uppercase tracking-wider">Message</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="siteAlertTableBody-stageABC"></tbody>
                             </table>
                         </div>
                     </div>
