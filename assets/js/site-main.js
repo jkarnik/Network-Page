@@ -571,3 +571,87 @@ function renderVlanSection(siteName) {
 }
 
 registerSiteRenderer(renderVlanSection);
+
+// --- TIME-TO-CONNECT BREAKDOWN (Stage A+B+C) ---
+
+function computeSiteTimeToConnect(siteName) {
+    const aps = DataLoader.getDevicesBySite(siteName, 'accessPoints');
+    const withData = aps.filter(ap => ap.timeToConnect && ap.timeToConnect > 0);
+    if (withData.length === 0) return null;
+
+    const frustrationData = DataLoader.getFrustrationData(siteName, withData.length);
+    const totals = { association: 0, auth: 0, dhcp: 0, dns: 0 };
+    frustrationData.forEach(d => {
+        totals.association += d.breakdown.association;
+        totals.auth += d.breakdown.auth;
+        totals.dhcp += d.breakdown.dhcp;
+        totals.dns += d.breakdown.dns;
+    });
+
+    const n = frustrationData.length;
+    return {
+        association: Math.round(totals.association / n),
+        auth: Math.round(totals.auth / n),
+        dhcp: Math.round(totals.dhcp / n),
+        dns: Math.round(totals.dns / n)
+    };
+}
+
+function renderTimeToConnect(siteName) {
+    const container = document.getElementById('timeToConnectContainer-stageABC');
+    if (!container) return;
+
+    const breakdown = computeSiteTimeToConnect(siteName);
+    if (!breakdown) {
+        container.innerHTML = '<p class="text-sm text-gray-400 italic mt-2">No Time-to-Connect data for this site.</p>';
+        return;
+    }
+
+    if (!container.querySelector('canvas')) {
+        container.innerHTML = `
+            <p class="text-xs text-gray-400 mb-2">Time-to-Connect Breakdown (ms)</p>
+            <div style="height: 60px;"><canvas id="timeToConnectChart-stageABC"></canvas></div>
+        `;
+    }
+
+    const total = breakdown.association + breakdown.auth + breakdown.dhcp + breakdown.dns;
+    const datasets = [
+        { label: 'Association', data: [breakdown.association], backgroundColor: '#ef4444', borderRadius: 0 },
+        { label: 'Authentication', data: [breakdown.auth], backgroundColor: '#f97316', borderRadius: 0 },
+        { label: 'DHCP', data: [breakdown.dhcp], backgroundColor: '#f59e0b', borderRadius: 0 },
+        { label: 'DNS Resolution', data: [breakdown.dns], backgroundColor: '#22c55e', borderRadius: 4 }
+    ];
+
+    if (charts['timeToConnectChart-stageABC']) {
+        charts['timeToConnectChart-stageABC'].data.datasets = datasets;
+        charts['timeToConnectChart-stageABC'].options.scales.x.max = total;
+        charts['timeToConnectChart-stageABC'].update();
+        return;
+    }
+
+    charts['timeToConnectChart-stageABC'] = new Chart(document.getElementById('timeToConnectChart-stageABC'), {
+        type: 'bar',
+        data: { labels: [''], datasets },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.dataset.label + ': ' + context.parsed.x + ' ms';
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: { stacked: true, max: total, grid: { display: false }, ticks: { display: false } },
+                y: { stacked: true, grid: { display: false }, ticks: { display: false } }
+            }
+        }
+    });
+}
+
+registerSiteRenderer(renderTimeToConnect);
