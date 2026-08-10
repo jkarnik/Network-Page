@@ -449,3 +449,46 @@ function renderWirelessSection(siteName) {
 }
 
 registerSiteRenderer(renderWirelessSection);
+
+// --- APPLICATION VISIBILITY (Stage A+B+C) ---
+
+function renderTopApplications(siteName) {
+    const topApps = DataLoader.getTopApplications(siteName);
+    const canvas = document.getElementById('topAppsChart-stageABC');
+    if (!canvas) return;
+
+    if (charts['topAppsChart-stageABC']) {
+        charts['topAppsChart-stageABC'].data.labels = topApps.labels;
+        charts['topAppsChart-stageABC'].data.datasets[0].data = topApps.data;
+        charts['topAppsChart-stageABC'].data.datasets[0].backgroundColor = topApps.colors;
+        charts['topAppsChart-stageABC'].update();
+    } else {
+        charts['topAppsChart-stageABC'] = new Chart(canvas, {
+            type: 'doughnut',
+            data: {
+                labels: topApps.labels,
+                datasets: [{ data: topApps.data, backgroundColor: topApps.colors, borderWidth: 0 }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } }
+            }
+        });
+    }
+
+    const legendEl = document.getElementById('topAppsLegend-stageABC');
+    if (legendEl) {
+        legendEl.innerHTML = topApps.labels.map((label, i) => `
+            <div class="flex items-center gap-2 mb-2">
+                <div class="w-3 h-3 rounded-sm flex-shrink-0" style="background-color: ${topApps.colors[i]};"></div>
+                <div class="text-sm text-dark-text">
+                    <span class="font-medium">${SharedUI.escapeHtml(label)}</span>
+                    <span class="text-xs text-dark-muted ml-1">${topApps.data[i]}%</span>
+                </div>
+            </div>
+        `).join('');
+    }
+}
+
+registerSiteRenderer(renderTopApplications);
