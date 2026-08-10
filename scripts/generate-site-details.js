@@ -37,8 +37,10 @@ const TOPAPP_COLORS = ['#3b82f6', '#6366f1', '#0ea5e9', '#ef4444', '#9ca3af'];
 
 // Sites that get a demo-visible problem, so the Needs Attention panel and
 // BGP/security widgets have something to show without contradicting the
-// existing correlated alert for TOK-Sales (WAN Outage Cascade).
-const BGP_FLAP_SITES = ['TOK-Sales', 'PAR-Office'];
+// existing correlated alerts (CORR-001 WAN Outage Cascade - TOK-Sales,
+// CORR-002 IPSec Tunnel Failure - MUM-Hub, CORR-004 SFO-Branch IPSec & BGP Event).
+const TUNNEL_DOWN_SITES = ['TOK-Sales', 'MUM-Hub', 'SFO-Branch'];
+const BGP_FLAP_SITES = ['TOK-Sales', 'SFO-Branch'];
 const SECURITY_SITES = ['SFO-Branch', 'MUM-Hub'];
 const PSU_FAILURE_SITES = ['NJ-Warehouse'];
 
@@ -73,7 +75,7 @@ function buildCircuit(gateway, index) {
 }
 
 function buildVpnTunnels(siteName, gateways) {
-    const flapSite = BGP_FLAP_SITES.includes(siteName);
+    const flapSite = TUNNEL_DOWN_SITES.includes(siteName);
     return gateways.map((gw, i) => {
         const vendor = gw.vendor;
         const forcedDown = flapSite && i === 0;
@@ -150,9 +152,14 @@ siteNames.forEach(siteName => {
     };
 
     const topAppsBase = [42, 26, 16, 6, 10];
+    const jittered = topAppsBase.map(v => Math.max(1, v * (0.85 + Math.random() * 0.3)));
+    const jitteredSum = jittered.reduce((a, b) => a + b, 0);
+    const normalized = jittered.map(v => Math.round((v / jitteredSum) * 100));
+    const roundingDiff = 100 - normalized.reduce((a, b) => a + b, 0);
+    normalized[0] += roundingDiff;
     const topApplications = {
         labels: TOPAPP_LABELS,
-        data: topAppsBase.map(v => Math.max(1, Math.round(v * (0.85 + Math.random() * 0.3)))),
+        data: normalized,
         colors: TOPAPP_COLORS
     };
 
