@@ -689,3 +689,169 @@ function renderSecurityIntelligence(siteName) {
 }
 
 registerSiteRenderer(renderSecurityIntelligence);
+
+// --- ALERT SUMMARY CARDS: INFRASTRUCTURE / SECURITY / AI (Stage A) ---
+
+const ALERT_CARD_META = {
+    infra: {
+        idPrefix: 'infra',
+        countsFn: siteName => DataLoader.getInfrastructureCounts(siteName),
+        alertsFn: siteName => DataLoader.getAlertsBySite(siteName).filter(a => ['network', 'hardware', 'performance', 'system'].includes(a.type))
+    },
+    security: {
+        idPrefix: 'security',
+        countsFn: siteName => DataLoader.getSecurityCounts(siteName),
+        alertsFn: siteName => DataLoader.getAlertsBySite(siteName).filter(a => a.type === 'security')
+    },
+    ai: {
+        idPrefix: 'ai',
+        countsFn: siteName => DataLoader.getAICounts(siteName),
+        alertsFn: siteName => DataLoader.getAlertsBySite(siteName).filter(a => a.type === 'ai')
+    }
+};
+
+const alertCardState = {};
+STAGE_TABS.forEach(tab => {
+    alertCardState[tab] = {
+        infra: { severity: 'all', search: '', sortField: null, sortAsc: true },
+        security: { severity: 'all', search: '', sortField: null, sortAsc: true },
+        ai: { severity: 'all', search: '', sortField: null, sortAsc: true }
+    };
+});
+
+function renderAlertCards(siteName) {
+    STAGE_TABS.forEach(tab => {
+        Object.keys(ALERT_CARD_META).forEach(cardKey => {
+            const meta = ALERT_CARD_META[cardKey];
+            const counts = meta.countsFn(siteName);
+            setText(`${meta.idPrefix}CritCount-${tab}`, counts.crit);
+            setText(`${meta.idPrefix}WarnCount-${tab}`, counts.warn);
+        });
+    });
+}
+
+registerSiteRenderer(renderAlertCards);
+
+function showAlertCard(cardKey, severity, tab) {
+    const meta = ALERT_CARD_META[cardKey];
+    document.getElementById(`${meta.idPrefix}AlertsSummaryView-${tab}`).classList.add('hidden');
+    document.getElementById(`${meta.idPrefix}AlertsExpandedView-${tab}`).classList.remove('hidden');
+
+    const state = alertCardState[tab][cardKey];
+    state.severity = severity;
+    state.search = '';
+    state.sortField = null;
+    state.sortAsc = true;
+    document.getElementById(`${meta.idPrefix}SearchInput-${tab}`).value = '';
+
+    updateAlertFilterButtons(cardKey, tab, severity);
+    renderAlertCardTable(cardKey, tab);
+}
+
+function hideAlertCard(cardKey, tab) {
+    const meta = ALERT_CARD_META[cardKey];
+    document.getElementById(`${meta.idPrefix}AlertsSummaryView-${tab}`).classList.remove('hidden');
+    document.getElementById(`${meta.idPrefix}AlertsExpandedView-${tab}`).classList.add('hidden');
+}
+
+function filterAlertCard(cardKey, severity, tab) {
+    alertCardState[tab][cardKey].severity = severity;
+    updateAlertFilterButtons(cardKey, tab, severity);
+    renderAlertCardTable(cardKey, tab);
+}
+
+function searchAlertCard(cardKey, tab) {
+    const meta = ALERT_CARD_META[cardKey];
+    alertCardState[tab][cardKey].search = document.getElementById(`${meta.idPrefix}SearchInput-${tab}`).value;
+    renderAlertCardTable(cardKey, tab);
+}
+
+function sortAlertCard(cardKey, field, tab) {
+    const state = alertCardState[tab][cardKey];
+    if (state.sortField === field) {
+        state.sortAsc = !state.sortAsc;
+    } else {
+        state.sortField = field;
+        state.sortAsc = true;
+    }
+    renderAlertCardTable(cardKey, tab);
+}
+
+function updateAlertFilterButtons(cardKey, tab, activeSeverity) {
+    const meta = ALERT_CARD_META[cardKey];
+    const inactiveClass = 'px-2 py-1 text-[11px] rounded bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400';
+    const activeClass = 'px-2 py-1 text-[11px] rounded bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium';
+    const suffixMap = { all: 'FilterAll', crit: 'FilterCrit', warn: 'FilterWarn', info: 'FilterInfo' };
+
+    Object.values(suffixMap).forEach(suffix => {
+        const el = document.getElementById(`${meta.idPrefix}${suffix}-${tab}`);
+        if (el) el.className = inactiveClass;
+    });
+    const activeEl = document.getElementById(`${meta.idPrefix}${suffixMap[activeSeverity]}-${tab}`);
+    if (activeEl) activeEl.className = activeClass;
+}
+
+function sortAlertCardRows(alerts, field, asc) {
+    if (!field) return alerts;
+    const sevOrder = { crit: 0, warn: 1, info: 2 };
+    return [...alerts].sort((a, b) => {
+        let valA, valB;
+        if (field === 'sev') {
+            valA = sevOrder[a.severity] ?? 3;
+            valB = sevOrder[b.severity] ?? 3;
+        } else if (field === 'time') {
+            valA = a.timeAgo;
+            valB = b.timeAgo;
+        } else if (field === 'device') {
+            valA = a.device.toLowerCase();
+            valB = b.device.toLowerCase();
+        } else {
+            return 0;
+        }
+        if (valA < valB) return asc ? -1 : 1;
+        if (valA > valB) return asc ? 1 : -1;
+        return 0;
+    });
+}
+
+function renderAlertCardTable(cardKey, tab) {
+    const meta = ALERT_CARD_META[cardKey];
+    const state = alertCardState[tab][cardKey];
+    const tableBody = document.getElementById(`${meta.idPrefix}AlertTableBody-${tab}`);
+    const countEl = document.getElementById(`${meta.idPrefix}AlertCount-${tab}`);
+    if (!tableBody || !currentSite) return;
+
+    let alerts = meta.alertsFn(currentSite);
+
+    if (state.severity !== 'all') {
+        alerts = alerts.filter(a => a.severity === state.severity);
+    }
+    if (state.search) {
+        const searchLower = state.search.toLowerCase();
+        alerts = alerts.filter(a =>
+            a.device.toLowerCase().includes(searchLower) ||
+            a.message.toLowerCase().includes(searchLower)
+        );
+    }
+    alerts = sortAlertCardRows(alerts, state.sortField, state.sortAsc);
+
+    if (countEl) countEl.innerText = `${alerts.length} alert${alerts.length !== 1 ? 's' : ''}`;
+
+    if (alerts.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="4" class="px-2 py-3 text-center text-xs text-gray-400">No alerts found for this criteria.</td></tr>';
+        return;
+    }
+
+    tableBody.innerHTML = alerts.map(alert => `
+        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+            <td class="px-2 py-1.5 whitespace-nowrap">
+                <span class="${SharedUI.SEV_STYLES_SUMMARY[alert.severity]} flex items-center gap-1 w-fit">
+                    ${SharedUI.SEV_ICONS[alert.severity]} ${alert.severity.toUpperCase()}
+                </span>
+            </td>
+            <td class="px-2 py-1.5 whitespace-nowrap text-dark-muted">${alert.timeAgo}</td>
+            <td class="px-2 py-1.5 whitespace-nowrap text-indigo-600 dark:text-indigo-400 font-medium">${SharedUI.escapeHtml(alert.device)}</td>
+            <td class="px-2 py-1.5 text-dark-muted truncate max-w-[220px]" title="${SharedUI.escapeHtml(alert.message)}">${SharedUI.escapeHtml(alert.message)}</td>
+        </tr>
+    `).join('');
+}
