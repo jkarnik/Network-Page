@@ -792,6 +792,7 @@ const FLEET_STATUS_COLS = [
 const FLEET_STATUS_FILTER_MAP = { online: 'online', warn: 'warning', crit: 'critical', offline: 'offline' };
 
 const fleetExpandedKeys = { stageA: new Set(), stageAB: new Set(), stageABC: new Set() };
+const fleetTypeExpandedKeys = { stageA: new Set(), stageAB: new Set(), stageABC: new Set() };
 const fleetListState = { stageA: null, stageAB: null, stageABC: null };
 
 function getFleetDevices(siteName, type) {
@@ -839,30 +840,46 @@ function renderOneFleetGrid(siteName, tab) {
         grid.appendChild(div);
         return div;
     };
+    const addBlankCell = () => addCell('', 'status-cell');
 
     addCell('Type', 'status-cell status-header');
     addCell('Vendor', 'status-cell status-header');
     FLEET_STATUS_COLS.forEach(s => addCell(s.label, 'status-cell status-header ' + s.headerClass));
 
     FLEET_TYPES.forEach(type => {
-        let totalSubRows = type.vendors.length;
-        type.vendors.forEach(vendor => {
-            const expandKey = `${type.key}-${vendor.key}`;
-            if (fleetExpandedKeys[tab].has(expandKey)) {
-                totalSubRows += getFleetModels(siteName, type, vendor).length;
+        const typeExpanded = fleetTypeExpandedKeys[tab].has(type.key);
+        const allDevices = getFleetDevices(siteName, type);
+        const aggCounts = fleetStatusCounts(allDevices);
+
+        const typeChevron = typeExpanded ? 'fa-chevron-down' : 'fa-chevron-right';
+        const typeCell = addCell(
+            `<span class="flex items-center gap-1.5"><i class="fa-solid ${typeChevron} text-[9px] text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-1 -m-1 z-10 relative" data-type-expand-key="${type.key}"></i><span class="hover:underline">${type.label}</span></span>`,
+            'status-cell status-group-cell clickable text-dark-muted'
+        );
+        typeCell.style.gridColumn = 'span 2';
+        typeCell.onclick = (e) => {
+            if (e.target.closest('i[data-type-expand-key]')) {
+                toggleFleetTypeExpand(siteName, tab, type.key);
+            } else {
+                showFleetDeviceList(tab, type.key, 'all', null);
             }
+        };
+
+        FLEET_STATUS_COLS.forEach(s => {
+            const val = aggCounts[s.key] || 0;
+            const cell = addCell(val, 'status-cell clickable ' + s.cellClass);
+            cell.onclick = () => showFleetDeviceList(tab, type.key, FLEET_STATUS_FILTER_MAP[s.key], null);
         });
 
-        const groupCell = addCell(type.label, 'status-cell status-group-cell clickable text-dark-muted');
-        groupCell.style.gridRow = `span ${totalSubRows}`;
-        groupCell.onclick = () => showFleetDeviceList(tab, type.key, 'all', null);
+        if (!typeExpanded) return;
 
         type.vendors.forEach(vendor => {
             const expandKey = `${type.key}-${vendor.key}`;
             const isExpanded = fleetExpandedKeys[tab].has(expandKey);
-            const devices = getFleetDevices(siteName, type).filter(d => d.vendor === vendor.key);
+            const devices = allDevices.filter(d => d.vendor === vendor.key);
             const counts = fleetStatusCounts(devices);
 
+            addBlankCell();
             const chevron = isExpanded ? 'fa-chevron-down' : 'fa-chevron-right';
             const subCell = addCell(
                 `<span class="flex items-center gap-1.5"><i class="fa-solid ${chevron} text-[9px] text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-1 -m-1 z-10 relative" data-expand-key="${expandKey}"></i><span class="hover:underline">${vendor.label}</span></span>`,
@@ -888,6 +905,8 @@ function renderOneFleetGrid(siteName, tab) {
                     const modelDevices = devices.filter(d => d.model === model);
                     const modelCounts = fleetStatusCounts(modelDevices);
                     const shortModel = stripVendorPrefix(model, vendor.label);
+
+                    addBlankCell();
                     const modelCell = addCell(`<span class="hover:underline">${SharedUI.escapeHtml(shortModel)}</span>`, 'status-cell status-model-cell clickable text-left');
                     modelCell.onclick = () => showFleetDeviceList(tab, type.key, 'all', vendor.key, model);
                     FLEET_STATUS_COLS.forEach(s => {
@@ -899,6 +918,15 @@ function renderOneFleetGrid(siteName, tab) {
             }
         });
     });
+}
+
+function toggleFleetTypeExpand(siteName, tab, typeKey) {
+    if (fleetTypeExpandedKeys[tab].has(typeKey)) {
+        fleetTypeExpandedKeys[tab].delete(typeKey);
+    } else {
+        fleetTypeExpandedKeys[tab].add(typeKey);
+    }
+    renderOneFleetGrid(siteName, tab);
 }
 
 function toggleFleetExpand(siteName, tab, expandKey) {
