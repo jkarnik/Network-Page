@@ -268,12 +268,42 @@
                         </div>
                     </div>
 
+                    <!-- Fleet Status (Stage A) -->
+                    <div class="col-span-12 card p-4 bg-dark-card flex flex-col">
+                        <div id="fleetMatrixView-stageA" class="flex flex-col">
+                            <div class="flex justify-between items-center mb-2">
+                                <h3 class="text-sm font-bold text-dark-text">Fleet Status</h3>
+                                <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-2 py-0.5 rounded flex items-center gap-1">
+                                    <i class="fa-solid fa-hand-pointer text-[8px]"></i> Click cells
+                                </span>
+                            </div>
+                            <div class="max-h-96 overflow-y-auto custom-scrollbar">
+                                <div id="fleetStatusGrid-stageA" class="status-grid border border-gray-200 dark:border-gray-700 w-full">
+                                    <!-- Dynamically rendered by renderOneFleetGrid() -->
+                                </div>
+                            </div>
+                        </div>
+                        <div id="fleetListView-stageA" class="hidden flex flex-col">
+                            <div class="flex items-center justify-between mb-3 pb-2 border-b border-gray-200 dark:border-gray-700">
+                                <div class="flex items-center gap-3">
+                                    <h4 class="text-sm font-bold text-dark-text">Devices</h4>
+                                    <span class="text-xs text-gray-400 dark:text-gray-500" id="fleetListCount-stageA"></span>
+                                </div>
+                                <button onclick="hideFleetDeviceList('stageA')" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                                    <i class="fa-solid fa-times text-lg"></i>
+                                </button>
+                            </div>
+                            <div class="max-h-96 overflow-auto custom-scrollbar grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2" id="fleetListGrid-stageA">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                    </div>
                     <!-- WAN/Uplink Detail (Stage A) -->
-                    <div class="col-span-12 card p-0 bg-dark-card flex flex-col h-80">
+                    <div class="col-span-12 card p-0 bg-dark-card flex flex-col">
                         <div class="p-4 border-b border-gray-100 dark:border-gray-700">
                             <h3 class="text-sm font-bold text-dark-text">WAN / Uplink</h3>
                         </div>
-                        <div class="flex-1 overflow-auto custom-scrollbar">
+                        <div class="max-h-72 overflow-auto custom-scrollbar">
                             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm">
                                 <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0">
                                     <tr>
@@ -290,36 +320,6 @@
                                 </thead>
                                 <tbody id="circuitsTableBody-stageA"></tbody>
                             </table>
-                        </div>
-                    </div>
-                    <!-- Fleet Status (Stage A) -->
-                    <div class="col-span-12 card p-4 bg-dark-card flex flex-col h-[36rem] overflow-hidden">
-                        <div id="fleetMatrixView-stageA" class="h-full flex flex-col">
-                            <div class="flex justify-between items-center mb-2">
-                                <h3 class="text-sm font-bold text-dark-text">Fleet Status</h3>
-                                <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-2 py-0.5 rounded flex items-center gap-1">
-                                    <i class="fa-solid fa-hand-pointer text-[8px]"></i> Click cells
-                                </span>
-                            </div>
-                            <div class="flex-1 overflow-y-auto custom-scrollbar">
-                                <div id="fleetStatusGrid-stageA" class="status-grid border border-gray-200 dark:border-gray-700 w-full">
-                                    <!-- Dynamically rendered by renderOneFleetGrid() -->
-                                </div>
-                            </div>
-                        </div>
-                        <div id="fleetListView-stageA" class="hidden h-full flex flex-col">
-                            <div class="flex items-center justify-between mb-3 pb-2 border-b border-gray-200 dark:border-gray-700">
-                                <div class="flex items-center gap-3">
-                                    <h4 class="text-sm font-bold text-dark-text">Devices</h4>
-                                    <span class="text-xs text-gray-400 dark:text-gray-500" id="fleetListCount-stageA"></span>
-                                </div>
-                                <button onclick="hideFleetDeviceList('stageA')" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-                                    <i class="fa-solid fa-times text-lg"></i>
-                                </button>
-                            </div>
-                            <div class="flex-1 overflow-auto custom-scrollbar grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2" id="fleetListGrid-stageA">
-                                <!-- Populated by JS -->
-                            </div>
                         </div>
                     </div>
 
@@ -555,12 +555,42 @@
                         </div>
                     </div>
 
+                    <!-- Fleet Status (Stage A) -->
+                    <div class="col-span-12 card p-4 bg-dark-card flex flex-col">
+                        <div id="fleetMatrixView-stageAB" class="flex flex-col">
+                            <div class="flex justify-between items-center mb-2">
+                                <h3 class="text-sm font-bold text-dark-text">Fleet Status</h3>
+                                <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-2 py-0.5 rounded flex items-center gap-1">
+                                    <i class="fa-solid fa-hand-pointer text-[8px]"></i> Click cells
+                                </span>
+                            </div>
+                            <div class="max-h-96 overflow-y-auto custom-scrollbar">
+                                <div id="fleetStatusGrid-stageAB" class="status-grid border border-gray-200 dark:border-gray-700 w-full">
+                                    <!-- Dynamically rendered by renderOneFleetGrid() -->
+                                </div>
+                            </div>
+                        </div>
+                        <div id="fleetListView-stageAB" class="hidden flex flex-col">
+                            <div class="flex items-center justify-between mb-3 pb-2 border-b border-gray-200 dark:border-gray-700">
+                                <div class="flex items-center gap-3">
+                                    <h4 class="text-sm font-bold text-dark-text">Devices</h4>
+                                    <span class="text-xs text-gray-400 dark:text-gray-500" id="fleetListCount-stageAB"></span>
+                                </div>
+                                <button onclick="hideFleetDeviceList('stageAB')" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                                    <i class="fa-solid fa-times text-lg"></i>
+                                </button>
+                            </div>
+                            <div class="max-h-96 overflow-auto custom-scrollbar grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2" id="fleetListGrid-stageAB">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                    </div>
                     <!-- WAN/Uplink Detail (Stage A) -->
-                    <div class="col-span-12 card p-0 bg-dark-card flex flex-col h-80">
+                    <div class="col-span-12 card p-0 bg-dark-card flex flex-col">
                         <div class="p-4 border-b border-gray-100 dark:border-gray-700">
                             <h3 class="text-sm font-bold text-dark-text">WAN / Uplink</h3>
                         </div>
-                        <div class="flex-1 overflow-auto custom-scrollbar">
+                        <div class="max-h-72 overflow-auto custom-scrollbar">
                             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm">
                                 <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0">
                                     <tr>
@@ -577,36 +607,6 @@
                                 </thead>
                                 <tbody id="circuitsTableBody-stageAB"></tbody>
                             </table>
-                        </div>
-                    </div>
-                    <!-- Fleet Status (Stage A) -->
-                    <div class="col-span-12 card p-4 bg-dark-card flex flex-col h-[36rem] overflow-hidden">
-                        <div id="fleetMatrixView-stageAB" class="h-full flex flex-col">
-                            <div class="flex justify-between items-center mb-2">
-                                <h3 class="text-sm font-bold text-dark-text">Fleet Status</h3>
-                                <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-2 py-0.5 rounded flex items-center gap-1">
-                                    <i class="fa-solid fa-hand-pointer text-[8px]"></i> Click cells
-                                </span>
-                            </div>
-                            <div class="flex-1 overflow-y-auto custom-scrollbar">
-                                <div id="fleetStatusGrid-stageAB" class="status-grid border border-gray-200 dark:border-gray-700 w-full">
-                                    <!-- Dynamically rendered by renderOneFleetGrid() -->
-                                </div>
-                            </div>
-                        </div>
-                        <div id="fleetListView-stageAB" class="hidden h-full flex flex-col">
-                            <div class="flex items-center justify-between mb-3 pb-2 border-b border-gray-200 dark:border-gray-700">
-                                <div class="flex items-center gap-3">
-                                    <h4 class="text-sm font-bold text-dark-text">Devices</h4>
-                                    <span class="text-xs text-gray-400 dark:text-gray-500" id="fleetListCount-stageAB"></span>
-                                </div>
-                                <button onclick="hideFleetDeviceList('stageAB')" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-                                    <i class="fa-solid fa-times text-lg"></i>
-                                </button>
-                            </div>
-                            <div class="flex-1 overflow-auto custom-scrollbar grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2" id="fleetListGrid-stageAB">
-                                <!-- Populated by JS -->
-                            </div>
                         </div>
                     </div>
 
@@ -882,12 +882,42 @@
                         </div>
                     </div>
 
+                    <!-- Fleet Status (Stage A) -->
+                    <div class="col-span-12 card p-4 bg-dark-card flex flex-col">
+                        <div id="fleetMatrixView-stageABC" class="flex flex-col">
+                            <div class="flex justify-between items-center mb-2">
+                                <h3 class="text-sm font-bold text-dark-text">Fleet Status</h3>
+                                <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-2 py-0.5 rounded flex items-center gap-1">
+                                    <i class="fa-solid fa-hand-pointer text-[8px]"></i> Click cells
+                                </span>
+                            </div>
+                            <div class="max-h-96 overflow-y-auto custom-scrollbar">
+                                <div id="fleetStatusGrid-stageABC" class="status-grid border border-gray-200 dark:border-gray-700 w-full">
+                                    <!-- Dynamically rendered by renderOneFleetGrid() -->
+                                </div>
+                            </div>
+                        </div>
+                        <div id="fleetListView-stageABC" class="hidden flex flex-col">
+                            <div class="flex items-center justify-between mb-3 pb-2 border-b border-gray-200 dark:border-gray-700">
+                                <div class="flex items-center gap-3">
+                                    <h4 class="text-sm font-bold text-dark-text">Devices</h4>
+                                    <span class="text-xs text-gray-400 dark:text-gray-500" id="fleetListCount-stageABC"></span>
+                                </div>
+                                <button onclick="hideFleetDeviceList('stageABC')" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                                    <i class="fa-solid fa-times text-lg"></i>
+                                </button>
+                            </div>
+                            <div class="max-h-96 overflow-auto custom-scrollbar grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2" id="fleetListGrid-stageABC">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                    </div>
                     <!-- WAN/Uplink Detail (Stage A) -->
-                    <div class="col-span-12 card p-0 bg-dark-card flex flex-col h-80">
+                    <div class="col-span-12 card p-0 bg-dark-card flex flex-col">
                         <div class="p-4 border-b border-gray-100 dark:border-gray-700">
                             <h3 class="text-sm font-bold text-dark-text">WAN / Uplink</h3>
                         </div>
-                        <div class="flex-1 overflow-auto custom-scrollbar">
+                        <div class="max-h-72 overflow-auto custom-scrollbar">
                             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm">
                                 <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0">
                                     <tr>
@@ -904,36 +934,6 @@
                                 </thead>
                                 <tbody id="circuitsTableBody-stageABC"></tbody>
                             </table>
-                        </div>
-                    </div>
-                    <!-- Fleet Status (Stage A) -->
-                    <div class="col-span-12 card p-4 bg-dark-card flex flex-col h-[36rem] overflow-hidden">
-                        <div id="fleetMatrixView-stageABC" class="h-full flex flex-col">
-                            <div class="flex justify-between items-center mb-2">
-                                <h3 class="text-sm font-bold text-dark-text">Fleet Status</h3>
-                                <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-2 py-0.5 rounded flex items-center gap-1">
-                                    <i class="fa-solid fa-hand-pointer text-[8px]"></i> Click cells
-                                </span>
-                            </div>
-                            <div class="flex-1 overflow-y-auto custom-scrollbar">
-                                <div id="fleetStatusGrid-stageABC" class="status-grid border border-gray-200 dark:border-gray-700 w-full">
-                                    <!-- Dynamically rendered by renderOneFleetGrid() -->
-                                </div>
-                            </div>
-                        </div>
-                        <div id="fleetListView-stageABC" class="hidden h-full flex flex-col">
-                            <div class="flex items-center justify-between mb-3 pb-2 border-b border-gray-200 dark:border-gray-700">
-                                <div class="flex items-center gap-3">
-                                    <h4 class="text-sm font-bold text-dark-text">Devices</h4>
-                                    <span class="text-xs text-gray-400 dark:text-gray-500" id="fleetListCount-stageABC"></span>
-                                </div>
-                                <button onclick="hideFleetDeviceList('stageABC')" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-                                    <i class="fa-solid fa-times text-lg"></i>
-                                </button>
-                            </div>
-                            <div class="flex-1 overflow-auto custom-scrollbar grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2" id="fleetListGrid-stageABC">
-                                <!-- Populated by JS -->
-                            </div>
                         </div>
                     </div>
 
