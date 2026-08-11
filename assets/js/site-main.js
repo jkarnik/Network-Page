@@ -151,25 +151,20 @@ function computeVpnSummary(siteName) {
 }
 
 function renderHealthBadge(siteName) {
+    const site = DataLoader.getSite(siteName);
     const circuitSummary = computeCircuitSummary(siteName);
     const vpnSummary = computeVpnSummary(siteName);
-    const switches = statusCounts(DataLoader.getDevicesBySite(siteName, 'switches'));
-    const aps = statusCounts(DataLoader.getDevicesBySite(siteName, 'accessPoints'));
-    const hardware = DataLoader.getHardwareRollup(siteName);
-    // Each flagged device counts as exactly one failed PSU (of its 2) — a
-    // simplification for the mock rollup, not a claim about real PSU counts.
-    const psuOk = hardware.psuTotal - hardware.psuFailedDeviceIds.length;
     const routingPaths = circuitSummary.up + vpnSummary.up;
     const routingTotal = circuitSummary.total + vpnSummary.total;
 
     STAGE_TABS.forEach(tab => {
+        setText(`healthSiteName-${tab}`, siteName);
+        setText(`healthSiteRegion-${tab}`, site?.region || '—');
+        setText(`healthClients-${tab}`, `${(site?.clientCount || 0).toLocaleString()} clients`);
         setText(`healthUplinkStatus-${tab}`, `${circuitSummary.up}/${circuitSummary.total} up`);
         setText(`healthUplinkThroughput-${tab}`, `${circuitSummary.totalUp}/${circuitSummary.totalDown} Mbps`);
         setText(`healthUplinkLoss-${tab}`, `${circuitSummary.maxLoss.toFixed(2)}% loss`);
         setText(`healthVpnStatus-${tab}`, `${vpnSummary.up}/${vpnSummary.total} up`);
-        setText(`healthSwitchStatus-${tab}`, formatStatusCounts(switches));
-        setText(`healthApStatus-${tab}`, formatStatusCounts(aps));
-        setText(`healthPsuStatus-${tab}`, `${psuOk}/${hardware.psuTotal} OK`);
         setText(`healthRoutingRedundancy-${tab}`, `${routingPaths}/${routingTotal} paths available`);
         if (circuitSummary.primary) {
             renderSparkline(`healthUplinkSparkline-${tab}`, circuitSummary.primary.latencyTrend, '#3b82f6');
