@@ -853,8 +853,8 @@
                         </div>
                     </div>
 
-                    <!-- Fleet Status (Stage A) -->
-                    <div class="col-span-12 card p-4 bg-dark-card flex flex-col">
+                    <!-- Fleet Status (Stage A+B+C) -->
+                    <div class="col-span-12 lg:col-span-8 card p-4 bg-dark-card flex flex-col">
                         <div id="fleetMatrixView-stageABC" class="flex flex-col">
                             <div class="flex justify-between items-center mb-2">
                                 <h3 class="text-sm font-bold text-dark-text">Fleet Status</h3>
@@ -883,7 +883,23 @@
                             </div>
                         </div>
                     </div>
-                    <!-- WAN/Uplink Detail (Stage A) -->
+                    <!-- User Experience Score + BGP Flap Detector stacked (Stage A+B+C) -->
+                    <div class="col-span-12 lg:col-span-4 flex flex-col gap-3">
+                        <div class="card p-4 bg-dark-card">
+                            <h3 class="text-sm font-bold text-dark-text mb-3">User Experience Score</h3>
+                            <div id="timeToConnectContainer-stageABC" class="mt-4"></div>
+                        </div>
+                        <div class="card p-4 bg-dark-card">
+                            <h3 class="text-sm font-bold text-dark-text mb-3 flex items-center justify-between">
+                                <span>BGP Flap Detector</span>
+                                <span id="bgpFlapCount-stageABC" class="text-xs font-normal px-2 py-0.5 rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">0 flaps</span>
+                            </h3>
+                            <div class="space-y-1.5" id="bgpFlapList-stageABC">
+                                <p class="text-sm text-gray-400 italic">Loading…</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- WAN/Uplink Detail (Stage A+B+C) -->
                     <div class="col-span-12 card p-0 bg-dark-card flex flex-col">
                         <div class="p-4 border-b border-gray-100 dark:border-gray-700">
                             <h3 class="text-sm font-bold text-dark-text">WAN / Uplink</h3>
@@ -908,8 +924,8 @@
                         </div>
                     </div>
 
-                    <!-- VPN Tunnels Detail (Stage A+B) -->
-                    <div class="col-span-12 lg:col-span-4 card p-0 bg-dark-card flex flex-col">
+                    <!-- VPN Tunnels Detail (Stage A+B+C) -->
+                    <div class="col-span-12 lg:col-span-6 card p-0 bg-dark-card flex flex-col">
                         <div class="p-4 border-b border-gray-100 dark:border-gray-700">
                             <h3 class="text-sm font-bold text-dark-text">VPN Tunnels</h3>
                         </div>
@@ -928,33 +944,8 @@
                             </table>
                         </div>
                     </div>
-                    <!-- BGP Flap Detector (Stage A+B) -->
-                    <div class="col-span-12 lg:col-span-4 card p-4 bg-dark-card">
-                        <h3 class="text-sm font-bold text-dark-text mb-3 flex items-center justify-between">
-                            <span>BGP Flap Detector</span>
-                            <span id="bgpFlapCount-stageABC" class="text-xs font-normal px-2 py-0.5 rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">0 flaps</span>
-                        </h3>
-                        <div class="space-y-1.5" id="bgpFlapList-stageABC">
-                            <p class="text-sm text-gray-400 italic">Loading…</p>
-                        </div>
-                    </div>
-                    <!-- User Experience Score (Stage A+B+C) -->
-                    <div class="col-span-12 lg:col-span-4 card p-4 bg-dark-card">
-                        <h3 class="text-sm font-bold text-dark-text mb-3">User Experience Score</h3>
-                        <div id="timeToConnectContainer-stageABC" class="mt-4"></div>
-                    </div>
-                    <!-- Application Visibility (Stage A+B+C) -->
-                    <div class="col-span-12 lg:col-span-4 card p-4 bg-dark-card">
-                        <h3 class="text-sm font-bold text-dark-text mb-3">Top Applications</h3>
-                        <div class="flex gap-4">
-                            <div class="relative flex-shrink-0" style="width: 160px; height: 160px;">
-                                <canvas id="topAppsChart-stageABC"></canvas>
-                            </div>
-                            <div class="max-h-40 overflow-auto custom-scrollbar" id="topAppsLegend-stageABC"></div>
-                        </div>
-                    </div>
                     <!-- VLAN/Segmentation (Stage A+B+C) -->
-                    <div class="col-span-12 lg:col-span-4 card p-0 bg-dark-card flex flex-col">
+                    <div class="col-span-12 lg:col-span-6 card p-0 bg-dark-card flex flex-col">
                         <div class="p-4 border-b border-gray-100 dark:border-gray-700">
                             <h3 class="text-sm font-bold text-dark-text">VLAN / Segmentation</h3>
                         </div>
@@ -973,8 +964,18 @@
                         </div>
                     </div>
 
+                    <!-- Application Visibility (Stage A+B+C) -->
+                    <div class="col-span-12 lg:col-span-6 card p-4 bg-dark-card">
+                        <h3 class="text-sm font-bold text-dark-text mb-3">Top Applications</h3>
+                        <div class="flex gap-4">
+                            <div class="relative flex-shrink-0" style="width: 160px; height: 160px;">
+                                <canvas id="topAppsChart-stageABC"></canvas>
+                            </div>
+                            <div class="max-h-40 overflow-auto custom-scrollbar" id="topAppsLegend-stageABC"></div>
+                        </div>
+                    </div>
                     <!-- DHCP Pool Utilization (Stage A+B+C) -->
-                    <div class="col-span-12 lg:col-span-4 card p-4 bg-dark-card overflow-auto custom-scrollbar">
+                    <div class="col-span-12 lg:col-span-6 card p-4 bg-dark-card overflow-auto custom-scrollbar">
                         <h3 class="text-sm font-bold text-dark-text mb-3">DHCP Pool Utilization</h3>
                         <div class="space-y-3">
                             <div>
