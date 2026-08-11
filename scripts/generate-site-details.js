@@ -44,6 +44,62 @@ const BGP_FLAP_SITES = ['TOK-Sales', 'SFO-Branch'];
 const SECURITY_SITES = ['SFO-Branch', 'MUM-Hub'];
 const PSU_FAILURE_SITES = ['NJ-Warehouse'];
 
+const AUX_DEVICE_DEFS = [
+    { type: 'servers', label: 'SRV', vendors: [
+        { key: 'dell', models: ['Dell PowerEdge R650', 'Dell PowerEdge R750'] },
+        { key: 'hpe', models: ['HPE ProLiant DL380', 'HPE ProLiant DL360'] }
+    ] },
+    { type: 'ipCameras', label: 'CAM', vendors: [
+        { key: 'axis', models: ['Axis P3245-LVE', 'Axis M3086-V'] },
+        { key: 'hikvision', models: ['Hikvision DS-2CD2387G2', 'Hikvision DS-2CD2143G2'] }
+    ] },
+    { type: 'hvacUnits', label: 'HVAC', vendors: [
+        { key: 'honeywell', models: ['Honeywell T7350', 'Honeywell TrueSTEAM'] },
+        { key: 'trane', models: ['Trane XR16', 'Trane XL18i'] }
+    ] },
+    { type: 'environmentalSensors', label: 'ENV', vendors: [
+        { key: 'sensorpush', models: ['SensorPush HT1', 'SensorPush HTP.xw'] },
+        { key: 'monnit', models: ['Monnit MNS2-9-W2-TH', 'Monnit MNS2-9-W1-CO2'] }
+    ] }
+];
+
+function pickAuxStatus() {
+    const r = Math.random();
+    if (r < 0.88) return 'online';
+    if (r < 0.95) return 'warning';
+    if (r < 0.99) return 'critical';
+    return 'offline';
+}
+
+function buildAuxiliaryDevices(siteName, siteIndex, gateways, switches, aps) {
+    const counts = {
+        servers: Math.max(1, Math.round(switches.length * 0.5)),
+        ipCameras: Math.max(1, Math.round(aps.length * 0.4)),
+        hvacUnits: Math.max(1, Math.round((gateways.length + switches.length + aps.length) * 0.15)),
+        environmentalSensors: Math.max(1, Math.round(aps.length * 0.6))
+    };
+
+    const auxiliaryDevices = {};
+    AUX_DEVICE_DEFS.forEach((def, typeIndex) => {
+        const count = counts[def.type];
+        const devices = [];
+        for (let i = 0; i < count; i++) {
+            const vendorDef = def.vendors[i % def.vendors.length];
+            const model = vendorDef.models[Math.floor(i / def.vendors.length) % vendorDef.models.length];
+            devices.push({
+                id: `${def.label}-${siteIndex}-${i}`,
+                name: `${def.label}-${siteName}-${String(i + 1).padStart(2, '0')}`,
+                vendor: vendorDef.key,
+                model,
+                status: pickAuxStatus(),
+                ip: `172.${16 + typeIndex}.${siteIndex}.${10 + i}`
+            });
+        }
+        auxiliaryDevices[def.type] = devices;
+    });
+    return auxiliaryDevices;
+}
+
 function buildCircuit(gateway, index) {
     const status = (deviceStatus[gateway.id] && deviceStatus[gateway.id].status) || 'online';
     const isHealthy = status === 'online';
@@ -103,7 +159,7 @@ function buildVpnTunnels(siteName, gateways) {
 
 const result = { version: '1.0.0', sites: {} };
 
-siteNames.forEach(siteName => {
+siteNames.forEach((siteName, siteIndex) => {
     const siteDevices = devices.filter(d => d.site === siteName);
     const gateways = siteDevices.filter(d => d.type === 'gateway');
     const switches = siteDevices.filter(d => d.type === 'switch');
@@ -171,7 +227,8 @@ siteNames.forEach(siteName => {
         security,
         vlans,
         dhcp,
-        topApplications
+        topApplications,
+        auxiliaryDevices: buildAuxiliaryDevices(siteName, siteIndex, gateways, switches, aps)
     };
 });
 
