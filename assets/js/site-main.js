@@ -629,7 +629,7 @@ const ALERT_CARD_META = {
     infra: {
         idPrefix: 'infra',
         countsFn: siteName => DataLoader.getInfrastructureCounts(siteName),
-        alertsFn: siteName => DataLoader.getAlertsBySite(siteName).filter(a => ['network', 'hardware', 'performance', 'system'].includes(a.type))
+        alertsFn: siteName => DataLoader.getInfrastructureAlerts(siteName)
     },
     security: {
         idPrefix: 'security',
@@ -659,6 +659,7 @@ function renderAlertCards(siteName) {
             const counts = meta.countsFn(siteName);
             setText(`${meta.idPrefix}CritCount-${tab}`, counts.crit);
             setText(`${meta.idPrefix}WarnCount-${tab}`, counts.warn);
+            renderAlertCardTable(cardKey, tab);
         });
     });
 }
@@ -724,6 +725,15 @@ function updateAlertFilterButtons(cardKey, tab, activeSeverity) {
     if (activeEl) activeEl.className = activeClass;
 }
 
+function parseTimeAgoMinutes(timeAgo) {
+    const dayMatch = timeAgo.match(/(\d+)d/);
+    const hourMatch = timeAgo.match(/(\d+)h/);
+    const minMatch = timeAgo.match(/(\d+)m/);
+    return (dayMatch ? parseInt(dayMatch[1], 10) * 1440 : 0)
+        + (hourMatch ? parseInt(hourMatch[1], 10) * 60 : 0)
+        + (minMatch ? parseInt(minMatch[1], 10) : 0);
+}
+
 function sortAlertCardRows(alerts, field, asc) {
     if (!field) return alerts;
     const sevOrder = { crit: 0, warn: 1, info: 2 };
@@ -733,8 +743,8 @@ function sortAlertCardRows(alerts, field, asc) {
             valA = sevOrder[a.severity] ?? 3;
             valB = sevOrder[b.severity] ?? 3;
         } else if (field === 'time') {
-            valA = a.timeAgo;
-            valB = b.timeAgo;
+            valA = parseTimeAgoMinutes(a.timeAgo);
+            valB = parseTimeAgoMinutes(b.timeAgo);
         } else if (field === 'device') {
             valA = a.device.toLowerCase();
             valB = b.device.toLowerCase();
@@ -837,7 +847,10 @@ function stripVendorPrefix(model, vendorLabel) {
 }
 
 function renderFleetStatusGrid(siteName) {
-    STAGE_TABS.forEach(tab => renderOneFleetGrid(siteName, tab));
+    STAGE_TABS.forEach(tab => {
+        renderOneFleetGrid(siteName, tab);
+        if (fleetListState[tab]) renderFleetDeviceList(tab);
+    });
 }
 
 registerSiteRenderer(renderFleetStatusGrid);
@@ -903,7 +916,7 @@ function renderOneFleetGrid(siteName, tab) {
                     const modelDevices = devices.filter(d => d.model === model);
                     const modelCounts = fleetStatusCounts(modelDevices);
                     const shortModel = stripVendorPrefix(model, vendor.label);
-                    const modelCell = addCell(`<span class="hover:underline">${shortModel}</span>`, 'status-cell status-model-cell clickable text-left');
+                    const modelCell = addCell(`<span class="hover:underline">${SharedUI.escapeHtml(shortModel)}</span>`, 'status-cell status-model-cell clickable text-left');
                     modelCell.onclick = () => showFleetDeviceList(tab, type.key, 'all', vendor.key, model);
                     FLEET_STATUS_COLS.forEach(s => {
                         const val = modelCounts[s.key] || 0;

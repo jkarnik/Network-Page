@@ -513,13 +513,23 @@ const DataLoader = {
     },
 
     /**
+     * Get infrastructure-related alerts for a scope.
+     * "Infrastructure" here means network/hardware/performance/system types —
+     * it deliberately excludes security/ai so it doesn't overlap with
+     * the security/ai alert accessors.
+     */
+    getInfrastructureAlerts(scope = 'Global') {
+        return this.getAlertsByScope(scope).filter(a => ['network', 'hardware', 'performance', 'system'].includes(a.type));
+    },
+
+    /**
      * Get infrastructure-related alert counts by severity for a scope.
      * "Infrastructure" here means network/hardware/performance/system types —
      * it deliberately excludes security/ai so it doesn't overlap with
      * getSecurityCounts/getAICounts.
      */
     getInfrastructureCounts(scope = 'Global') {
-        const alerts = this.getAlertsByScope(scope).filter(a => ['network', 'hardware', 'performance', 'system'].includes(a.type));
+        const alerts = this.getInfrastructureAlerts(scope);
         return {
             crit: alerts.filter(a => a.severity === 'crit').length,
             warn: alerts.filter(a => a.severity === 'warn').length,
