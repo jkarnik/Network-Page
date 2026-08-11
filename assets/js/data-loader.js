@@ -795,10 +795,6 @@ const DataLoader = {
         return this.getSiteDetails(siteName)?.bgpFlaps || [];
     },
 
-    getSecurityDetections(siteName) {
-        return this.getSiteDetails(siteName)?.security || [];
-    },
-
     getVlanInventory(siteName) {
         return this.getSiteDetails(siteName)?.vlans || [];
     },
@@ -813,54 +809,6 @@ const DataLoader = {
 
     getAuxiliaryDevices(siteName, type) {
         return this.getSiteDetails(siteName)?.auxiliaryDevices?.[type] || [];
-    },
-
-    /**
-     * Build the Needs Attention list: device issues + PSU failures always;
-     * BGP flaps and security detections only when their stage flag is set,
-     * so the same accessor works for all 3 tabs.
-     * @param {string} siteName
-     * @param {Object} [opts]
-     * @param {boolean} [opts.includeBgp=false]
-     * @param {boolean} [opts.includeSecurity=false]
-     * @returns {Array<{severity: 'crit'|'warn', text: string}>}
-     */
-    getNeedsAttention(siteName, opts = {}) {
-        const items = [];
-
-        this.getDevicesBySite(siteName).forEach(device => {
-            if (device.status === 'critical' || device.status === 'offline') {
-                items.push({ severity: 'crit', text: `${device.name} is ${device.status}` });
-            } else if (device.status === 'warning') {
-                items.push({ severity: 'warn', text: `${device.name} needs attention` });
-            }
-        });
-
-        const hardware = this.getHardwareRollup(siteName);
-        hardware.psuFailedDeviceIds.forEach(deviceId => {
-            const device = this.getDeviceFromManifest(deviceId);
-            items.push({ severity: 'warn', text: `PSU failed: ${device ? device.name : deviceId}` });
-        });
-
-        this.getVpnTunnels(siteName).forEach(tunnel => {
-            if (tunnel.status === 'down') {
-                items.push({ severity: 'crit', text: `Tunnel down: ${tunnel.peerName}` });
-            }
-        });
-
-        if (opts.includeBgp) {
-            this.getBgpFlaps(siteName).forEach(flap => {
-                items.push({ severity: 'warn', text: `BGP flap detected ${flap.timeAgo}: ${flap.neighbor}` });
-            });
-        }
-
-        if (opts.includeSecurity) {
-            this.getSecurityDetections(siteName).forEach(detection => {
-                items.push({ severity: 'crit', text: `Rogue AP detected: ${detection.ssid} (${detection.rssi} dBm)` });
-            });
-        }
-
-        return items;
     },
 
     // ==================== VALIDATION ====================

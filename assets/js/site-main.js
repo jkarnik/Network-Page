@@ -199,37 +199,6 @@ function renderHealthBadge(siteName) {
 
 registerSiteRenderer(renderHealthBadge);
 
-// --- NEEDS ATTENTION PANEL (Stage A, grows in B/C) ---
-
-const NEEDS_ATTENTION_OPTS_BY_TAB = {
-    stageA: {},
-    stageAB: { includeBgp: true },
-    stageABC: { includeBgp: true, includeSecurity: true }
-};
-
-function renderNeedsAttention(siteName) {
-    STAGE_TABS.forEach(tab => {
-        const container = document.getElementById(`needsAttentionList-${tab}`);
-        if (!container) return;
-
-        const items = DataLoader.getNeedsAttention(siteName, NEEDS_ATTENTION_OPTS_BY_TAB[tab]);
-
-        if (items.length === 0) {
-            container.innerHTML = '<p class="text-sm text-gray-400 italic">All systems normal — nothing needs attention.</p>';
-            return;
-        }
-
-        container.innerHTML = items.map(item => `
-            <div class="flex items-center gap-2 py-1.5 px-2 rounded ${item.severity === 'crit' ? 'bg-red-50 dark:bg-red-900/20' : 'bg-amber-50 dark:bg-amber-900/20'}">
-                <i class="fa-solid ${item.severity === 'crit' ? 'fa-circle-exclamation text-red-500' : 'fa-triangle-exclamation text-amber-500'}"></i>
-                <span class="text-sm text-dark-text">${SharedUI.escapeHtml(item.text)}</span>
-            </div>
-        `).join('');
-    });
-}
-
-registerSiteRenderer(renderNeedsAttention);
-
 // --- WAN/UPLINK DETAIL SECTION (Stage A, cellular column filled by Task 12) ---
 
 const CIRCUIT_STATUS_BADGES = {
@@ -594,34 +563,6 @@ function renderTimeToConnect(siteName) {
 }
 
 registerSiteRenderer(renderTimeToConnect);
-
-// --- SECURITY INTELLIGENCE (Stage A+B+C) ---
-
-function renderSecurityIntelligence(siteName) {
-    const detections = DataLoader.getSecurityDetections(siteName);
-    const listEl = document.getElementById('securityIntelList-stageABC');
-    const countEl = document.getElementById('securityIntelCount-stageABC');
-
-    if (countEl) countEl.textContent = `${detections.length} detection${detections.length !== 1 ? 's' : ''}`;
-    if (!listEl) return;
-
-    if (detections.length === 0) {
-        listEl.innerHTML = '<p class="text-sm text-gray-400 italic">No rogue APs or wireless threats detected.</p>';
-        return;
-    }
-
-    listEl.innerHTML = detections.map(d => `
-        <div class="flex items-center justify-between py-1.5 px-2 rounded bg-red-50 dark:bg-red-900/20">
-            <span class="text-sm text-dark-text">
-                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300 uppercase mr-2">${SharedUI.escapeHtml(d.classification)}</span>
-                ${SharedUI.escapeHtml(d.ssid)} (${SharedUI.escapeHtml(d.bssid)}) — ${d.band}, ${d.rssi} dBm
-            </span>
-            <span class="text-xs text-gray-400">${d.detectedAt}</span>
-        </div>
-    `).join('');
-}
-
-registerSiteRenderer(renderSecurityIntelligence);
 
 // --- ALERT SUMMARY CARDS: INFRASTRUCTURE / SECURITY / AI (Stage A) ---
 
