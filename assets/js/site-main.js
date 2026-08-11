@@ -745,12 +745,11 @@ const FLEET_TYPES = [
 ];
 
 const FLEET_STATUS_COLS = [
-    { key: 'online', label: 'Healthy', headerClass: 'text-newrelic-success dark:text-green-400', cellClass: '' },
-    { key: 'warn', label: 'Warning', headerClass: 'text-amber-500', cellClass: 'bg-amber-50 dark:bg-amber-900/10 text-amber-700 dark:text-amber-400' },
-    { key: 'crit', label: 'Critical', headerClass: 'text-red-500', cellClass: 'bg-red-50 dark:bg-red-900/10 text-red-700 dark:text-red-400 font-bold' },
+    { key: 'online', label: 'Online', headerClass: 'text-newrelic-success dark:text-green-400', cellClass: '' },
+    { key: 'warn', label: 'Alerting', headerClass: 'text-amber-500', cellClass: 'bg-amber-50 dark:bg-amber-900/10 text-amber-700 dark:text-amber-400' },
     { key: 'offline', label: 'Offline', headerClass: 'text-gray-400 dark:text-gray-500', cellClass: 'bg-gray-50 dark:bg-gray-800/50 text-gray-500 dark:text-gray-400' }
 ];
-const FLEET_STATUS_FILTER_MAP = { online: 'online', warn: 'warning', crit: 'critical', offline: 'offline' };
+const FLEET_STATUS_FILTER_MAP = { online: 'online', warn: ['warning', 'critical'], offline: 'offline' };
 
 const fleetExpandedKeys = { stageA: new Set(), stageAB: new Set(), stageABC: new Set() };
 const fleetTypeExpandedKeys = { stageA: new Set(), stageAB: new Set(), stageABC: new Set() };
@@ -765,8 +764,7 @@ function getFleetDevices(siteName, type) {
 function fleetStatusCounts(devices) {
     return {
         online: devices.filter(d => d.status === 'online').length,
-        warn: devices.filter(d => d.status === 'warning').length,
-        crit: devices.filter(d => d.status === 'critical').length,
+        warn: devices.filter(d => d.status === 'warning' || d.status === 'critical').length,
         offline: devices.filter(d => d.status === 'offline').length
     };
 }
@@ -923,7 +921,11 @@ function renderFleetDeviceList(tab) {
 
     if (state.vendorKey) devices = devices.filter(d => d.vendor === state.vendorKey);
     if (state.model) devices = devices.filter(d => d.model === state.model);
-    if (state.statusKey !== 'all') devices = devices.filter(d => d.status === state.statusKey);
+    if (state.statusKey !== 'all') {
+        devices = Array.isArray(state.statusKey)
+            ? devices.filter(d => state.statusKey.includes(d.status))
+            : devices.filter(d => d.status === state.statusKey);
+    }
 
     if (countEl) countEl.innerText = `${devices.length} device${devices.length !== 1 ? 's' : ''}`;
 

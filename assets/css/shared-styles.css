@@ -117,7 +117,7 @@ body {
 /* Status Grid Component */
 .status-grid {
     display: grid;
-    grid-template-columns: auto auto repeat(4, 1fr);
+    grid-template-columns: auto auto repeat(3, 1fr);
     gap: 1px;
     background-color: #e5e7eb;
     border-radius: 0.5rem;
