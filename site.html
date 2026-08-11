@@ -150,6 +150,172 @@
                             <p class="text-sm text-gray-400 italic">Loading…</p>
                         </div>
                     </div>
+                    <!-- Infrastructure Alerts (Stage A) -->
+                    <div class="col-span-12 sm:col-span-6 lg:col-span-4 card p-4 bg-dark-card overflow-hidden">
+                        <div id="infraAlertsSummaryView-stageA">
+                            <div class="flex items-center justify-center gap-2 mb-3">
+                                <h3 class="text-sm font-bold text-dark-text">Infrastructure Alerts</h3>
+                                <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-1.5 py-0.5 rounded flex items-center gap-1">
+                                    <i class="fa-solid fa-hand-pointer text-[7px]"></i> Click
+                                </span>
+                            </div>
+                            <div class="flex items-center justify-between gap-2">
+                                <div class="cursor-pointer group flex-1 text-center" onclick="showAlertCard('infra', 'crit', 'stageA')">
+                                    <span class="block text-2xl font-bold text-newrelic-error group-hover:text-red-500 transition-colors" id="infraCritCount-stageA">—</span>
+                                    <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-red-500 inline-block">Critical</span>
+                                </div>
+                                <div class="flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-triangle-exclamation text-4xl text-newrelic-error opacity-30 dark:opacity-90"></i>
+                                </div>
+                                <div class="cursor-pointer group flex-1 text-center" onclick="showAlertCard('infra', 'warn', 'stageA')">
+                                    <span class="block text-2xl font-bold text-amber-500 group-hover:text-amber-400 transition-colors" id="infraWarnCount-stageA">—</span>
+                                    <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-amber-500 inline-block">Warning</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="infraAlertsExpandedView-stageA" class="hidden h-full flex flex-col">
+                            <div class="flex items-center justify-between mb-3 pb-2 border-b border-gray-200 dark:border-gray-700">
+                                <div class="flex items-center gap-2">
+                                    <h4 class="text-sm font-bold text-dark-text">Infrastructure Alerts</h4>
+                                    <span class="text-xs text-gray-400 dark:text-gray-500" id="infraAlertCount-stageA"></span>
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <button onclick="filterAlertCard('infra', 'all', 'stageA')" id="infraFilterAll-stageA" class="px-2 py-1 text-[11px] rounded bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium">All</button>
+                                    <button onclick="filterAlertCard('infra', 'crit', 'stageA')" id="infraFilterCrit-stageA" class="px-2 py-1 text-[11px] rounded bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">Critical</button>
+                                    <button onclick="filterAlertCard('infra', 'warn', 'stageA')" id="infraFilterWarn-stageA" class="px-2 py-1 text-[11px] rounded bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">Warning</button>
+                                    <button onclick="filterAlertCard('infra', 'info', 'stageA')" id="infraFilterInfo-stageA" class="px-2 py-1 text-[11px] rounded bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">Info</button>
+                                    <button onclick="hideAlertCard('infra', 'stageA')" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-1">
+                                        <i class="fa-solid fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <input type="text" oninput="searchAlertCard('infra', 'stageA')" id="infraSearchInput-stageA" placeholder="Search by device or message..." class="mb-2 px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                            <div class="flex-1 overflow-auto custom-scrollbar">
+                                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-xs">
+                                    <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0">
+                                        <tr>
+                                            <th class="px-2 py-1.5 text-left font-medium text-gray-500 uppercase cursor-pointer" onclick="sortAlertCard('infra', 'sev', 'stageA')">Severity</th>
+                                            <th class="px-2 py-1.5 text-left font-medium text-gray-500 uppercase cursor-pointer" onclick="sortAlertCard('infra', 'time', 'stageA')">Time</th>
+                                            <th class="px-2 py-1.5 text-left font-medium text-gray-500 uppercase cursor-pointer" onclick="sortAlertCard('infra', 'device', 'stageA')">Device</th>
+                                            <th class="px-2 py-1.5 text-left font-medium text-gray-500 uppercase">Message</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="infraAlertTableBody-stageA"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Security Alerts (Stage A) -->
+                    <div class="col-span-12 sm:col-span-6 lg:col-span-4 card p-4 bg-dark-card overflow-hidden">
+                        <div id="securityAlertsSummaryView-stageA">
+                            <div class="flex items-center justify-center gap-2 mb-3">
+                                <h3 class="text-sm font-bold text-dark-text">Security Alerts</h3>
+                                <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-1.5 py-0.5 rounded flex items-center gap-1">
+                                    <i class="fa-solid fa-hand-pointer text-[7px]"></i> Click
+                                </span>
+                            </div>
+                            <div class="flex items-center justify-between gap-2">
+                                <div class="cursor-pointer group flex-1 text-center" onclick="showAlertCard('security', 'crit', 'stageA')">
+                                    <span class="block text-2xl font-bold text-newrelic-error group-hover:text-red-500 transition-colors" id="securityCritCount-stageA">—</span>
+                                    <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-red-500 inline-block">Critical</span>
+                                </div>
+                                <div class="flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-shield-halved text-4xl text-indigo-600 dark:text-indigo-400 opacity-30 dark:opacity-90"></i>
+                                </div>
+                                <div class="cursor-pointer group flex-1 text-center" onclick="showAlertCard('security', 'warn', 'stageA')">
+                                    <span class="block text-2xl font-bold text-amber-500 group-hover:text-amber-400 transition-colors" id="securityWarnCount-stageA">—</span>
+                                    <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-amber-500 inline-block">Warning</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="securityAlertsExpandedView-stageA" class="hidden h-full flex flex-col">
+                            <div class="flex items-center justify-between mb-3 pb-2 border-b border-gray-200 dark:border-gray-700">
+                                <div class="flex items-center gap-2">
+                                    <h4 class="text-sm font-bold text-dark-text">Security Alerts</h4>
+                                    <span class="text-xs text-gray-400 dark:text-gray-500" id="securityAlertCount-stageA"></span>
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <button onclick="filterAlertCard('security', 'all', 'stageA')" id="securityFilterAll-stageA" class="px-2 py-1 text-[11px] rounded bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium">All</button>
+                                    <button onclick="filterAlertCard('security', 'crit', 'stageA')" id="securityFilterCrit-stageA" class="px-2 py-1 text-[11px] rounded bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">Critical</button>
+                                    <button onclick="filterAlertCard('security', 'warn', 'stageA')" id="securityFilterWarn-stageA" class="px-2 py-1 text-[11px] rounded bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">Warning</button>
+                                    <button onclick="filterAlertCard('security', 'info', 'stageA')" id="securityFilterInfo-stageA" class="px-2 py-1 text-[11px] rounded bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">Info</button>
+                                    <button onclick="hideAlertCard('security', 'stageA')" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-1">
+                                        <i class="fa-solid fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <input type="text" oninput="searchAlertCard('security', 'stageA')" id="securitySearchInput-stageA" placeholder="Search by device or message..." class="mb-2 px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                            <div class="flex-1 overflow-auto custom-scrollbar">
+                                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-xs">
+                                    <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0">
+                                        <tr>
+                                            <th class="px-2 py-1.5 text-left font-medium text-gray-500 uppercase cursor-pointer" onclick="sortAlertCard('security', 'sev', 'stageA')">Severity</th>
+                                            <th class="px-2 py-1.5 text-left font-medium text-gray-500 uppercase cursor-pointer" onclick="sortAlertCard('security', 'time', 'stageA')">Time</th>
+                                            <th class="px-2 py-1.5 text-left font-medium text-gray-500 uppercase cursor-pointer" onclick="sortAlertCard('security', 'device', 'stageA')">Device</th>
+                                            <th class="px-2 py-1.5 text-left font-medium text-gray-500 uppercase">Message</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="securityAlertTableBody-stageA"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- AI Alerts (Stage A) -->
+                    <div class="col-span-12 sm:col-span-6 lg:col-span-4 card p-4 bg-dark-card overflow-hidden">
+                        <div id="aiAlertsSummaryView-stageA">
+                            <div class="flex items-center justify-center gap-2 mb-3">
+                                <h3 class="text-sm font-bold text-dark-text">AI Alerts</h3>
+                                <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-1.5 py-0.5 rounded flex items-center gap-1">
+                                    <i class="fa-solid fa-hand-pointer text-[7px]"></i> Click
+                                </span>
+                            </div>
+                            <div class="flex items-center justify-between gap-2">
+                                <div class="cursor-pointer group flex-1 text-center" onclick="showAlertCard('ai', 'crit', 'stageA')">
+                                    <span class="block text-2xl font-bold text-newrelic-error group-hover:text-red-500 transition-colors" id="aiCritCount-stageA">—</span>
+                                    <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-red-500 inline-block">Critical</span>
+                                </div>
+                                <div class="flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-brain text-4xl text-purple-600 dark:text-purple-400 opacity-30 dark:opacity-90"></i>
+                                </div>
+                                <div class="cursor-pointer group flex-1 text-center" onclick="showAlertCard('ai', 'warn', 'stageA')">
+                                    <span class="block text-2xl font-bold text-amber-500 group-hover:text-amber-400 transition-colors" id="aiWarnCount-stageA">—</span>
+                                    <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-amber-500 inline-block">Warning</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="aiAlertsExpandedView-stageA" class="hidden h-full flex flex-col">
+                            <div class="flex items-center justify-between mb-3 pb-2 border-b border-gray-200 dark:border-gray-700">
+                                <div class="flex items-center gap-2">
+                                    <h4 class="text-sm font-bold text-dark-text">AI Alerts</h4>
+                                    <span class="text-xs text-gray-400 dark:text-gray-500" id="aiAlertCount-stageA"></span>
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <button onclick="filterAlertCard('ai', 'all', 'stageA')" id="aiFilterAll-stageA" class="px-2 py-1 text-[11px] rounded bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium">All</button>
+                                    <button onclick="filterAlertCard('ai', 'crit', 'stageA')" id="aiFilterCrit-stageA" class="px-2 py-1 text-[11px] rounded bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">Critical</button>
+                                    <button onclick="filterAlertCard('ai', 'warn', 'stageA')" id="aiFilterWarn-stageA" class="px-2 py-1 text-[11px] rounded bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">Warning</button>
+                                    <button onclick="filterAlertCard('ai', 'info', 'stageA')" id="aiFilterInfo-stageA" class="px-2 py-1 text-[11px] rounded bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">Info</button>
+                                    <button onclick="hideAlertCard('ai', 'stageA')" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-1">
+                                        <i class="fa-solid fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <input type="text" oninput="searchAlertCard('ai', 'stageA')" id="aiSearchInput-stageA" placeholder="Search by device or message..." class="mb-2 px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                            <div class="flex-1 overflow-auto custom-scrollbar">
+                                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-xs">
+                                    <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0">
+                                        <tr>
+                                            <th class="px-2 py-1.5 text-left font-medium text-gray-500 uppercase cursor-pointer" onclick="sortAlertCard('ai', 'sev', 'stageA')">Severity</th>
+                                            <th class="px-2 py-1.5 text-left font-medium text-gray-500 uppercase cursor-pointer" onclick="sortAlertCard('ai', 'time', 'stageA')">Time</th>
+                                            <th class="px-2 py-1.5 text-left font-medium text-gray-500 uppercase cursor-pointer" onclick="sortAlertCard('ai', 'device', 'stageA')">Device</th>
+                                            <th class="px-2 py-1.5 text-left font-medium text-gray-500 uppercase">Message</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="aiAlertTableBody-stageA"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- WAN/Uplink Detail (Stage A) -->
                     <div class="col-span-12 lg:col-span-6 card p-0 bg-dark-card flex flex-col h-80">
                         <div class="p-4 border-b border-gray-100 dark:border-gray-700">
@@ -291,6 +457,172 @@
                             <p class="text-sm text-gray-400 italic">Loading…</p>
                         </div>
                     </div>
+                                        <!-- Infrastructure Alerts (Stage A) -->
+                    <div class="col-span-12 sm:col-span-6 lg:col-span-4 card p-4 bg-dark-card overflow-hidden">
+                        <div id="infraAlertsSummaryView-stageAB">
+                            <div class="flex items-center justify-center gap-2 mb-3">
+                                <h3 class="text-sm font-bold text-dark-text">Infrastructure Alerts</h3>
+                                <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-1.5 py-0.5 rounded flex items-center gap-1">
+                                    <i class="fa-solid fa-hand-pointer text-[7px]"></i> Click
+                                </span>
+                            </div>
+                            <div class="flex items-center justify-between gap-2">
+                                <div class="cursor-pointer group flex-1 text-center" onclick="showAlertCard('infra', 'crit', 'stageAB')">
+                                    <span class="block text-2xl font-bold text-newrelic-error group-hover:text-red-500 transition-colors" id="infraCritCount-stageAB">—</span>
+                                    <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-red-500 inline-block">Critical</span>
+                                </div>
+                                <div class="flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-triangle-exclamation text-4xl text-newrelic-error opacity-30 dark:opacity-90"></i>
+                                </div>
+                                <div class="cursor-pointer group flex-1 text-center" onclick="showAlertCard('infra', 'warn', 'stageAB')">
+                                    <span class="block text-2xl font-bold text-amber-500 group-hover:text-amber-400 transition-colors" id="infraWarnCount-stageAB">—</span>
+                                    <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-amber-500 inline-block">Warning</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="infraAlertsExpandedView-stageAB" class="hidden h-full flex flex-col">
+                            <div class="flex items-center justify-between mb-3 pb-2 border-b border-gray-200 dark:border-gray-700">
+                                <div class="flex items-center gap-2">
+                                    <h4 class="text-sm font-bold text-dark-text">Infrastructure Alerts</h4>
+                                    <span class="text-xs text-gray-400 dark:text-gray-500" id="infraAlertCount-stageAB"></span>
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <button onclick="filterAlertCard('infra', 'all', 'stageAB')" id="infraFilterAll-stageAB" class="px-2 py-1 text-[11px] rounded bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium">All</button>
+                                    <button onclick="filterAlertCard('infra', 'crit', 'stageAB')" id="infraFilterCrit-stageAB" class="px-2 py-1 text-[11px] rounded bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">Critical</button>
+                                    <button onclick="filterAlertCard('infra', 'warn', 'stageAB')" id="infraFilterWarn-stageAB" class="px-2 py-1 text-[11px] rounded bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">Warning</button>
+                                    <button onclick="filterAlertCard('infra', 'info', 'stageAB')" id="infraFilterInfo-stageAB" class="px-2 py-1 text-[11px] rounded bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">Info</button>
+                                    <button onclick="hideAlertCard('infra', 'stageAB')" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-1">
+                                        <i class="fa-solid fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <input type="text" oninput="searchAlertCard('infra', 'stageAB')" id="infraSearchInput-stageAB" placeholder="Search by device or message..." class="mb-2 px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                            <div class="flex-1 overflow-auto custom-scrollbar">
+                                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-xs">
+                                    <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0">
+                                        <tr>
+                                            <th class="px-2 py-1.5 text-left font-medium text-gray-500 uppercase cursor-pointer" onclick="sortAlertCard('infra', 'sev', 'stageAB')">Severity</th>
+                                            <th class="px-2 py-1.5 text-left font-medium text-gray-500 uppercase cursor-pointer" onclick="sortAlertCard('infra', 'time', 'stageAB')">Time</th>
+                                            <th class="px-2 py-1.5 text-left font-medium text-gray-500 uppercase cursor-pointer" onclick="sortAlertCard('infra', 'device', 'stageAB')">Device</th>
+                                            <th class="px-2 py-1.5 text-left font-medium text-gray-500 uppercase">Message</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="infraAlertTableBody-stageAB"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Security Alerts (Stage A) -->
+                    <div class="col-span-12 sm:col-span-6 lg:col-span-4 card p-4 bg-dark-card overflow-hidden">
+                        <div id="securityAlertsSummaryView-stageAB">
+                            <div class="flex items-center justify-center gap-2 mb-3">
+                                <h3 class="text-sm font-bold text-dark-text">Security Alerts</h3>
+                                <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-1.5 py-0.5 rounded flex items-center gap-1">
+                                    <i class="fa-solid fa-hand-pointer text-[7px]"></i> Click
+                                </span>
+                            </div>
+                            <div class="flex items-center justify-between gap-2">
+                                <div class="cursor-pointer group flex-1 text-center" onclick="showAlertCard('security', 'crit', 'stageAB')">
+                                    <span class="block text-2xl font-bold text-newrelic-error group-hover:text-red-500 transition-colors" id="securityCritCount-stageAB">—</span>
+                                    <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-red-500 inline-block">Critical</span>
+                                </div>
+                                <div class="flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-shield-halved text-4xl text-indigo-600 dark:text-indigo-400 opacity-30 dark:opacity-90"></i>
+                                </div>
+                                <div class="cursor-pointer group flex-1 text-center" onclick="showAlertCard('security', 'warn', 'stageAB')">
+                                    <span class="block text-2xl font-bold text-amber-500 group-hover:text-amber-400 transition-colors" id="securityWarnCount-stageAB">—</span>
+                                    <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-amber-500 inline-block">Warning</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="securityAlertsExpandedView-stageAB" class="hidden h-full flex flex-col">
+                            <div class="flex items-center justify-between mb-3 pb-2 border-b border-gray-200 dark:border-gray-700">
+                                <div class="flex items-center gap-2">
+                                    <h4 class="text-sm font-bold text-dark-text">Security Alerts</h4>
+                                    <span class="text-xs text-gray-400 dark:text-gray-500" id="securityAlertCount-stageAB"></span>
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <button onclick="filterAlertCard('security', 'all', 'stageAB')" id="securityFilterAll-stageAB" class="px-2 py-1 text-[11px] rounded bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium">All</button>
+                                    <button onclick="filterAlertCard('security', 'crit', 'stageAB')" id="securityFilterCrit-stageAB" class="px-2 py-1 text-[11px] rounded bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">Critical</button>
+                                    <button onclick="filterAlertCard('security', 'warn', 'stageAB')" id="securityFilterWarn-stageAB" class="px-2 py-1 text-[11px] rounded bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">Warning</button>
+                                    <button onclick="filterAlertCard('security', 'info', 'stageAB')" id="securityFilterInfo-stageAB" class="px-2 py-1 text-[11px] rounded bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">Info</button>
+                                    <button onclick="hideAlertCard('security', 'stageAB')" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-1">
+                                        <i class="fa-solid fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <input type="text" oninput="searchAlertCard('security', 'stageAB')" id="securitySearchInput-stageAB" placeholder="Search by device or message..." class="mb-2 px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                            <div class="flex-1 overflow-auto custom-scrollbar">
+                                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-xs">
+                                    <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0">
+                                        <tr>
+                                            <th class="px-2 py-1.5 text-left font-medium text-gray-500 uppercase cursor-pointer" onclick="sortAlertCard('security', 'sev', 'stageAB')">Severity</th>
+                                            <th class="px-2 py-1.5 text-left font-medium text-gray-500 uppercase cursor-pointer" onclick="sortAlertCard('security', 'time', 'stageAB')">Time</th>
+                                            <th class="px-2 py-1.5 text-left font-medium text-gray-500 uppercase cursor-pointer" onclick="sortAlertCard('security', 'device', 'stageAB')">Device</th>
+                                            <th class="px-2 py-1.5 text-left font-medium text-gray-500 uppercase">Message</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="securityAlertTableBody-stageAB"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- AI Alerts (Stage A) -->
+                    <div class="col-span-12 sm:col-span-6 lg:col-span-4 card p-4 bg-dark-card overflow-hidden">
+                        <div id="aiAlertsSummaryView-stageAB">
+                            <div class="flex items-center justify-center gap-2 mb-3">
+                                <h3 class="text-sm font-bold text-dark-text">AI Alerts</h3>
+                                <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-1.5 py-0.5 rounded flex items-center gap-1">
+                                    <i class="fa-solid fa-hand-pointer text-[7px]"></i> Click
+                                </span>
+                            </div>
+                            <div class="flex items-center justify-between gap-2">
+                                <div class="cursor-pointer group flex-1 text-center" onclick="showAlertCard('ai', 'crit', 'stageAB')">
+                                    <span class="block text-2xl font-bold text-newrelic-error group-hover:text-red-500 transition-colors" id="aiCritCount-stageAB">—</span>
+                                    <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-red-500 inline-block">Critical</span>
+                                </div>
+                                <div class="flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-brain text-4xl text-purple-600 dark:text-purple-400 opacity-30 dark:opacity-90"></i>
+                                </div>
+                                <div class="cursor-pointer group flex-1 text-center" onclick="showAlertCard('ai', 'warn', 'stageAB')">
+                                    <span class="block text-2xl font-bold text-amber-500 group-hover:text-amber-400 transition-colors" id="aiWarnCount-stageAB">—</span>
+                                    <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-amber-500 inline-block">Warning</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="aiAlertsExpandedView-stageAB" class="hidden h-full flex flex-col">
+                            <div class="flex items-center justify-between mb-3 pb-2 border-b border-gray-200 dark:border-gray-700">
+                                <div class="flex items-center gap-2">
+                                    <h4 class="text-sm font-bold text-dark-text">AI Alerts</h4>
+                                    <span class="text-xs text-gray-400 dark:text-gray-500" id="aiAlertCount-stageAB"></span>
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <button onclick="filterAlertCard('ai', 'all', 'stageAB')" id="aiFilterAll-stageAB" class="px-2 py-1 text-[11px] rounded bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium">All</button>
+                                    <button onclick="filterAlertCard('ai', 'crit', 'stageAB')" id="aiFilterCrit-stageAB" class="px-2 py-1 text-[11px] rounded bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">Critical</button>
+                                    <button onclick="filterAlertCard('ai', 'warn', 'stageAB')" id="aiFilterWarn-stageAB" class="px-2 py-1 text-[11px] rounded bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">Warning</button>
+                                    <button onclick="filterAlertCard('ai', 'info', 'stageAB')" id="aiFilterInfo-stageAB" class="px-2 py-1 text-[11px] rounded bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">Info</button>
+                                    <button onclick="hideAlertCard('ai', 'stageAB')" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-1">
+                                        <i class="fa-solid fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <input type="text" oninput="searchAlertCard('ai', 'stageAB')" id="aiSearchInput-stageAB" placeholder="Search by device or message..." class="mb-2 px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                            <div class="flex-1 overflow-auto custom-scrollbar">
+                                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-xs">
+                                    <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0">
+                                        <tr>
+                                            <th class="px-2 py-1.5 text-left font-medium text-gray-500 uppercase cursor-pointer" onclick="sortAlertCard('ai', 'sev', 'stageAB')">Severity</th>
+                                            <th class="px-2 py-1.5 text-left font-medium text-gray-500 uppercase cursor-pointer" onclick="sortAlertCard('ai', 'time', 'stageAB')">Time</th>
+                                            <th class="px-2 py-1.5 text-left font-medium text-gray-500 uppercase cursor-pointer" onclick="sortAlertCard('ai', 'device', 'stageAB')">Device</th>
+                                            <th class="px-2 py-1.5 text-left font-medium text-gray-500 uppercase">Message</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="aiAlertTableBody-stageAB"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- WAN/Uplink Detail (Stage A) -->
                     <div class="col-span-12 lg:col-span-6 card p-0 bg-dark-card flex flex-col h-80">
                         <div class="p-4 border-b border-gray-100 dark:border-gray-700">
@@ -478,6 +810,172 @@
                             <p class="text-sm text-gray-400 italic">Loading…</p>
                         </div>
                     </div>
+                                        <!-- Infrastructure Alerts (Stage A) -->
+                    <div class="col-span-12 sm:col-span-6 lg:col-span-4 card p-4 bg-dark-card overflow-hidden">
+                        <div id="infraAlertsSummaryView-stageABC">
+                            <div class="flex items-center justify-center gap-2 mb-3">
+                                <h3 class="text-sm font-bold text-dark-text">Infrastructure Alerts</h3>
+                                <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-1.5 py-0.5 rounded flex items-center gap-1">
+                                    <i class="fa-solid fa-hand-pointer text-[7px]"></i> Click
+                                </span>
+                            </div>
+                            <div class="flex items-center justify-between gap-2">
+                                <div class="cursor-pointer group flex-1 text-center" onclick="showAlertCard('infra', 'crit', 'stageABC')">
+                                    <span class="block text-2xl font-bold text-newrelic-error group-hover:text-red-500 transition-colors" id="infraCritCount-stageABC">—</span>
+                                    <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-red-500 inline-block">Critical</span>
+                                </div>
+                                <div class="flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-triangle-exclamation text-4xl text-newrelic-error opacity-30 dark:opacity-90"></i>
+                                </div>
+                                <div class="cursor-pointer group flex-1 text-center" onclick="showAlertCard('infra', 'warn', 'stageABC')">
+                                    <span class="block text-2xl font-bold text-amber-500 group-hover:text-amber-400 transition-colors" id="infraWarnCount-stageABC">—</span>
+                                    <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-amber-500 inline-block">Warning</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="infraAlertsExpandedView-stageABC" class="hidden h-full flex flex-col">
+                            <div class="flex items-center justify-between mb-3 pb-2 border-b border-gray-200 dark:border-gray-700">
+                                <div class="flex items-center gap-2">
+                                    <h4 class="text-sm font-bold text-dark-text">Infrastructure Alerts</h4>
+                                    <span class="text-xs text-gray-400 dark:text-gray-500" id="infraAlertCount-stageABC"></span>
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <button onclick="filterAlertCard('infra', 'all', 'stageABC')" id="infraFilterAll-stageABC" class="px-2 py-1 text-[11px] rounded bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium">All</button>
+                                    <button onclick="filterAlertCard('infra', 'crit', 'stageABC')" id="infraFilterCrit-stageABC" class="px-2 py-1 text-[11px] rounded bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">Critical</button>
+                                    <button onclick="filterAlertCard('infra', 'warn', 'stageABC')" id="infraFilterWarn-stageABC" class="px-2 py-1 text-[11px] rounded bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">Warning</button>
+                                    <button onclick="filterAlertCard('infra', 'info', 'stageABC')" id="infraFilterInfo-stageABC" class="px-2 py-1 text-[11px] rounded bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">Info</button>
+                                    <button onclick="hideAlertCard('infra', 'stageABC')" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-1">
+                                        <i class="fa-solid fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <input type="text" oninput="searchAlertCard('infra', 'stageABC')" id="infraSearchInput-stageABC" placeholder="Search by device or message..." class="mb-2 px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                            <div class="flex-1 overflow-auto custom-scrollbar">
+                                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-xs">
+                                    <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0">
+                                        <tr>
+                                            <th class="px-2 py-1.5 text-left font-medium text-gray-500 uppercase cursor-pointer" onclick="sortAlertCard('infra', 'sev', 'stageABC')">Severity</th>
+                                            <th class="px-2 py-1.5 text-left font-medium text-gray-500 uppercase cursor-pointer" onclick="sortAlertCard('infra', 'time', 'stageABC')">Time</th>
+                                            <th class="px-2 py-1.5 text-left font-medium text-gray-500 uppercase cursor-pointer" onclick="sortAlertCard('infra', 'device', 'stageABC')">Device</th>
+                                            <th class="px-2 py-1.5 text-left font-medium text-gray-500 uppercase">Message</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="infraAlertTableBody-stageABC"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Security Alerts (Stage A) -->
+                    <div class="col-span-12 sm:col-span-6 lg:col-span-4 card p-4 bg-dark-card overflow-hidden">
+                        <div id="securityAlertsSummaryView-stageABC">
+                            <div class="flex items-center justify-center gap-2 mb-3">
+                                <h3 class="text-sm font-bold text-dark-text">Security Alerts</h3>
+                                <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-1.5 py-0.5 rounded flex items-center gap-1">
+                                    <i class="fa-solid fa-hand-pointer text-[7px]"></i> Click
+                                </span>
+                            </div>
+                            <div class="flex items-center justify-between gap-2">
+                                <div class="cursor-pointer group flex-1 text-center" onclick="showAlertCard('security', 'crit', 'stageABC')">
+                                    <span class="block text-2xl font-bold text-newrelic-error group-hover:text-red-500 transition-colors" id="securityCritCount-stageABC">—</span>
+                                    <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-red-500 inline-block">Critical</span>
+                                </div>
+                                <div class="flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-shield-halved text-4xl text-indigo-600 dark:text-indigo-400 opacity-30 dark:opacity-90"></i>
+                                </div>
+                                <div class="cursor-pointer group flex-1 text-center" onclick="showAlertCard('security', 'warn', 'stageABC')">
+                                    <span class="block text-2xl font-bold text-amber-500 group-hover:text-amber-400 transition-colors" id="securityWarnCount-stageABC">—</span>
+                                    <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-amber-500 inline-block">Warning</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="securityAlertsExpandedView-stageABC" class="hidden h-full flex flex-col">
+                            <div class="flex items-center justify-between mb-3 pb-2 border-b border-gray-200 dark:border-gray-700">
+                                <div class="flex items-center gap-2">
+                                    <h4 class="text-sm font-bold text-dark-text">Security Alerts</h4>
+                                    <span class="text-xs text-gray-400 dark:text-gray-500" id="securityAlertCount-stageABC"></span>
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <button onclick="filterAlertCard('security', 'all', 'stageABC')" id="securityFilterAll-stageABC" class="px-2 py-1 text-[11px] rounded bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium">All</button>
+                                    <button onclick="filterAlertCard('security', 'crit', 'stageABC')" id="securityFilterCrit-stageABC" class="px-2 py-1 text-[11px] rounded bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">Critical</button>
+                                    <button onclick="filterAlertCard('security', 'warn', 'stageABC')" id="securityFilterWarn-stageABC" class="px-2 py-1 text-[11px] rounded bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">Warning</button>
+                                    <button onclick="filterAlertCard('security', 'info', 'stageABC')" id="securityFilterInfo-stageABC" class="px-2 py-1 text-[11px] rounded bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">Info</button>
+                                    <button onclick="hideAlertCard('security', 'stageABC')" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-1">
+                                        <i class="fa-solid fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <input type="text" oninput="searchAlertCard('security', 'stageABC')" id="securitySearchInput-stageABC" placeholder="Search by device or message..." class="mb-2 px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                            <div class="flex-1 overflow-auto custom-scrollbar">
+                                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-xs">
+                                    <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0">
+                                        <tr>
+                                            <th class="px-2 py-1.5 text-left font-medium text-gray-500 uppercase cursor-pointer" onclick="sortAlertCard('security', 'sev', 'stageABC')">Severity</th>
+                                            <th class="px-2 py-1.5 text-left font-medium text-gray-500 uppercase cursor-pointer" onclick="sortAlertCard('security', 'time', 'stageABC')">Time</th>
+                                            <th class="px-2 py-1.5 text-left font-medium text-gray-500 uppercase cursor-pointer" onclick="sortAlertCard('security', 'device', 'stageABC')">Device</th>
+                                            <th class="px-2 py-1.5 text-left font-medium text-gray-500 uppercase">Message</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="securityAlertTableBody-stageABC"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- AI Alerts (Stage A) -->
+                    <div class="col-span-12 sm:col-span-6 lg:col-span-4 card p-4 bg-dark-card overflow-hidden">
+                        <div id="aiAlertsSummaryView-stageABC">
+                            <div class="flex items-center justify-center gap-2 mb-3">
+                                <h3 class="text-sm font-bold text-dark-text">AI Alerts</h3>
+                                <span class="text-[10px] text-newrelic-cyan font-medium bg-newrelic-cyan/20 px-1.5 py-0.5 rounded flex items-center gap-1">
+                                    <i class="fa-solid fa-hand-pointer text-[7px]"></i> Click
+                                </span>
+                            </div>
+                            <div class="flex items-center justify-between gap-2">
+                                <div class="cursor-pointer group flex-1 text-center" onclick="showAlertCard('ai', 'crit', 'stageABC')">
+                                    <span class="block text-2xl font-bold text-newrelic-error group-hover:text-red-500 transition-colors" id="aiCritCount-stageABC">—</span>
+                                    <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-red-500 inline-block">Critical</span>
+                                </div>
+                                <div class="flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-brain text-4xl text-purple-600 dark:text-purple-400 opacity-30 dark:opacity-90"></i>
+                                </div>
+                                <div class="cursor-pointer group flex-1 text-center" onclick="showAlertCard('ai', 'warn', 'stageABC')">
+                                    <span class="block text-2xl font-bold text-amber-500 group-hover:text-amber-400 transition-colors" id="aiWarnCount-stageABC">—</span>
+                                    <span class="text-xs text-dark-muted border-b border-dashed border-gray-400 group-hover:border-amber-500 inline-block">Warning</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="aiAlertsExpandedView-stageABC" class="hidden h-full flex flex-col">
+                            <div class="flex items-center justify-between mb-3 pb-2 border-b border-gray-200 dark:border-gray-700">
+                                <div class="flex items-center gap-2">
+                                    <h4 class="text-sm font-bold text-dark-text">AI Alerts</h4>
+                                    <span class="text-xs text-gray-400 dark:text-gray-500" id="aiAlertCount-stageABC"></span>
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <button onclick="filterAlertCard('ai', 'all', 'stageABC')" id="aiFilterAll-stageABC" class="px-2 py-1 text-[11px] rounded bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium">All</button>
+                                    <button onclick="filterAlertCard('ai', 'crit', 'stageABC')" id="aiFilterCrit-stageABC" class="px-2 py-1 text-[11px] rounded bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">Critical</button>
+                                    <button onclick="filterAlertCard('ai', 'warn', 'stageABC')" id="aiFilterWarn-stageABC" class="px-2 py-1 text-[11px] rounded bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">Warning</button>
+                                    <button onclick="filterAlertCard('ai', 'info', 'stageABC')" id="aiFilterInfo-stageABC" class="px-2 py-1 text-[11px] rounded bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">Info</button>
+                                    <button onclick="hideAlertCard('ai', 'stageABC')" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-1">
+                                        <i class="fa-solid fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <input type="text" oninput="searchAlertCard('ai', 'stageABC')" id="aiSearchInput-stageABC" placeholder="Search by device or message..." class="mb-2 px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                            <div class="flex-1 overflow-auto custom-scrollbar">
+                                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-xs">
+                                    <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0">
+                                        <tr>
+                                            <th class="px-2 py-1.5 text-left font-medium text-gray-500 uppercase cursor-pointer" onclick="sortAlertCard('ai', 'sev', 'stageABC')">Severity</th>
+                                            <th class="px-2 py-1.5 text-left font-medium text-gray-500 uppercase cursor-pointer" onclick="sortAlertCard('ai', 'time', 'stageABC')">Time</th>
+                                            <th class="px-2 py-1.5 text-left font-medium text-gray-500 uppercase cursor-pointer" onclick="sortAlertCard('ai', 'device', 'stageABC')">Device</th>
+                                            <th class="px-2 py-1.5 text-left font-medium text-gray-500 uppercase">Message</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="aiAlertTableBody-stageABC"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- WAN/Uplink Detail (Stage A) -->
                     <div class="col-span-12 lg:col-span-6 card p-0 bg-dark-card flex flex-col h-80">
                         <div class="p-4 border-b border-gray-100 dark:border-gray-700">
