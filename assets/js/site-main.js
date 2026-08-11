@@ -313,7 +313,7 @@ function renderVpnTunnels(siteName) {
         if (!tbody) return;
 
         if (tunnels.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="7" class="px-4 py-3 text-center text-sm text-gray-400">No VPN tunnels at this site.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="5" class="px-4 py-3 text-center text-sm text-gray-400">No VPN tunnels at this site.</td></tr>';
             return;
         }
 
@@ -327,13 +327,11 @@ function renderVpnTunnels(siteName) {
             return `
                 <tr>
                     <td class="px-4 py-2.5 font-bold text-dark-text whitespace-nowrap">${SharedUI.escapeHtml(t.peerName)}</td>
-                    <td class="px-4 py-2.5 text-dark-muted whitespace-nowrap capitalize">${t.vendor}</td>
                     <td class="px-4 py-2.5 whitespace-nowrap">${statusBadge}</td>
                     <td class="px-4 py-2.5 text-right whitespace-nowrap">
                         <div>${t.latencyMs != null ? t.latencyMs + ' ms' : '—'}</div>
                         ${latencySpark ? `<div class="flex justify-end mt-0.5">${latencySpark}</div>` : ''}
                     </td>
-                    <td class="px-4 py-2.5 text-right whitespace-nowrap">${t.jitterMs != null ? t.jitterMs + ' ms' : '—'}</td>
                     <td class="px-4 py-2.5 text-right whitespace-nowrap">
                         <div>${t.lossPct != null ? t.lossPct + '%' : '—'}</div>
                         ${lossSpark ? `<div class="flex justify-end mt-0.5">${lossSpark}</div>` : ''}
@@ -495,13 +493,13 @@ function renderVlanSection(siteName) {
     const tbody = document.getElementById('vlanTableBody-stageABC');
     if (tbody) {
         tbody.innerHTML = vlans.length === 0
-            ? '<tr><td colspan="4" class="px-4 py-3 text-center text-sm text-gray-400">No VLANs configured.</td></tr>'
+            ? '<tr><td colspan="4" class="px-2 py-3 text-center text-sm text-gray-400">No VLANs configured.</td></tr>'
             : vlans.map(v => `
                 <tr>
-                    <td class="px-4 py-2.5 font-bold text-dark-text whitespace-nowrap">${v.id} - ${SharedUI.escapeHtml(v.name)}</td>
-                    <td class="px-4 py-2.5 text-dark-muted whitespace-nowrap">${SharedUI.escapeHtml(v.purpose)}</td>
-                    <td class="px-4 py-2.5 text-right whitespace-nowrap">${v.clientCount}</td>
-                    <td class="px-4 py-2.5 text-right whitespace-nowrap">${v.bandwidthMbps} Mbps</td>
+                    <td class="px-2 py-2.5 font-bold text-dark-text whitespace-nowrap">${v.id} - ${SharedUI.escapeHtml(v.name)}</td>
+                    <td class="px-2 py-2.5 text-dark-muted whitespace-nowrap">${SharedUI.escapeHtml(v.purpose)}</td>
+                    <td class="px-2 py-2.5 text-right whitespace-nowrap">${v.clientCount}</td>
+                    <td class="px-2 py-2.5 text-right whitespace-nowrap">${v.bandwidthMbps} Mbps</td>
                 </tr>
             `).join('');
     }
