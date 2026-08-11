@@ -68,12 +68,9 @@
                 <div class="grid grid-cols-12 gap-3 mb-6" id="stageA-grid">
                     <!-- Health Badge (Stage A) -->
                     <div class="col-span-12 card p-4 bg-dark-card">
-                        <div class="flex items-center justify-between mb-3">
-                            <h3 class="text-sm font-bold text-dark-text">Site Health</h3>
-                            <div class="text-right">
-                                <span class="text-sm font-bold text-dark-text" id="healthSiteName-stageA">—</span>
-                                <span class="text-xs text-gray-500 ml-1" id="healthSiteRegion-stageA">—</span>
-                            </div>
+                        <div class="flex items-baseline gap-2 mb-3">
+                            <span class="text-sm font-bold text-dark-text" id="healthSiteName-stageA">—</span>
+                            <span class="text-xs text-gray-500" id="healthSiteRegion-stageA">—</span>
                         </div>
                         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                             <div>
@@ -97,9 +94,6 @@
                                 <p class="text-xs text-gray-400">Clients</p>
                                 <p class="text-sm font-bold text-dark-text" id="healthClients-stageA">—</p>
                             </div>
-                        </div>
-                        <div class="mt-3" style="height: 50px;">
-                            <canvas id="healthUplinkSparkline-stageA"></canvas>
                         </div>
                     </div>
                     <!-- Infrastructure Alerts (Stage A) -->
@@ -353,14 +347,11 @@
             <!-- Tab Content: Stage A+B -->
             <div id="content-stageAB" class="tab-content hidden">
                 <div class="grid grid-cols-12 gap-3 mb-6" id="stageAB-grid">
-                    <!-- Health Badge (Stage A) -->
+                    <!-- Health Badge (Stage A+B) -->
                     <div class="col-span-12 card p-4 bg-dark-card">
-                        <div class="flex items-center justify-between mb-3">
-                            <h3 class="text-sm font-bold text-dark-text">Site Health</h3>
-                            <div class="text-right">
-                                <span class="text-sm font-bold text-dark-text" id="healthSiteName-stageAB">—</span>
-                                <span class="text-xs text-gray-500 ml-1" id="healthSiteRegion-stageAB">—</span>
-                            </div>
+                        <div class="flex items-baseline gap-2 mb-3">
+                            <span class="text-sm font-bold text-dark-text" id="healthSiteName-stageAB">—</span>
+                            <span class="text-xs text-gray-500" id="healthSiteRegion-stageAB">—</span>
                         </div>
                         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                             <div>
@@ -385,11 +376,8 @@
                                 <p class="text-sm font-bold text-dark-text" id="healthClients-stageAB">—</p>
                             </div>
                         </div>
-                        <div class="mt-3" style="height: 50px;">
-                            <canvas id="healthUplinkSparkline-stageAB"></canvas>
-                        </div>
                     </div>
-                    <!-- Infrastructure Alerts (Stage A) -->
+                    <!-- Infrastructure Alerts (Stage A+B) -->
                     <div class="col-span-12 sm:col-span-6 lg:col-span-4 card p-4 bg-dark-card overflow-hidden">
                         <div id="infraAlertsSummaryView-stageAB">
                             <div class="flex items-center justify-center gap-2 mb-3">
@@ -677,14 +665,11 @@
             <!-- Tab Content: Stage A+B+C -->
             <div id="content-stageABC" class="tab-content hidden">
                 <div class="grid grid-cols-12 gap-3 mb-6" id="stageABC-grid">
-                    <!-- Health Badge (Stage A) -->
+                    <!-- Health Badge (Stage A+B+C) -->
                     <div class="col-span-12 card p-4 bg-dark-card">
-                        <div class="flex items-center justify-between mb-3">
-                            <h3 class="text-sm font-bold text-dark-text">Site Health</h3>
-                            <div class="text-right">
-                                <span class="text-sm font-bold text-dark-text" id="healthSiteName-stageABC">—</span>
-                                <span class="text-xs text-gray-500 ml-1" id="healthSiteRegion-stageABC">—</span>
-                            </div>
+                        <div class="flex items-baseline gap-2 mb-3">
+                            <span class="text-sm font-bold text-dark-text" id="healthSiteName-stageABC">—</span>
+                            <span class="text-xs text-gray-500" id="healthSiteRegion-stageABC">—</span>
                         </div>
                         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                             <div>
@@ -709,11 +694,8 @@
                                 <p class="text-sm font-bold text-dark-text" id="healthClients-stageABC">—</p>
                             </div>
                         </div>
-                        <div class="mt-3" style="height: 50px;">
-                            <canvas id="healthUplinkSparkline-stageABC"></canvas>
-                        </div>
                     </div>
-                    <!-- Infrastructure Alerts (Stage A) -->
+                    <!-- Infrastructure Alerts (Stage A+B+C) -->
                     <div class="col-span-12 sm:col-span-6 lg:col-span-4 card p-4 bg-dark-card overflow-hidden">
                         <div id="infraAlertsSummaryView-stageABC">
                             <div class="flex items-center justify-center gap-2 mb-3">

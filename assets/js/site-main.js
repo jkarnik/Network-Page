@@ -81,40 +81,6 @@ function setText(id, text) {
     if (el) el.textContent = text;
 }
 
-function renderSparkline(id, dataset, color = '#3b82f6') {
-    const canvas = document.getElementById(id);
-    if (!canvas || !dataset) return;
-
-    if (charts[id]) {
-        charts[id].data.labels = dataset.labels;
-        charts[id].data.datasets[0].data = dataset.data;
-        charts[id].update();
-        return;
-    }
-
-    charts[id] = new Chart(canvas, {
-        type: 'line',
-        data: {
-            labels: dataset.labels,
-            datasets: [{
-                data: dataset.data,
-                borderColor: color,
-                backgroundColor: color + '1a',
-                borderWidth: 2,
-                pointRadius: 0,
-                tension: 0.4,
-                fill: true
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false }, tooltip: { enabled: true } },
-            scales: { x: { display: false }, y: { display: false } }
-        }
-    });
-}
-
 function computeCircuitSummary(siteName) {
     const circuits = DataLoader.getCircuits(siteName);
     const up = circuits.filter(c => c.status !== 'critical' && c.status !== 'offline').length;
@@ -147,9 +113,6 @@ function renderHealthBadge(siteName) {
         setText(`healthUplinkLoss-${tab}`, `${circuitSummary.maxLoss.toFixed(2)}% loss`);
         setText(`healthVpnStatus-${tab}`, `${vpnSummary.up}/${vpnSummary.total} up`);
         setText(`healthRoutingRedundancy-${tab}`, `${routingPaths}/${routingTotal} paths available`);
-        if (circuitSummary.primary) {
-            renderSparkline(`healthUplinkSparkline-${tab}`, circuitSummary.primary.latencyTrend, '#3b82f6');
-        }
     });
 }
 
