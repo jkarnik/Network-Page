@@ -273,76 +273,9 @@ function renderWanSection(siteName) {
 
 registerSiteRenderer(renderWanSection);
 
-// --- LAN/SWITCHING DETAIL SECTION (Stage A) ---
-
-function renderLanSection(siteName) {
-    const switches = DataLoader.getDevicesBySite(siteName, 'switches');
-    const hardware = DataLoader.getHardwareRollup(siteName);
-
-    STAGE_TABS.forEach(tab => {
-        const tbody = document.getElementById(`lanTableBody-${tab}`);
-        if (!tbody) return;
-
-        if (switches.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="4" class="px-4 py-3 text-center text-sm text-gray-400">No switches at this site.</td></tr>';
-            return;
-        }
-
-        tbody.innerHTML = switches.map(sw => {
-            const statusBadge = CIRCUIT_STATUS_BADGES[sw.status] || CIRCUIT_STATUS_BADGES.online;
-            const psuFailed = hardware.psuFailedDeviceIds.includes(sw.id);
-            const psuBadge = psuFailed
-                ? '<span class="px-2 py-0.5 rounded text-xs font-bold bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">Failed</span>'
-                : '<span class="px-2 py-0.5 rounded text-xs font-bold bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">OK</span>';
-            return `
-                <tr>
-                    <td class="px-4 py-2.5 font-bold text-dark-text whitespace-nowrap">${sw.name}</td>
-                    <td class="px-4 py-2.5 text-dark-muted whitespace-nowrap">${sw.model}</td>
-                    <td class="px-4 py-2.5 whitespace-nowrap">${statusBadge}</td>
-                    <td class="px-4 py-2.5 whitespace-nowrap">${psuBadge}</td>
-                </tr>
-            `;
-        }).join('');
-    });
-}
-
-registerSiteRenderer(renderLanSection);
-
-// --- DEVICE INVENTORY + SITE ALERT FEED (Stage A) ---
+// --- SITE ALERT FEED (Stage A) ---
 
 const DEVICE_TYPE_PAGES = { gateway: 'sdwan.html', switch: 'switch.html', accessPoint: 'access-point.html' };
-
-function renderDeviceInventory(siteName) {
-    const devices = DataLoader.getAllDevices().filter(d => d.site === siteName);
-
-    STAGE_TABS.forEach(tab => {
-        const tbody = document.getElementById(`deviceInventoryTableBody-${tab}`);
-        if (!tbody) return;
-
-        if (devices.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" class="px-4 py-3 text-center text-sm text-gray-400">No devices at this site.</td></tr>';
-            return;
-        }
-
-        tbody.innerHTML = devices.map(d => {
-            const statusBadge = CIRCUIT_STATUS_BADGES[d.status] || CIRCUIT_STATUS_BADGES.online;
-            const page = DEVICE_TYPE_PAGES[d.type] || 'sdwan.html';
-            return `
-                <tr class="hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">
-                    <td class="px-4 py-2.5 whitespace-nowrap">
-                        <a href="${page}?device=${d.id}" class="font-bold text-blue-600 dark:text-blue-400 hover:underline">${d.name}</a>
-                    </td>
-                    <td class="px-4 py-2.5 text-dark-muted whitespace-nowrap">${d.model}</td>
-                    <td class="px-4 py-2.5 text-dark-muted whitespace-nowrap capitalize">${d.type}</td>
-                    <td class="px-4 py-2.5 whitespace-nowrap">${statusBadge}</td>
-                    <td class="px-4 py-2.5 text-dark-muted whitespace-nowrap">${d.uptime || '—'}</td>
-                </tr>
-            `;
-        }).join('');
-    });
-}
-
-registerSiteRenderer(renderDeviceInventory);
 
 function renderSiteAlertFeeds(siteName) {
     STAGE_TABS.forEach(tab => {
@@ -854,4 +787,200 @@ function renderAlertCardTable(cardKey, tab) {
             <td class="px-2 py-1.5 text-dark-muted truncate max-w-[220px]" title="${SharedUI.escapeHtml(alert.message)}">${SharedUI.escapeHtml(alert.message)}</td>
         </tr>
     `).join('');
+}
+
+// --- FLEET STATUS WIDGET (Stage A) ---
+
+const FLEET_TYPES = [
+    { key: 'gateways', label: 'Gateways', kind: 'real', deviceType: 'gateways', filterKey: 'gateway', vendors: [{ key: 'meraki', label: 'Meraki' }, { key: 'mist', label: 'Mist' }] },
+    { key: 'switches', label: 'Switches', kind: 'real', deviceType: 'switches', filterKey: 'switch', vendors: [{ key: 'meraki', label: 'Meraki' }, { key: 'mist', label: 'Mist' }] },
+    { key: 'accessPoints', label: 'Access Points', kind: 'real', deviceType: 'accessPoints', filterKey: 'accessPoint', vendors: [{ key: 'meraki', label: 'Meraki' }, { key: 'mist', label: 'Mist' }] },
+    { key: 'servers', label: 'Servers', kind: 'mock', auxType: 'servers', vendors: [{ key: 'dell', label: 'Dell' }, { key: 'hpe', label: 'HPE' }] },
+    { key: 'ipCameras', label: 'IP Cameras', kind: 'mock', auxType: 'ipCameras', vendors: [{ key: 'axis', label: 'Axis' }, { key: 'hikvision', label: 'Hikvision' }] },
+    { key: 'hvacUnits', label: 'HVAC Units', kind: 'mock', auxType: 'hvacUnits', vendors: [{ key: 'honeywell', label: 'Honeywell' }, { key: 'trane', label: 'Trane' }] },
+    { key: 'environmentalSensors', label: 'Environmental Sensors', kind: 'mock', auxType: 'environmentalSensors', vendors: [{ key: 'sensorpush', label: 'SensorPush' }, { key: 'monnit', label: 'Monnit' }] }
+];
+
+const FLEET_STATUS_COLS = [
+    { key: 'online', label: 'Healthy', headerClass: 'text-newrelic-success dark:text-green-400', cellClass: '' },
+    { key: 'warn', label: 'Warning', headerClass: 'text-amber-500', cellClass: 'bg-amber-50 dark:bg-amber-900/10 text-amber-700 dark:text-amber-400' },
+    { key: 'crit', label: 'Critical', headerClass: 'text-red-500', cellClass: 'bg-red-50 dark:bg-red-900/10 text-red-700 dark:text-red-400 font-bold' },
+    { key: 'offline', label: 'Offline', headerClass: 'text-gray-400 dark:text-gray-500', cellClass: 'bg-gray-50 dark:bg-gray-800/50 text-gray-500 dark:text-gray-400' }
+];
+const FLEET_STATUS_FILTER_MAP = { online: 'online', warn: 'warning', crit: 'critical', offline: 'offline' };
+
+const fleetExpandedKeys = { stageA: new Set(), stageAB: new Set(), stageABC: new Set() };
+const fleetListState = { stageA: null, stageAB: null, stageABC: null };
+
+function getFleetDevices(siteName, type) {
+    return type.kind === 'real'
+        ? DataLoader.getDevicesBySite(siteName, type.deviceType)
+        : DataLoader.getAuxiliaryDevices(siteName, type.auxType);
+}
+
+function fleetStatusCounts(devices) {
+    return {
+        online: devices.filter(d => d.status === 'online').length,
+        warn: devices.filter(d => d.status === 'warning').length,
+        crit: devices.filter(d => d.status === 'critical').length,
+        offline: devices.filter(d => d.status === 'offline').length
+    };
+}
+
+function getFleetModels(siteName, type, vendor) {
+    const devices = getFleetDevices(siteName, type).filter(d => d.vendor === vendor.key);
+    return [...new Set(devices.map(d => d.model))].sort();
+}
+
+function stripVendorPrefix(model, vendorLabel) {
+    return model.startsWith(vendorLabel + ' ') ? model.slice(vendorLabel.length + 1) : model;
+}
+
+function renderFleetStatusGrid(siteName) {
+    STAGE_TABS.forEach(tab => renderOneFleetGrid(siteName, tab));
+}
+
+registerSiteRenderer(renderFleetStatusGrid);
+
+function renderOneFleetGrid(siteName, tab) {
+    const grid = document.getElementById(`fleetStatusGrid-${tab}`);
+    if (!grid) return;
+    grid.innerHTML = '';
+
+    const addCell = (text, classes) => {
+        const div = document.createElement('div');
+        div.className = classes;
+        div.innerHTML = text;
+        grid.appendChild(div);
+        return div;
+    };
+
+    addCell('Type', 'status-cell status-header');
+    addCell('Vendor', 'status-cell status-header');
+    FLEET_STATUS_COLS.forEach(s => addCell(s.label, 'status-cell status-header ' + s.headerClass));
+
+    FLEET_TYPES.forEach(type => {
+        let totalSubRows = type.vendors.length;
+        type.vendors.forEach(vendor => {
+            const expandKey = `${type.key}-${vendor.key}`;
+            if (fleetExpandedKeys[tab].has(expandKey)) {
+                totalSubRows += getFleetModels(siteName, type, vendor).length;
+            }
+        });
+
+        const groupCell = addCell(type.label, 'status-cell status-group-cell clickable text-dark-muted');
+        groupCell.style.gridRow = `span ${totalSubRows}`;
+        groupCell.onclick = () => showFleetDeviceList(tab, type.key, 'all', null);
+
+        type.vendors.forEach(vendor => {
+            const expandKey = `${type.key}-${vendor.key}`;
+            const isExpanded = fleetExpandedKeys[tab].has(expandKey);
+            const devices = getFleetDevices(siteName, type).filter(d => d.vendor === vendor.key);
+            const counts = fleetStatusCounts(devices);
+
+            const chevron = isExpanded ? 'fa-chevron-down' : 'fa-chevron-right';
+            const subCell = addCell(
+                `<span class="flex items-center gap-1.5"><i class="fa-solid ${chevron} text-[9px] text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-1 -m-1 z-10 relative" data-expand-key="${expandKey}"></i><span class="hover:underline">${vendor.label}</span></span>`,
+                'status-cell status-subgroup-cell clickable text-dark-muted'
+            );
+            subCell.onclick = (e) => {
+                if (e.target.closest('i[data-expand-key]')) {
+                    toggleFleetExpand(siteName, tab, expandKey);
+                } else {
+                    showFleetDeviceList(tab, type.key, 'all', vendor.key);
+                }
+            };
+
+            FLEET_STATUS_COLS.forEach(s => {
+                const val = counts[s.key] || 0;
+                const cell = addCell(val, 'status-cell clickable ' + s.cellClass);
+                cell.onclick = () => showFleetDeviceList(tab, type.key, FLEET_STATUS_FILTER_MAP[s.key], vendor.key);
+            });
+
+            if (isExpanded) {
+                const models = getFleetModels(siteName, type, vendor);
+                models.forEach(model => {
+                    const modelDevices = devices.filter(d => d.model === model);
+                    const modelCounts = fleetStatusCounts(modelDevices);
+                    const shortModel = stripVendorPrefix(model, vendor.label);
+                    const modelCell = addCell(`<span class="hover:underline">${shortModel}</span>`, 'status-cell status-model-cell clickable text-left');
+                    modelCell.onclick = () => showFleetDeviceList(tab, type.key, 'all', vendor.key, model);
+                    FLEET_STATUS_COLS.forEach(s => {
+                        const val = modelCounts[s.key] || 0;
+                        const cell = addCell(val || '', 'status-cell status-model-cell clickable ' + (val > 0 ? s.cellClass : ''));
+                        cell.onclick = () => showFleetDeviceList(tab, type.key, FLEET_STATUS_FILTER_MAP[s.key], vendor.key, model);
+                    });
+                });
+            }
+        });
+    });
+}
+
+function toggleFleetExpand(siteName, tab, expandKey) {
+    if (fleetExpandedKeys[tab].has(expandKey)) {
+        fleetExpandedKeys[tab].delete(expandKey);
+    } else {
+        fleetExpandedKeys[tab].add(expandKey);
+    }
+    renderOneFleetGrid(siteName, tab);
+}
+
+function showFleetDeviceList(tab, typeKey, statusKey, vendorKey, model) {
+    fleetListState[tab] = { typeKey, statusKey, vendorKey, model: model || null };
+    document.getElementById(`fleetMatrixView-${tab}`).classList.add('hidden');
+    document.getElementById(`fleetListView-${tab}`).classList.remove('hidden');
+    renderFleetDeviceList(tab);
+}
+
+function hideFleetDeviceList(tab) {
+    fleetListState[tab] = null;
+    document.getElementById(`fleetListView-${tab}`).classList.add('hidden');
+    document.getElementById(`fleetMatrixView-${tab}`).classList.remove('hidden');
+}
+
+function renderFleetDeviceList(tab) {
+    const state = fleetListState[tab];
+    const container = document.getElementById(`fleetListGrid-${tab}`);
+    const countEl = document.getElementById(`fleetListCount-${tab}`);
+    if (!state || !container || !currentSite) return;
+
+    const type = FLEET_TYPES.find(t => t.key === state.typeKey);
+    let devices = getFleetDevices(currentSite, type);
+
+    if (state.vendorKey) devices = devices.filter(d => d.vendor === state.vendorKey);
+    if (state.model) devices = devices.filter(d => d.model === state.model);
+    if (state.statusKey !== 'all') devices = devices.filter(d => d.status === state.statusKey);
+
+    if (countEl) countEl.innerText = `${devices.length} device${devices.length !== 1 ? 's' : ''}`;
+
+    if (devices.length === 0) {
+        container.innerHTML = '<div class="col-span-full text-center text-sm text-gray-400 py-8">No devices found.</div>';
+        return;
+    }
+
+    const statusColors = {
+        online: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+        warning: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
+        critical: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+        offline: 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
+    };
+
+    container.innerHTML = devices.map(d => {
+        const page = DEVICE_TYPE_PAGES[type.filterKey];
+        const nameMarkup = (type.kind === 'real' && page)
+            ? `<a href="${page}?device=${d.id}" class="text-sm font-bold text-blue-600 dark:text-blue-400 hover:underline">${SharedUI.escapeHtml(d.name)}</a>`
+            : `<a href="#" onclick="event.preventDefault()" class="text-sm font-bold text-blue-600 dark:text-blue-400 hover:underline">${SharedUI.escapeHtml(d.name)}</a>`;
+        return `
+            <div class="bg-gray-50 dark:bg-gray-800 p-3 rounded-lg">
+                <div class="flex items-start justify-between mb-2">
+                    <div class="min-w-0">
+                        ${nameMarkup}
+                        <div class="text-xs text-dark-muted">${SharedUI.escapeHtml(d.model)}</div>
+                    </div>
+                    <span class="px-2 py-0.5 text-[10px] rounded font-semibold ${statusColors[d.status]}">${d.status.toUpperCase()}</span>
+                </div>
+                <div class="text-xs text-dark-muted">${SharedUI.escapeHtml(d.ip)}</div>
+            </div>
+        `;
+    }).join('');
 }
