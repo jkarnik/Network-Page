@@ -26,25 +26,6 @@ function renderAllTabs(siteName) {
     });
 }
 
-// --- SITE IDENTITY CARD (persistent, stage-independent) ---
-function renderIdentityCard(siteName) {
-    const site = DataLoader.getSite(siteName);
-    if (!site) return;
-
-    document.querySelector('[data-site-name]').textContent = siteName;
-    document.querySelector('[data-site-region]').textContent = site.region || '—';
-
-    const gateways = DataLoader.getDevicesBySite(siteName, 'gateways');
-    const switches = DataLoader.getDevicesBySite(siteName, 'switches');
-    const aps = DataLoader.getDevicesBySite(siteName, 'accessPoints');
-
-    document.querySelector('[data-site-gateway-count]').textContent = gateways.length;
-    document.querySelector('[data-site-switch-count]').textContent = switches.length;
-    document.querySelector('[data-site-ap-count]').textContent = aps.length;
-    document.querySelector('[data-site-circuit-count]').textContent = DataLoader.getCircuits(siteName).length;
-    document.querySelector('[data-site-device-count]').textContent = gateways.length + switches.length + aps.length;
-}
-
 // --- SITE SELECTOR ---
 async function initSiteSelectorController() {
     const site = await SharedUI.initSiteSelector({
@@ -68,7 +49,6 @@ async function loadSiteData(siteName) {
     await DataLoader.load();
     await DataLoader.loadSiteDetails();
 
-    renderIdentityCard(siteName);
     renderAllTabs(siteName);
 
     themeManager.registerCharts(charts);
