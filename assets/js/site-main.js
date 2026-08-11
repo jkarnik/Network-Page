@@ -791,6 +791,7 @@ function renderOneFleetGrid(siteName, tab) {
 
     addCell('Type', 'status-cell status-header');
     addCell('Vendor', 'status-cell status-header');
+    addCell('Model', 'status-cell status-header');
     FLEET_STATUS_COLS.forEach(s => addCell(s.label, 'status-cell status-header ' + s.headerClass));
 
     FLEET_TYPES.forEach(type => {
@@ -803,7 +804,7 @@ function renderOneFleetGrid(siteName, tab) {
             `<span class="flex items-center gap-1.5"><i class="fa-solid ${typeChevron} text-[9px] text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-1 -m-1 z-10 relative" data-type-expand-key="${type.key}"></i><span class="hover:underline">${type.label}</span></span>`,
             'status-cell status-group-cell clickable text-dark-muted'
         );
-        typeCell.style.gridColumn = 'span 2';
+        typeCell.style.gridColumn = 'span 3';
         typeCell.onclick = (e) => {
             if (e.target.closest('i[data-type-expand-key]')) {
                 toggleFleetTypeExpand(siteName, tab, type.key);
@@ -832,6 +833,7 @@ function renderOneFleetGrid(siteName, tab) {
                 `<span class="flex items-center gap-1.5"><i class="fa-solid ${chevron} text-[9px] text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-1 -m-1 z-10 relative" data-expand-key="${expandKey}"></i><span class="hover:underline">${vendor.label}</span></span>`,
                 'status-cell status-subgroup-cell clickable text-dark-muted'
             );
+            subCell.style.gridColumn = 'span 2';
             subCell.onclick = (e) => {
                 if (e.target.closest('i[data-expand-key]')) {
                     toggleFleetExpand(siteName, tab, expandKey);
@@ -853,6 +855,7 @@ function renderOneFleetGrid(siteName, tab) {
                     const modelCounts = fleetStatusCounts(modelDevices);
                     const shortModel = stripVendorPrefix(model, vendor.label);
 
+                    addBlankCell();
                     addBlankCell();
                     const modelCell = addCell(`<span class="hover:underline">${SharedUI.escapeHtml(shortModel)}</span>`, 'status-cell status-model-cell clickable text-left');
                     modelCell.onclick = () => showFleetDeviceList(tab, type.key, 'all', vendor.key, model);
