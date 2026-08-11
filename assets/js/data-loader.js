@@ -512,6 +512,22 @@ const DataLoader = {
         };
     },
 
+    /**
+     * Get infrastructure-related alert counts by severity for a scope.
+     * "Infrastructure" here means network/hardware/performance/system types —
+     * it deliberately excludes security/ai so it doesn't overlap with
+     * getSecurityCounts/getAICounts.
+     */
+    getInfrastructureCounts(scope = 'Global') {
+        const alerts = this.getAlertsByScope(scope).filter(a => ['network', 'hardware', 'performance', 'system'].includes(a.type));
+        return {
+            crit: alerts.filter(a => a.severity === 'crit').length,
+            warn: alerts.filter(a => a.severity === 'warn').length,
+            info: alerts.filter(a => a.severity === 'info').length,
+            total: alerts.length
+        };
+    },
+
     // ==================== CHART DATA ACCESSORS ====================
 
     /**
@@ -783,6 +799,10 @@ const DataLoader = {
 
     getTopApplications(siteName) {
         return this.getSiteDetails(siteName)?.topApplications || { labels: [], data: [], colors: [] };
+    },
+
+    getAuxiliaryDevices(siteName, type) {
+        return this.getSiteDetails(siteName)?.auxiliaryDevices?.[type] || [];
     },
 
     /**
