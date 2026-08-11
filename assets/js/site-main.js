@@ -115,25 +115,6 @@ function renderSparkline(id, dataset, color = '#3b82f6') {
     });
 }
 
-function statusCounts(devices) {
-    return {
-        online: devices.filter(d => d.status === 'online').length,
-        warning: devices.filter(d => d.status === 'warning').length,
-        critical: devices.filter(d => d.status === 'critical').length,
-        offline: devices.filter(d => d.status === 'offline').length,
-        total: devices.length
-    };
-}
-
-function formatStatusCounts(counts) {
-    const parts = [];
-    if (counts.online) parts.push(`${counts.online} online`);
-    if (counts.warning) parts.push(`${counts.warning} alerting`);
-    if (counts.critical) parts.push(`${counts.critical} critical`);
-    if (counts.offline) parts.push(`${counts.offline} offline`);
-    return parts.join(', ') || 'no devices';
-}
-
 function computeCircuitSummary(siteName) {
     const circuits = DataLoader.getCircuits(siteName);
     const up = circuits.filter(c => c.status !== 'critical' && c.status !== 'offline').length;
