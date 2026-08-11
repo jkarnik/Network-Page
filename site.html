@@ -609,7 +609,46 @@
                             </table>
                         </div>
                     </div>
-
+                    <!-- VPN Tunnels Detail (Stage A+B) -->
+                    <div class="col-span-12 lg:col-span-4 card p-0 bg-dark-card flex flex-col">
+                        <div class="p-4 border-b border-gray-100 dark:border-gray-700">
+                            <h3 class="text-sm font-bold text-dark-text">VPN Tunnels</h3>
+                        </div>
+                        <div class="max-h-72 overflow-auto custom-scrollbar">
+                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm">
+                                <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0">
+                                    <tr>
+                                        <th class="px-4 py-2 text-left text-[11px] font-medium text-gray-500 uppercase">Peer</th>
+                                        <th class="px-4 py-2 text-left text-[11px] font-medium text-gray-500 uppercase">Vendor</th>
+                                        <th class="px-4 py-2 text-left text-[11px] font-medium text-gray-500 uppercase">Status</th>
+                                        <th class="px-4 py-2 text-right text-[11px] font-medium text-gray-500 uppercase">Latency</th>
+                                        <th class="px-4 py-2 text-right text-[11px] font-medium text-gray-500 uppercase">Jitter</th>
+                                        <th class="px-4 py-2 text-right text-[11px] font-medium text-gray-500 uppercase">Loss</th>
+                                        <th class="px-4 py-2 text-right text-[11px] font-medium text-gray-500 uppercase">Bandwidth ↑/↓</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="vpnTunnelsTableBody-stageAB"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- BGP Flap Detector (Stage A+B) -->
+                    <div class="col-span-12 lg:col-span-4 card p-4 bg-dark-card">
+                        <h3 class="text-sm font-bold text-dark-text mb-3 flex items-center justify-between">
+                            <span>BGP Flap Detector</span>
+                            <span id="bgpFlapCount-stageAB" class="text-xs font-normal px-2 py-0.5 rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">0 flaps</span>
+                        </h3>
+                        <div class="space-y-1.5" id="bgpFlapList-stageAB">
+                            <p class="text-sm text-gray-400 italic">Loading…</p>
+                        </div>
+                    </div>
+                    <!-- Wireless (Stage A+B; Time-to-Connect added in Stage C) -->
+                    <div class="col-span-12 lg:col-span-4 card p-4 bg-dark-card">
+                        <h3 class="text-sm font-bold text-dark-text mb-3">Wireless</h3>
+                        <div>
+                            <p class="text-xs text-gray-400">Active Wireless Clients</p>
+                            <p class="text-sm font-bold text-dark-text" id="wirelessActiveClients-stageAB">—</p>
+                        </div>
+                    </div>
                     <!-- Site Alert Feed (Stage A) -->
                     <div class="col-span-12 card h-80 flex flex-col bg-dark-card">
                         <div class="p-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
@@ -631,46 +670,6 @@
                                 </thead>
                                 <tbody id="siteAlertTableBody-stageAB"></tbody>
                             </table>
-                        </div>
-                    </div>
-                    <!-- VPN Tunnels Detail (Stage A+B) -->
-                    <div class="col-span-12 lg:col-span-6 card p-0 bg-dark-card flex flex-col h-80">
-                        <div class="p-4 border-b border-gray-100 dark:border-gray-700">
-                            <h3 class="text-sm font-bold text-dark-text">VPN Tunnels</h3>
-                        </div>
-                        <div class="flex-1 overflow-auto custom-scrollbar">
-                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm">
-                                <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0">
-                                    <tr>
-                                        <th class="px-4 py-2 text-left text-[11px] font-medium text-gray-500 uppercase">Peer</th>
-                                        <th class="px-4 py-2 text-left text-[11px] font-medium text-gray-500 uppercase">Vendor</th>
-                                        <th class="px-4 py-2 text-left text-[11px] font-medium text-gray-500 uppercase">Status</th>
-                                        <th class="px-4 py-2 text-right text-[11px] font-medium text-gray-500 uppercase">Latency</th>
-                                        <th class="px-4 py-2 text-right text-[11px] font-medium text-gray-500 uppercase">Jitter</th>
-                                        <th class="px-4 py-2 text-right text-[11px] font-medium text-gray-500 uppercase">Loss</th>
-                                        <th class="px-4 py-2 text-right text-[11px] font-medium text-gray-500 uppercase">Bandwidth ↑/↓</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="vpnTunnelsTableBody-stageAB"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <!-- BGP Flap Detector (Stage A+B) -->
-                    <div class="col-span-12 lg:col-span-6 card p-4 bg-dark-card">
-                        <h3 class="text-sm font-bold text-dark-text mb-3 flex items-center justify-between">
-                            <span>BGP Flap Detector</span>
-                            <span id="bgpFlapCount-stageAB" class="text-xs font-normal px-2 py-0.5 rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">0 flaps</span>
-                        </h3>
-                        <div class="space-y-1.5" id="bgpFlapList-stageAB">
-                            <p class="text-sm text-gray-400 italic">Loading…</p>
-                        </div>
-                    </div>
-                    <!-- Wireless (Stage A+B; Time-to-Connect added in Stage C) -->
-                    <div class="col-span-12 lg:col-span-6 card p-4 bg-dark-card">
-                        <h3 class="text-sm font-bold text-dark-text mb-3">Wireless</h3>
-                        <div>
-                            <p class="text-xs text-gray-400">Active Wireless Clients</p>
-                            <p class="text-sm font-bold text-dark-text" id="wirelessActiveClients-stageAB">—</p>
                         </div>
                     </div>
                     <!-- Widget markup appended by Tasks 7-14 -->
@@ -961,11 +960,11 @@
                         </div>
                     </div>
                     <!-- VPN Tunnels Detail (Stage A+B) -->
-                    <div class="col-span-12 lg:col-span-6 card p-0 bg-dark-card flex flex-col h-80">
+                    <div class="col-span-12 lg:col-span-4 card p-0 bg-dark-card flex flex-col">
                         <div class="p-4 border-b border-gray-100 dark:border-gray-700">
                             <h3 class="text-sm font-bold text-dark-text">VPN Tunnels</h3>
                         </div>
-                        <div class="flex-1 overflow-auto custom-scrollbar">
+                        <div class="max-h-72 overflow-auto custom-scrollbar">
                             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm">
                                 <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0">
                                     <tr>
@@ -983,7 +982,7 @@
                         </div>
                     </div>
                     <!-- BGP Flap Detector (Stage A+B) -->
-                    <div class="col-span-12 lg:col-span-6 card p-4 bg-dark-card">
+                    <div class="col-span-12 lg:col-span-4 card p-4 bg-dark-card">
                         <h3 class="text-sm font-bold text-dark-text mb-3 flex items-center justify-between">
                             <span>BGP Flap Detector</span>
                             <span id="bgpFlapCount-stageABC" class="text-xs font-normal px-2 py-0.5 rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">0 flaps</span>
@@ -993,7 +992,7 @@
                         </div>
                     </div>
                     <!-- Wireless (Stage A+B; Time-to-Connect added in Stage C) -->
-                    <div class="col-span-12 lg:col-span-6 card p-4 bg-dark-card">
+                    <div class="col-span-12 lg:col-span-4 card p-4 bg-dark-card">
                         <h3 class="text-sm font-bold text-dark-text mb-3">Wireless</h3>
                         <div>
                             <p class="text-xs text-gray-400">Active Wireless Clients</p>
