@@ -338,18 +338,6 @@ function renderBgpFlapDetector(siteName) {
 
 registerSiteRenderer(renderBgpFlapDetector);
 
-// --- WIRELESS SECTION (Stage A+B; Time-to-Connect appended in Task 17) ---
-
-function renderWirelessSection(siteName) {
-    const activeClients = DataLoader.getClientCountByType('accessPoints', siteName);
-
-    ['stageAB', 'stageABC'].forEach(tab => {
-        setText(`wirelessActiveClients-${tab}`, `${activeClients} clients`);
-    });
-}
-
-registerSiteRenderer(renderWirelessSection);
-
 // --- APPLICATION VISIBILITY (Stage A+B+C) ---
 
 function renderTopApplications(siteName) {
