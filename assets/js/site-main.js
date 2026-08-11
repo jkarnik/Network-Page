@@ -199,6 +199,59 @@ function renderHealthBadge(siteName) {
 
 registerSiteRenderer(renderHealthBadge);
 
+// --- INLINE TREND SPARKLINES (SVG, no Chart.js — these live inside table rows that
+// get fully rebuilt on every render, so a Chart.js instance here would end up bound
+// to a detached canvas after the next re-render) ---
+
+function sparklineSvg(series, opts = {}) {
+    const { width = 64, height = 20, color = '#3b82f6' } = opts;
+    const values = (series || []).filter(v => v != null && !isNaN(v));
+    if (values.length < 2) return '';
+
+    const min = Math.min(...values);
+    const max = Math.max(...values);
+    const range = max - min || 1;
+    const step = width / (series.length - 1);
+
+    let x = 0;
+    const points = series.map(v => {
+        const px = x;
+        x += step;
+        if (v == null || isNaN(v)) return null;
+        const py = height - ((v - min) / range) * height;
+        return `${px.toFixed(1)},${py.toFixed(1)}`;
+    }).filter(Boolean).join(' ');
+
+    return `<svg width="${width}" height="${height}" class="inline-block align-middle" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none"><polyline points="${points}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" /></svg>`;
+}
+
+function dualSparklineSvg(seriesA, seriesB, opts = {}) {
+    const { width = 64, height = 20, colorA = '#9ca3af', colorB = '#3b82f6' } = opts;
+    const all = [...(seriesA || []), ...(seriesB || [])].filter(v => v != null && !isNaN(v));
+    if (all.length < 2) return '';
+
+    const min = Math.min(...all);
+    const max = Math.max(...all);
+    const range = max - min || 1;
+
+    const toPoints = (series) => {
+        const step = width / (series.length - 1);
+        let x = 0;
+        return series.map(v => {
+            const px = x;
+            x += step;
+            if (v == null || isNaN(v)) return null;
+            const py = height - ((v - min) / range) * height;
+            return `${px.toFixed(1)},${py.toFixed(1)}`;
+        }).filter(Boolean).join(' ');
+    };
+
+    return `<svg width="${width}" height="${height}" class="inline-block align-middle" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
+        <polyline points="${toPoints(seriesA)}" fill="none" stroke="${colorA}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" />
+        <polyline points="${toPoints(seriesB)}" fill="none" stroke="${colorB}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" />
+    </svg>`;
+}
+
 // --- WAN/UPLINK DETAIL SECTION (Stage A, cellular column filled by Task 12) ---
 
 const CIRCUIT_STATUS_BADGES = {
@@ -223,6 +276,9 @@ function renderWanSection(siteName) {
         tbody.innerHTML = circuits.map(c => {
             const device = DataLoader.getDeviceFromManifest(c.deviceId);
             const statusBadge = CIRCUIT_STATUS_BADGES[c.status] || CIRCUIT_STATUS_BADGES.online;
+            const throughputSpark = dualSparklineSvg(c.throughputTrend.upload, c.throughputTrend.download);
+            const latencySpark = sparklineSvg(c.latencyTrend.data, { color: '#f59e0b' });
+            const lossSpark = sparklineSvg(c.lossTrend.data, { color: '#ef4444' });
             return `
                 <tr>
                     <td class="px-4 py-2.5 font-bold text-dark-text whitespace-nowrap">${device ? device.name : c.deviceId}</td>
@@ -230,9 +286,18 @@ function renderWanSection(siteName) {
                     <td class="px-4 py-2.5 text-dark-muted whitespace-nowrap">${c.tier}</td>
                     <td class="px-4 py-2.5 text-dark-muted whitespace-nowrap">${c.connectionType}</td>
                     <td class="px-4 py-2.5 whitespace-nowrap">${statusBadge}</td>
-                    <td class="px-4 py-2.5 text-right whitespace-nowrap">${c.throughputUpMbps} / ${c.throughputDownMbps} Mbps</td>
-                    <td class="px-4 py-2.5 text-right whitespace-nowrap">${c.latencyMs} ms</td>
-                    <td class="px-4 py-2.5 text-right whitespace-nowrap">${c.lossPct}%</td>
+                    <td class="px-4 py-2.5 text-right whitespace-nowrap">
+                        <div>${c.throughputUpMbps} / ${c.throughputDownMbps} Mbps</div>
+                        ${throughputSpark ? `<div class="flex justify-end mt-0.5">${throughputSpark}</div>` : ''}
+                    </td>
+                    <td class="px-4 py-2.5 text-right whitespace-nowrap">
+                        <div>${c.latencyMs} ms</div>
+                        ${latencySpark ? `<div class="flex justify-end mt-0.5">${latencySpark}</div>` : ''}
+                    </td>
+                    <td class="px-4 py-2.5 text-right whitespace-nowrap">
+                        <div>${c.lossPct}%</div>
+                        ${lossSpark ? `<div class="flex justify-end mt-0.5">${lossSpark}</div>` : ''}
+                    </td>
                     <td class="px-4 py-2.5 text-right whitespace-nowrap text-gray-400" id="circuitCellular-${c.deviceId}-${tab}">—</td>
                 </tr>
             `;
@@ -300,15 +365,27 @@ function renderVpnTunnels(siteName) {
             const statusBadge = t.status === 'up'
                 ? '<span class="px-2 py-0.5 rounded text-xs font-bold bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">Up</span>'
                 : '<span class="px-2 py-0.5 rounded text-xs font-bold bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">Down</span>';
+            const latencySpark = sparklineSvg(t.latencyTrend.data, { color: '#f59e0b' });
+            const lossSpark = t.lossTrend ? sparklineSvg(t.lossTrend.data, { color: '#ef4444' }) : '';
+            const bandwidthSpark = dualSparklineSvg(t.bandwidthTrend.upload, t.bandwidthTrend.download);
             return `
                 <tr>
                     <td class="px-4 py-2.5 font-bold text-dark-text whitespace-nowrap">${SharedUI.escapeHtml(t.peerName)}</td>
                     <td class="px-4 py-2.5 text-dark-muted whitespace-nowrap capitalize">${t.vendor}</td>
                     <td class="px-4 py-2.5 whitespace-nowrap">${statusBadge}</td>
-                    <td class="px-4 py-2.5 text-right whitespace-nowrap">${t.latencyMs != null ? t.latencyMs + ' ms' : '—'}</td>
+                    <td class="px-4 py-2.5 text-right whitespace-nowrap">
+                        <div>${t.latencyMs != null ? t.latencyMs + ' ms' : '—'}</div>
+                        ${latencySpark ? `<div class="flex justify-end mt-0.5">${latencySpark}</div>` : ''}
+                    </td>
                     <td class="px-4 py-2.5 text-right whitespace-nowrap">${t.jitterMs != null ? t.jitterMs + ' ms' : '—'}</td>
-                    <td class="px-4 py-2.5 text-right whitespace-nowrap">${t.lossPct != null ? t.lossPct + '%' : '—'}</td>
-                    <td class="px-4 py-2.5 text-right whitespace-nowrap">${t.bandwidthUpMbps} / ${t.bandwidthDownMbps} Mbps</td>
+                    <td class="px-4 py-2.5 text-right whitespace-nowrap">
+                        <div>${t.lossPct != null ? t.lossPct + '%' : '—'}</div>
+                        ${lossSpark ? `<div class="flex justify-end mt-0.5">${lossSpark}</div>` : ''}
+                    </td>
+                    <td class="px-4 py-2.5 text-right whitespace-nowrap">
+                        <div>${t.bandwidthUpMbps} / ${t.bandwidthDownMbps} Mbps</div>
+                        ${bandwidthSpark ? `<div class="flex justify-end mt-0.5">${bandwidthSpark}</div>` : ''}
+                    </td>
                 </tr>
             `;
         }).join('');

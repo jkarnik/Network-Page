@@ -137,21 +137,35 @@ function buildVpnTunnels(siteName, gateways) {
         const forcedDown = flapSite && i === 0;
         const status = forcedDown ? 'down' : 'up';
         const baseLatency = forcedDown ? 0 : 20 + i * 15;
+        const baseBandwidthUp = forcedDown ? 0 : 80 - i * 20;
+        const baseBandwidthDown = forcedDown ? 0 : 200 - i * 40;
         const tunnel = {
             id: `vpn-${gw.id}`,
             peerName: TUNNEL_PEER_NAMES[i % TUNNEL_PEER_NAMES.length],
             vendor,
             status,
             latencyMs: forcedDown ? null : round(baseLatency),
-            bandwidthUpMbps: forcedDown ? 0 : Math.round(80 - i * 20),
-            bandwidthDownMbps: forcedDown ? 0 : Math.round(200 - i * 40),
+            bandwidthUpMbps: Math.round(baseBandwidthUp),
+            bandwidthDownMbps: Math.round(baseBandwidthDown),
             latencyTrend: forcedDown
                 ? { labels: HOUR_LABELS, data: HOUR_LABELS.map(() => null) }
-                : { labels: HOUR_LABELS, data: wobble(baseLatency, 0.2).map(v => round(v)) }
+                : { labels: HOUR_LABELS, data: wobble(baseLatency, 0.2).map(v => round(v)) },
+            bandwidthTrend: forcedDown
+                ? { labels: HOUR_LABELS, upload: HOUR_LABELS.map(() => null), download: HOUR_LABELS.map(() => null) }
+                : {
+                    labels: HOUR_LABELS,
+                    upload: wobble(baseBandwidthUp, 0.3).map(v => round(v)),
+                    download: wobble(baseBandwidthDown, 0.3).map(v => round(v))
+                }
         };
         if (vendor === 'meraki') {
-            tunnel.jitterMs = forcedDown ? null : round(1.5 + i * 0.8);
-            tunnel.lossPct = forcedDown ? null : round(0.05 + i * 0.05, 2);
+            const baseJitter = 1.5 + i * 0.8;
+            const baseLoss = 0.05 + i * 0.05;
+            tunnel.jitterMs = forcedDown ? null : round(baseJitter);
+            tunnel.lossPct = forcedDown ? null : round(baseLoss, 2);
+            tunnel.lossTrend = forcedDown
+                ? { labels: HOUR_LABELS, data: HOUR_LABELS.map(() => null) }
+                : { labels: HOUR_LABELS, data: wobble(baseLoss, 0.4).map(v => round(v, 2)) };
         }
         return tunnel;
     });
