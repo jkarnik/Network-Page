@@ -19,8 +19,9 @@ The split is load-bearing for one specific reason: **a dead collector is indisti
 Moving the trust strip here must not make fragmentation invisible where it matters. The org page retains, and this page supplies:
 
 1. **Per-widget coverage labels** — every widget fed by a partial source states its scope in its own header (e.g. *"Mist-only · 41% of sites"*).
-2. **A single degraded-coverage indicator** — one compact line, shown *only* when coverage is impaired, linking here. Not a persistent strip; an exception marker.
-3. **Source, population and freshness** in every panel header (see §5).
+2. **Visibility-root classification** — the org page's band 2 computes which incident clusters are collector-rooted and renders each as a single handoff row linking here. It carries the classification only, never the diagnosis (see Band 1b).
+3. **A single degraded-coverage indicator** — one compact line, shown *only* when coverage is impaired, linking here. Not a persistent strip; an exception marker.
+4. **Source, population and freshness** in every panel header (see §5).
 
 ## 2. Scope of Content
 
@@ -49,6 +50,15 @@ A compact posture row, the page's own headline:
 - Worst-case API rate-limit headroom across vendors.
 - Number of metrics currently at reduced coverage.
 - Overall verdict: *healthy / degraded / fragmented*, defined in §5.
+
+### Band 1b — Monitoring-edge incident roots
+
+The widget the org summary page hands off to. The org page classifies a cluster as a visibility incident and stops there; this is where it gets diagnosed.
+
+- One row per monitoring-rooted incident cluster: the root collector, the host it runs on, counts of affected devices and sites, cluster onset, and the collector's current ingest state.
+- Expands to the full picture the org page deliberately withholds — affected devices **grouped by site**, so the shape of the blindness is visible (one site dark vs. forty sites partially dark are very different problems); the collector's host health; ingest counters and drop/timeout rates; and last-successful-report time per affected device.
+- **Site shape is the discriminator worth surfacing.** A network fault is site-shaped; a collector fault spans sites. When a collector's affected set happens to align with a single site, that ambiguity is real and should be called out rather than resolved automatically — it is exactly the case where an engineer must look at both pages.
+- Cross-reference is bidirectional: the org page links here for diagnosis, and each row here links back to the affected sites on `site.html`.
 
 ### Band 2 — Per-vendor API polling
 
