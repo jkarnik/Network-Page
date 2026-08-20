@@ -205,6 +205,10 @@ Each panel states its own source scope in its header (e.g. *"SNMP-monitored swit
 - **CPU / memory hotspots** — ranked by site. **Agent-scoped and permanently so**: SNMP polls these cheaply in bulk, while the API path needs a per-device call and therefore cannot survive org-scale collection (§3.1 of the Monitor Health spec). Scope stated in the header; this is not a gap a roadmap closes.
 - **Interface error hotspots** — errors, discards and CRC, ranked by the number of devices behind the offending port. Agent-strongest signal and the best hardware-fault indicator available; API sources summarise these away. Note that a port error severe enough to open an incident surfaces in band 2 as a root in its own right; this panel is the sub-incident-threshold view, for ports degrading but not yet alerting.
 - **Path health** — site-to-service reachability from flow data: whether sites are actually reaching the services their users depend on. **Agent-scoped**, since flow is the only source that observes conversations; API sources have no equivalent. Stage C, and the thinnest-justified widget on the page — included because it is the one signal here that reports user-facing outcome rather than device condition, but the first thing to cut if band 4 is crowded.
+- **Top Applications** — what is consuming fleet bandwidth, as capacity context for the saturation figures above.
+  - **API-vendor data only.** The vendor APIs return named application categories directly. Flow does *not* substitute for this: raw flow is bytes per conversation, and turning that into application names requires a classification layer — port/IP/DPI mapping — which is precisely the kind of brittle, per-vendor mapping this design avoids elsewhere. So agent-monitored devices contribute nothing here, and no attempt is made to synthesise app data for them.
+  - **This widget carries an explicit warning, not merely a scope label**, and it is the only widget on the page that does. The reason is specific to how the data renders: application breakdowns are shown as shares of a total, and shares **normalise to 100% regardless of the denominator**. A chart covering 61% of the fleet looks exactly like a chart covering all of it. Every other partial widget on the page shows absolute counts, where a small number at least hints at a small denominator; this one actively conceals that. The warning must state which integrations contributed and what share of the fleet they represent.
+  - Never present the shares as fleet-wide traffic. They are shares of *observed* traffic from API-managed devices only.
 - **Change timeline** — configuration and change events over time, from vendor audit logs and syslog. The "what changed" axis, since most incidents follow a change.
 
 ### Band 5 — Events
@@ -252,6 +256,7 @@ The evidence layer, and **the only place silos remain** — correctly, since thi
 | Cross-site lift grouping | **A+B** | Refinement, not a prerequisite — the traversal covers the common cases |
 | Capacity: link saturation | **A+B** | Needs consistent interface-capacity data across sources |
 | Capacity: DHCP scope · PoE budget | **A+B** | SNMP-available; scoped to agent-monitored devices |
+| Top Applications | **A+B** | API-native app categories; needs the warning treatment specified in band 4 |
 | Change timeline | **A+B** | Needs audit-log and syslog ingestion wired up |
 | Change window as a grouping attribute | **A+B** | Same dependency as the change timeline |
 | Region as a grouping attribute | **A+B** | Optional, and needs the tag-coverage figure to display honestly |
@@ -263,17 +268,21 @@ The evidence layer, and **the only place silos remain** — correctly, since thi
 
 Stage B is small and Stage C is nearly empty, because the expensive prerequisites — a normalised fault taxonomy, an ASN enrichment pipeline, flow-baseline learning — were all designed out rather than deferred. What remains in later stages is genuinely optional refinement.
 
-The message for engineering is therefore **not** "when do we get the rest?" but: **five panels are permanently scoped to one source family, by the physics of what that source can observe, not by roadmap.**
+The message for engineering is therefore **not** "when do we get the rest?" but: **seven panels are permanently scoped to one source family, by the physics of what that source can observe, not by roadmap.**
 
 | Panel | Permanently scoped to | Why no roadmap closes it |
 |---|---|---|
-| DHCP scope · PoE budget | SNMP | No viable bulk API path on either vendor |
+| DHCP scope | SNMP | No viable bulk API path on either vendor |
+| PoE budget | SNMP | No viable bulk API path on either vendor |
 | Interface error detail | SNMP | API sources summarise these away |
 | CPU / memory hotspots | SNMP | The API path needs one call per device and cannot survive org-scale collection |
 | Path health | Flow | Only flow observes conversations |
 | Wireless experience (SLE) | API, Mist-strongest | SNMP has no equivalent signal |
+| Top Applications | API | Flow yields conversations, not application names; classifying them needs a mapping layer this design rejects |
 
-Note that the constraint runs in **both** directions — three of the five are agent-side and two are API-side — so this is a genuine capability split rather than one source being weaker.
+The constraint runs in **both** directions, though not evenly: five are agent-side and two are API-side. So neither source is simply weaker — but the agent-side gaps are the more numerous, and they are the ones most likely to be assumed away by anyone who thinks of the vendor APIs as the primary source.
+
+Top Applications is the clearest case of the API side winning outright: the vendor's own classification *is* the product, and flow cannot replace it without rebuilding that classification ourselves.
 
 Stage A+B+C is therefore not "everything, fleet-wide." Each of these panels states its scope in its own header instead of implying completeness. Everything *not* in this table is fleet-wide, and the widgets built on topology (SPOF risk, redundancy verification, topology coverage, WAN path posture) are fleet-wide by construction since topology is.
 
@@ -335,7 +344,6 @@ Parallel to the existing `getSiteDetails` family:
 - **No monitoring-health diagnostics.** API polling counts, rate-limit headroom, agent fleet health and agent host health all live on the Monitor Health page. The single deliberate exception is visibility-root *classification* in band 2 — computed here because omitting it would flood the root list, but carrying no diagnostic detail and linking out for it. Per-panel source scope labels are the only other monitoring-derived content.
 - **No staleness inference.** Collector loss and heartbeat loss arrive as incidents; the page does not second-guess them.
 - **No traffic-collapse detection.** Flow volume against a rolling baseline was considered and cut: it is baseline learning, and therefore falls under the no-derived-metrics rule above rather than being an exception to it.
-- **No fleet-wide Top Applications.** Flow gives per-application data without derivation, so this was cut on scope rather than feasibility: application usage is neither triage nor posture, which is what §1 says this page is for. It remains appropriate on the site and device pages, where it already exists.
 - **No trend overlays.** The existing modal trend charts are not carried forward. Sparklines inline where a metric is gauge-like, consistent with `site.html`.
 - **No ML or probabilistic correlation.** The traversal is deterministic and every cluster is explainable in one sentence. If a grouping cannot be explained, it does not ship.
 
