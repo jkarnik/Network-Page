@@ -76,10 +76,40 @@ This departs from the four-value enum used elsewhere in the app (`online/warning
 
 ### 2.3 The dependency graph
 
-One graph, supplied by the cross-vendor topology engine, with two edge kinds:
+One graph, supplied by the cross-vendor topology engine. **Ports are first-class nodes, not device attributes** — the engine's chain is port-level:
 
-- **Network adjacency** — AP → access port → uplink → distribution → core → gateway. Cross-vendor, since the engine is.
-- **Monitoring** — device → the collector that observes it.
+```
+AP → AP port → Distribution Switch port → Distribution Switch
+   → Distribution Switch port → Core Switch port → Core Switch
+   → Core Switch port → Gateway port → Gateway
+```
+
+So the graph has two node kinds and three edge kinds:
+
+| Node kind | Notes |
+|---|---|
+| **Device** | Gateway, core switch, distribution switch, AP, and non-network auxiliary devices. Collectors are also device nodes, so monitoring edges have both endpoints. |
+| **Port** | Belongs to exactly one device. Carries its own state and its own incidents. |
+
+| Edge kind | Connects | Meaning |
+|---|---|---|
+| **contains** | device → its ports | Structural ownership |
+| **link** | port → peer port | A physical adjacency between two devices |
+| **monitoring** | device → its collector | Observation dependency, not a network path |
+
+There is **no access-switch layer** — APs attach directly to distribution switches. The role vocabulary is therefore `gateway` / `core` / `distribution` / `ap` / `auxiliary` / `collector`, and an "access" role must not be introduced.
+
+Upstream traversal from an AP walks: AP → *contains* → AP port → *link* → distribution port → *contains* → distribution switch → *contains* → its uplink port → *link* → core port → … → gateway.
+
+### 2.3.1 Why port-level granularity changes the design materially
+
+This is not a modelling detail. It is the difference between a usable blast radius and a misleading one.
+
+- **A port fault and a device fault have completely different blast radii.** `dist-01 port Gi1/0/12 erroring` affects the one AP behind that port. `dist-01 down` affects all 24. Device-level modelling would report both as "distribution switch affected" and force the engineer to go find out which.
+- **Incidents attach at the level the fault actually occurs.** Link-down, interface errors, discards, CRC and saturation are *port* facts. Reachability, CPU and memory are *device* facts. Attaching everything to devices would lose the localisation that makes the root list precise.
+- **This is where the interface-error widget and the root traversal converge.** Interface errors *are* port-node incidents, so error hotspots stop being a separate ranked list and become roots in their own right, with an exact count of what sits behind them.
+- **Redundancy becomes decidable.** A device with two uplink ports whose peer ports sit on *different* upstream devices is genuinely redundant. Two uplink ports landing on the *same* upstream device is not — a distinction invisible without port nodes, and the reason the site page's current "2/2 paths available" indicator cannot be trusted.
+- **Roots may be ports.** A root is the upstream-most affected *node*, port or device. Rendering must therefore identify a root as `device` or `device + port`.
 
 NR incidents attach to nodes. Both edge kinds are traversed by the same algorithm; they are **distinguished visually, never computationally**. A network-edge root means the network is broken; a monitoring-edge root means visibility is broken. The graph makes the distinction fall out rather than requiring a rule.
 
@@ -92,7 +122,7 @@ This single traversal handles gateway failures, switch failures, collector failu
 - **Nothing is suppressed or filtered.** Every incident stays visible and countable; clusters collapse to one line rather than forty. This is what makes the page usable before upstream alert deduplication lands — and when that dedup arrives, the page needs no change, because clusters simply get smaller.
 - **Roots are labelled probable.** Adjacency makes nesting exact, but a root is still an inference about causality, and is presented as one.
 - **Blast radius is a precise count** — "47 devices downstream of this node" — not an estimate.
-- **Graceful degradation.** Where adjacency is incomplete for a site, fall back to role ordering (gateway → core/distribution → access → AP), which needs only site membership and device role. The page must not break on a partially mapped site.
+- **Graceful degradation.** Where port-level adjacency is incomplete for a site, fall back to device-level role ordering (gateway → core → distribution → AP), which needs only site membership and device role. Blast-radius counts from the fallback path must be marked as approximate, since role ordering cannot distinguish which port a device hangs off and therefore over-counts.
 
 ### 2.5 Statistical grouping, demoted
 
@@ -128,7 +158,7 @@ No client widget. No trend content. No capacity content.
 The centrepiece, and the reason the page exists. One widget: the **incident root list**.
 
 - One row per incident cluster, ordered by downstream device count × root priority.
-- Each row shows: root node, its site, its vendor and collection method, root state, **exact count of affected descendants**, cluster onset time, and an explicit `network` or `visibility` classification derived from the root's edge kind.
+- Each row shows: root node — identified as a device or as **device + port**, since a root may be either — its site, vendor and collection method, root state, **exact count of affected descendants**, cluster onset time, and an explicit `network` or `visibility` classification derived from the root's edge kind.
 - **Visibility-rooted clusters are a handoff row, not a workable item.** They must still be *computed* here: the no-heartbeat incidents behind a dead collector have no network-edge root, so without the monitoring-edge traversal they would surface as dozens of separate unexplained roots — defeating the one thing this widget exists to do. Suppressing them instead is not an option either, since the alerts are deliberately kept until upstream deduplication lands.
 - So the org page renders the collapsed row only: root collector, affected device and site counts, onset, and a link to Monitor Health. It is **visually distinct** from a network-rooted row and **does not expand** into collector diagnostics, host health or ingest state. What the org page owes the reader is the single fact *"this is not a network fault"*; the diagnosis of why the collector failed belongs to Monitor Health, which owns that question per its §1.
 - Rows expand **in place** to the nested dependency tree: root, its affected children, their affected children. Unaffected siblings are not shown. Expansion follows `site.html`'s in-card pattern — no page overlay, no backdrop, no `main` overflow toggling.
@@ -150,7 +180,7 @@ Each panel states its own source scope in its header (e.g. *"SNMP-monitored swit
 
 - **SPOF risk** — nodes whose failure would orphan devices with no redundant path, ranked by devices at risk. Pure topology, **no telemetry at all**, so it covers every site regardless of collection method. The one widget on the page with complete coverage by construction.
 - **Capacity exhaustion** — link saturation from both source families; **DHCP scope utilisation and PoE budget from SNMP**. Both of the latter were previously assessed as blocked with no viable data path; agent-based collection unblocks them for the devices it covers.
-- **Interface error hotspots** — errors, discards and CRC ranked by site. Agent-strongest signal, and the best hardware-fault indicator available; API sources summarise these away.
+- **Interface error hotspots** — errors, discards and CRC, ranked by the number of devices behind the offending port. Agent-strongest signal and the best hardware-fault indicator available; API sources summarise these away. Note that a port error severe enough to open an incident surfaces in band 2 as a root in its own right; this panel is the sub-incident-threshold view, for ports degrading but not yet alerting.
 - **Change timeline** — configuration and change events over time, from vendor audit logs and syslog. The "what changed" axis, since most incidents follow a change.
 
 ### Band 5 — Events
@@ -219,9 +249,9 @@ The message for engineering is therefore **not** "when do we get the rest?" but:
 
 Generated by a new `scripts/generate-topology.js`, following the `generate-site-details.js` pattern. The dependency graph:
 
-- `nodes` — `{ id, name, siteId, role, vendor, model, collectionMethod, collectorId, hasTelemetry }`. `role` is one of `gateway` / `core` / `distribution` / `access` / `ap` / `auxiliary`. Includes collector nodes so monitoring edges have both endpoints.
-- `edges` — `{ from, to, kind }` where `kind` is `network` or `monitoring`. Direction is downstream-to-upstream so traversal to a root is a walk up.
-- `redundancy` — per site, computed independent-path findings for the redundancy widget.
+- `nodes` — `{ id, name, kind, siteId, role, vendor, model, collectionMethod, collectorId, hasTelemetry }` where `kind` is `device` or `port`. For `port` nodes, `role` is omitted and `parentDeviceId` is required. For `device` nodes, `role` is one of `gateway` / `core` / `distribution` / `ap` / `auxiliary` / `collector` — **no `access` role**, per §2.3.
+- `edges` — `{ from, to, kind }` where `kind` is `contains`, `link`, or `monitoring`. `link` and `monitoring` edges are directed downstream-to-upstream so reaching a root is a walk up; `contains` edges are device→port.
+- `redundancy` — per site, computed independent-path findings, derived from whether a device's uplink ports terminate on distinct upstream devices.
 
 Must include mixed-vendor sites, since that is the normal case: at least one site combining a non-API gateway with API-managed switches and APs.
 
@@ -266,6 +296,6 @@ Parallel to the existing `getSiteDetails` family:
 
 1. **Does adjacency extend to inter-site overlay links?** This spec designs intra-site adjacency. If the topology engine also knows site-to-site tunnels, blast radius can cross sites — a hub gateway failure would nest the spoke sites depending on it, which would be the strongest capability on the page and a genuinely org-only insight. Structurally it is the same graph with more edges, so it is additive rather than disruptive. Flagged as Stage C above.
 2. **Duplicate alerting during collector loss** is known and being fixed upstream. This design deliberately nests rather than suppresses, so it needs no change when dedup lands — but confirm nobody expects the page to filter in the interim.
-3. **Role vocabulary** — the `role` values in §6.2 are assumed. They must match whatever the topology engine actually emits, or a mapping is reintroduced at exactly the point this design is trying to avoid one.
+3. **Role vocabulary and port identity** — the `role` values in §6.2 now match the confirmed chain (no `access` layer), but must still match the engine's emitted strings exactly, or a mapping is reintroduced at precisely the point this design exists to avoid one. Separately: what is a port's stable identifier across polls, and is it consistent between an API-managed device and an SNMP-polled one (`ifIndex` is not stable across reboots on all platforms)?
 4. **Incident-to-entity granularity** — whether NR incidents attach to individual devices or can attach to higher-level entities. The traversal assumes device-level attachment; group-level incidents would need a defined position in the graph.
 5. **Redundancy semantics** — what counts as an independent path is a judgement call (dual uplinks to the same ISP? dual gateways sharing a switch?). Needs a definition before the redundancy widget can be built.

@@ -14,10 +14,12 @@ const NavigationManager = {
      */
     _pages: [
         { key: 'summary', label: 'Summary', href: 'index.html', icon: 'fa-chart-line' },
-        { key: 'sdwan',   label: 'SD-WAN',  href: 'sdwan.html', icon: 'fa-network-wired' },
-        { key: 'switch',  label: 'Switch',   href: 'switch.html', icon: 'fa-server' },
-        { key: 'ap',      label: 'Access Point', href: 'access-point.html', icon: 'fa-wifi' },
-        { key: 'site', label: 'Sites', href: 'site.html', icon: 'fa-building' }
+        { key: 'site',    label: 'Sites',   href: 'site.html',  icon: 'fa-building' },
+        { key: 'devices', label: 'Devices', icon: 'fa-hard-drive', children: [
+            { key: 'sdwan',  label: 'SD-WAN',       href: 'sdwan.html',        icon: 'fa-network-wired' },
+            { key: 'switch', label: 'Switch',       href: 'switch.html',       icon: 'fa-server' },
+            { key: 'ap',     label: 'Access Point', href: 'access-point.html', icon: 'fa-wifi' }
+        ]}
     ],
 
     /**
@@ -64,6 +66,15 @@ const NavigationManager = {
      * Render the mobile nav overlay, drawer, and top nav bar into #appHeader.
      * @private
      */
+    /**
+     * True when a nav group contains the currently active page.
+     * @private
+     */
+    _isGroupActive(group) {
+        return Array.isArray(group.children)
+            && group.children.some(c => c.key === this._activePage);
+    },
+
     _renderHeader() {
         const container = document.getElementById('appHeader');
         if (!container) return;
@@ -71,20 +82,48 @@ const NavigationManager = {
         const isSummary = this._activePage === 'summary';
 
         // Build nav links
+        const navLinkCls = (isActive) => isActive
+            ? 'border-newrelic-cyan text-dark-text inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium'
+            : 'border-transparent text-dark-muted hover:border-newrelic-cyan hover:text-newrelic-cyan inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors';
+
         const desktopLinks = this._pages.map(p => {
-            const isActive = p.key === this._activePage;
-            const cls = isActive
-                ? 'border-newrelic-cyan text-dark-text inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium'
-                : 'border-transparent text-dark-muted hover:border-newrelic-cyan hover:text-newrelic-cyan inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors';
-            return `<a href="${p.href}" class="${cls}">${p.label}</a>`;
+            if (!p.children) {
+                return `<a href="${p.href}" class="${navLinkCls(p.key === this._activePage)}">${p.label}</a>`;
+            }
+            // Group: active when any child page is active. Opens on hover or keyboard focus.
+            const groupActive = this._isGroupActive(p);
+            const items = p.children.map(c => {
+                const itemCls = c.key === this._activePage
+                    ? 'flex items-center gap-2 px-3 py-2 text-sm text-newrelic-cyan bg-white/5'
+                    : 'flex items-center gap-2 px-3 py-2 text-sm text-dark-muted hover:text-newrelic-cyan hover:bg-white/5 transition-colors';
+                return `<a href="${c.href}" class="${itemCls}"><i class="fa-solid ${c.icon} w-4 text-center"></i><span>${c.label}</span></a>`;
+            }).join('\n                            ');
+            return `<div class="relative group inline-flex">
+                            <button type="button" class="${navLinkCls(groupActive)} gap-1.5" aria-haspopup="true">
+                                ${p.label}<i class="fa-solid fa-chevron-down text-[10px]"></i>
+                            </button>
+                            <div class="absolute left-0 top-full z-50 hidden group-hover:block group-focus-within:block min-w-[11rem] rounded-md border border-dark-border bg-dark-card shadow-lg py-1">
+                            ${items}
+                            </div>
+                        </div>`;
         }).join('\n                        ');
 
-        const mobileLinks = this._pages.map(p =>
-            `<a href="${p.href}" class="mobile-nav-link">
+        const mobileLinks = this._pages.map(p => {
+            if (!p.children) {
+                return `<a href="${p.href}" class="mobile-nav-link${p.key === this._activePage ? ' active' : ''}">
                 <i class="fa-solid ${p.icon}"></i>
                 <span>${p.label}</span>
+            </a>`;
+            }
+            const items = p.children.map(c =>
+                `<a href="${c.href}" class="mobile-nav-link mobile-nav-sublink${c.key === this._activePage ? ' active' : ''}">
+                <i class="fa-solid ${c.icon}"></i>
+                <span>${c.label}</span>
             </a>`
-        ).join('\n            ');
+            ).join('\n            ');
+            return `<div class="mobile-nav-section-label">${p.label}</div>
+            ${items}`;
+        }).join('\n            ');
 
         // Build right-side selector
         const selectorHtml = isSummary
