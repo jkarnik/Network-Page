@@ -338,7 +338,7 @@
                             <span class="capitalize text-xs font-medium">${alert.vendor}</span>
                         </div>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">${alert.site}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">${siteLink(alert.site)}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-indigo-600 dark:text-indigo-400 font-medium">${alert.device}</td>
                     <td class="px-6 py-4 text-sm text-dark-muted truncate max-w-xs" title="${alert.msg}">${alert.msg}</td>
                 `;
@@ -377,6 +377,16 @@
         }
 
         // --- DEVICE LIST FUNCTIONS ---
+
+        /**
+         * Link a site name to its Site page, landing on the fullest stage tab.
+         * Returns plain text when the site is unknown, so nothing links nowhere.
+         */
+        function siteLink(siteName) {
+            if (!siteName) return '—';
+            const href = `site.html?site=${encodeURIComponent(siteName)}&tab=stageABC`;
+            return `<a href="${href}" class="text-indigo-500 hover:underline">${siteName}</a>`;
+        }
 
         function getDevicePageUrl(deviceName) {
             // Find the device to get its ID
@@ -427,7 +437,7 @@
             `;
 
             // Site
-            document.getElementById('alertDetailSite').textContent = alert.site || '—';
+            document.getElementById('alertDetailSite').innerHTML = siteLink(alert.site);
 
             // Device (linked)
             const deviceEl = document.getElementById('alertDetailDevice');
@@ -1145,7 +1155,7 @@
                         </span>
                     </td>
                     <td class="px-4 py-3 whitespace-nowrap text-xs text-dark-muted">${alert.time}</td>
-                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">${alert.site}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">${siteLink(alert.site)}</td>
                     <td class="px-4 py-3 whitespace-nowrap text-sm text-indigo-600 dark:text-indigo-400 font-medium">${alert.device}</td>
                     <td class="px-4 py-3 text-sm text-dark-muted truncate max-w-xs" title="${alert.msg}">${alert.msg}</td>
                 `;
@@ -1350,7 +1360,7 @@
                         </span>
                     </td>
                     <td class="px-4 py-3 whitespace-nowrap text-xs text-dark-muted">${alert.time}</td>
-                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">${alert.site}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">${siteLink(alert.site)}</td>
                     <td class="px-4 py-3 whitespace-nowrap text-sm text-indigo-600 dark:text-indigo-400 font-medium">${alert.device}</td>
                     <td class="px-4 py-3 text-sm text-dark-muted truncate max-w-xs" title="${alert.msg}">${alert.msg}</td>
                 `;
@@ -1530,7 +1540,7 @@
                         </span>
                     </td>
                     <td class="px-4 py-3 whitespace-nowrap text-xs text-dark-muted">${alert.time}</td>
-                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">${alert.site}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">${siteLink(alert.site)}</td>
                     <td class="px-4 py-3 whitespace-nowrap text-sm text-indigo-600 dark:text-indigo-400 font-medium">${alert.device}</td>
                     <td class="px-4 py-3 text-sm text-dark-muted truncate max-w-xs" title="${alert.msg}">${alert.msg}</td>
                 `;
@@ -2043,7 +2053,7 @@
                 const sinceStr = formatSince(since);
                 const sinceAbsolute = since.toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
                 return `<tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
-                    <td class="px-4 py-2.5 text-sm font-medium text-dark-text">${g.site || '—'}</td>
+                    <td class="px-4 py-2.5 text-sm font-medium">${siteLink(g.site)}</td>
                     <td class="px-4 py-2.5">${badge}</td>
                     <td class="px-4 py-2.5 text-xs text-dark-muted" title="${sinceAbsolute}">${sinceStr}</td>
                 </tr>`;

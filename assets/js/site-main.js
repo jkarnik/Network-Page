@@ -62,10 +62,23 @@ function switchTab(tabName) {
     });
 }
 
+/**
+ * Honour a ?tab= deep link. Falls back to the markup's default (stageA) when
+ * the param is absent or not a recognised stage, so a bad link degrades to the
+ * normal landing view rather than a blank page.
+ */
+function applyTabFromUrl() {
+    const requested = new URLSearchParams(window.location.search).get('tab');
+    if (requested && STAGE_TABS.includes(requested)) {
+        switchTab(requested);
+    }
+}
+
 // --- INITIALIZE ---
 ChartConfig.initDefaults();
 initSiteSelectorController();
 SharedUI.initTabListeners(switchTab);
+applyTabFromUrl();
 
 if (themeManager.isDarkMode()) {
     themeManager.updateChartColors();

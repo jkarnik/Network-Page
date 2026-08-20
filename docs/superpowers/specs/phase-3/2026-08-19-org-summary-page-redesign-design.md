@@ -243,6 +243,7 @@ The message for engineering is therefore **not** "when do we get the rest?" but:
 | Site list and membership | `network-data.json` `sites` |
 | Event feed content | `alerts.json` — **reinterpreted as events**, not alerts, per §2.1 |
 | Device page routing | Existing `DEVICE_TYPE_PAGES` map |
+| Site page deep linking | `site.html?site=<name>&tab=<stage>` — `site` handled by `SharedUI.initSiteSelector`, `tab` by `applyTabFromUrl()` in `site-main.js`. Already wired from the current summary page's alert tables, so the redesign reuses it rather than building it. |
 | Accordion / status-grid CSS | Existing `.status-grid` family in `shared-styles.css` |
 
 ### 6.2 New: `data/topology.json`
