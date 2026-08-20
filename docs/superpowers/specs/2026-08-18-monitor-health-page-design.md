@@ -25,19 +25,61 @@ Moving the trust strip here must not make fragmentation invisible where it matte
 
 ## 2. Scope of Content
 
-Three subjects, in descending order of how often an engineer needs them:
+### Structured by collection mode, not by vendor
 
-| Subject | Why it's here |
-|---|---|
-| Per-vendor API polling health (Meraki, Mist) | Rate limits are the binding constraint on what the org page can show at all. This is where that budget is visible. |
-| kTranslate agent fleet + the host hardware each agent runs on | The agent is a single point of failure for every device behind it. Its host being out of disk is a network-visibility incident. |
-| Derived coverage model | The machine-readable output other pages consume to label their widgets honestly. |
+The page is organised around **how** data is collected, with each integration appearing under whichever mode or modes it uses. This is deliberate and matters more than it first appears:
 
-## 3. Why rate limits get first-class treatment
+- **An integration can use several modes at once.** Mist uses REST polling for inventory *and* a WebSocket for real-time streaming. A vendor-per-section layout would either split Mist across two sections or force one section to describe two structurally different health models.
+- **New integrations are additive.** A future integration slots into existing modes rather than requiring a new page section — the same vendor-additive principle the org page follows.
+- **The failure modes are properties of the mode, not the vendor.** Rate-limit exhaustion is a pull problem. Silent subscription loss is a push problem. Grouping by mode puts each failure mode where its metrics live.
+
+| Mode | Integrations today | Why it's here |
+|---|---|---|
+| **Pull** — request/response on a cadence | Meraki REST, Mist REST, kTranslate SNMP polling | Rate limits are the binding constraint on what the org page can show at all. This is where that budget is visible. |
+| **Push** — server-initiated stream | Mist WebSocket, kTranslate syslog + flow ingestion | Absence of data is ambiguous rather than an error. See §3.2. |
+| **Agent** — a process we operate | kTranslate agent fleet and its host hardware | The agent is a single point of failure for every device behind it. Its host running out of disk is a network-visibility incident. |
+| **Coverage model** | Derived from all of the above | The machine-readable output other pages consume to label their panels honestly. |
+
+## 3. Why collection mode drives the design
+
+### 3.1 Pull: rate limits are the binding constraint
 
 At org altitude the constraint is not whether a vendor endpoint exists — it is whether it can be called for every device without exhausting the request budget. A metric available per-device is effectively **unavailable fleet-wide** if collecting it costs one call per device.
 
 This is why CPU and memory are agent-strong but API-impractical at org scope: SNMP polls them cheaply in bulk, while the API path needs a per-device call. The page therefore tracks **bulk vs per-device call ratio** as a headline figure, because that ratio is what decides which org-page widgets are viable.
+
+### 3.2 Push: absence of data is ambiguous
+
+Almost none of the §3.1 pull-mode metrics have a push-mode equivalent. There is no request rate, no rate-limit headroom, no poll cycle to complete. Adding a WebSocket as a row in the polling table would leave every meaningful column blank and every real failure mode unmeasured.
+
+**The defining difference: with polling, absence of data is an error. With push, absence of data is ambiguous** — either nothing is happening, or the stream is dead. A failed request announces itself; a silent subscription does not.
+
+That produces a characteristic failure the pull model simply does not have:
+
+> **Stale state looks like current state.** A polled value carries implicit freshness — you know when it was fetched. A streamed value's freshness is unbounded: it is as old as the last event, which may legitimately be hours ago, or may be hours ago because the connection dropped and never re-synced. Everything reads connected and green while the view has silently diverged from reality.
+
+So for push sources the page must track:
+
+| Signal | Why it matters |
+|---|---|
+| **Connection state and uptime** | Continuous, not discrete — connected / reconnecting / disconnected, rather than "did the last cycle finish". |
+| **Reconnect count and backoff state** | A flapping connection is *worse* than a cleanly-down one, because it yields partial data while appearing to work. Reconnect storms are a real failure mode. |
+| **Per-subscription state** | A stream carries subscriptions to channels. You can be connected while subscribed to nothing. **This is the sneakiest failure — connection green, subscription silently dropped, no data, no error** — and it is the push analogue of "did the poll cycle complete". Track: subscribed, server-confirmed, and dropped. |
+| **Message arrival rate against baseline** | The only way to make silence meaningful. Needs a per-channel expected-rate baseline. |
+| **Heartbeat / keepalive and last-message age** | The only reliable way to distinguish *quiet* from *dead*. Last-message-at is required per channel, not just per connection. |
+| **Sequence gaps** | Polling re-reads state and is therefore self-healing; a stream that drops a message has lost it permanently unless it re-syncs. Where the protocol exposes sequence numbers or drop signals, gaps mean silent data loss. |
+| **Consumer lag / backpressure** | If events arrive faster than we process them, queue depth grows and we lag or drop. No pull-mode analogue. |
+| **Snapshot recency** | Streams deliver deltas, so after any disconnect a snapshot is needed to re-establish state. **Time since last full reconciliation is the direct measure of drift risk** and is the most important single number for a push source. |
+
+### 3.3 This gap already existed
+
+The WebSocket question exposes something the original version of this spec under-specified: **kTranslate's syslog and flow ingestion are already push.** A device that stops sending syslog looks quiet in exactly the same ambiguous way, and flow volume dropping to zero is indistinguishable from a genuinely idle site. So push-mode health is not a Mist-specific addition — it applies retroactively to a collection path already in use, and the signals above should be applied to syslog and flow ingestion as well as to WebSockets.
+
+### 3.4 Silence must raise an incident
+
+Per the org page design, device state derives from open NR incidents, which means a source going silent must produce one — otherwise the devices behind it read `online` and the fleet renders green at the moment visibility is lost.
+
+For pull sources this is a failed-request condition. **For push sources the condition must be heartbeat- or baseline-based**, since no request fails: *"no message on this subscription for longer than its expected interval."* Without that, a dropped subscription is invisible to every network page. This is a requirement on the alerting configuration, not something the dashboard can compensate for.
 
 ## 4. Widgets
 
@@ -49,7 +91,7 @@ A compact posture row, the page's own headline:
 - Collectors down or degraded, with the count of devices behind them.
 - Worst-case API rate-limit headroom across vendors.
 - Number of metrics currently at reduced coverage.
-- Overall verdict: *healthy / degraded / fragmented*, defined in §5.
+- Overall verdict: *healthy / degraded / blind* — **blind** when any source is `silent`, **degraded** when any source is `stale`, using the per-source states of §5. ("Fragmented" is deliberately not used; it belonged to the retired cross-source parity vocabulary.)
 
 ### Band 1b — Monitoring-edge incident roots
 
@@ -60,7 +102,7 @@ The widget the org summary page hands off to. The org page classifies a cluster 
 - **Site shape is the discriminator worth surfacing.** A network fault is site-shaped; a collector fault spans sites. When a collector's affected set happens to align with a single site, that ambiguity is real and should be called out rather than resolved automatically — it is exactly the case where an engineer must look at both pages.
 - Cross-reference is bidirectional: the org page links here for diagnosis, and each row here links back to the affected sites on `site.html`.
 
-### Band 2 — Per-vendor API polling
+### Band 2 — Pull-mode health (per integration)
 
 One panel per vendor (Meraki, Mist), each showing:
 
@@ -70,6 +112,15 @@ One panel per vendor (Meraki, Mist), each showing:
 - **Per-endpoint-class table**: endpoint, cadence, last success, last failure, average latency, error rate.
 - **Budget allocation** — which endpoint classes consume the request budget, and therefore which org-page widgets are competing for it. Makes the trade-off explicit when someone asks for a new metric.
 - **Bulk vs per-device call ratio**, per §3.
+
+### Band 2b — Push-mode health (per stream)
+
+One panel per streaming source — Mist WebSocket today, syslog and flow ingestion likewise, future integrations additively. Each shows:
+
+- **Connection**: state, uptime, reconnect count over a window, current backoff.
+- **Subscriptions table**: channel, subscribed/confirmed/dropped, message rate against baseline, **last message age**, sequence gaps if the protocol exposes them. The per-channel granularity is the point — a healthy connection with one dead channel is the failure this table exists to catch.
+- **Snapshot recency**: time since last full reconciliation, and whether a resync is currently needed or in progress. Flag prominently when drift risk is elevated.
+- **Consumer lag**: queue depth and drop counters.
 
 ### Band 3 — kTranslate agent fleet
 
@@ -121,10 +172,13 @@ This page supplies the source, population and freshness figures, plus the per-co
 
 New mock file `data/monitor-health.json`, generated by a new `scripts/generate-monitor-health.js` following the existing `generate-alerts.js` / `generate-site-details.js` pattern:
 
-- `apiPolling` — per vendor: limit, current rate, headroom, throttle events, endpoint classes with cadence/last-success/latency/error-rate, bulk vs per-device counts.
+- `apiPolling` — per pull integration: limit, current rate, headroom, throttle events, endpoint classes with cadence/last-success/latency/error-rate, bulk vs per-device counts.
 - `agents` — per agent: id, version, host, status, heartbeat, covered site and device ids, ingest rates, drop counters.
 - `agentHosts` — per host: CPU, memory, disk, load, interface throughput, uptime, restarts, capacity headroom.
-- `coverage` — per source: `{ sourceId, kind, devicesCovered, sitesCovered, lastSuccessfulReport, state }` where `state` is one of `reporting` / `stale` / `silent`. Keyed by source rather than by metric, since panels are source-scoped.
+- `coverage` — per source: `{ sourceId, integration, mode, devicesCovered, sitesCovered, state, freshness }` where `mode` is `pull` / `push` / `agent` and `state` is one of `reporting` / `stale` / `silent`. Keyed by source rather than by metric, since panels are source-scoped.
+  - For `pull` sources, `freshness` is `{ lastSuccessfulReport }`.
+  - For `push` sources, `freshness` is `{ lastMessageAt, lastSnapshotAt, expectedIntervalMs }` — **`lastSuccessfulReport` has no meaning for a stream**, and a push source with a recent `lastMessageAt` but a stale `lastSnapshotAt` is `stale`, not `reporting`, because its state may have drifted.
+- `streams` — per streaming source: `{ sourceId, connectionState, uptimeMs, reconnectCount, backoffMs, queueDepth, dropCount, subscriptions[] }` where each subscription is `{ channel, state, messageRate, baselineRate, lastMessageAt, sequenceGaps }` and `state` is `subscribed` / `confirmed` / `dropped`.
 - `unmonitored` — device and site ids with no telemetry path.
 
 Device-to-source assignment must be added to the existing device model so every device carries its source tier; the org page needs this for the Fleet Status source-tier level and for Explorer grouping by collector.
@@ -139,3 +193,7 @@ New `DataLoader` accessors, parallel to the existing `getSiteDetails` family: `g
 - **Are agent host metrics obtainable?** Requires the collector host itself to be in the monitored inventory, which may not be true today. If not, band 4 degrades to process-level health only.
 - **Agent-to-device assignment source of truth** — needed for blast radius and orphan detection. Whether this is configuration we hold or must be inferred from which agent last reported a device is unresolved.
 - **Poll-cycle completion visibility** — whether the collection layer currently emits sweep start/end events, or whether this must be inferred.
+- **Do we get per-subscription acknowledgement from the Mist WebSocket?** Band 2b's subscription table depends on distinguishing *subscribed* from *server-confirmed*. If the protocol gives no confirmation, a dropped subscription can only be inferred from message-rate decay against baseline, which is slower and noisier.
+- **Does the stream expose sequence numbers or explicit drop signals?** Without them, silent message loss is undetectable and snapshot recency becomes the only defence — which raises the required reconciliation frequency.
+- **What is the resync mechanism and its cost?** Snapshot recency is only actionable if a resync can be triggered. If a full snapshot is expensive or rate-limited, it competes with the pull-mode request budget in §3.1, and the two modes stop being independent.
+- **Baseline message rates per channel** — needed before "arrival rate against baseline" means anything. These may have to be learned rather than configured, and a learned baseline is wrong during the learning window.

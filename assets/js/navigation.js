@@ -19,7 +19,8 @@ const NavigationManager = {
             { key: 'sdwan',  label: 'SD-WAN',       href: 'sdwan.html',        icon: 'fa-network-wired' },
             { key: 'switch', label: 'Switch',       href: 'switch.html',       icon: 'fa-server' },
             { key: 'ap',     label: 'Access Point', href: 'access-point.html', icon: 'fa-wifi' }
-        ]}
+        ]},
+        { key: 'monitor', label: 'Monitor Health', href: 'monitor-health.html', icon: 'fa-heart-pulse' }
     ],
 
     /**

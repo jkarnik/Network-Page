@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitor Health</title>
+
+    <link rel="preconnect" href="https://www.googletagmanager.com">
+    <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-3V0WMCMXMQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-3V0WMCMXMQ');
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="assets/js/tailwind-config.js?v=20260820"></script>
+
+    <link rel="stylesheet" href="fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/shared-styles.css?v=20260820">
+</head>
+<body class="bg-dark-bg text-dark-text h-screen flex flex-col overflow-hidden">
+
+    <div id="appHeader"></div>
+
+    <main class="flex-1 overflow-y-auto p-6 bg-dark-bg">
+        <div class="max-w-[1920px] mx-auto">
+
+            <div class="card p-8 bg-dark-card">
+                <div class="flex items-start gap-4">
+                    <i class="fa-solid fa-heart-pulse text-2xl text-newrelic-cyan mt-1"></i>
+                    <div>
+                        <h1 class="text-lg font-bold text-dark-text mb-1">Monitor Health</h1>
+                        <p class="text-sm text-dark-muted mb-5 max-w-2xl leading-relaxed">
+                            Answers <em>&ldquo;can I trust the network pages right now?&rdquo;</em> &mdash; separate from
+                            network health, because a dead collector is indistinguishable from a site-wide outage.
+                        </p>
+
+                        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-newrelic-warning/10 border border-newrelic-warning/30 mb-6">
+                            <i class="fa-solid fa-drafting-compass text-newrelic-warning text-xs"></i>
+                            <span class="text-xs font-semibold text-newrelic-warning">Designed, not yet built</span>
+                        </div>
+
+                        <div class="text-xs uppercase tracking-wide text-dark-muted font-bold mb-3">Planned scope</div>
+                        <ul class="text-sm text-dark-muted space-y-2 mb-6 list-disc pl-5">
+                            <li><span class="text-dark-text font-medium">Pull / polling health</span> &mdash; request rate against limit, headroom, throttle events, poll-cycle completion, bulk vs per-device call ratio.</li>
+                            <li><span class="text-dark-text font-medium">Push / streaming health</span> &mdash; connection and subscription state, message arrival against baseline, heartbeat and last-message age, sequence gaps, consumer lag, snapshot recency.</li>
+                            <li><span class="text-dark-text font-medium">Agent fleet</span> &mdash; kTranslate inventory, ingest rates, orphaned devices, precomputed per-agent blast radius.</li>
+                            <li><span class="text-dark-text font-medium">Agent host hardware</span> &mdash; CPU, memory, disk, restarts, capacity headroom.</li>
+                            <li><span class="text-dark-text font-medium">Coverage model</span> &mdash; the per-source contract the network pages read for their panel headers.</li>
+                            <li><span class="text-dark-text font-medium">Monitoring-edge incident roots</span> &mdash; the diagnosis the org page's handoff row links to.</li>
+                        </ul>
+
+                        <p class="text-xs text-dark-muted">
+                            Design: <code class="text-newrelic-cyan">docs/superpowers/specs/2026-08-18-monitor-health-page-design.md</code>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="assets/js/theme-manager.js?v=20260820" defer></script>
+    <script src="assets/js/navigation.js?v=20260820" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => NavigationManager.init('monitor'));
+    </script>
+</body>
+</html>
