@@ -45,13 +45,17 @@
                         </div>
 
                         <div class="text-xs uppercase tracking-wide text-dark-muted font-bold mb-3">Planned scope</div>
+                        <p class="text-sm text-dark-muted mb-4 max-w-2xl leading-relaxed">
+                            Organised as <span class="text-dark-text font-medium">one panel per integration</span>, because
+                            collection failures are independent across integrations and shared within one. Collection mode is a
+                            subsection inside a panel, not the spine.
+                        </p>
                         <ul class="text-sm text-dark-muted space-y-2 mb-6 list-disc pl-5">
-                            <li><span class="text-dark-text font-medium">Pull / polling health</span> &mdash; request rate against limit, headroom, throttle events, poll-cycle completion, bulk vs per-device call ratio.</li>
-                            <li><span class="text-dark-text font-medium">Push / streaming health</span> &mdash; connection and subscription state, message arrival against baseline, heartbeat and last-message age, sequence gaps, consumer lag, snapshot recency.</li>
-                            <li><span class="text-dark-text font-medium">Agent fleet</span> &mdash; kTranslate inventory, ingest rates, orphaned devices, precomputed per-agent blast radius.</li>
-                            <li><span class="text-dark-text font-medium">Agent host hardware</span> &mdash; CPU, memory, disk, restarts, capacity headroom.</li>
-                            <li><span class="text-dark-text font-medium">Coverage model</span> &mdash; the per-source contract the network pages read for their panel headers.</li>
-                            <li><span class="text-dark-text font-medium">Monitoring-edge incident roots</span> &mdash; the diagnosis the org page's handoff row links to.</li>
+                            <li><span class="text-dark-text font-medium">Cisco Meraki</span> &mdash; pull: request rate against its org limit, headroom, throttle events, poll-cycle completion, bulk vs per-device call ratio.</li>
+                            <li><span class="text-dark-text font-medium">Juniper Mist</span> &mdash; pull, plus push for the WebSocket: connection and reconnect state, per-subscription state, arrival rate against baseline, last-message age, sequence gaps, consumer lag, snapshot recency.</li>
+                            <li><span class="text-dark-text font-medium">kTranslate</span> &mdash; pull (SNMP) and push (syslog, flow), plus agent fleet with precomputed per-agent blast radius, and the health of the hosts the agents run on.</li>
+                            <li><span class="text-dark-text font-medium">Coverage model</span> &mdash; not a failure domain; the per-source contract the network pages read for their panel headers.</li>
+                            <li><span class="text-dark-text font-medium">Monitoring-edge incident roots</span> &mdash; the diagnosis the org page&rsquo;s handoff row links to.</li>
                         </ul>
 
                         <p class="text-xs text-dark-muted">

@@ -25,26 +25,40 @@ Moving the trust strip here must not make fragmentation invisible where it matte
 
 ## 2. Scope of Content
 
-### Structured by collection mode, not by vendor
+### Structured by integration — failure domains are vendor-scoped
 
-The page is organised around **how** data is collected, with each integration appearing under whichever mode or modes it uses. This is deliberate and matters more than it first appears:
+The page is organised as **one panel per integration**, because failures are independent across integrations and shared within one. Meraki's API being rate-limited tells you nothing about Mist, and a dead Mist WebSocket tells you nothing about kTranslate. The blast radius of any collection failure is the set of devices that integration observes.
 
-- **An integration can use several modes at once.** Mist uses REST polling for inventory *and* a WebSocket for real-time streaming. A vendor-per-section layout would either split Mist across two sections or force one section to describe two structurally different health models.
-- **New integrations are additive.** A future integration slots into existing modes rather than requiring a new page section — the same vendor-additive principle the org page follows.
-- **The failure modes are properties of the mode, not the vendor.** Rate-limit exhaustion is a pull problem. Silent subscription loss is a push problem. Grouping by mode puts each failure mode where its metrics live.
+Collection mode is a **subsection within a panel**, not the page's spine. An integration using several modes shows several subsections.
 
-| Mode | Integrations today | Why it's here |
+This is the same principle the org page applies when it rejects source lanes: grouping by mode would fragment one vendor's health across two distant sections, forcing the reader to reassemble the unit they are actually troubleshooting. There, mode-style grouping fragmented a *site*; here it would fragment a *vendor*. In both cases the right spine is the unit that fails together.
+
+| Panel | Modes it contains | Failure domain |
 |---|---|---|
-| **Pull** — request/response on a cadence | Meraki REST, Mist REST, kTranslate SNMP polling | Rate limits are the binding constraint on what the org page can show at all. This is where that budget is visible. |
-| **Push** — server-initiated stream | Mist WebSocket, kTranslate syslog + flow ingestion | Absence of data is ambiguous rather than an error. See §3.2. |
-| **Agent** — a process we operate | kTranslate agent fleet and its host hardware | The agent is a single point of failure for every device behind it. Its host running out of disk is a network-visibility incident. |
-| **Coverage model** | Derived from all of the above | The machine-readable output other pages consume to label their panels honestly. |
+| **Cisco Meraki** | Pull (REST) | All Meraki-managed devices |
+| **Juniper Mist** | Pull (REST) · Push (WebSocket) | All Mist-managed devices. The two modes fail independently *of each other* — REST can be healthy while a WebSocket subscription is silently dropped — so both subsections are always shown. |
+| **kTranslate** | Pull (SNMP) · Push (syslog, flow) · Agent · Host | Devices behind each agent, per agent |
+| **Coverage model** | Derived from all panels | Not a failure domain — the contract other pages consume |
 
-## 3. Why collection mode drives the design
+A future integration adds a panel with whichever mode subsections apply, and touches nothing existing.
+
+### 2.1 Consequence: there is no meaningful cross-integration aggregate
+
+Because failure domains are independent, blending them produces a number that describes nothing real. There is no "overall polling health" — a figure averaging a healthy Meraki against a dead Mist stream is worse than either fact on its own.
+
+So **Band 1 is a per-integration status strip, not a blended score.** The only legitimate rollup is a worst-of indicator answering "is anything impaired at all," and it exists purely to save a glance; the per-integration rows carry the actual content. Any widget tempted to average across integrations should instead show them side by side.
+
+## 3. Why collection mode drives the metrics
+
+Mode does not organise the page (§2), but it entirely determines *which metrics mean anything* inside a panel. The two modes share almost no vocabulary.
 
 ### 3.1 Pull: rate limits are the binding constraint
 
 At org altitude the constraint is not whether a vendor endpoint exists — it is whether it can be called for every device without exhausting the request budget. A metric available per-device is effectively **unavailable fleet-wide** if collecting it costs one call per device.
+
+**The budget is per-vendor and org-scoped.** Each vendor's rate limit applies at its own organisation level, so every call we make to that org shares one pool — and pools are not shared *between* vendors. This is why the budget belongs inside a vendor panel rather than in a page-level section.
+
+**Push traffic does not consume it.** A WebSocket is a separate transport with no request accounting, so streaming activity and resyncs are independent of the pull budget. The two modes within the Mist panel therefore compete for nothing.
 
 This is why CPU and memory are agent-strong but API-impractical at org scope: SNMP polls them cheaply in bulk, while the API path needs a per-device call. The page therefore tracks **bulk vs per-device call ratio** as a headline figure, because that ratio is what decides which org-page widgets are viable.
 
@@ -91,7 +105,8 @@ A compact posture row, the page's own headline:
 - Collectors down or degraded, with the count of devices behind them.
 - Worst-case API rate-limit headroom across vendors.
 - Number of metrics currently at reduced coverage.
-- Overall verdict: *healthy / degraded / blind* — **blind** when any source is `silent`, **degraded** when any source is `stale`, using the per-source states of §5. ("Fragmented" is deliberately not used; it belonged to the retired cross-source parity vocabulary.)
+- **Per-integration status rows — the primary content.** One row per integration: its state, devices and sites covered, and which of its mode subsections are impaired. Independent failure domains are shown side by side, never blended (§2.1).
+- A worst-of indicator: *healthy / degraded / blind* — **blind** when any source is `silent`, **degraded** when any is `stale`, using the per-source states of §5. Deliberately coarse; it answers "is anything impaired at all" and nothing more. ("Fragmented" is not used; it belonged to the retired cross-source parity vocabulary.)
 
 ### Band 1b — Monitoring-edge incident roots
 
@@ -102,47 +117,44 @@ The widget the org summary page hands off to. The org page classifies a cluster 
 - **Site shape is the discriminator worth surfacing.** A network fault is site-shaped; a collector fault spans sites. When a collector's affected set happens to align with a single site, that ambiguity is real and should be called out rather than resolved automatically — it is exactly the case where an engineer must look at both pages.
 - Cross-reference is bidirectional: the org page links here for diagnosis, and each row here links back to the affected sites on `site.html`.
 
-### Band 2 — Pull-mode health (per integration)
+### Band 2 — Integration panels
 
-One panel per vendor (Meraki, Mist), each showing:
+One panel per integration, ordered worst-state first so an impaired integration surfaces without scrolling. Each panel carries only the mode subsections that integration actually uses, plus a header stating its devices and sites covered.
 
-- **Request rate vs published limit**, with headroom % and a short trend. The single most important number on the page.
+The subsections below are **templates**, defined once and reused wherever the mode appears — this is what keeps a new integration additive.
+
+#### Subsection template — Pull mode
+
+- **Request rate vs published limit**, with headroom % and a short trend. The single most important number in a pull panel. Per-vendor and org-scoped (§3.1), so it is never compared across panels.
 - **Throttle events** (HTTP 429 / backoff) over time, with which endpoint class triggered them.
 - **Poll cycle completion** — did the last full inventory sweep finish, and how long did it take? A sweep that no longer completes within its cadence is the leading indicator of coverage decay.
 - **Per-endpoint-class table**: endpoint, cadence, last success, last failure, average latency, error rate.
-- **Budget allocation** — which endpoint classes consume the request budget, and therefore which org-page widgets are competing for it. Makes the trade-off explicit when someone asks for a new metric.
-- **Bulk vs per-device call ratio**, per §3.
+- **Budget allocation** — which endpoint classes consume this vendor's request budget, and therefore which org-page widgets compete for it. Makes the trade-off explicit when someone asks for a new metric.
+- **Bulk vs per-device call ratio**, per §3.1.
 
-### Band 2b — Push-mode health (per stream)
+#### Subsection template — Push mode
 
-One panel per streaming source — Mist WebSocket today, syslog and flow ingestion likewise, future integrations additively. Each shows:
-
-- **Connection**: state, uptime, reconnect count over a window, current backoff.
-- **Subscriptions table**: channel, subscribed/confirmed/dropped, message rate against baseline, **last message age**, sequence gaps if the protocol exposes them. The per-channel granularity is the point — a healthy connection with one dead channel is the failure this table exists to catch.
-- **Snapshot recency**: time since last full reconciliation, and whether a resync is currently needed or in progress. Flag prominently when drift risk is elevated.
+- **Connection**: state, uptime, reconnect count over a window, current backoff. A flapping connection is worse than a cleanly-down one and must be distinguishable from it.
+- **Subscriptions table**: channel, subscribed/confirmed/dropped, message rate against baseline, **last message age**, sequence gaps where the protocol exposes them. Per-channel granularity is the point — a healthy connection with one dead channel is the failure this table exists to catch.
+- **Snapshot recency**: time since last full reconciliation, and whether a resync is needed or in progress. Flag prominently when drift risk is elevated. Resyncs do not consume the pull budget (§3.1).
 - **Consumer lag**: queue depth and drop counters.
 
-### Band 3 — kTranslate agent fleet
+#### Panel composition
 
-- **Agent inventory table**: agent id, version, host, sites and devices covered, status, last heartbeat.
-- **Ingest health per agent**: flows/sec, SNMP polls/sec, syslog messages/sec, plus the failure counterparts — dropped flows, SNMP timeouts, syslog queue depth.
-- **Orphaned devices** — devices whose assigned agent is dead or unassigned. These are the devices at risk of being silently counted as healthy.
-- **Blast radius per agent** — precomputed count of sites and devices that go dark if this agent fails. Precomputed deliberately: it is the number you want during an incident, not one you want to derive under pressure.
+**Cisco Meraki** — Pull subsection only.
 
-### Band 4 — Agent host hardware health
+**Juniper Mist** — Pull and Push subsections. Both always shown, because REST health and WebSocket subscription health fail independently of each other: REST can be green while a subscription has silently dropped, and that combination is invisible if either subsection is hidden when the other is healthy.
 
-The agent process is only as healthy as the box under it. Per host running kTranslate:
+**kTranslate** — Pull (SNMP), Push (syslog and flow), plus two subsections unique to an integration we operate ourselves:
 
-- CPU, memory, disk utilisation, load average.
-- Throughput on the collection interface.
-- Process uptime and restart count.
-- **Capacity headroom** — is this host near its limit for the device count assigned to it? Answers "can I add sites to this collector?"
+- *Agent fleet* — inventory table (agent id, version, host, sites and devices covered, status, last heartbeat); ingest health per agent (flows/sec, SNMP polls/sec, syslog messages/sec, and their failure counterparts: dropped flows, SNMP timeouts, syslog queue depth); **orphaned devices**, whose assigned agent is dead or unassigned, and which are therefore at risk of being silently counted healthy; and **blast radius per agent** — a precomputed count of sites and devices that go dark if that agent fails. Precomputed deliberately: it is the number you want *during* an incident, not one you want to derive under pressure.
+- *Host hardware* — the agent process is only as healthy as the box under it. Per host: CPU, memory, disk, load average; throughput on the collection interface; process uptime and restart count; and **capacity headroom**, answering "can I add sites to this collector?" Host metrics may themselves arrive via SNMP or a host agent; see §7.
 
-Host metrics may themselves arrive via SNMP or a host agent; see §7.
+Note that the agent's Pull and Push subsections describe the agent's *own* collection from devices — SNMP polling is pull, syslog and flow ingestion is push — and carry the same ambiguity risk as any stream (§3.3).
 
-### Band 5 — Coverage model
+### Band 3 — Coverage model
 
-The live version of the source-capability analysis, and the contract other pages read:
+Not a failure domain, so it sits outside the integration panels. The live version of the source-capability analysis, and the contract other pages read:
 
 - **Metric × source availability matrix** — live rather than a static document, so it reflects actual current collection rather than theoretical capability.
 - **Per-metric coverage** — what fraction of sites and devices can report each metric.
@@ -172,7 +184,8 @@ This page supplies the source, population and freshness figures, plus the per-co
 
 New mock file `data/monitor-health.json`, generated by a new `scripts/generate-monitor-health.js` following the existing `generate-alerts.js` / `generate-site-details.js` pattern:
 
-- `apiPolling` — per pull integration: limit, current rate, headroom, throttle events, endpoint classes with cadence/last-success/latency/error-rate, bulk vs per-device counts.
+- `integrations` — one entry per integration: `{ integrationId, label, modes[], devicesCovered, sitesCovered, state }`. `modes` lists which subsections the panel renders, so a new integration is a data addition rather than a layout change.
+- `pullHealth` — keyed by integration: limit, current rate, headroom, throttle events, endpoint classes with cadence/last-success/latency/error-rate, bulk vs per-device counts. Limits are per-vendor org-scoped and must not be summed across integrations.
 - `agents` — per agent: id, version, host, status, heartbeat, covered site and device ids, ingest rates, drop counters.
 - `agentHosts` — per host: CPU, memory, disk, load, interface throughput, uptime, restarts, capacity headroom.
 - `coverage` — per source: `{ sourceId, integration, mode, devicesCovered, sitesCovered, state, freshness }` where `mode` is `pull` / `push` / `agent` and `state` is one of `reporting` / `stale` / `silent`. Keyed by source rather than by metric, since panels are source-scoped.
@@ -193,7 +206,7 @@ New `DataLoader` accessors, parallel to the existing `getSiteDetails` family: `g
 - **Are agent host metrics obtainable?** Requires the collector host itself to be in the monitored inventory, which may not be true today. If not, band 4 degrades to process-level health only.
 - **Agent-to-device assignment source of truth** — needed for blast radius and orphan detection. Whether this is configuration we hold or must be inferred from which agent last reported a device is unresolved.
 - **Poll-cycle completion visibility** — whether the collection layer currently emits sweep start/end events, or whether this must be inferred.
-- **Do we get per-subscription acknowledgement from the Mist WebSocket?** Band 2b's subscription table depends on distinguishing *subscribed* from *server-confirmed*. If the protocol gives no confirmation, a dropped subscription can only be inferred from message-rate decay against baseline, which is slower and noisier.
+- **Do we get per-subscription acknowledgement from the Mist WebSocket?** The Push subsection's subscription table depends on distinguishing *subscribed* from *server-confirmed*. If the protocol gives no confirmation, a dropped subscription can only be inferred from message-rate decay against baseline, which is slower and noisier.
 - **Does the stream expose sequence numbers or explicit drop signals?** Without them, silent message loss is undetectable and snapshot recency becomes the only defence — which raises the required reconciliation frequency.
-- **What is the resync mechanism and its cost?** Snapshot recency is only actionable if a resync can be triggered. If a full snapshot is expensive or rate-limited, it competes with the pull-mode request budget in §3.1, and the two modes stop being independent.
+- **What is the resync mechanism and its cost?** Snapshot recency is only actionable if a resync can be triggered. Confirmed not to compete with the pull request budget, so the remaining question is latency and whether a resync can be initiated on demand or only on reconnect.
 - **Baseline message rates per channel** — needed before "arrival rate against baseline" means anything. These may have to be learned rather than configured, and a learned baseline is wrong during the learning window.
