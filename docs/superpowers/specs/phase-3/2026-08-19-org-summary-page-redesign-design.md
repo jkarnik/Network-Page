@@ -144,11 +144,14 @@ Five bands, in fixed order. Band membership encodes urgency; a widget may not mo
 
 ### Band 1 — Triage
 
-One row. Every figure here runs on NR incidents and is legitimately fleet-wide, because no aggregation is invented — the standardisation already happened at the alert layer.
+One row. Every figure here runs on NR incidents and is legitimately fleet-wide, because no aggregation is invented — the standardisation already happened at the alert layer. **Nothing enters this band that is not incident-derived**; a figure that would need a source-scoped denominator belongs in band 3 or 4 instead.
+
+One dependency this creates: the backup figure below is only as complete as the alerting configuration. An integration that does not raise a failover incident contributes zero to it, and the count would understate reality without saying so. This is the same shape of dependency as the *entity stopped reporting* condition in the Monitor Health spec — it belongs in alerting configuration, not in dashboard inference — and it should be confirmed per integration rather than assumed.
 
 - **Sites by worst state** — count of sites whose worst device state is `warning` or `offline`, against total sites. The headline.
 - **Devices by state** — `online` / `warning` / `offline` counts fleet-wide.
 - **Open incidents by NR priority** — the actionable set, not event volume.
+- **Sites on a backup path** — count of sites with an open failover-class incident. Deliberately expressed as an *incident* count rather than as observed path state, so it inherits the same standardisation as everything else in this band instead of introducing a source-scoped figure here. Detailed path state lives in band 3.
 - **Incident roots** — how many *distinct clusters* the open incidents reduce to. This is the band-1 expression of "one problem or forty": forty incidents resolving to three roots is a materially different morning than forty resolving to forty.
 
 No client widget. No trend content. No capacity content.
@@ -172,6 +175,10 @@ The centrepiece, and the reason the page exists. One widget: the **incident root
 - **Fleet Status accordion** — grouped **role → vendor → model**, with collection method as an attribute column rather than a grouping level. Role-first is deliberate: grouping by vendor first would scatter a mixed-vendor site's stack across the widget. Columns are the three device states. Reuses the existing `.status-grid` CSS family and the accordion interaction from `site.html` (single collapsed row per group, chevron expands).
 - **Redundancy verification** — per site, whether dual gateways or dual uplinks are genuinely independent paths, **computed from adjacency** rather than asserted from device count. Replaces the site page's guessed "2/2 paths available" indicator with a real answer.
 - **Topology coverage** — sites where the engine knows devices that have no telemetry source at all. These are the devices most at risk of being read as healthy, and this is the only place they are visible on this page.
+- **WAN path posture** — per site, which uplink is currently carrying traffic and whether that is the intended primary. Counted in *sites*, not percentages, so it stays readable at any fleet size. **Successor to the removed WAN Resilience donut** (§6.5), and the reason failover visibility is not lost in the redesign.
+  - Sourced only from integrations that report active-uplink state **natively**. No derivation: flow-baseline primary-interface learning is explicitly rejected in §7, so a source that does not expose which uplink is active contributes nothing here and the panel states its scope in its header.
+  - Port nodes give link state for every uplink port (§2.3), but link state alone cannot say which uplink is *intended* as primary — that is configuration intent, not observed state. See §8 question 6.
+  - Where a site's active path is unknown, it is shown as unknown, never as primary. Assuming primary would render a failed-over site as healthy.
 - **Worst sites** — ranked by downstream-affected device count, linking to `site.html`. Ranking by real blast radius replaces the site-tier weighting considered earlier, which depended on customer-maintained tier metadata with the same silent-failure mode as region tags.
 
 ### Band 4 — Forward-look
@@ -191,6 +198,7 @@ The evidence layer, and **the only place silos remain** — correctly, since thi
 - Severity and event type displayed **in each source's own words, verbatim**. A shared table is acceptable; a shared vocabulary is not.
 - Fixed max-height with internal scroll — event volume is unbounded, so a scroll viewport here is intentional rather than wasted space. This is the one exception to content-driven height.
 - Device names link to device pages where one exists.
+- **Site names link to `site.html?site=<name>&tab=stageABC`**, reusing the deep-link support recorded in §6.1. A Site column is the natural companion to a Source column in a fleet-wide feed, and this is the one linked surface on the current page that carries forward into the redesign. A row whose site is unknown renders as plain text rather than a link to nowhere.
 
 ### 4.1 Layout rules carried over from `site.html`
 
@@ -212,6 +220,8 @@ The evidence layer, and **the only place silos remain** — correctly, since thi
 | Sites by worst state · devices by state · incidents by priority | **A** | NR incidents exist today |
 | Incident root count | **A** | One traversal over the existing graph |
 | Incident root list + nested tree + event drill-down | **A** | The graph and the incidents both already exist |
+| Sites on a backup path (band 1) | **A** | An incident count; needs only failover-class incidents to exist |
+| WAN path posture (band 3) | **A** | Native active-uplink state where a source exposes it; scope stated |
 | Fleet Status accordion (role → vendor → model) | **A** | Inventory and state are available for all sources |
 | Redundancy verification | **A** | Pure adjacency |
 | Topology coverage | **A** | Pure topology |
@@ -300,3 +310,4 @@ Parallel to the existing `getSiteDetails` family:
 3. **Role vocabulary and port identity** — the `role` values in §6.2 now match the confirmed chain (no `access` layer), but must still match the engine's emitted strings exactly, or a mapping is reintroduced at precisely the point this design exists to avoid one. Separately: what is a port's stable identifier across polls, and is it consistent between an API-managed device and an SNMP-polled one (`ifIndex` is not stable across reboots on all platforms)?
 4. **Incident-to-entity granularity** — whether NR incidents attach to individual devices or can attach to higher-level entities. The traversal assumes device-level attachment; group-level incidents would need a defined position in the graph.
 5. **Redundancy semantics** — what counts as an independent path is a judgement call (dual uplinks to the same ISP? dual gateways sharing a switch?). Needs a definition before the redundancy widget can be built.
+6. **Does the topology engine record uplink role or priority?** WAN path posture can show which uplink is *active* from native source state, but "is this the intended primary?" needs configuration intent. If the engine carries uplink role or priority, the widget becomes topology-native and works for every site regardless of integration. If it does not, the question is answerable only where a source exposes primary/secondary itself — and the alternative, learning the primary from traffic history, is rejected in §7 as too fragile. This determines whether the widget is fleet-wide or source-scoped, so it is worth settling early.
