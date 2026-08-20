@@ -130,6 +130,10 @@ Structure beats correlation wherever structure exists, so the topology traversal
 
 This answers findings no topology can produce — *"nine sites all have gateway incidents"*. Partitions must clear a minimum member count and a tight onset window to be promoted; everything else stays visible as unrelated singletons.
 
+**Change window is a grouping attribute in its own right**, correlating incidents against configuration changes shortly before onset. It carries the "what did we do to ourselves?" question, and it is the attribute that absorbs the use case firmware grouping would have served before firmware was dropped — so it should not be treated as optional.
+
+**The view pre-selects the highest-lift attribute rather than presenting an empty chooser.** Lift is computed across all attributes anyway, so the reader should arrive at *"these nine share one model"* instead of having to hunt for it. The other attributes remain available as an explicit "or group by…" control.
+
 ## 3. Page & Navigation
 
 - **Scope model: global only.** The existing `scopeSelector` dropdown is removed. There is no region mode and no single-site mode — the page is always the whole fleet.
@@ -141,6 +145,12 @@ This answers findings no topology can produce — *"nine sites all have gateway 
 ## 4. Bands & Widgets
 
 Five bands, in fixed order. Band membership encodes urgency; a widget may not move band to get more attention.
+
+### Band 0 — Coverage exception line
+
+Not a band of widgets and not a persistent strip. **One compact line, rendered only when coverage is impaired**, naming what is degraded and linking to Monitor Health for the diagnosis. Absent entirely when everything is reporting.
+
+Required by the Monitor Health spec, which lists it among the things the network pages retain when the trust strip moved off this page. It sits above band 1 rather than inside it because it is a status annotation, not an incident-derived figure, and band 1's invariant (below) admits only the latter.
 
 ### Band 1 — Triage
 
@@ -169,7 +179,7 @@ The centrepiece, and the reason the page exists. One widget: the **incident root
 - Rows expand **in place** to the nested dependency tree: root, its affected children, their affected children. Unaffected siblings are not shown. Expansion follows `site.html`'s in-card pattern — no page overlay, no backdrop, no `main` overflow toggling.
 - Each node in the expanded tree links out: gateways/switches/APs to their existing device pages via the `DEVICE_TYPE_PAGES` map, sites to `site.html?site=`. Devices with no detail page (Palo Alto, auxiliary types) are styled identically but inert, matching how `site.html` already treats auxiliary devices.
 - Drilling into a node shows its **events** — raw, verbatim, in the source's own vocabulary — as the evidence beneath the incident.
-- **Cross-site grouping** sits beneath the root list as a secondary view: lift-scored partitions by vendor, model, device role, collector, and optionally region with its coverage percentage. Ranked, capped, with an explicit "+N more" row. Never silently truncated.
+- **Cross-site grouping** sits beneath the root list as a secondary view: lift-scored partitions by vendor, model, device role, collector, change window, and optionally region with its coverage percentage. Opens on the highest-lift attribute (§2.5). Ranked, capped, with an explicit "+N more" row. Never silently truncated.
 - Empty state collapses to a single line. No reserved height.
 
 ### Band 3 — Fleet posture
@@ -183,6 +193,7 @@ The centrepiece, and the reason the page exists. One widget: the **incident root
   - Comparing the two gives backup state with **no derivation**: the intended-primary port is down while another uplink port is up. This is a comparison of two known facts, in the same category as the incident-root traversal, not a learned inference like the flow-baseline primary detection rejected in §7.
   - **Limitation, stated rather than glossed:** link-up is not the same as carrying traffic. A primary uplink can stay up while blackholing, in which case failover happens at the routing or SD-WAN layer with no port going down. Port-state comparison catches hard link failure but **not brownout failover**. So where an integration reports active path natively, prefer that — it catches both — and fall back to the port-state comparison everywhere else. The method used must be visible per site, because the two have different blind spots.
   - Where the active path genuinely cannot be determined, show it as unknown, never as primary. Assuming primary would render a failed-over site as healthy.
+- **Wireless experience distribution** — SLE / time-to-connect as a **distribution across sites**, not a top-N list, so it stays readable at any fleet size. A deliberately **partial-coverage widget**: SLE is API-side only and Mist-strongest, so it states its scope in its own header (e.g. *"Mist-managed sites · 41%"*) and never implies fleet-wide coverage. Sites whose APs are agent-monitored have no SLE at all and are excluded from the denominator rather than counted as healthy.
 - **Worst sites** — ranked by downstream-affected device count, linking to `site.html`. Ranking by real blast radius replaces the site-tier weighting considered earlier, which depended on customer-maintained tier metadata with the same silent-failure mode as region tags.
 
 ### Band 4 — Forward-look
@@ -191,7 +202,9 @@ Each panel states its own source scope in its header (e.g. *"SNMP-monitored swit
 
 - **SPOF risk** — nodes whose failure would orphan devices with no redundant path, ranked by devices at risk. Pure topology, **no telemetry at all**, so it covers every site regardless of collection method — confirmed complete rather than assumed, now that topology is known to be fleet-wide.
 - **Capacity exhaustion** — link saturation from both source families; **DHCP scope utilisation and PoE budget from SNMP**. Both of the latter were previously assessed as blocked with no viable data path; agent-based collection unblocks them for the devices it covers.
+- **CPU / memory hotspots** — ranked by site. **Agent-scoped and permanently so**: SNMP polls these cheaply in bulk, while the API path needs a per-device call and therefore cannot survive org-scale collection (§3.1 of the Monitor Health spec). Scope stated in the header; this is not a gap a roadmap closes.
 - **Interface error hotspots** — errors, discards and CRC, ranked by the number of devices behind the offending port. Agent-strongest signal and the best hardware-fault indicator available; API sources summarise these away. Note that a port error severe enough to open an incident surfaces in band 2 as a root in its own right; this panel is the sub-incident-threshold view, for ports degrading but not yet alerting.
+- **Path health** — site-to-service reachability from flow data: whether sites are actually reaching the services their users depend on. **Agent-scoped**, since flow is the only source that observes conversations; API sources have no equivalent. Stage C, and the thinnest-justified widget on the page — included because it is the one signal here that reports user-facing outcome rather than device condition, but the first thing to cut if band 4 is crowded.
 - **Change timeline** — configuration and change events over time, from vendor audit logs and syslog. The "what changed" axis, since most incidents follow a change.
 
 ### Band 5 — Events
@@ -232,20 +245,37 @@ The evidence layer, and **the only place silos remain** — correctly, since thi
 | Worst sites by blast radius | **A** | Falls out of the traversal |
 | SPOF risk | **A** | Pure topology, no telemetry |
 | Interface error hotspots | **A** | Agent-native today; scoped to SNMP-monitored devices |
+| CPU / memory hotspots | **A** | Agent-native; permanently agent-scoped by rate-limit physics |
+| Wireless experience distribution (SLE) | **A** | Mist-native today; permanently a partial-coverage widget |
+| Coverage exception line (band 0) | **A** | Reads the Monitor Health coverage model |
 | Event feed with source column | **A** | Raw passthrough, no processing |
 | Cross-site lift grouping | **A+B** | Refinement, not a prerequisite — the traversal covers the common cases |
 | Capacity: link saturation | **A+B** | Needs consistent interface-capacity data across sources |
 | Capacity: DHCP scope · PoE budget | **A+B** | SNMP-available; scoped to agent-monitored devices |
 | Change timeline | **A+B** | Needs audit-log and syslog ingestion wired up |
+| Change window as a grouping attribute | **A+B** | Same dependency as the change timeline |
 | Region as a grouping attribute | **A+B** | Optional, and needs the tag-coverage figure to display honestly |
 | Adjacency-exact nesting on partially-mapped sites | **A+B+C** | Role-order fallback covers Stage A; this closes the gap |
+| Path health (flow-derived) | **A+B+C** | Agent-scoped; needs flow conversation analysis |
 | Inter-site overlay blast radius | **A+B+C** | Depends on the topology engine exposing inter-site links — see §8 |
 
 ### 5.3 What staging now communicates
 
 Stage B is small and Stage C is nearly empty, because the expensive prerequisites — a normalised fault taxonomy, an ASN enrichment pipeline, flow-baseline learning — were all designed out rather than deferred. What remains in later stages is genuinely optional refinement.
 
-The message for engineering is therefore **not** "when do we get the rest?" but: **several panels are permanently scoped to one source family, by the physics of what that source can observe.** DHCP scope, PoE budget and interface error detail are SNMP-side indefinitely; wireless SLE is API-side indefinitely. No roadmap closes those, because the other source cannot produce the signal. Stage A+B+C is not "everything, fleet-wide," and the page says so in each panel header rather than implying completeness.
+The message for engineering is therefore **not** "when do we get the rest?" but: **five panels are permanently scoped to one source family, by the physics of what that source can observe, not by roadmap.**
+
+| Panel | Permanently scoped to | Why no roadmap closes it |
+|---|---|---|
+| DHCP scope · PoE budget | SNMP | No viable bulk API path on either vendor |
+| Interface error detail | SNMP | API sources summarise these away |
+| CPU / memory hotspots | SNMP | The API path needs one call per device and cannot survive org-scale collection |
+| Path health | Flow | Only flow observes conversations |
+| Wireless experience (SLE) | API, Mist-strongest | SNMP has no equivalent signal |
+
+Note that the constraint runs in **both** directions — three of the five are agent-side and two are API-side — so this is a genuine capability split rather than one source being weaker.
+
+Stage A+B+C is therefore not "everything, fleet-wide." Each of these panels states its scope in its own header instead of implying completeness. Everything *not* in this table is fleet-wide, and the widgets built on topology (SPOF risk, redundancy verification, topology coverage, WAN path posture) are fleet-wide by construction since topology is.
 
 ## 6. Data Plan
 
@@ -304,6 +334,8 @@ Parallel to the existing `getSiteDetails` family:
 - **No site-tier or criticality weighting.** Depends on customer-maintained metadata with a silent failure mode; real blast-radius counts serve the ranking purpose better.
 - **No monitoring-health diagnostics.** API polling counts, rate-limit headroom, agent fleet health and agent host health all live on the Monitor Health page. The single deliberate exception is visibility-root *classification* in band 2 — computed here because omitting it would flood the root list, but carrying no diagnostic detail and linking out for it. Per-panel source scope labels are the only other monitoring-derived content.
 - **No staleness inference.** Collector loss and heartbeat loss arrive as incidents; the page does not second-guess them.
+- **No traffic-collapse detection.** Flow volume against a rolling baseline was considered and cut: it is baseline learning, and therefore falls under the no-derived-metrics rule above rather than being an exception to it.
+- **No fleet-wide Top Applications.** Flow gives per-application data without derivation, so this was cut on scope rather than feasibility: application usage is neither triage nor posture, which is what §1 says this page is for. It remains appropriate on the site and device pages, where it already exists.
 - **No trend overlays.** The existing modal trend charts are not carried forward. Sparklines inline where a metric is gauge-like, consistent with `site.html`.
 - **No ML or probabilistic correlation.** The traversal is deterministic and every cluster is explainable in one sentence. If a grouping cannot be explained, it does not ship.
 
