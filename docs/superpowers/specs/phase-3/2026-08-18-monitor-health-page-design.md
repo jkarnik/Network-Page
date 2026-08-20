@@ -161,24 +161,37 @@ Not a failure domain, so it sits outside the integration panels. The live versio
 - **Unmonitored inventory** — devices and sites present in inventory with no telemetry path.
 - **Per-source scope, population and freshness** — the figures panels render in their headers. See §5.
 
-## 5. Source Scope — the shared vocabulary
+## 5. What this page supplies to the network pages
 
-The org page is **siloed by source**: each panel reports one source's data in that source's own vocabulary, and no cross-source aggregate is computed. That decision removes most of what this section originally had to solve — a number belonging to exactly one source is unambiguous by construction, so it needs no confidence marker.
+The org page is **unified at the incident layer and siloed only at the event layer**: aggregates run on open NR incidents, which are already standardised, while raw vendor events are shown verbatim in each source's own words. Site — supplied by the topology engine — is its structural spine, and cross-source correlation is done by traversing the dependency graph, not by comparing semantics.
 
-What remains is simpler. Every panel on a network page declares, in its own header, the scope it covers:
+That architecture leaves this page three concrete obligations.
+
+### 5.1 Per-panel scope labels
+
+Most org-page widgets are fleet-wide. Seven are permanently scoped to one source family (listed in the org spec's §5.3), and each of those declares in its own header:
 
 | Element | Content | Example |
 |---|---|---|
-| **Source** | Which collector or vendor API fed this panel | `Cisco Meraki` |
-| **Population** | How many devices or sites that source covers | `68 devices · 6 networks` |
-| **Freshness** | When that source last reported successfully | `last poll 40s ago` |
+| **Source** | Which integration fed this panel | `Juniper Mist` |
+| **Population** | Devices or sites that source covers | `44 devices · 5 sites` |
+| **Freshness** | Mode-shaped — see §6 | `last poll 40s ago` / `last message 4s ago` |
 
-Two cross-source elements exist, and both correlate only on keys every source agrees on without mapping — **time** and **site identity**:
+Top Applications is the one panel needing more than a label: because it renders shares that normalise to 100% regardless of denominator, it carries an explicit warning naming the contributing integrations and their share of the fleet.
 
-- **Shared onset rail** — a timeline across lanes, so simultaneous onsets are visible without any semantic comparison.
-- **Multi-lane site count** — set intersection on site IDs: how many sites currently have faults in two or more lanes. No thresholds, no taxonomy.
+### 5.2 The band 0 coverage exception line
 
-This page supplies the source, population and freshness figures, plus the per-collector state that lets a lane render as *quiet* rather than *healthy* when its collector has stopped reporting. **A silent lane must never read as a clean lane** — that distinction is this page's main contribution to the org page's honesty.
+The org page renders one compact line, **only when coverage is impaired**, naming what is degraded and linking here. This page supplies its content. Absent entirely when everything is reporting, so it is an exception marker rather than a persistent strip.
+
+### 5.3 Diagnosis behind the visibility-root handoff
+
+When the org page classifies an incident cluster as collector-rooted, it renders a single non-expanding handoff row and links here for the diagnosis in Band 1b.
+
+### 5.4 The principle underneath all three
+
+**A source that has gone silent must never read as healthy.** Collector loss and heartbeat loss arrive as NR incidents, so the devices behind a dead collector become `warning` rather than staying `online` — the org page does no staleness inference of its own (org spec §2.2). This page's contribution is making the *reason* legible: which integration, which mode, how long, and how many devices sit behind it.
+
+Push sources need particular care here, since silence is ambiguous rather than an error (§3.2): a recent `lastMessageAt` with a stale `lastSnapshotAt` is `stale`, not `reporting`, because the state may have drifted.
 
 ## 6. Data Plan
 

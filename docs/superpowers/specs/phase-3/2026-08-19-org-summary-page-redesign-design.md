@@ -332,7 +332,7 @@ Parallel to the existing `getSiteDetails` family:
 
 ### 6.5 Migration note
 
-`index-main.js` is 2,129 lines and currently owns all of the widgets being replaced. This redesign removes most of them — the four alert cards, the axis-flip Fleet Status, WAN Resilience donut, Top Impacted Sites, Clients Connected, Top SSIDs, and the three trend overlays. The traversal and state-derivation logic belongs in `data-loader.js` (testable, reusable by `site.html`), not in the page script. The page script should end up smaller than it starts.
+`index-main.js` is over 2,000 lines and currently owns all of the widgets being replaced. This redesign removes most of them — the four alert cards, the axis-flip Fleet Status, WAN Resilience donut, Top Impacted Sites, Clients Connected, Top SSIDs, and the three trend overlays. The traversal and state-derivation logic belongs in `data-loader.js` (testable, reusable by `site.html`), not in the page script. The page script should end up smaller than it starts.
 
 ## 7. Explicit Scope Cuts
 
